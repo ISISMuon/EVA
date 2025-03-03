@@ -24,7 +24,7 @@ install EVA by running
 
 .. code-block::
 
-    pip install .
+    pip install -e .
 
 Once this is done you can start EVA by running ``main.py`` in src/EVA.
 
