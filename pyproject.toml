@@ -11,7 +11,7 @@ author='Aidy'
 author_email='adrian.hillier@stfc.ac.uk'
 description='Elemental analysis Data Visualiser for MuX @ ISIS'
 test_suite = "Tests"
-dependencies = ["PyQt6", "scipy", "numpy", "matplotlib", "lmfit", "pandas"]
+dependencies = ["PyQt6", "scipy", "numpy", "matplotlib", "lmfit", "pandas", "setuptools", "pyyaml"]
 
 [tool.pytest.ini_options]
 addopts = [
