@@ -15,5 +15,5 @@ pip install -r "requirements.txt"
 After this, you can start the program by running `src/EVA/main.py`. If this fails to run, you may need to run
 
 ```
-pip install .
+pip install -e .
 ```
