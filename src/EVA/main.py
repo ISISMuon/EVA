@@ -1,10 +1,12 @@
-
-import sys
 import os
-import logging
 from pathlib import Path
 
-from PyQt6.QtGui import QIcon
+# Changes cwd to root so that paths can be specified relative to root level - MUST BE BEFORE ANY EVA IMPORTS
+ROOT = Path(__file__).resolve().parent.parent.parent # get root dir using pathlib
+os.chdir(ROOT) # change cwd to root
+
+import sys
+import logging
 
 from EVA.windows.main.main_window import MainWindow
 from EVA.core.app import App
@@ -28,13 +30,9 @@ def handle_exception(exc_type, exc_value, exc_traceback):
 sys.excepthook = handle_exception
 
 if __name__ == "__main__":
-    # ensure all paths are relative to project root
-    ROOT = Path(__file__).resolve().parent.parent.parent
-    os.chdir(ROOT)
-
     logging.info("Starting EVA...")
-
     logger.debug("Root directory: %s", ROOT)
+
     app = App(sys.argv)
     #QIcon.setThemeName("TangoMFK")
 
