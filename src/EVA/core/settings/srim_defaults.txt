@@ -1,0 +1,23 @@
+Sample Name
+Cu
+SimType
+Mono
+Momentum
+27.0
+Momentum Spread
+4.0
+Scan Momentum
+No
+Min Momentum
+21.0
+Max Momentum
+30.0
+Momentum Step
+1.0
+Stats
+100.0
+Sample
+Beamline Window,0.05,
+Air (compressed),0.067,
+Al,0.05,2.7
+Cu,0.5,6.7
