@@ -11,6 +11,7 @@ from EVA.windows.manual import manual_window
 from EVA.windows.peakfit import peakfit_widget
 from EVA.windows.srim.trim_window import TrimWindow
 from EVA.util.path_handler import get_path
+from EVA.windows.trim_fitting.trim_fit_widget import TrimFitWidget
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +44,8 @@ class MainPresenter(object):
 
         for i, detector in enumerate(self.view.detector_list):
             self.view.peakfit_menu_actions[i].triggered.connect(lambda _, det=detector: self.open_peakfit(det))
+
+        #self.view.trim_fit.triggered.connect(self.open_trim_fit)
 
         self.view.trim_simulation.triggered.connect(self.open_trim)
         #self.view.trim_simulation_test.triggered.connect(self.RunTrimExample)
@@ -263,3 +266,11 @@ class MainPresenter(object):
         self.view.periodic_table_window = None
         logger.info("Closed periodic table window.")
 
+
+    def open_trim_fit(self):
+        logger.info("Launching trim fit window.")
+        if self.view.trim_fit_window is None:
+            self.view.trim_fit_window = TrimFitWidget()
+            self.view.trim_fit_window.show()
+        else:
+            self.view.trim_fit_window.show()

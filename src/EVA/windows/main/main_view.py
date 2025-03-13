@@ -71,6 +71,9 @@ class MainView(QWidget):
             action = self.peakfit_menu.addAction(detector)
             self.peakfit_menu_actions.append(action)
 
+        #self.trim_fit = self.analysis_menu.addAction("Trim fitting")
+
+
         self.tools_menu = self.bar.addMenu('Tools')
         self.trim_simulation = self.tools_menu.addAction('SRIM/TRIM Simulation')
 
@@ -160,6 +163,7 @@ class MainView(QWidget):
         self.multiplot_window = None
         self.peakfit_window = None
         self.trim_window = None
+        self.trim_fit_window = None
         self.efficiency_correction_window = None
         self.energy_correction_window = None
         self.manual_window = None
