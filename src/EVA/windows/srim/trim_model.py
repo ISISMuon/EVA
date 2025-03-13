@@ -1,9 +1,12 @@
 import os
-from random import sample
+import shutil
+from zipfile import ZipFile
 
 import numpy as np
 from PyQt6.QtCore import pyqtSignal, QObject
 from matplotlib import pyplot as plt
+from matplotlib.figure import Figure
+from scipy.stats import moment
 
 from EVA.core.app import get_config
 from srim import TRIM, Ion, Layer, Target
@@ -19,70 +22,121 @@ class TrimModel(QObject):
         self.result_x = []
         self.result_y = []
 
-        # Layer information
+        # Default layers to display in table
+        self.input_layers = [{
+                "name": "Beamline Window",
+                "thickness": 0.05
+            },
+            {
+                "name": "Air (compressed)",
+                "thickness": 0.067
+            },
+            {
+                "name": "Al",
+                "thickness": 0.05,
+                "density": 2.7
+            },
+            {
+                "name": "Cu",
+                "thickness": 0.5,
+                "density": 6.7
+            }]
+
+        # initialising layer variables
         self.sample_layers = None
         self.sample_names = []
         self.total_thickness = 0
+        self.layer_boundary_positions = []
 
         self.components = []
-        self.momentum = []
 
-    def trim_simulation(self, sample_name, stats, srim_dir, output_dir, momentum, momentum_spread, sim_type,
-                        min_momentum, max_momentum, step_momentum, scan_type, layers):
+        ### Default SRIM settings ###
+        self.stats = 100
+        self.srim_exe_dir = get_config()["SRIM"]["installation_directory"]
+        self.srim_out_dir = get_config()["SRIM"]["output_directory"]
 
-        # update config to save the directory
-        config = get_config()
-        config["SRIM"]["installation_directory"] = srim_dir
-        config["SRIM"]["output_directory"] = output_dir
+        self.sim_type = "Mono"
+        self.momentum = 27.
+        self.momentum_spread = 4.
 
+        self.min_momentum = 21.
+        self.max_momentum = 30.
+        self.step_momentum = 1.
+
+        self.scan_type = "No"
+
+        # for storing an x-axis shift for each momentum plot (one for each momentum)
+        self.default_origin_position = 0
+        self.plot_origin_shifts = []
+
+    def remove_layer(self, index: int):
+        self.input_layers.pop(index)
+
+    def start_trim_simulation(self):
+        """
+        Runs the srim simulation using parameters set in the model.
+        """
         # Set up sample from layers
-        self.SetupSample(layers)
-        targetsample = Target(self.sample_layers)
+        self.setup_sample(self.input_layers)
+        target_sample = Target(self.sample_layers)
 
-        # Calculate momentum if momentum scan is wanted
-        if scan_type == 'Yes':
-            self.momentum = list(self.my_range(min_momentum, max_momentum, step_momentum))
+        # Calculate momentum array if momentum scan is wanted
+        if self.scan_type == 'Yes':
+            self.momentum = np.arange(start=self.min_momentum, stop=self.max_momentum, step=self.step_momentum)
         else:
-            self.momentum = [momentum]
+            self.momentum = [self.momentum]
+
+        self.result_x = np.zeros((len(self.momentum), 100))
+        self.result_y = np.zeros_like(self.result_x)
+        self.components = []
 
         # Run TRIM for each momentum
-        self.components = []
-        self.result_x = []
-        self.result_y = []
-
         for momentum_index, mom in enumerate(self.momentum):
-            if sim_type == 'Mono':
+            if self.sim_type == 'Mono':
                 # get muon information
-                muon_ion = self.iondef(mom)
-                x, y, e = self.RunTRIM(targetsample, self.total_thickness, muon_ion, stats, srim_dir,
-                                                 output_dir)
-            elif sim_type == 'Momentum Spread':
-                x, y = self.CalcProfileWithMomBite(
-                    targetsample, self.total_thickness, mom, stats, momentum_spread, srim_dir, output_dir)
+                muon_ion = self.get_muon(mom)
+                x, y = self.run_TRIM(target=target_sample, muon=muon_ion)
+
+            elif self.sim_type == 'Momentum Spread':
+                x, y = self.CalcProfileWithMomBite(target_sample, mom)
             else:
                 raise ValueError("Invalid simulation type specified")
 
-            self.result_x.append(x)
-            self.result_y.append(y)
+            # insert results into results arrays
+            self.result_x[momentum_index, :] = x
+            self.result_y[momentum_index, :] = y
 
-            # break to components to get %
-            xposlist = self.getxpos()
-            comp = self.getcomp(xposlist, momentum_index)
-            perlayer = self.getperlayer(comp)
-            outstr = ''
-            for index in range(len(self.sample_layers)):
-                outstr += '[' + str(index + 1) + '] ' + str(round(perlayer[index], 3)) + ' '
+        # calculate the
+        self.layer_boundary_positions = self.get_layer_boundary_positions()
 
-            self.components.append(outstr)
+        # set default origin position to be at end of aluminium layer
+        self.default_origin_position = self.layer_boundary_positions[3]
 
-    def my_range(self, start, end, step):
-        # sets a reange of momenta
-        while start <= end:
-            yield start
-            start += step
+        self.components = []
 
-    def SetupSample(self, layers):
-        ''' Sets up the sample layers '''
+        for momentum_index, mom in enumerate(self.momentum):
+            comp = self.split_components(momentum_index)
+            perlayer = self.get_muons_per_layer(comp)
+
+            self.components.append(perlayer)
+
+        # set all default plot origin shifts to the aluminium layer
+        self.plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
+
+
+    def setup_sample(self, layers: list[dict]):
+        """
+        Builds SRIM layers from layer input dictionary.
+
+        Args:
+            layers: list of dictionaries containing information about layers to simulate for. Dict keys:
+
+            * name: (str) Name of layer - must be valid name in SRIM and is case-sensitive.
+
+            * thickness: (float) layer thickness.
+
+            * density: (float) Not required for beamline window or compressed air.
+        """
 
         i = 0
         sample_layers = []
@@ -141,89 +195,102 @@ class TrimModel(QObject):
         self.sample_names = sample_names
         self.total_thickness = total_thickness
 
-    def iondef(self, Mom:float):
-        '''muon properties, mass and energy'''
-        muM = 105.6583745  # mass o muon in MeV/c^2
-        muMA = muM / 931.5  # mass of muon in atomic mass units
-        # kintetic energy associatd with the momentum (relitavistic)
-        Ek = np.sqrt(105.6583745 ** 2 + Mom ** 2) - 105.6583745
+    def get_muon(self, momentum: float) -> Ion:
+        """
+        Defines muon momentum, mass and kinetic energy and models the muon as a hydrogen ion in pysrim
 
-        print('Momentum=' + str(Mom) + ' Energy=' + str(Ek))
+        Args:
+            momentum: Muon momentum
+
+        Returns:
+            pysrim 'Ion' object with muon properties.
+        """
+
+        mass_mevc = 105.6583745  # mass o muon in MeV/c^2
+        mass_amu = mass_mevc / 931.5  # mass of muon in atomic mass units
+
+        # kinetic energy associate with the momentum (relativistic)
+        kinetic_energy = np.sqrt(mass_mevc ** 2 + momentum ** 2) - mass_mevc
 
         # corresponding SRIM muon ion definitions
-        muon_ion = Ion('H', Ek * 1e6,
-                       muMA)  # define muon as Hydrogen ion with mass of muon, with a given kinetic energy
-
-        print('muon_ion', muon_ion, muMA)
-
+        # define muon as Hydrogen ion with mass of muon, with a given kinetic energy
+        muon_ion = Ion('H', kinetic_energy * 1e6, mass_amu)
 
         return muon_ion
 
+    def run_TRIM(self, target: Target, muon: Ion) -> tuple[list, list] | None:
+        """
+        Runs TRIM simulation for a single momentum.
 
-    def RunTRIM(self, target, TotalThickness, muon_ion, number_muon, SRIMdirectory, output_directory):
-        '''Run TRIM and output results in x1, y1, e1'''
-        print('in runtrim')
+        Args:
+            target: sample target
+            muon: muon object
 
-        print(muon_ion)
-        print(number_muon)
-        print('dir', SRIMdirectory)
+        Returns: xdata, ydata
+        """
 
-        trimsim = TRIM(target, muon_ion, number_ions=number_muon, calculation=1)
-
+        trim_sim = TRIM(target, muon, number_ions= self.stats, calculation=1)
 
         try:
-            trimdataoutput = trimsim.run(SRIMdirectory)  # Simulation run by executing SRIM.exe in directory
+            trim_data_output = trim_sim.run(self.srim_exe_dir)  # Simulation run by executing SRIM.exe in directory
 
-            TRIM.copy_output_files(SRIMdirectory,
-                                   output_directory)  # ouput files from SRIM copied to desired output directory
+            # output files from SRIM copied to desired output directory
+            TRIM.copy_output_files(self.srim_exe_dir, self.srim_out_dir)
+
         except FileNotFoundError:
             return
 
-        trimdata = trimdataoutput.range
+        trim_data = trim_data_output.range
 
-        x1 = list(trimdata.depth / 1e7)  # muon ranges, converted from angstroms to mm.
+        x1 = np.array(trim_data.depth / 1e7)  # muon ranges, converted from angstroms to mm.
 
-        y1 = list(trimdata.ions)  # SRIM has weird units for y axis
+        y1 = np.array(trim_data.ions)  # SRIM has weird units for y axis
 
-        y1 = self.CorrectToCounts(TotalThickness, y1,number_muon)
+        y1_corrected = self.correct_to_counts(self.total_thickness, y1, self.stats)
 
-        e1 = list(trimdata.ions)
+        # e1 = list(trim_data.ions)
 
-        return x1, y1, e1
+        return x1, y1_corrected
 
-    def CorrectToCounts(self, thickness, y1, TotalSimCounts):
+    def correct_to_counts(self, thickness, y1, total_sim_counts):
         ''' output of SRIM is odd this corrects it to counts'''
-        finalbins = thickness / 100.0
+        final_bins = thickness / 100.0
+
         for i in range(len(y1)):
-            y1[i] = y1[i] * finalbins * TotalSimCounts
+            y1[i] = y1[i] * final_bins * total_sim_counts
+
         return y1
 
-    def CalcProfileWithMomBite(self, sample, TotalThickness, Mom, NFinal, Mombite, SRIMdirectory, output_directory):
-        # Calculate the stopping profile for a nomial momentum with a % momentum bite defined
-        # in BeamParameters
+    def CalcProfileWithMomBite(self, target_sample: Target, momentum: float) \
+            -> tuple[np.ndarray[float], np.ndarray[float]]:
+        """
+        Calculate muon stopping profile for a nominal momentum with a % momentum bite defined
 
-        print('in here')
+        Args:
+            target_sample: SRIM target object
+            momentum: muon momentum
+
+        Returns:
+            x and y numpy arrays containing simulation result.
+        """
 
         sigmastep = 12  # 12 runs per momentum
-        MomSigma = 0.01 * Mombite * Mom
+        MomSigma = 0.01 * self.momentum_spread * momentum
 
         xres = []
         yres = []
-        eres = []
 
         for i in range(sigmastep + 1):
-            P = Mom - 3 * MomSigma + i * 0.5 * MomSigma  # momentum for each iteration
-            print('P', P)
+            P = momentum - 3 * MomSigma + i * 0.5 * MomSigma  # momentum for each iteration
 
             # Number of simulated muons dependent on Gaussian distribution of muon momentum
             # get muon information
-            muon_ion = self.iondef(P)
+            muon_ion = self.get_muon(P)
 
-            NE = int(NFinal * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) * np.exp(
-                -0.5 * (P - Mom) ** 2 / (MomSigma ** 2)))
-            print('Number of Counts', NE)
+            NE = int(self.stats * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) * np.exp(
+                -0.5 * (P - momentum) ** 2 / (MomSigma ** 2)))
 
-            x1, y1, e1 = self.RunTRIM(sample, TotalThickness, muon_ion, NE, SRIMdirectory, output_directory)
+            x1, y1  = self.run_TRIM(target_sample, muon_ion)
 
             if i == 0:
                 yres = y1
@@ -234,160 +301,181 @@ class TrimModel(QObject):
 
         return xres, yres
 
-    def getxpos(self):
-        '''gets xpos from layers must be an easier way'''
-        xposlist = []
-        xposlist.append(0.0)
+    def get_layer_boundary_positions(self) -> np.ndarray[float]:
+        """
+        Calculate the (cumulative) boundary positions for all layers.
 
-        for i in range(len(self.sample_layers)):
-            temp = self.sample_layers[i]
-            loc = str(temp).find('width:')
-            xpos = float(str(temp)[loc + 6:].strip('>')) / 1e7
-            xposlist.append(xpos)
-        # print('xposlist', xposlist)
-        return xposlist
+        Returns:
+            numpy array containing layer boundary positions, includes start point at 0.0
+        """
 
-    def getcomp(self, xposlist, MomIndex):
-        ''' break the SRIM output into components'''
+        layer_thicknesses = [float(layer["thickness"]) for layer in self.input_layers]
+        # insert 0.0 to start of list
+        layer_thicknesses.insert(0, 0.)
+
+        boundaries = np.cumsum(np.array(layer_thicknesses, dtype=float))
+
+        # cast to numpy array and shift
+        return boundaries
+
+    def split_components(self, MomIndex: int) -> list[np.ndarray]:
+        """
+        Splits up the SRIM result into list of np.ndarrays, one for each layer, containing only the y-values in that
+        layer.
+
+        Args:
+            MomIndex: which momentum to calculate for
+
+        Returns:
+            list of np.ndarrays
+        """
+
+        # get data for given index
+        y_data = self.result_y[MomIndex, :]
+        x_data = self.result_x[MomIndex, :]
         comp = []
-        sum1 = 0.0
-        sum2 = 0.0
-        print('result x', self.result_x)
-        print('result y', self.result_y)
+
         for i in range(len(self.sample_layers)):
-            templist = []
-            sum1 += xposlist[i]
-            sum2 = sum1 + xposlist[i + 1]
-            for j in range(len(self.result_y[MomIndex])):
-                if self.result_x[MomIndex][j] >= sum1 and self.result_x[MomIndex][j] < sum2:
-                    templist.append(self.result_y[MomIndex][j])
-                else:
-                    templist.append(0.0)
-            comp.append(templist)
-        print('comp', comp)
+            lower_boundary = self.layer_boundary_positions[i]
+            upper_boundary = self.layer_boundary_positions[i + 1]
+
+            y_subset = np.array([y_data[j] if lower_boundary < x_data[j] <= upper_boundary else 0.
+                                 for j, _ in enumerate(x_data)])
+
+            comp.append(y_subset)
+
         return comp
 
-    def getperlayer(self, comp):
+    def get_muons_per_layer(self, comp):
         ''' gets the number of muons in a layer (normalised)'''
-        perlayer = []
-        totalsumlayer = 0.0
 
-        for index in range(len(self.sample_layers)):
-            sumlayer = np.sum(comp[index])
-            perlayer.append(sumlayer)
-            totalsumlayer += sumlayer
+        counts_per_layer = [np.sum(comp[i]) for i, _ in enumerate(self.sample_layers)]
 
-        for index in range(len(self.sample_layers)):
-            perlayer[index] = perlayer[index] / totalsumlayer
-        print('perlayer', perlayer)
+        total_count = np.sum(counts_per_layer)
+        total_count_err = np.sqrt(total_count)
 
-        return perlayer
+        res = []
+        for i, layer_count in enumerate(counts_per_layer):
+            layer_count_err = np.sqrt(layer_count)
 
-    def plot_whole(self, row, momentum):
+            frac = layer_count / total_count
+
+            # only calculate error for layers with counts
+            if frac == 0:
+                frac_err = 0
+            else:
+                # error propagation
+                frac_err = np.sqrt((total_count_err/total_count)**2 + (layer_count_err/layer_count)**2) * frac
+
+            res.append((round(frac, 3)*100, round(frac_err, 3)*100, round(layer_count, 3), round(layer_count_err, 3)))
+
+        return res
+
+    def plot_whole(self, momentum_index: int, momentum: float) -> tuple[plt.Figure, plt.Axes]:
+        """
+        Plots the whole stopping profile from the srim simulation
+
+        Args:
+            momentum_index: the list index
+            momentum: momentum value
+
+        Returns:
+            matplotlib figure and axes objects with plotted data.
+        """
+        x_shift = self.plot_origin_shifts[momentum_index]
+
         figt, axx = plt.subplots()
-        axx.plot(self.result_x[row], self.result_y[row])
+
+        axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title('SRIM Simulation at ' + momentum + ' MeV/c')
-        xposlist = self.getxpos()
+        axx.set_title('SRIM Simulation at ' + str(round(momentum, 4)) + ' MeV/c')
 
-        # plot layers out plot
-        sumdis = 0.0
+        # Display layer boundaries on plot
         for i in range(len(self.sample_layers)):
-            sumdis += xposlist[i + 1]
+            pos = self.layer_boundary_positions[i + 1]
 
-            axx.axvline(x=sumdis, color='k', linestyle='--')
-            axx.text(sumdis, 5, self.sample_names[i], horizontalalignment='left', rotation='vertical')
-            print('sample_layers', self.sample_layers[i])
+            axx.axvline(x=pos - x_shift, color='k', linestyle='--')
+            axx.text(pos - x_shift, 5, self.sample_names[i], horizontalalignment='left', rotation='vertical')
 
         return figt, axx
 
-    def plot_components(self, momentum_index, momentum):
+    def plot_components(self, momentum_index: int, momentum: float) -> tuple[plt.Figure, plt.Axes]:
+        """
+        Plots the whole stopping profile from the srim simulation and shows the profile from each layer separately.
+
+        Args:
+            momentum_index: the list index
+            momentum: momentum value
+
+        Returns:
+            matplotlib figure and axes objects with plotted data.
+        """
+
+        x_shift = self.plot_origin_shifts[momentum_index]
+
         # plot components
         figt, axx = plt.subplots()
-        axx.plot(self.result_x[momentum_index], self.result_y[momentum_index])
+        axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title('SRIM Simulation at ' + momentum + ' MeV/c')
-
-        xposlist = self.getxpos()
+        axx.set_title('SRIM Simulation at ' + str(round(momentum, 4)) + ' MeV/c')
 
         # plot layers out plot
-        sumdis = 0.0
         for i in range(len(self.sample_layers)):
-            sumdis += xposlist[i + 1]
+            pos = self.layer_boundary_positions[i + 1]
 
-            axx.axvline(x=sumdis, color='k', linestyle='--')
-            axx.text(sumdis, 5, self.sample_names[i], horizontalalignment='left', rotation='vertical')
+            axx.axvline(x=pos - x_shift, color='k', linestyle='--')
+            axx.text(pos - x_shift, 5, self.sample_names[i], horizontalalignment='left', rotation='vertical')
 
         # break output down to components
-        comp = self.getcomp(xposlist, momentum_index)
+        comp = self.split_components(momentum_index)
 
         # plot layers
         for i in range(len(self.sample_layers)):
-            axx.plot(self.result_x[0], comp[i])
+            axx.plot(self.result_x[0] - x_shift, comp[i], label=self.sample_names[i])
 
+        axx.legend()
         return figt, axx
 
-    def save_sim(self, row):
-        '''
-        :param x: button layer
-        :param y: button column
-        :return:
-        writes the results of SRIM TRIM calcs
-        '''
-        momentum = str(self.momentum[row])
-        print(get_config()["general"]["working_directory"])
-        print('working dir', print(get_config()["general"]["working_directory"]))
-        print('')
-        save_file = get_config()["general"]["working_directory"] + '/SRIM_' + momentum + '_MeVc.dat'
-        print('Sve_file',save_file)
-        file2 = open(save_file, "w")
+    def get_default_srim_save_name(self, momentum: float | None = None) -> str:
+        if momentum is None:
+            momentum = "all"
+        return os.path.join(f"{get_config()["general"]["working_directory"]}", f"SRIM_{momentum}_MeVc.zip")
 
-        sumdis = 0.0
-        xposlist = self.getxpos()
+    def save_sim(self, path: str, rows: list | int | None = None):
+        if isinstance(rows, int):
+            rows = [rows]
 
-        for i in range(len(self.sample_layers)):
-            sumdis += xposlist[i + 1]
-            print(self.sample_names[i] + ' = ' + str(sumdis) + '\n')
-            file2.writelines(self.sample_names[i] + ' = ' + str(sumdis) + '\n')
+        if rows is None:
+            rows = [i for i, _ in enumerate(self.momentum)]
 
+        # prepare header text (will be the same for all files)
+        header = [(f"Layer {i}: {self.sample_names[i]} at ({self.layer_boundary_positions[i]}mm, "
+                   f"{self.layer_boundary_positions[i + 1]}mm)\n") for i, layer in enumerate(self.sample_layers)]
 
-        for i in range(len(self.result_x[row])):
-            file2.writelines(str(self.result_x[row][i]) + ',' + str(self.result_y[row][i]) + '\n')
-        '''file2.writelines(str(srim_settings.TRIMRes_x[x]) + ',' + str(srim_settings.TRIMRes_y[x]))
-        '''
-        file2.close()
-        print('save_file_fin')
+        header.append("\nDepth (mm), Muon count\n")
 
-        print('In WriteSim')
-        print(get_config()["general"]["working_directory"])
-        print('')
-        print('')
-        comp = self.getcomp(xposlist, row)
+        # create zip archive
+        with ZipFile(path, "w") as zf:
+            for row in rows:
+                momentum = self.momentum[row]
+                total_curve_filename = f"{momentum}MeVc_total_profile.dat"
 
-        # plot layers
-        for i in range(len(self.sample_layers)):
+                total_curve_data = [f"{x}, {self.result_y[row][i]}\n" for i, x in enumerate(self.result_x[row])]
+                total_curve_str = "".join(header) + "".join(total_curve_data)
 
-            save_file = (get_config()["general"]["working_directory"] + '/SRIM_'
-                         + momentum + '_MeVc_' + str(i) + '.dat')
-            print('Sve_file', save_file)
-            file2 = open(save_file, "w")
+                zf.writestr(total_curve_filename, total_curve_str)
 
-            sumdis = 0.0
-            xposlist = self.getxpos()
+                for i, layer_name in enumerate(self.sample_names):
+                    layer_filename =  f"{momentum}MeVc_layer{i}_profile.dat"
 
-            for k in range(len(self.sample_layers)):
-                sumdis += xposlist[k + 1]
-                print(self.sample_names[k] + ' = ' + str(sumdis) + '\n')
-                file2.writelines(self.sample_names[k] + ' = ' + str(sumdis) + '\n')
+                    ydata_per_layer = self.split_components(row)  # list of arrays containing a y-array for each layer
+                    layer_data = [f"{x}, {ydata_per_layer[i][j]}\n" for j, x in enumerate(self.result_x[row])]
+                    layer_curve_str = "".join(header) + "".join(layer_data)
 
-            for j in range(len(self.result_x[row])):
-                file2.writelines(str(self.result_y[row][j]) + ',' + str(comp[i][j]) + '\n')
-        '''file2.writelines(str(srim_settings.TRIMRes_x[x]) + ',' + str(srim_settings.TRIMRes_y[x]))
-        '''
-        file2.close()
-        print('save_file_fin')
+                    zf.writestr(layer_filename, layer_curve_str)
+
 
     def save_settings(self, sample_name, stats, srim_dir, output_dir, momentum, momentum_spread, sim_type,
                         min_momentum, max_momentum, step_momentum, scan_type, layers, target_dir):
@@ -418,18 +506,13 @@ class TrimModel(QObject):
         file2.writelines('Momentum Step\n')
         out = str(step_momentum)+'\n'
         file2.writelines(out)
-        file2.writelines('SRIM.exe dir\n')
-        out = srim_dir+'\n'
-        file2.writelines(out)
-        file2.writelines('Output dir\n')
-        out = output_dir+'\n'
-        file2.writelines(out)
         file2.writelines('Stats\n')
         out = str(stats)+'\n'
         file2.writelines(out)
         file2.writelines('Sample\n')
 
         for layer in layers:
+            print(layer)
             file2.writelines(layer["name"] + "," + str(layer["thickness"]) + "," + str(layer.get("density", "")) + "\n")
         file2.close()
 
@@ -454,18 +537,14 @@ class TrimModel(QObject):
         ignore = file2.readline()
         step_momentum = file2.readline().strip()
         ignore = file2.readline()
-        srim_dir = file2.readline().strip()
-        ignore = file2.readline()
-        output_dir = file2.readline().strip()
-        ignore = file2.readline()
         stats = file2.readline().strip()
         ignore = file2.readline()
 
         form_data = {
             "sample_name": sample_name,
             "stats": float(stats),
-            "srim_dir": srim_dir,
-            "output_dir": output_dir,
+            "srim_dir": get_config()["SRIM"]["installation_directory"],
+            "output_dir": get_config()["SRIM"]["output_directory"],
             "momentum": float(momentum),
             "sim_type": sim_type,
             "momentum_spread": float(momentum_spread),

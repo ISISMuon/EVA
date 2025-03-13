@@ -25,7 +25,7 @@ class BaseTable(QTableWidget):
                 self.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
 
 
-    def update_contents(self, data, resize_rows=True, resize_columns=False):
+    def update_contents(self, data, resize_rows=True, resize_columns=False, round_to=2):
         self.block_updates = True # temporarily block updates
         input_n_rows = len(data)
 
@@ -49,7 +49,7 @@ class BaseTable(QTableWidget):
                 input_item = list(row_data)[col]
 
                 if isinstance(input_item, float):
-                    table_item = QTableWidgetItem(f"{input_item:.2f}")
+                    table_item = QTableWidgetItem(f"{round(input_item, round_to)}")
                 else:
                     table_item = QTableWidgetItem(str(input_item))
 
@@ -59,13 +59,44 @@ class BaseTable(QTableWidget):
         self.contents_updated_s.emit()
 
     def get_contents(self):
-        pass
+        n_rows = self.rowCount()
+        n_cols = self.columnCount()
+
+        data = []
+        # some lovely, probably very slow, table printing
+        for row in range(n_rows):
+            row_data = []
+            for col in range(n_cols):
+                item = self.item(row, col)
+
+                if item is not None:
+                    row_data.append(item.text())
+                else:
+                    row_data.append("")
+
+            data.append(row_data)
+
+        return data
 
     def get_row_contents(self):
         pass
 
     def get_column_contents(self):
         pass
+
+    def append_row(self):
+        """
+        Adds a row to the bottom of the table.
+        """
+        n_rows = self.rowCount()
+        self.setRowCount(n_rows + 1)
+
+    def remove_last_row(self):
+        """
+        Removes the last row at the bottom of the table.
+        """
+        n_rows = self.rowCount()
+        self.setRowCount(n_rows - 1)
 
     def copy_selection(self):
         copied_cells = sorted(self.selectedIndexes())

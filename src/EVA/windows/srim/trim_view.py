@@ -1,4 +1,5 @@
-from PyQt6.QtCore import pyqtSignal
+from matplotlib import pyplot as plt
+from PyQt6.QtCore import pyqtSignal, Qt
 
 from PyQt6.QtWidgets import (
     QLabel,
@@ -6,283 +7,239 @@ from PyQt6.QtWidgets import (
     QWidget,
     QLineEdit,
     QGridLayout,
-    QComboBox,
-    QTabWidget,
     QTableWidgetItem,
-    QMenuBar,
     QFileDialog,
     QVBoxLayout,
-    QFormLayout, QMessageBox
+    QTreeWidgetItem,
+    QCheckBox,
+    QStackedWidget,
+    QHBoxLayout,
+    QFrame, QMenuBar, QSizePolicy
 )
+
+from EVA.gui.trim_gui import Ui_trim
+from EVA.widgets.base.base_view import BaseView
 from EVA.widgets.plot.plot_widget import PlotWidget
-from EVA.widgets.base.base_table import BaseTable
-from EVA.core.app import get_config, get_app
 
 
-class TrimView(QWidget):
-    sim_button_clicked_s = pyqtSignal(dict)
-    plot_whole_s = pyqtSignal(int, str)
-    plot_comp_s = pyqtSignal(int, str)
+class TrimView(BaseView, Ui_trim):
+    remove_layer_requested_s = pyqtSignal(int)
+    save_plot_requested_s = pyqtSignal(int, str)
+
+    show_plot_s = pyqtSignal(int, str)
     save_s = pyqtSignal(int)
+    shift_plot_origin_s = pyqtSignal(int)
+    reset_plot_origin_s = pyqtSignal(int)
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.parent = parent
+        self.setupUi(self)
 
         self.setWindowTitle("TRIM Simulations")
         self.setMinimumSize(1100, 600)
+        self.plot_stacks = []
+        self.origin_shift_line_edits = []
 
-        # Load default directories from config
-        config = get_config()
-        default_SRIM_directory = config["SRIM"]["installation_directory"] # C:/SRIM2013
-        default_SRIM_output_directory = config["SRIM"]["output_directory"] # C:/SRIM2013/SRIM Outputs
+        self.layer_setup_table.stretch_horizontal_header()
 
-        # setting up buttons
-        self.run_sim_button = QPushButton("Run Simulations")
+        self.results_table.setColumnWidth(0, 150)
+        self.results_table.stretch_horizontal_header(skip=[0])
 
-        # Setting up defaults (to add load from file)
-        self.SampleName = QLineEdit('Cu')
-        self.SimType = QComboBox()
-        self.SimType.addItem('Mono')
-        self.SimType.addItem('Momentum Spread')
-        self.Momentum = QLineEdit('27.0')
-        self.MomentumSpread = QLineEdit('4.0')
-        self.ScanType = QComboBox()
-        self.ScanType.addItem('No')
-        self.ScanType.addItem('Yes')
-        self.MinMomentum = QLineEdit('21.0')
-        self.MaxMomentum = QLineEdit('30.0')
-        self.StepMomentum = QLineEdit('1.0')
-        self.SRIMdir = QLineEdit(default_SRIM_directory)
-        self.TRIMOutDir = QLineEdit(default_SRIM_output_directory)
-        self.Stats = QLineEdit('100')
+        self.results_tree.resizeColumnToContents(0)
+        self.results_tree.resizeColumnToContents(1)
+        self.results_tree.resizeColumnToContents(2)
+        self.results_tree.resizeColumnToContents(3)
 
-        self.bar = QMenuBar()
-        #self.bar.setFixedHeight(25)
+        self.menubar = QMenuBar()
+        self.menubar.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
 
-        file = self.bar.addMenu('File')
+        file = self.menubar.addMenu('File')
+        self.menubar.setContentsMargins(0,0,0,0)
 
         self.file_load = file.addAction('Load SRIM Settings')
         self.file_save = file.addAction('Save SRIM Settings')
+        self.file_reset = file.addAction('Restore default SRIM Settings')
 
-        # set up containers and layouts
-        self.trim_settings_container = QWidget()
-        self.trim_settings_layout = QFormLayout()
-
-        # main layout to hold menu bar and page contents
-        self.main_layout = QVBoxLayout()
-        self.main_layout.setContentsMargins(0, 0, 0, 0)
-
-        # content container to hold page contents
-        self.content_layout = QGridLayout()
-        self.content_container = QWidget()
-
-        self.tab1_layout = QVBoxLayout()
-        self.tab2_layout = QVBoxLayout()
-
-        # size constraints
-        self.trim_settings_container.setFixedWidth(600)
-
-        # set up plot window
-        self.plot = PlotWidget()
-
-        # set up trim settings panel
-        self.trim_settings_layout.addRow(QLabel('Sample Name'), self.SampleName)
-        self.trim_settings_layout.addRow(QLabel('Simulation Type'), self.SimType)
-        self.trim_settings_layout.addRow(QLabel('Momentum'), self.Momentum)
-        self.trim_settings_layout.addRow(QLabel('Momentum Spread'), self.MomentumSpread)
-        self.trim_settings_layout.addRow(QLabel('Scan Momentum'), self.ScanType)
-        self.trim_settings_layout.addRow(QLabel('Min Momentum'), self.MinMomentum)
-        self.trim_settings_layout.addRow(QLabel('Max Momentum'), self.MaxMomentum)
-        self.trim_settings_layout.addRow(QLabel('Momentum Step'), self.StepMomentum)
-        self.trim_settings_layout.addRow(QLabel('SRIM.exe directory'), self.SRIMdir)
-        self.trim_settings_layout.addRow(QLabel('TRIM output directory'), self.TRIMOutDir)
-        self.trim_settings_layout.addRow(QLabel('Stats for optimal Run'), self.Stats)
-
-        self.trim_settings_layout.addRow(self.run_sim_button)
-
-        # Initialize tab screen
-
-        self.tabs = QTabWidget()
-        self.tabs.setFixedWidth(600)
-
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-
-        # Add tabs
-        self.tabs.addTab(self.tab1, "Layers")
-        self.tabs.addTab(self.tab2, "Results")
-
-        self.tab1.table_TRIMsetup = BaseTable(self.tab1)
-
-        self.tab1.table_TRIMsetup.setShowGrid(True)
-        self.tab1.table_TRIMsetup.setColumnCount(3)
-        self.tab1.table_TRIMsetup.setRowCount(5)
-
-        self.tab1.table_TRIMsetup.setHorizontalHeaderLabels(['Sample', 'Thickness (mm)', 'Density'])
-        self.tab1.table_TRIMsetup.setItem(0, 0, QTableWidgetItem('Beamline Window'))
-        self.tab1.table_TRIMsetup.setItem(0, 1, QTableWidgetItem('0.05'))
-        self.tab1.table_TRIMsetup.setItem(1, 0, QTableWidgetItem('Air (compressed)'))
-        self.tab1.table_TRIMsetup.setItem(1, 1, QTableWidgetItem('0.067'))
-        self.tab1.table_TRIMsetup.setItem(2, 0, QTableWidgetItem('Al'))
-        self.tab1.table_TRIMsetup.setItem(2, 1, QTableWidgetItem('0.05'))
-        self.tab1.table_TRIMsetup.setItem(2, 2, QTableWidgetItem('2.7'))
-        self.tab1.table_TRIMsetup.setItem(3, 0, QTableWidgetItem('Cu'))
-        self.tab1.table_TRIMsetup.setItem(3, 1, QTableWidgetItem('0.5'))
-        self.tab1.table_TRIMsetup.setItem(3, 2, QTableWidgetItem('6.7'))
-
-        # adding tab1 components to layout
-        self.tab1_layout.addWidget(self.tab1.table_TRIMsetup)
-        self.tab1.setLayout(self.tab1_layout)
-
-        self.tab2.table_PlotRes = BaseTable(self.tab2)
-
-        self.tab2.table_PlotRes.setShowGrid(True)
-        self.tab2.table_PlotRes.setColumnCount(5)
-        self.tab2.table_PlotRes.setRowCount(100)
-
-
-        self.tab2.table_PlotRes.setHorizontalHeaderLabels(
-            ['Momentum', '% Component', 'Plot Results (Com)', 'Plot Results2',' Save Results'])
-
+    def reset(self):
         # set up results table
-        self.plot_comp_buttons = []
-        self.plot_whole_buttons = []
-        self.save_buttons = []
+        self.plot_stacks = []
+        self.origin_shift_line_edits = []
+        self.reset_plot_tabs()
 
-        # adding tab2 components to layout
-        self.tab2_layout.addWidget(self.tab2.table_PlotRes)
-        self.tab2.setLayout(self.tab2_layout)
-
-        # set layouts to containers
-        self.trim_settings_container.setLayout(self.trim_settings_layout)
-        self.content_container.setLayout(self.content_layout)
-
-        self.content_layout.addWidget(self.trim_settings_container, 0, 0)
-        self.content_layout.addWidget(self.plot, 0, 1, 2, 1)
-        self.content_layout.addWidget(self.tabs, 1, 0)
-
-        self.setLayout(self.main_layout)
-        self.main_layout.addWidget(self.bar)
-        self.main_layout.addWidget(self.content_container)
-
-    def get_table_data(self):
-        table = self.tab1.table_TRIMsetup
-        layers = []
-        n_rows = table.rowCount()
-        for i in range(n_rows):
-
-            # skip current iteration if line empty
-            if table.item(i, 0) is None or table.item(i, 0).text().strip() == "":
-                continue
-
-            sample_name = table.item(i, 0).text().strip()
-            thickness = float(table.item(i, 1).text().strip())
-            layer = {"name": sample_name, "thickness": thickness}
-
-            if table.item(i, 2) is not None:
-                layer["density"] = float(table.item(i, 2).text().strip())
-
-            layers.append(layer)
-
-        return layers
-
-    def add_trimsetup_row(self):
-        table = self.tab1.table_TRIMsetup
-        current_count = table.rowCount()
-        table.setRowCount(current_count+1)
-
-    def set_table_data(self, table_data):
-        table = self.tab1.table_TRIMsetup
-        table.setRowCount(len(table_data)+1)
-        for row, layer in enumerate(table_data):
-            table.setItem(row, 0, QTableWidgetItem(layer["name"]))
-            table.setItem(row, 1, QTableWidgetItem(str(layer["thickness"])))
-
-            density = layer.get("density", None)
-            if density is not None:
-                table.setItem(row, 2, QTableWidgetItem(str(density)))
+        # close all figures
+        plt.close()
 
     # display results to table and set up connections
-    def setup_results_table(self, momenta, components):
-        table = self.tab2.table_PlotRes
+    def setup_results_table(self, momenta):
+        table = self.results_table
         n_rows = len(momenta)
 
-        self.tab2.table_PlotRes.setRowCount(n_rows)
+        self.results_table.setRowCount(n_rows)
 
-        for row in range(n_rows):
-            momentumstr = str(momenta[row])
-            comp = components[row]
+        for row, momentum in enumerate(momenta):
+            momentumstr = str(round(momentum, 4))
 
             table.setItem(row, 0, QTableWidgetItem(momentumstr))
-            table.setItem(row, 1, QTableWidgetItem(comp))
+
+            options_container = QWidget()
+            layout = QHBoxLayout()
+            layout.setContentsMargins(0,0,0,0)
+            options_container.setLayout(layout)
 
             plot_whole_btn = QPushButton()
-            plot_whole_btn.setText('Plot Whole' + str(row + 1))
-            table.setCellWidget(row, 2, plot_whole_btn)
-
-            plot_whole_btn.clicked.connect(
-                lambda _, r=row, m=momentumstr: self.plot_whole_s.emit(r, m))
-
-            plot_comp_btn = QPushButton()
-            plot_comp_btn.setText('Plot Com' + str(row + 1))
-            table.setCellWidget(row, 3, plot_comp_btn)
-
-            plot_comp_btn.clicked.connect(
-                lambda _, r=row, m=momentumstr: self.plot_comp_s.emit(r, m))
+            plot_whole_btn.setText("Show plot")
 
             save_btn = QPushButton()
-            save_btn.setText('Save ' + str(row + 1))
-            table.setCellWidget(row, 4, save_btn)
+            save_btn.setText('Save plot data')
+
+
+            layout.addWidget(plot_whole_btn)
+            layout.addWidget(save_btn)
+
+            table.setCellWidget(row, 1, options_container)
+
+            plot_whole_btn.clicked.connect(
+                lambda _, r=row, m=momentumstr: self.show_plot_s.emit(r, m))
 
             save_btn.clicked.connect(
                 lambda _, r=row: self.save_s.emit(r))
 
+    def update_results_tree(self, momenta, layer_names, components):
+        self.results_tree.clear()
+
+        # build all tree items and add to tree widget
+        items = []
+        for i, mom in enumerate(momenta):
+            momentum_item = QTreeWidgetItem([str(round(mom, 4))])
+
+            for j, layer_name in enumerate(layer_names):
+                comp = components[i][j]
+                layer_item = QTreeWidgetItem()
+                layer_item.setText(1, layer_name)
+                layer_item.setText(2, f"{comp[0]} ± {comp[1]}")
+                #layer_item.setText(3, str(round(comp[1], 4)))
+                layer_item.setText(3, f"{comp[2]} ± {comp[3]}")
+                #layer_item.setText(5, str(comp[3]))
+                momentum_item.addChild(layer_item)
+
+            items.append(momentum_item)
+        self.results_tree.addTopLevelItems(items)
+
+        # expand all items
+        for item in items:
+            item.setExpanded(True)
+
+        # lastly, resize all columns
+        self.results_tree.resizeColumnToContents(0)
+        self.results_tree.resizeColumnToContents(1)
+        self.results_tree.resizeColumnToContents(2)
+        self.results_tree.resizeColumnToContents(3)
 
     def get_form_data(self):
         form_data = {
-            "sample_name": self.SampleName.text(),
-            "stats": float(self.Stats.text()),
-            "srim_dir": self.SRIMdir.text(),
-            "output_dir": self.TRIMOutDir.text(),
-            "momentum": float(self.Momentum.text()),
-            "sim_type": self.SimType.currentText(),
-            "momentum_spread": float(self.MomentumSpread.text()),
-            "min_momentum": float(self.MinMomentum.text()),
-            "max_momentum": float(self.MaxMomentum.text()),
-            "step_momentum": float(self.StepMomentum.text()),
-            "scan_type": self.ScanType.currentText()
+            "sample_name": self.sample_name_linedit.text(),
+            "stats": float(self.stats_linedit.text()),
+            "srim_dir": self.srim_exe_dir_linedit.text(),
+            "output_dir": self.trim_out_dir_linedit.text(),
+            "momentum": float(self.momentum_linedit.text()),
+            "sim_type": self.sim_type_combo.currentText(),
+            "momentum_spread": float(self.momentum_spread_linedit.text()),
+            "min_momentum": float(self.min_momentum_linedit.text()),
+            "max_momentum": float(self.max_momentum_linedit.text()),
+            "step_momentum": float(self.momentum_step_linedit.text()),
+            "scan_type": self.scan_momentum_combo.currentText()
         }
 
         return form_data
 
+    def reset_plot_tabs(self):
+        self.plot_stacks = []
+        self.results_tabs.clear()
+
+    def generate_plot_tab(self, momentum, index, fig_whole, ax_whole, fig_comp, ax_comp):
+        container = QWidget()
+
+        plot_stack = QStackedWidget()
+        plot_stack_layout = QHBoxLayout()
+        plot_stack.setLayout(plot_stack_layout)
+
+        plot_whole = PlotWidget(fig_whole, ax_whole)
+        plot_comp = PlotWidget(fig_comp, ax_comp)
+
+        plot_stack.addWidget(plot_whole)
+        plot_stack.addWidget(plot_comp)
+
+        settings_container = QFrame()
+        settings_layout = QGridLayout()
+
+        settings_container.setLayout(settings_layout)
+
+        show_comp = QCheckBox("Show components")
+
+        shift_origin_label = QLabel("Shift plot origin to: (mm)")
+        shift_origin_linedit = QLineEdit("0")
+        #shift_origin_linedit.setMaximumWidth(100)
+
+        shift_button = QPushButton("Shift")
+        reset_button = QPushButton("Reset origin")
+
+        settings_layout.addWidget(show_comp, 0, 0, 1, -1)
+        settings_layout.addWidget(shift_origin_label, 1, 0)
+        settings_layout.addWidget(shift_origin_linedit, 1, 1)
+        settings_layout.addWidget(shift_button, 1, 2)
+        settings_layout.addWidget(reset_button, 1, 3)
+
+        layout = QVBoxLayout()
+        layout.addWidget(plot_stack)
+        layout.addWidget(settings_container)
+
+        container.setLayout(layout)
+
+         # connect all buttons
+        show_comp.checkStateChanged.connect(lambda check_state, i=index: self.swap_plot_stack(check_state, i))
+        shift_button.clicked.connect(lambda x, i=index: self.shift_plot_origin_s.emit(i))
+        reset_button.clicked.connect(lambda x, i=index: self.reset_plot_origin_s.emit(i))
+
+        self.plot_stacks.append(plot_stack)
+        self.origin_shift_line_edits.append(shift_origin_linedit)
+        self.results_tabs.addTab(container, f"{round(momentum, 4)} MeV/c")
+
+    def swap_plot_stack(self, check_state, index):
+        stack = self.plot_stacks[index]
+
+        if check_state == Qt.CheckState.Checked:
+            stack.setCurrentIndex(1)
+        else:
+            stack.setCurrentIndex(0)
+
     def set_form_data(self, form_data):
-        self.SampleName.setText(form_data["sample_name"]),
-        self.Stats.setText(str(form_data["stats"])),
-        self.SRIMdir.setText(form_data["srim_dir"]),
-        self.TRIMOutDir.setText(form_data["output_dir"]),
-        self.Momentum.setText(str(form_data["momentum"])),
-        self.SimType.setCurrentText(form_data["sim_type"]),
-        self.MomentumSpread.setText(str(form_data["momentum_spread"])),
-        self.MinMomentum.setText(str(form_data["min_momentum"])),
-        self.MaxMomentum.setText(str(form_data["max_momentum"])),
-        self.StepMomentum.setText(str(form_data["step_momentum"])),
-        self.ScanType.setCurrentText(form_data["scan_type"])
+        self.sample_name_linedit.setText(form_data["sample_name"]),
+        self.stats_linedit.setText(str(form_data["stats"])),
+        self.srim_exe_dir_linedit.setText(form_data["srim_dir"]),
+        self.trim_out_dir_linedit.setText(form_data["output_dir"]),
+        self.momentum_linedit.setText(str(form_data["momentum"])),
+        self.sim_type_combo.setCurrentText(form_data["sim_type"]),
+        self.momentum_spread_linedit.setText(str(form_data["momentum_spread"])),
+        self.min_momentum_linedit.setText(str(form_data["min_momentum"])),
+        self.max_momentum_linedit.setText(str(form_data["max_momentum"])),
+        self.momentum_step_linedit.setText(str(form_data["step_momentum"])),
+        self.scan_momentum_combo.setCurrentText(form_data["scan_type"])
 
-    def closeEvent(self, event):
-        # close window cleanly
-        app = get_app()
-        app.trim_window = None
-        event.accept()
+    def get_save_file_path(self, default_dir: str, file_filter: str) -> str:
+        file = QFileDialog.getSaveFileName(self, 'Save File', directory=default_dir, filter=file_filter)
+        if file:
+            return file[0]
 
-    def show_error_box(self, text, title="Error"):
-        _ = QMessageBox.critical(self, title, text, QMessageBox.StandardButton.Ok)
+    def get_load_file_path(self, default_dir: str, file_filter: str) -> str:
+        file = QFileDialog.getOpenFileName(self, 'Load File', directory=default_dir, filter=file_filter)
+        if file:
+            return file[0]
 
-
-    def request_save_file(self):
-        return QFileDialog.getSaveFileName(self, caption="Save TRIM/SRIM Settings")[0]
-
-    def request_load_file(self):
-        return QFileDialog.getOpenFileName(self, caption = "Load TRIM/SRIM Settings")[0]
+    def get_directory(self, default_dir):
+        file_dir = QFileDialog.getExistingDirectory(self, "Select folder", directory=default_dir)
+        if file_dir:
+            return file_dir
 
     def file_save(self,SampleName, SimType, Momentum, MomentumSpread, ScanType, MinMomentum, MaxMomentum,
                    StepMomentum, SRIMdir, TRIMOutDir, Stats):

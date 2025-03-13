@@ -1,5 +1,7 @@
 import logging
-from PyQt6.QtWidgets import QWidget, QHBoxLayout
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 from EVA.windows.srim.trim_model import TrimModel
 from EVA.windows.srim.trim_presenter import TrimPresenter
@@ -17,7 +19,8 @@ class TrimWindow(QWidget):
         self.model = TrimModel()
         self.presenter = TrimPresenter(self.view, self.model)
 
-        layout = QHBoxLayout()
+        layout = QVBoxLayout()
+        layout.addWidget(self.view.menubar)
         layout.addWidget(self.view)
         layout.setContentsMargins(0, 0, 0, 0)
 
