@@ -9,20 +9,27 @@ def sort_match(results: list[dict]) -> dict:
         Dict of length 6, ordered by frequency. Dict key is element name, value is number of occurrences.
     """
 
-    element_list = []
+    peaks = {}
+    counts = {}
 
+    # sorts all transitions by peaks and keeps track of which elements are found for each peak
     for line in results:
-        row = [line['peak_centre'], line['energy'], line['element'],
-               line['transition'], line['error'], line['diff']]
 
-        element_list.append(row[2])
+        # create dictionary key if energy has not been seen previously
+        if not line["peak_centre"] in peaks.keys():
+            peaks[line["peak_centre"]] = []
 
-    # Count number of elements
-    counts = {element: element_list.count(element) for element in element_list}
+        # create dictionary key if element has not been seen previously
+        if not line["element"] in counts.keys():
+            counts[line["element"]] = 0
 
-    #sort the counts
-    counts_sorted = dict(sorted(counts.items(), key=lambda x: x[1], reverse=True))
+        if line["element"] not in peaks[line["peak_centre"]]:
+            peaks[line["peak_centre"]].append(line["element"])
+            # if this element has not previously been detected for this peak, increment peak count for that element
+            counts[line["element"]] += 1
 
-    #return top 6
-    return dict(list(counts_sorted.items())[0:5])
+    # Sort counts starting with highest count
+    counts = {k: v for k, v in sorted(counts.items(), key = lambda x: x[1], reverse=True)}
 
+    # Return top 8 results
+    return dict(list(counts.items())[0:7])
