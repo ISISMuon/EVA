@@ -25,7 +25,7 @@ class PlotWidget(QWidget):
     link the two manually every time a PlotWidget is needed. It also takes care of figure resizing and linking the
     navbar and plot together.
     """
-    def __init__(self, fig=None, axs=None):
+    def __init__(self, fig=None, axs=None, parent=None):
         super().__init__()
         # create the figure canvas
         self.canvas = FigureCanvas(fig=fig, axs=axs)

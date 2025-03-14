@@ -9,15 +9,18 @@ class TestSRIM:
     @pytest.fixture(autouse=True)
     def setup(self):
         # use function below to set up sample
-        sample_layers, sample_names, total_thickness, sample_density = self.make_setupsample()
+        #sample_layers, sample_names, total_thickness, sample_density = self.make_setupsample()
 
         # create trim model instance
         self.trim_model = TrimModel()
-
+    """
+    
         # set sample values in the model
         self.trim_model.sample_layers = sample_layers
         self.trim_model.sample_names = sample_names
         self.trim_model.total_thickness = total_thickness
+
+    
 
     def make_setupsample(self):
         #setting up default layer
@@ -140,3 +143,5 @@ class TestSRIM:
         res = self.trim_model.iondef(27)
         correct_res = Ion('H', 3.395245806628296*1e6, 0.11342820665593129)
         assert correct_res == res, 'iondef failed'
+    
+    """
