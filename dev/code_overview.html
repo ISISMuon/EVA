@@ -1,0 +1,207 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code overview &mdash; EVA 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GUI implementation" href="gui.html" />
+    <link rel="prev" title="Getting started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            EVA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual.html">User manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="dev_index.html">Developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Code overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#file-structure">File structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-entry-point">Code entry point</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-app-class">Custom app class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main-window">Main window</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#config-files">Config files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pysrim-implementation">pysrim implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">GUI implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unit_testing.html">Unit testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="writing_documentation.html">Writing documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs.html">Code documentation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">EVA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="dev_index.html">Developer documentation</a></li>
+      <li class="breadcrumb-item active">Code overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/dev/code_overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="code-overview">
+<h1>Code overview<a class="headerlink" href="#code-overview" title="Link to this heading"></a></h1>
+<p>EVA is based on PyQt6, which is a Python binding of Qt which is a C++ library for creating cross-platform GUIs.
+If you are new to PyQt I recommend going through one of the many PyQt6 tutorials out there.</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#file-structure" id="id3">File structure</a></p></li>
+<li><p><a class="reference internal" href="#code-entry-point" id="id4">Code entry point</a></p></li>
+<li><p><a class="reference internal" href="#custom-app-class" id="id5">Custom app class</a></p></li>
+<li><p><a class="reference internal" href="#main-window" id="id6">Main window</a></p></li>
+<li><p><a class="reference internal" href="#config-files" id="id7">Config files</a></p></li>
+<li><p><a class="reference internal" href="#pysrim-implementation" id="id8">pysrim implementation</a></p></li>
+</ul>
+</nav>
+<section id="file-structure">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">File structure</a><a class="headerlink" href="#file-structure" title="Link to this heading"></a></h2>
+<p>This project uses a <a class="reference external" href="https://www.pyopensci.org/python-package-guide/package-structure-code/python-package-structure.html">src layout</a>, meaning all source code will be located in the <code class="docutils literal notranslate"><span class="pre">src</span></code> folder, keeping other things like
+project configurations and unit tests outside of the source directory.</p>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">src</span></code> folder there are two folders:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EVA</span></code> which contains all the EVA source code</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">srim</span></code> which contains a modified version of pysrim - see <a class="reference internal" href="#pysrim-implementation">pysrim implementation</a> for why</p></li>
+</ul>
+<p>Within the EVA folder we have:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">core/</span></code> contains most of the fundamental non-gui things such as fitting functions, database loading, data loading, config files etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">databases/</span></code> contains JSON databases for muonic xray transitions, gamma transitions and electronic xrays.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gui/</span></code> contains all Qt Designer .ui files and generated python files for the GUI</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resources/</span></code> contains images, icons, manual etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">util/</span></code> contains a few “utility” functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">widgets/</span></code> contains all custom widgets for EVA such as custom tables, plotting widgets, as well view “templates”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">windows/</span></code> contains all the standalone windows, including the <a href="#id1"><span class="problematic" id="id2">``</span></a>main_window.py`.</p></li>
+</ul>
+</section>
+<section id="code-entry-point">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Code entry point</a><a class="headerlink" href="#code-entry-point" title="Link to this heading"></a></h2>
+<p>The main code entry point is <code class="docutils literal notranslate"><span class="pre">src/EVA/main.py</span></code>, which creates an instance of the QApplication and runs it. This is the
+main “event loop” which keeps the program running until user closes the application.</p>
+</section>
+<section id="custom-app-class">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Custom app class</a><a class="headerlink" href="#custom-app-class" title="Link to this heading"></a></h2>
+<p>EVA uses a custom subclass of QApplication which is located under <code class="docutils literal notranslate"><span class="pre">src/EVA/core/app.py</span></code>. All global information,
+such as user configurations and databases, are stored within this class, and can be accessed anywhere. Take care not to
+clutter this too much - only store things in the app if the need to be globally accessible. The App class is a singleton
+instance, meaning there is only ever one App instance at once.</p>
+<p>The App instance can be quickly accessed anywhere by calling <code class="docutils literal notranslate"><span class="pre">QApplication.instance()</span></code> or using the wrapper
+function <code class="docutils literal notranslate"><span class="pre">get_app()</span></code> from app.py. The App class also has a wrapper function <code class="docutils literal notranslate"><span class="pre">get_config()</span></code> which returns the current config.</p>
+</section>
+<section id="main-window">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Main window</a><a class="headerlink" href="#main-window" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">src/EVA/windows/main/main_window.py</span></code> is the EVA “main window” which is shown on start up. This window is responsible
+for launching all other windows. It is made up of a view, model, and presenter - see the GUI guide for more on this.
+When a user loads data, the loaded data will be stored in this window and passed around whenever needed.</p>
+</section>
+<section id="config-files">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Config files</a><a class="headerlink" href="#config-files" title="Link to this heading"></a></h2>
+<p>EVA uses the configparser library to manage configurations, which is a part of the Python standard library as of version 3.12.
+The configurations are stored in .ini files. The config class, located under <code class="docutils literal notranslate"><span class="pre">src/EVA/core/settings/config.py</span></code>, handles
+everything related to configurations.</p>
+</section>
+<section id="pysrim-implementation">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">pysrim implementation</a><a class="headerlink" href="#pysrim-implementation" title="Link to this heading"></a></h2>
+<p>Inside the src directory you’ll find a modified version of pysrim, which is one of the dependencies for EVA.
+The src directory also contains a modified version of pysrim. Due to an update in PyYAML, the following modification
+has to be made in the pysrim/core/elementdb.py file (as of 28/10/24) in order for it to work properly.</p>
+<p>From</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_elementdb</span><span class="p">():</span>
+<span class="n">dbpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">srim</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;elements.yaml&#39;</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">dbpath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_elementdb</span><span class="p">():</span>
+<span class="n">dbpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">srim</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;elements.yaml&#39;</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">dbpath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This modification has been made to a copy of pysrim located under src/, but the copy can be removed in the future if
+the error is patched in the main repository.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gui.html" class="btn btn-neutral float-right" title="GUI implementation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, ISIS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
