@@ -123,6 +123,10 @@ class TrimModel(QObject):
         # set all default plot origin shifts to the aluminium layer
         self.plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
 
+        # after sucessful run, update srim installation directory in config
+        get_config()["SRIM"]["installation_directory"] = self.srim_exe_dir
+        get_config()["SRIM"]["output_directory"] = self.srim_out_dir
+
 
     def setup_sample(self, layers: list[dict]):
         """

@@ -185,7 +185,7 @@ class Ui_trim(object):
         self.gridLayout.addWidget(self.results_panel, 0, 1, 3, 1)
 
         self.retranslateUi(trim)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.results_tabs.setCurrentIndex(-1)
         QtCore.QMetaObject.connectSlotsByName(trim)
 
