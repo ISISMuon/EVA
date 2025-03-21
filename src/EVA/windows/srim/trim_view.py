@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
     QCheckBox,
     QStackedWidget,
     QHBoxLayout,
-    QFrame, QMenuBar, QSizePolicy
+    QFrame, QMenuBar, QSizePolicy, QSlider
 )
 
 from EVA.gui.trim_gui import Ui_trim
@@ -61,14 +61,16 @@ class TrimView(BaseView, Ui_trim):
         self.file_save = file.addAction('Save SRIM Settings')
         self.file_reset = file.addAction('Restore default SRIM Settings')
 
+        self.simulation_progress_widget.hide()
+        self.cancel_sim_button.hide()
+        self.slider_container.hide()
+        self.depth_profile_plot.hide()
+
     def reset(self):
         # set up results table
-        self.plot_stacks = []
         self.origin_shift_line_edits = []
         self.reset_plot_tabs()
-
-        # close all figures
-        plt.close()
+        self.slider_container.hide()
 
     # display results to table and set up connections
     def setup_results_table(self, momenta):
@@ -105,7 +107,7 @@ class TrimView(BaseView, Ui_trim):
             save_btn.clicked.connect(
                 lambda _, r=row: self.save_s.emit(r))
 
-    def update_results_tree(self, momenta, layer_names, components):
+    def update_results_tree(self, momenta, layer_names, proportions, proportions_errs, counts, counts_errs):
         self.results_tree.clear()
 
         # build all tree items and add to tree widget
@@ -114,12 +116,12 @@ class TrimView(BaseView, Ui_trim):
             momentum_item = QTreeWidgetItem([str(round(mom, 4))])
 
             for j, layer_name in enumerate(layer_names):
-                comp = components[i][j]
+
                 layer_item = QTreeWidgetItem()
                 layer_item.setText(1, layer_name)
-                layer_item.setText(2, f"{comp[0]} ± {comp[1]}")
+                layer_item.setText(2, f"{proportions[j, i]} ± {proportions_errs[j, i]}")
                 #layer_item.setText(3, str(round(comp[1], 4)))
-                layer_item.setText(3, f"{comp[2]} ± {comp[3]}")
+                layer_item.setText(3, f"{counts[j, i]} ± {counts_errs[j, i]}")
                 #layer_item.setText(5, str(comp[3]))
                 momentum_item.addChild(layer_item)
 
@@ -135,6 +137,13 @@ class TrimView(BaseView, Ui_trim):
         self.results_tree.resizeColumnToContents(1)
         self.results_tree.resizeColumnToContents(2)
         self.results_tree.resizeColumnToContents(3)
+
+    def collapse_expand_implantation(self, checkstate):
+        if checkstate == Qt.CheckState.Checked:
+            self.results_tree.expandAll()
+
+        else:
+            self.results_tree.collapseAll()
 
     def get_form_data(self):
         form_data = {
@@ -153,9 +162,25 @@ class TrimView(BaseView, Ui_trim):
 
         return form_data
 
+    def enable_depth_profile_tab(self, fig, ax):
+        # hide text saying more momentum is needed for depth profile
+        self.not_enough_momentum_label.hide()
+
+        self.depth_profile_plot.show()
+        self.depth_profile_plot.update_plot(fig, ax)
+
     def reset_plot_tabs(self):
+        self.stopping_profiles_tab_widget.clear()
+
+        self.not_enough_momentum_label.show()
+        self.depth_profile_plot.hide()
+        
+        for plot_stack in self.plot_stacks:
+            plt.close(plot_stack.widget(0).canvas.figure)
+            plt.close(plot_stack.widget(1).canvas.figure)
+
+        plt.close(self.depth_profile_plot.canvas.figure)
         self.plot_stacks = []
-        self.results_tabs.clear()
 
     def generate_plot_tab(self, momentum, index, fig_whole, ax_whole, fig_comp, ax_comp):
         container = QWidget()
@@ -179,7 +204,6 @@ class TrimView(BaseView, Ui_trim):
 
         shift_origin_label = QLabel("Shift plot origin to: (mm)")
         shift_origin_linedit = QLineEdit("0")
-        #shift_origin_linedit.setMaximumWidth(100)
 
         shift_button = QPushButton("Shift")
         reset_button = QPushButton("Reset origin")
@@ -203,7 +227,7 @@ class TrimView(BaseView, Ui_trim):
 
         self.plot_stacks.append(plot_stack)
         self.origin_shift_line_edits.append(shift_origin_linedit)
-        self.results_tabs.addTab(container, f"{round(momentum, 4)} MeV/c")
+        self.stopping_profiles_tab_widget.addTab(container, str(round(momentum, 4)))
 
     def swap_plot_stack(self, check_state, index):
         stack = self.plot_stacks[index]
@@ -301,9 +325,7 @@ class TrimView(BaseView, Ui_trim):
         print(load_file[0])
         file2 = open(load_file[0], "r")
         ignore = file2.readline()
-        print(ignore)
         SampleName.setText(file2.readline().strip())
-        print(SampleName.text())
         ignore = file2.readline()
         SimType.setCurrentText(file2.readline().strip())
         ignore = file2.readline()

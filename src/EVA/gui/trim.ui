@@ -43,6 +43,12 @@
       </item>
       <item>
        <widget class="QFrame" name="settings">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -53,6 +59,40 @@
          <enum>QFrame::StyledPanel</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
+         <item row="1" column="0">
+          <widget class="QLabel" name="momentum_label">
+           <property name="text">
+            <string>Momentum (MeV/c)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLineEdit" name="srim_exe_dir_linedit"/>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="min_momentum_linedit"/>
+         </item>
+         <item row="10" column="0">
+          <widget class="QLabel" name="stats_label">
+           <property name="text">
+            <string>Stats for optimal run</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="momentum_spread_label">
+           <property name="text">
+            <string>Momentum Spread (%)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="srim_exe_dir_label">
+           <property name="text">
+            <string>SRIM.exe directory</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="sample_name_label">
            <property name="text">
@@ -60,21 +100,44 @@
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QLineEdit" name="min_momentum_linedit"/>
+         <item row="6" column="0">
+          <widget class="QLabel" name="max_momentum_label">
+           <property name="text">
+            <string>Max Momentum (MeV/c)</string>
+           </property>
+          </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QComboBox" name="sim_type_combo">
-           <item>
-            <property name="text">
-             <string>Mono</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Momentum Spread</string>
-            </property>
-           </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="momentum_linedit"/>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="momentum_step_label">
+           <property name="text">
+            <string>Momentum Step (MeV/c)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLineEdit" name="stats_linedit"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="momentum_spread_linedit"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="sim_type_label">
+           <property name="text">
+            <string>Simulation type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="min_momentum_label">
+           <property name="text">
+            <string>Min Momentum (MeV/c)</string>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
           </widget>
          </item>
          <item row="4" column="1">
@@ -91,76 +154,6 @@
            </item>
           </widget>
          </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="max_momentum_label">
-           <property name="text">
-            <string>Max Momentum (MeV/c)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="sim_type_label">
-           <property name="text">
-            <string>Simulation type</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLineEdit" name="max_momentum_linedit"/>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="momentum_spread_linedit"/>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLineEdit" name="srim_exe_dir_linedit"/>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="momentum_linedit"/>
-         </item>
-         <item row="10" column="1">
-          <widget class="QLineEdit" name="stats_linedit"/>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="sample_name_linedit"/>
-         </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="trim_out_dir_label">
-           <property name="text">
-            <string>SRIM output directory</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="momentum_label">
-           <property name="text">
-            <string>Momentum (MeV/c)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLineEdit" name="momentum_step_linedit"/>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="momentum_spread_label">
-           <property name="text">
-            <string>Momentum Spread (%)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="srim_exe_dir_label">
-           <property name="text">
-            <string>SRIM.exe directory</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="0">
-          <widget class="QLabel" name="stats_label">
-           <property name="text">
-            <string>Stats for optimal run</string>
-           </property>
-          </widget>
-         </item>
          <item row="9" column="1">
           <widget class="QLineEdit" name="trim_out_dir_linedit"/>
          </item>
@@ -171,20 +164,33 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="momentum_step_label">
-           <property name="text">
-            <string>Momentum Step (MeV/c)</string>
-           </property>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="sample_name_linedit"/>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="max_momentum_linedit"/>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="momentum_step_linedit"/>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="sim_type_combo">
+           <item>
+            <property name="text">
+             <string>Mono</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Momentum Spread</string>
+            </property>
+           </item>
           </widget>
          </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="min_momentum_label">
+         <item row="9" column="0">
+          <widget class="QLabel" name="trim_out_dir_label">
            <property name="text">
-            <string>Min Momentum (MeV/c)</string>
-           </property>
-           <property name="margin">
-            <number>0</number>
+            <string>SRIM output directory</string>
            </property>
           </widget>
          </item>
@@ -271,6 +277,16 @@
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
+           <widget class="QCheckBox" name="collapse_expand_implantation_checkbox">
+            <property name="text">
+             <string> Expand all / Collapse</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QTreeWidget" name="results_tree">
             <property name="minimumSize">
              <size>
@@ -322,10 +338,62 @@
          <property name="bottomMargin">
           <number>0</number>
          </property>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="simulation_progress_widget" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="simulation_progress_label">
+           <property name="text">
+            <string>Simulation in progress...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="estimated_time_remaining_label">
+           <property name="text">
+            <string>Estimated time remaining: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QProgressBar" name="simulation_progress_bar">
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_2" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QPushButton" name="run_sim_button">
            <property name="text">
             <string>Run Simulations</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="cancel_sim_button">
+           <property name="text">
+            <string>Cancel</string>
            </property>
           </widget>
          </item>
@@ -356,8 +424,75 @@
       <item>
        <widget class="QTabWidget" name="results_tabs">
         <property name="currentIndex">
-         <number>-1</number>
+         <number>0</number>
         </property>
+        <widget class="QWidget" name="stopping_profiles_tab">
+         <attribute name="title">
+          <string>Stopping profiles</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QWidget" name="slider_container" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Slide to increase momentum:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="momentum_slider">
+               <property name="styleSheet">
+                <string notr="true">QSlider::groove:horizontal {height: 10px; margin: 0 0;}
+QSlider::ticks {color: grey}</string>
+               </property>
+               <property name="tracking">
+                <bool>true</bool>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="invertedAppearance">
+                <bool>false</bool>
+               </property>
+               <property name="tickPosition">
+                <enum>QSlider::NoTicks</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTabWidget" name="stopping_profiles_tab_widget"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="depth_profile_tab">
+         <attribute name="title">
+          <string>Depth profile</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="depth_profile_layout">
+          <item>
+           <widget class="QLabel" name="not_enough_momentum_label">
+            <property name="text">
+             <string>A momentum scan with at least 2 momenta is required to generate a depth profile plot.</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="PlotWidget" name="depth_profile_plot" native="true">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -370,6 +505,12 @@
    <class>BaseTable</class>
    <extends>QTableWidget</extends>
    <header>EVA.widgets.base.base_table</header>
+  </customwidget>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>EVA.widgets.plot.plot_widget</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
