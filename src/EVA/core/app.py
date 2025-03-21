@@ -1,6 +1,7 @@
 import logging
 import time
 import matplotlib
+from PyQt6.QtCore import QThreadPool
 
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication
@@ -62,6 +63,9 @@ class App(QApplication):
             self.muon_database = self.mudirac_muon_database
         else:
             raise KeyError # Invalid muon database in config
+
+        self.threadpool = QThreadPool()
+        logger.debug("Created thread pool. Maximum thread count: %s", self.threadpool.maxThreadCount())
 
     def use_mudirac_muon_db(self):
         """
