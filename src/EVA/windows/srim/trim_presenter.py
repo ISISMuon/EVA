@@ -2,14 +2,18 @@ import time
 import logging
 
 from copy import copy
+from idlelib.configdialog import font_sample_text
 
+from PyQt6.QtCore import QThreadPool
 from PyQt6.QtWidgets import QWidget
+from matplotlib import pyplot as plt
 
 from EVA.util.path_handler import get_path
+from EVA.util.worker import Worker
 
 logger = logging.getLogger(__name__)
 
-from EVA.core.app import get_config
+from EVA.core.app import get_config, get_app
 
 
 class TrimPresenter(QWidget):
@@ -19,7 +23,7 @@ class TrimPresenter(QWidget):
         self.model = model
 
         self.view.sample_name_linedit.setText("Cu")
-        self.view.momentum_linedit.setText(str(self.model.momentum))
+        self.view.momentum_linedit.setText(str(self.model.momentum[0]))
         self.view.momentum_spread_linedit.setText(str(self.model.momentum_spread))
         self.view.min_momentum_linedit.setText(str(self.model.min_momentum))
         self.view.max_momentum_linedit.setText(str(self.model.max_momentum))
@@ -42,17 +46,27 @@ class TrimPresenter(QWidget):
 
         self.view.layer_setup_table.update_contents(self.format_model_layers(), round_to=4)
 
+        self.view.collapse_expand_implantation_checkbox.checkStateChanged.connect(self.view.collapse_expand_implantation)
+
         self.view.run_sim_button.clicked.connect(self.start_sim)
+        self.view.cancel_sim_button.clicked.connect(self.cancel_sim)
         self.view.shift_plot_origin_s.connect(self.shift_plot_origin)
         self.view.reset_plot_origin_s.connect(self.reset_plot_origin)
 
         self.view.save_s.connect(self.on_save_sim_result)
         self.view.save_all_sims_button.clicked.connect(self.on_save_all_sim_results)
         self.view.show_plot_s.connect(self.show_plot)
+        self.view.momentum_slider.valueChanged.connect(self.on_slider_moved)
 
         self.view.file_load.triggered.connect(self.load_settings)
         self.view.file_save.triggered.connect(self.save_settings)
         self.view.file_reset.triggered.connect(self.load_default_settings)
+
+
+        # set up simulation worker to run simulation on separate thread
+        self.simulation_worker = None
+
+        self.time_last_swapped = time.time_ns()
 
     def on_scan_type_changed(self, scan_type: str):
         """
@@ -132,8 +146,16 @@ class TrimPresenter(QWidget):
         logger.debug("Saving result for index %s", index)
 
     def show_plot(self, index, momentumstr):
-        logger.debug("Showing plot for momentum %s at index %s", momentumstr, index)
-        self.view.results_tabs.setCurrentIndex(index)
+        self.view.stopping_profiles_tab_widget.setCurrentIndex(index)
+
+    def on_slider_moved(self, val: int):
+        dt = time.time_ns() - self.time_last_swapped
+
+        if dt < 1e7:
+            return # limit swapping plots to once every 10ms
+
+        self.show_plot(val, self.model.momentum[val])
+        self.time_last_swapped = time.time_ns()
 
     def format_model_layers(self, layers: list | None = None) -> list[list[str | float]]:
         """
@@ -161,54 +183,54 @@ class TrimPresenter(QWidget):
                 # skip rows where sample name is blank - assume the whole row is empty
                 continue
 
-            try:
-                name = layer[0]
-                thickness = float(layer[1])
-
-            except ValueError:
-                self.view.display_error_message(message="Invalid layers in table.")
-                return
+            name = layer[0]
+            thickness = float(layer[1])
 
             layer_dict = {"name": name, "thickness": thickness}
+
+            if layer_dict["thickness"] <= 0:
+                raise ValueError
 
             # layer density is allowed to be empty for 'Beamline Window' and 'Air (compressed)'
             try:
                 layer_dict["density"] = float(layer[2])
 
+                if layer_dict["density"] <= 0:
+                    raise ValueError
+
             except ValueError:
                 if not (name == "Beamline Window" or name == "Air (compressed)"):
-                    self.view.display_error_message(message=f"Invalid density for '{name}'.")
-                    return
+                    raise ValueError
 
             structured_layers.append(layer_dict)
-
         return structured_layers
 
-    def remove_layer(self, row):
-        self.model.remove_layer(row)
-        self.view.layer_setup_table.update_contents(self.format_model_layers())
-
     def start_sim(self):
-        # get form data
         try:
+            # get form data from view
             form_data = self.view.get_form_data()
         except (ValueError, AttributeError) as e:
-            self.view.show_error_box("Invalid form input!")
+            self.view.display_error_message(message="Invalid form input!")
+            return
+
+        # check that form contains valid srim settings
+        valid, error = self.validate_srim_settings(form_data)
+
+        if not valid:
+            self.view.display_error_message(message=error)
             return
 
         # get table data
         try:
             self.model.input_layers = self.get_layers_from_table()
 
-        except (ValueError, AttributeError) as e:
-            self.view.display_error_message(message="You must specify a valid sample name and thickness for all layers.")
+        except (ValueError, AttributeError, KeyError) as e:
+            self.view.display_error_message(message="Invalid layers specified. All layers must have a thickness, and all layers apart from "
+                                                    "Beamline window and Air must have a density specified. "
+                                                    "Ensure all values are greater than 0.")
             raise e
 
-        except KeyError:
-            self.view.display_error_message(message="All element layers must have a specified density.")
-            return
-
-        # check if path is valid
+        # check if srim exe and output path is valid
         srimdir_valid = self.model.is_valid_path(form_data["srim_dir"])
         outputdir_valid = self.model.is_valid_path(form_data["output_dir"])
 
@@ -219,7 +241,6 @@ class TrimPresenter(QWidget):
 
         # if everything is ok, send data to model and simulate
         try:
-            self.model.momentum = form_data["momentum"]
             self.model.min_momentum = form_data["min_momentum"]
             self.model.max_momentum = form_data["max_momentum"]
             self.model.step_momentum = form_data["step_momentum"]
@@ -231,13 +252,82 @@ class TrimPresenter(QWidget):
             self.model.scan_type = form_data["scan_type"]
             self.model.sim_type = form_data["sim_type"]
 
-            self.model.start_trim_simulation()
+            if not isinstance(form_data["momentum"], list):
+                self.model.momentum = [form_data["momentum"]]
 
         except Exception as e:
-            self.view.display_error_message(message=f"An unexpected error has occurred! \n{e.args}")
+            self.view.display_error_message(message=f"An unexpected error has occurred! \n{e}")
+            logger.critical("Simulation failed! %s", e)
             raise e
 
+        # show simulation progress widget and cancel button
+        self.view.simulation_progress_widget.show()
+        self.view.cancel_sim_button.show()
+
+        # get number of simulations and update progress bar
+        n_sim = self.model.number_of_sims()
+        self.view.simulation_progress_bar.setMaximum(n_sim)
+        self.view.simulation_progress_bar.setValue(0)
+
+        self.view.estimated_time_remaining_label.setText(f"Estimated time left: calculating...")
+        self.view.simulation_progress_label.setText(f"Running simulation 1 / {n_sim}")
+
+        # start simulation on separate thread
+        self.simulation_worker = Worker(self.model.start_trim_simulation)
+        self.simulation_worker.signals.result.connect(self.on_simulation_finished)
+        self.simulation_worker.signals.progress.connect(self.progress_fn)
+
+        get_app().threadpool.start(self.simulation_worker)
+
+    def cancel_sim(self):
+        # if user has requested the simulation to be cancelled, set this flag to True to notify the model
+        self.model.cancel_sim = True
+        self.view.simulation_progress_label.setText("Stopping...")
+        self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: -")
+
+    def progress_fn(self, progress: dict):
+        """
+        Updates progress bar and progress text. Is called every time the simulation worker emits a progress signal.
+
+        Args:
+            progress: dict with keys 'current' - current simulation number, 'total' - number of simulations planned
+
+        """
+        n = progress["current"]
+        total = progress["total"]
+
+        if n == total:
+            return
+
+        time_str = self.model.estimate_time_left(n, total)
+        self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: {time_str}")
+
+        self.view.simulation_progress_bar.setMaximum(total)
+        self.view.simulation_progress_label.setText(f"Running simulation {n+1} / {total}")
+        self.view.simulation_progress_bar.setValue(n)
+
+    def on_simulation_finished(self, result):
+        self.model.cancel_sim = False
+
+        # hide progress bar and cancel button when done
+        self.view.simulation_progress_widget.hide()
+        self.view.cancel_sim_button.hide()
+
+        if result["status"] == "cancelled":
+            self.view.display_message(message="Simulation cancelled!")
+            return
+
         self.view.reset()
+
+        # update table and implantation tree
+        self.view.setup_results_table(self.model.momentum)
+
+        self.view.update_results_tree(momenta=self.model.momentum,
+                                      layer_names=[layer["name"] for layer in self.model.input_layers],
+                                      proportions=self.model.proportions_per_layer,
+                                      proportions_errs=self.model.proportions_per_layer_err,
+                                      counts=self.model.counts_per_layer,
+                                      counts_errs=self.model.counts_per_layer_err)
 
         for i, momentum in enumerate(self.model.momentum):
             fig_whole, ax_whole = self.model.plot_whole(i, momentum)
@@ -245,32 +335,14 @@ class TrimPresenter(QWidget):
 
             self.view.generate_plot_tab(momentum, i, fig_whole, ax_whole, fig_comp, ax_comp)
 
-        #self.view.plot_comp.update_plot(*self.model.plot_components(0, str(self.model.momentum[0])))
+        # Plot stopping profiles and depth profiles
+        if len(self.model.momentum) > 1:
+            self.view.enable_depth_profile_tab(*self.model.plot_depth_profile())
 
-        self.view.setup_results_table(self.model.momentum)
-
-        self.view.update_results_tree(momenta=self.model.momentum, layer_names=[layer["name"] for layer in self.model.input_layers],
-                                      components=self.model.components)
-
-        #self.view.setup_results_table(self.model.momentum, self.model.components) # display results in table
-
-    def on_show_plot_comp(self, row, momentum):
-        t0 = time.time_ns()
-        # Generate figure to display in view
-        fig, ax = self.model.plot_components(row, momentum)
-        self.view.plot_comp.update_plot(fig, ax)
-        t1 = time.time_ns()
-        print("time taken: ", (t1-t0)/1e9)
-
-    def on_cell_clicked(self, row, col):
-        table = self.view.tab1.table_TRIMsetup
-        if row == table.rowCount() - 1: # if cell on last row is edited
-            self.view.add_trimsetup_row()
-
-    def on_show_plot_whole(self, row, momentum):
-        # Generate figure to display in view
-        fig, ax = self.model.plot_whole(row, momentum)
-        self.view.plot_whole.update_plot(fig, ax)
+            self.view.slider_container.show()
+            self.view.momentum_slider.setMinimum(0)
+            self.view.momentum_slider.setMaximum(len(self.model.momentum)-1)
+            self.view.momentum_slider.setSingleStep(1)
 
     def on_save_sim_result(self, row):
         if len(self.model.result_x) == 0: # if no simulations have been run
@@ -298,7 +370,6 @@ class TrimPresenter(QWidget):
         if path:
             self.model.save_sim(path)
 
-
     def save_settings(self):
         try:
             form_data = self.view.get_form_data()
@@ -306,7 +377,12 @@ class TrimPresenter(QWidget):
 
         except (AttributeError, ValueError) as e:
             self.view.display_error_message(message="Cannot save settings. Invalid data in form or layers table.")
-            raise e
+            return
+
+        valid, error = self.validate_srim_settings(form_data)
+
+        if not valid:
+            self.view.display_error_message(message=error)
             return
 
         path = self.view.get_save_file_path(get_config()["general"]["working_directory"],
@@ -328,3 +404,47 @@ class TrimPresenter(QWidget):
         form_data, table_data = self.model.load_settings(path)
         self.view.set_form_data(form_data)
         self.view.layer_setup_table.update_contents(self.format_model_layers(table_data))
+
+    def validate_srim_settings(self, form_data: dict) -> tuple[bool, str]:
+        """
+        Checks if form data contains valid SRIM settings
+
+        Args:
+            form_data: dict containing all srim setting loaded from form
+
+        Returns:
+            bool indicating whether form is valid, string containing additional information
+        """
+
+        form_data["min_momentum"] = form_data["min_momentum"]
+        form_data["max_momentum"] = form_data["max_momentum"]
+        self.model.step_momentum = form_data["step_momentum"]
+        self.model.momentum_spread = form_data["momentum_spread"]
+        self.model.sample_name = form_data["sample_name"]
+        self.model.stats = form_data["stats"]
+        self.model.srim_exe_dir = form_data["srim_dir"]
+        self.model.srim_out_dir = form_data["output_dir"]
+        self.model.scan_type = form_data["scan_type"]
+        self.model.sim_type = form_data["sim_type"]
+
+        if (form_data["max_momentum"] <= 0 or form_data["min_momentum"] <= 0 or
+                form_data["step_momentum"] <= 0 or form_data["momentum"] <= 0):
+            return False, "Momentum must be greater than 0."
+
+        if form_data["min_momentum"] >= form_data["max_momentum"]:
+            return False, "Min momentum must be less than max momentum."
+
+        if (form_data["max_momentum"] - form_data["min_momentum"]) < form_data["step_momentum"]:
+            return False, "Momentum step too high."
+
+        if form_data["stats"] <= 0:
+            return False, "Stats must be greater than 0."
+
+        if form_data["momentum_spread"] <= 0:
+            return False, "Momentum spread be greater than 0."
+
+        if ((form_data["max_momentum"] - form_data["min_momentum"]) / form_data["step_momentum"]) > 1e6:
+            return False, "Too many simulations! Please increase the momentum step."
+
+        return True, ""
+
