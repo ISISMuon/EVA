@@ -71,7 +71,7 @@ class MainView(QWidget):
             action = self.peakfit_menu.addAction(detector)
             self.peakfit_menu_actions.append(action)
 
-        #self.trim_fit = self.analysis_menu.addAction("Trim fitting")
+        self.trim_fit = self.analysis_menu.addAction("Trim fitting")
 
 
         self.tools_menu = self.bar.addMenu('Tools')

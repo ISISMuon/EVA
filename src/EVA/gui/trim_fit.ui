@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>832</width>
-    <height>669</height>
+    <height>670</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,53 +29,243 @@
       </size>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="2" column="0">
-       <widget class="QTextEdit" name="result_text_edit"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QWidget" name="widget" native="true">
-        <layout class="QFormLayout" name="formLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="momentum_label">
+      <item row="6" column="0">
+       <widget class="QWidget" name="widget_4" native="true">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="4" column="3">
+          <widget class="QPushButton" name="cancel_button">
            <property name="text">
-            <string>Momentum</string>
+            <string>Stop</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="momentum_line_edit"/>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QPushButton" name="fit_button">
+         <item row="4" column="2">
+          <widget class="QPushButton" name="test_simulation_button">
            <property name="text">
-            <string>go!!!!</string>
+            <string>Test first iteration</string>
            </property>
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QWidget" name="widget_2" native="true"/>
+          <widget class="QLabel" name="time_remaining_label">
+           <property name="text">
+            <string>Estimated time left of iteration:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="fit_iteration_label">
+           <property name="text">
+            <string>Fit iteration: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="4">
+          <widget class="QProgressBar" name="simulation_progress_bar">
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="simulation_number_label">
+           <property name="text">
+            <string>Running simulation </string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="2">
+          <widget class="QPushButton" name="fit_button">
+           <property name="text">
+            <string>Fit</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="BaseTable" name="layer_table">
-        <column>
-         <property name="text">
-          <string>Sample</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Thickness</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Density</string>
-         </property>
-        </column>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Fitting log</string>
+        </property>
        </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Simulation setup</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QWidget" name="widget" native="true">
+            <layout class="QFormLayout" name="formLayout">
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Simulation type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="sim_type_combo">
+               <item>
+                <property name="text">
+                 <string>Mono</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Momentum Spread</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Momentum spread</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="momentum_spread_line_edit">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>Number of ions</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="num_ions_line_edit"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QWidget" name="widget_2" native="true"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Layers</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="BaseTable" name="layer_table">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <column>
+             <property name="text">
+              <string>Sample</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Initial thickness</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Density</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_5" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_3">
+         <attribute name="title">
+          <string>Experiment data</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QWidget" name="widget_6" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="load_data_button">
+               <property name="text">
+                <string>Load data / Modify</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="plot_data_button">
+               <property name="text">
+                <string>Plot data</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="BaseTable" name="experiment_data_table">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QTextBrowser" name="fit_log_text_browser"/>
       </item>
      </layout>
     </widget>
@@ -84,12 +274,50 @@
     <widget class="QWidget" name="widget_3" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="PlotWidget" name="plot" native="true">
-        <layout class="QVBoxLayout" name="verticalLayout"/>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Measured depth profile</string>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="PlotWidget" name="trim_plot" native="true"/>
+       <widget class="QTabWidget" name="trim_results">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="fit_result_tab">
+         <attribute name="title">
+          <string>Fit result</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="PlotWidget" name="comparison_plot" native="true"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="experiment_data_tab">
+         <attribute name="title">
+          <string>Experiment data</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="PlotWidget" name="plot" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout"/>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="stopping_profiles_tab">
+         <attribute name="title">
+          <string>Stopping Profiles</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QTabWidget" name="stopping_profiles_tab_widget"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
       </item>
      </layout>
     </widget>

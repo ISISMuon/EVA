@@ -45,7 +45,7 @@ class MainPresenter(object):
         for i, detector in enumerate(self.view.detector_list):
             self.view.peakfit_menu_actions[i].triggered.connect(lambda _, det=detector: self.open_peakfit(det))
 
-        #self.view.trim_fit.triggered.connect(self.open_trim_fit)
+        self.view.trim_fit.triggered.connect(self.open_trim_fit)
 
         self.view.trim_simulation.triggered.connect(self.open_trim)
         #self.view.trim_simulation_test.triggered.connect(self.RunTrimExample)
@@ -271,6 +271,6 @@ class MainPresenter(object):
         logger.info("Launching trim fit window.")
         if self.view.trim_fit_window is None:
             self.view.trim_fit_window = TrimFitWidget()
-            self.view.trim_fit_window.show()
+            self.view.trim_fit_window.showMaximized()
         else:
-            self.view.trim_fit_window.show()
+            self.view.trim_fit_window.showMaximized()

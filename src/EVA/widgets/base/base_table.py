@@ -11,8 +11,14 @@ class BaseTable(QTableWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.block_updates = False
-
         self.cellChanged.connect(self.on_cell_changed)
+
+        # Key controls (CTRL+C, CTRL+X, del etc)
+        self.key_controls_enabled = True
+        self.copy_enabled = True
+        self.paste_enabled = True
+        self.cut_enabled = True
+        self.del_enabled = True
 
     def on_cell_changed(self, row, col):
         if not self.block_updates:
@@ -157,23 +163,26 @@ class BaseTable(QTableWidget):
 
 
     def keyPressEvent(self, event):
+        if not self.key_controls_enabled:
+            return
+
         super().keyPressEvent(event)
 
         # Copying
-        if event.key() == Qt.Key.Key_C and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
+        if self.copy_enabled and (event.key() == Qt.Key.Key_C) and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
             self.copy_selection()
 
         # Pasting
-        if event.key() == Qt.Key.Key_V and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
+        if self.paste_enabled and (event.key() == Qt.Key.Key_V) and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
             self.paste_selection()
 
         # Cutting
-        if event.key() == Qt.Key.Key_X and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
+        if self.cut_enabled and (event.key() == Qt.Key.Key_X) and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
             self.copy_selection()
             self.delete_selection()
 
         # Deleting
-        if event.key() == Qt.Key.Key_Delete:
+        if self.del_enabled and (event.key() == Qt.Key.Key_Delete):
             self.delete_selection()
 
     def stretch_horizontal_headers(self):

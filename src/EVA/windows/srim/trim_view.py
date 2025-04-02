@@ -69,7 +69,19 @@ class TrimView(BaseView, Ui_trim):
     def reset(self):
         # set up results table
         self.origin_shift_line_edits = []
-        self.reset_plot_tabs()
+
+        self.stopping_profiles_tab_widget.clear()
+
+        self.not_enough_momentum_label.show()
+        self.depth_profile_plot.hide()
+
+        for plot_stack in self.plot_stacks:
+            plt.close(plot_stack.widget(0).canvas.figure)
+            plt.close(plot_stack.widget(1).canvas.figure)
+
+        plt.close(self.depth_profile_plot.canvas.figure)
+        self.plot_stacks = []
+
         self.slider_container.hide()
 
     # display results to table and set up connections
@@ -169,18 +181,6 @@ class TrimView(BaseView, Ui_trim):
         self.depth_profile_plot.show()
         self.depth_profile_plot.update_plot(fig, ax)
 
-    def reset_plot_tabs(self):
-        self.stopping_profiles_tab_widget.clear()
-
-        self.not_enough_momentum_label.show()
-        self.depth_profile_plot.hide()
-        
-        for plot_stack in self.plot_stacks:
-            plt.close(plot_stack.widget(0).canvas.figure)
-            plt.close(plot_stack.widget(1).canvas.figure)
-
-        plt.close(self.depth_profile_plot.canvas.figure)
-        self.plot_stacks = []
 
     def generate_plot_tab(self, momentum, index, fig_whole, ax_whole, fig_comp, ax_comp):
         container = QWidget()

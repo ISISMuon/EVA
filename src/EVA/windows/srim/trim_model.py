@@ -42,7 +42,7 @@ class TrimModel(QObject):
         self.layer_boundary_positions = []
 
         ### Default SRIM settings ###
-        self.stats = 100
+        self.stats = 1000
         self.srim_exe_dir = get_config()["SRIM"]["installation_directory"]
         self.srim_out_dir = get_config()["SRIM"]["output_directory"]
 
@@ -92,13 +92,17 @@ class TrimModel(QObject):
 
         return n_sim
 
+    def calculate_momentum(self):
+        # Calculate momentum array if momentum scan is wanted
+        if self.scan_type == 'Yes':
+            self.momentum = np.round(np.arange(start=self.min_momentum, stop=self.max_momentum, step=self.step_momentum), 5)
+
     def start_trim_simulation(self, progress_callback: pyqtSignal) -> dict:
         """
         Runs the srim simulation using parameters set in the model.
         """
-        # Calculate momentum array if momentum scan is wanted
-        if self.scan_type == 'Yes':
-            self.momentum = np.round(np.arange(start=self.min_momentum, stop=self.max_momentum, step=self.step_momentum), 5)
+        # reset cancel flag
+        self.cancel_sim = False
 
         # initialise empty data arrays
         self.result_x = np.zeros(shape=(len(self.momentum), 100))
@@ -233,9 +237,6 @@ class TrimModel(QObject):
             self.proportions_per_layer[:, m] = np.round(frac*100, 4)
             self.proportions_per_layer_err[:, m] = np.round(frac_err_filtered*100, 4)
 
-        print(self.proportions_per_layer)
-        print(self.proportions_per_layer_err)
-
         # set all plot origins to be shifted by default so that 0 on the x-axis is located at end of aluminium layer
         self.default_origin_position = self.layer_boundary_positions[3]
         self.plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
@@ -246,7 +247,7 @@ class TrimModel(QObject):
 
         return {"status": "success"}
 
-    def setup_sample(self, layers: list[dict]):
+    def setup_sample(self, layers: dict):
         """
         Builds SRIM layers from layer input dictionary.
 
@@ -459,6 +460,7 @@ class TrimModel(QObject):
             axx.axvline(x=pos - x_shift, color='k', linestyle='--')
             axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='left', rotation='vertical')
 
+        print(self.result_y)
         return figt, axx
 
     def plot_components(self, momentum_index: int, momentum: float) -> tuple[plt.Figure, plt.Axes]:

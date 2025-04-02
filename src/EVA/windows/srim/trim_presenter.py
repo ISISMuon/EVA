@@ -255,6 +255,8 @@ class TrimPresenter(QWidget):
             if not isinstance(form_data["momentum"], list):
                 self.model.momentum = [form_data["momentum"]]
 
+            self.model.calculate_momentum()
+
         except Exception as e:
             self.view.display_error_message(message=f"An unexpected error has occurred! \n{e}")
             logger.critical("Simulation failed! %s", e)
@@ -307,8 +309,6 @@ class TrimPresenter(QWidget):
         self.view.simulation_progress_bar.setValue(n)
 
     def on_simulation_finished(self, result):
-        self.model.cancel_sim = False
-
         # hide progress bar and cancel button when done
         self.view.simulation_progress_widget.hide()
         self.view.cancel_sim_button.hide()

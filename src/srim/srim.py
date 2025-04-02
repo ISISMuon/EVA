@@ -221,7 +221,6 @@ class TRIM(object):
                 subprocess.check_call([str(os.path.join('', 'TRIM.exe'))])
 
             os.chdir(current_directory)
-            print(os.getcwd())
             return Results(srim_directory)
         finally:
             os.chdir(current_directory)
