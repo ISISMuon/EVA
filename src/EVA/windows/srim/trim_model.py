@@ -353,7 +353,7 @@ class TrimModel(QObject):
         if self.cancel_sim:
             return None, None, 1
 
-        trim_sim = TRIM(target, muon, number_ions= self.stats, calculation=1)
+        trim_sim = TRIM(target, muon, number_ions= self.stats, calculation=1, trim_settings={"bins": 1000})
 
         try:
             trim_data_output = trim_sim.run(self.srim_exe_dir)  # Simulation run by executing SRIM.exe in directory
@@ -490,7 +490,7 @@ class TrimModel(QObject):
 
         for i in range(len(self.sample_layers)):
             # plot profile per layer
-            axx.plot(self.result_x[0] - x_shift, self.ydata_per_layer[i, momentum_index], label=self.sample_names[i])
+            axx.plot(self.result_x[0] - x_shift, self.ydata_per_layer[i, momentum_index], "o-", label=self.sample_names[i])
 
             # display layer boundaries
             pos = self.layer_boundary_positions[i + 1]

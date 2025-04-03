@@ -1,6 +1,6 @@
 from functools import partial
 
-import matplotlib.dates
+import re
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt6.QtCore import pyqtSignal
@@ -32,7 +32,7 @@ class TrimFitModel(TrimModel):
                 "density": 1.25
             },
             {
-                "name": "SiO",
+                "name": "Si",
                 "thickness": 0.2,
                 "density": 1.4
             },
@@ -85,10 +85,9 @@ class TrimFitModel(TrimModel):
 
         return fig, ax
 
-    def func(self, params, xdata, ydata, progress_callback):
+    def func(self, params, xdata, ydata, progress_callback, param_ids):
         self.fit_iter += 1
 
-        base_pos = self.get_layer_boundary_positions()[self.target_indices[0]]
         """
         for i, ix in enumerate(self.target_indices):
             if i == 0:
@@ -100,7 +99,7 @@ class TrimFitModel(TrimModel):
         """
 
         for i, ix in enumerate(self.target_indices):
-            self.input_layers[ix]["thickness"] = params[f"thickness{i}"]
+            self.input_layers[ix]["thickness"] = params[f"thickness{ix}_{param_ids[ix]}"]
 
         self.start_trim_simulation(progress_callback)
         
@@ -176,21 +175,28 @@ class TrimFitModel(TrimModel):
         # inspired by this: https://stackoverflow.com/questions/49931455/python-lmfit-constraints-a-b-c?rq=3
         # The boundary parameters are constrained to be in terms of the initial boundary and thicknesses
 
-        for i, ix in enumerate(self.target_indices):
-            thickness = (initial_boundaries[ix+1] - initial_boundaries[ix])
-            params.add(f"thickness{i}", value=thickness, min=0)
+        param_ids = []
 
-            # these are just here for convenience, the thicknesses are the only parameters actually being fitted
-            if i == 0:
-                params.add(f'boundary{i}', expr=f"init_bound + thickness{i}")
+        for j, sample_name in enumerate(self.sample_names):
+            name = re.sub('[()\\s]', '', sample_name)
+
+            param_ids.append(name)
+
+            thickness = self.input_layers[j]["thickness"]
+            vary = j in self.target_indices # boolean for
+
+            params.add(f'boundary{j}_{name}', value=initial_boundaries[j + 1], vary=vary,)
+
+            if j == 0:
+                params.add(f"thickness{j}_{name}", value=thickness, expr=f"boundary{j}_{name}", min=0)
             else:
-                params.add(f'boundary{i}', expr=f"boundary{i-1} + thickness{i}")
+                params.add(f"thickness{j}_{name}", value=thickness, expr=f"boundary{j}_{name} - boundary{j-1}_{param_ids[j-1]}", min=0)
 
         # since the fitting data is simulated it will vary a little in between iterations, so it is important that the
         # changes made by lmfit to parameters between iterations is greater than the noise of the simulation.
         # the size of the parameter changes can be modified with the "epsfcn" parameter (i think it's the derivative multiplier)
 
-        self.fit_result = minimize(self.func, method="leastsq", params=params, iter_cb=self.on_iteration_complete, args=(self.momentum, self.proportions, progress_callback),
+        self.fit_result = minimize(self.func, method="leastsq", nan_policy="omit", params=params, iter_cb=self.on_iteration_complete, args=(self.momentum, self.proportions, progress_callback, param_ids),
                        epsfcn=0.01, max_nfev=100)
 
         # returns status to the GUI so that it can update it correspondingly
