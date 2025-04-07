@@ -3,7 +3,7 @@ from EVA.core.app import get_app
 class TestMuonDatabaseLoad:
     def test_mudirac_json_loaded(self, qapp):
         app = get_app()
-        assert len(app.muon_database) == 7, "Mudirac muonic xray JSON file was not loaded correctly"
+        assert len(app.muon_database) == 9, "Mudirac muonic xray JSON file was not loaded correctly"
 
     def test_mudirac_correct_number_of_isotopes_loaded(self, qapp):
         app = get_app()

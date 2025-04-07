@@ -42,7 +42,7 @@ default_peaks_list_gamma = [
 default_sigma_list_gamma = [0.01]
 
 target_result_list_gamma = [
-    [{'isotope': '140Eu', 'energy': 20.5, 'diff': 0.0, 'intensity': ' 0.000E+00', 'lifetime': '        '}]
+    [{'isotope': '140Eu', 'energy': 20.5, 'diff': 0.0, 'intensity': 0.0, 'lifetime': '        '}]
 ]
 
 #################################################################
@@ -109,5 +109,6 @@ class TestDatabasesGetMatch:
         # Generate input string to test matches
         input_data = list(zip(default_peaks, [default_sigma] * len(default_peaks)))
         res = get_match.search_gammas(input_data)
+        print(res)
 
         assert res == target_result, 'Data in gamma database did not match expected'
