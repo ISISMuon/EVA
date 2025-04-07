@@ -189,10 +189,8 @@ class MainPresenter(object):
 
         if self.view.energy_correction_window is None:
             self.view.energy_correction_window = energy_correction_window.Correction_E()
-            self.view.energy_correction_window.show()
-        else:
-            self.view.energy_correction_window.show()
 
+        self.view.energy_correction_window.show()
         self.view.energy_correction_window.energycorr_window_closed_s.connect(self.close_energy_corrections)
 
     def close_energy_corrections(self, event):
@@ -205,10 +203,8 @@ class MainPresenter(object):
 
         if self.view.efficiency_correction_window is None:
             self.view.efficiency_correction_window = efficiency_correction_window.Correction_Eff()
-            self.view.efficiency_correction_window.show()
-        else:
-            self.view.efficiency_correction_window.show()
 
+        self.view.efficiency_correction_window.show()
         self.view.efficiency_correction_window.effcorr_window_closed_s.connect(self.close_efficiency_corrections)
 
     def close_efficiency_corrections(self, event):
@@ -235,9 +231,8 @@ class MainPresenter(object):
         logger.info("Launching manual window.")
         if self.view.manual_window is None:
             self.view.manual_window = manual_window.ManualWindow()
-            self.view.manual_window.show()
-        else:
-            self.view.manual_window.show()
+
+        self.view.manual_window.show()
 
     def open_plot_window(self):
         config = get_config()
@@ -257,9 +252,8 @@ class MainPresenter(object):
         logger.info("Launching periodic table.")
         if self.view.periodic_table_window is None:
             self.view.periodic_table_window = PeriodicTableWidget()
-            self.view.periodic_table_window.show()
-        else:
-            self.view.periodic_table_window.show()
+
+        self.view.periodic_table_window.showMaximized()
 
     def close_periodic_table(self, event):
         event.accept()
@@ -271,6 +265,5 @@ class MainPresenter(object):
         logger.info("Launching trim fit window.")
         if self.view.trim_fit_window is None:
             self.view.trim_fit_window = TrimFitWidget()
-            self.view.trim_fit_window.show()
-        else:
-            self.view.trim_fit_window.show()
+
+        self.view.trim_fit_window.show()
