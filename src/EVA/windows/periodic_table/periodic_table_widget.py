@@ -1,13 +1,17 @@
 # imports
 import re
 import json
-from PyQt6.QtWidgets import QMainWindow, QTreeWidgetItem, QTableWidgetItem, QMessageBox
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QMainWindow, QTreeWidgetItem, QTableWidgetItem, QMessageBox, QHeaderView
 from functools import partial
 
-from EVA.core.data_searching.get_match import search_muxrays
-from EVA.windows.periodic_table.periodic_table import Ui_MainWindow
+from EVA.core.app import get_app
+from EVA.core.data_searching.get_match import search_muxrays, search_muxrays_all_isotopes, search_gammas, search_e_xrays
+from EVA.gui.periodic_table import Ui_MainWindow
 from EVA.util.path_handler import get_path
 from EVA.util.transition_utils import to_iupac
+from EVA.core.data_searching import get_match
 
 # lists
 elements = ["H", "He", 
@@ -21,7 +25,8 @@ elements = ["H", "He",
 
 elements_disable = ["H", "Kr", "Xe", "Tc", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", 
                     "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og", "Pm", "Pa", "U", "Np", "Pu", "Am",
-                    "Cm", "Bk", "Cf", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"] 
+                    "Cm", "Bk", "Cf", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"]
+
 
 # class definitions
 class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
@@ -46,92 +51,185 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
         # the first tab, for muonic X-rays, is set to active when the GUI opens
         self.tabWidget.setCurrentIndex(0)
 
-    def open_element(self, name):
-        with open(get_path('src/EVA/databases/muonic_xrays/mudirac_data_readable.json'), 'r') as jsonfile1:
-            mudirac_data_from_file = json.load(jsonfile1)
-        with open(get_path('src/EVA/databases/gammas/gammas.json'), 'r') as jsonfile2:
-            gamma_data_from_file = json.load(jsonfile2)
-        with open(get_path('src/EVA/databases/electronic_xrays/xray_booklet_data.json'), 'r') as jsonfile3:
-            electronic_data_from_file = json.load(jsonfile3)
+    def open_element(self, element):
+        mu_db = get_app().muon_database
 
-        for k1, v1 in mudirac_data_from_file.items():
-            if k1 == name:
-                for k2, v2 in v1.items():
-                    if k2 == "Info":
-                        text = f"{v2}"
-                    elif k2 == "Isotopes":
-                        data = v2
-        self.element_info_text.setPlainText(text)
+        info = mu_db["Infos"][element]
+        isotopes = mu_db["Isotope names"][element]
+        abundancies = mu_db["Abundancies"][element]
+
+        self.element_info_text.setPlainText(info)
         self.element_info_text.setReadOnly(True)
 
-        items = []
         self.element_info_muonic_xray_tree.clear()
-        for k3, v3 in data.items():
-            item = QTreeWidgetItem([k3])
-            for k4, v4 in v3.items():
-                match k4:
-                    case "Abundancy":
-                        info = QTreeWidgetItem([k4, v4])
-                        item.addChild(info)
-                    case "Primary" | "Secondary":
-                        d1 = re.sub('[^A-Za-z0-9-./ ]+', '', str(v4)).split()
-                        d2 = [d for d in d1 if (d != "E" and d != "I")]
-                        d3 = "\n"
-                        for i in range(0, len(v4)):
-                            d3 = d3 + f"{d2[3*i]}\t{float(d2[3*i+1]):.3f}\t\t{d2[3*i+2]}\n"
-                        info = QTreeWidgetItem([k4, d3])
-                        item.addChild(info) 
-            items.append(item)
-        self.element_info_muonic_xray_tree.insertTopLevelItems(0, items)
+        print(abundancies)
 
-        for kg1, vg1 in gamma_data_from_file.items():
-            if kg1 == name:
-                for kg2, vg2 in vg1.items():
-                    if kg2 == "Isotopes":
-                        datag = vg2
+        mu_xray_items = []
+        for i, isotope_name in enumerate(isotopes):
+            isotope_item = QTreeWidgetItem([isotope_name])
 
-        itemsg = []
+            abundancy_item = QTreeWidgetItem()
+            abundancy_item.setText(0, "Abundancy")
+            abundancy_item.setText(1, abundancies[isotope_name])
+            isotope_item.addChild(abundancy_item)
+
+            primary_item = QTreeWidgetItem()
+            primary_item.setText(0, "Primary")
+            isotope_item.addChild(primary_item)
+
+            secondary_item = QTreeWidgetItem()
+            secondary_item.setText(0, "Secondary")
+            isotope_item.addChild(secondary_item)
+
+            matches = get_match.search_muxrays_single_element_all_isotopes(isotope_name)
+
+            # sort primary and secondary matches
+            prims = [key for key in mu_db["All isotopes"]["Primary energies"][isotope_name].keys()]
+
+            for match in matches:
+                match_item = QTreeWidgetItem()
+                match_item.setText(1, match["transition"])
+                match_item.setText(3, to_iupac(match["transition"]))
+                match_item.setText(2, str(round(match["energy"], 4)))
+
+                if match["transition"] in prims:
+                    primary_item.addChild(match_item)
+                else:
+                    secondary_item.addChild(match_item)
+
+            primary_item.setExpanded(True)
+            secondary_item.setExpanded(True)
+            mu_xray_items.append(isotope_item)
+
+        self.element_info_muonic_xray_tree.insertTopLevelItems(0, mu_xray_items)
+
+        # lastly, resize all columns
+        self.element_info_muonic_xray_tree.resizeColumnToContents(0)
+        self.element_info_muonic_xray_tree.resizeColumnToContents(1)
+        self.element_info_muonic_xray_tree.resizeColumnToContents(2)
+        self.element_info_muonic_xray_tree.resizeColumnToContents(3)
+        self.element_info_muonic_xray_tree.resizeColumnToContents(4)
+
+        # updating gamma tree
+        gamma_data = get_app().gamma_database[element]
         self.treeWidget_2.clear()
-        for kg3, vg3 in datag.items():
-            itemg = QTreeWidgetItem([kg3])
-            for i in vg3:
-                for j in i.items():
-                    d1g = re.sub('[^A-Za-z0-9-./ ]+', '', str(i)).split()
-                    d2g = [dg for dg in d1g if (dg != "E" and dg != "T1/2")]
-                    d3g = ""
-                    for k in range(0, 1):
-                        d3g = d3g + f"{d2g[3*k]}\t{float(d2g[3*k+1]):.4f}"
-                    info = QTreeWidgetItem(["", str(d3g)])
-                itemg.addChild(info)
-            itemsg.append(itemg)
-        self.treeWidget_2.insertTopLevelItems(0, itemsg)
 
-        for ke1, ve1 in electronic_data_from_file.items():
-            if ke1 == name:
-                for i, (ke2, ve2) in enumerate(ve1.items()):
-                    self.element_info_electronic_xray_table.setRowCount(len(ve1))
-                    item_transition = QTableWidgetItem(ke2)
-                    item_energy = QTableWidgetItem(ve2)
-                    self.element_info_electronic_xray_table.setItem(i, 0, item_transition)
-                    self.element_info_electronic_xray_table.setItem(i, 1, item_energy)
+        gamma_items = []
+        isotopes = []
+        isotope_items = []
+
+        for i, gammas in enumerate(gamma_data):
+            isotope = gammas[0]
+
+            if isotope not in isotopes:
+                isotopes.append(isotope)
+                isotope_items.append(QTreeWidgetItem([isotope]))
+
+            match_item = QTreeWidgetItem()
+            match_item.setText(1, str(round(float(gammas[1]), 6)))
+            match_item.setText(2, str(round(float(gammas[2]), 6)))
+
+            isotope_items[-1].addChild(match_item)
+
+        self.treeWidget_2.insertTopLevelItems(0, isotope_items)
+
+        # Update electronic xray table
+        e_xray_data = get_app().e_xray_database[element]
+        self.element_info_electronic_xray_table.setRowCount(len(e_xray_data))
+
+        for i, data in enumerate(e_xray_data.items()):
+            self.element_info_electronic_xray_table.setItem(i, 0, QTableWidgetItem(data[0]))
+            self.element_info_electronic_xray_table.setItem(i, 1, QTableWidgetItem(data[1]))
+
+        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
     def energy_search(self):
-        self.x_ray_search.setPlainText("")
         try:
             energy = float(self.energy_input.text())
             error = float(self.uncertainty_input.text())
         except (AttributeError, ValueError):
-            msg = QMessageBox.critical(self, "Search error", "Invalid input in energy search.",
+            _ = QMessageBox.critical(self, "Search error", "Invalid input in energy search.",
                                        QMessageBox.StandardButton.Ok)
             return
 
-        res, _, _ = search_muxrays([[energy, error]])
+        # display mu-xray results
+        if self.search_isotopes_checkbox.isChecked():
+            muon_res, _, _ = search_muxrays_all_isotopes([[energy, error]])
+        else:
+            muon_res, _, _ = search_muxrays([[energy, error]])
 
-        for r in res:
-            if r["error"] == error: # Only get results that are within the search width (get_match will get matches within
-                # 1x error, 2x error and 3x error)
-                line = f"{r["energy"]:.4f}\t{r["transition"]}\t{to_iupac(r["transition"])}\t{r["element"]}\n"
-                self.x_ray_search.insertPlainText(line)
+        if not len(muon_res):
+            self.mu_xray_search_result_table.setRowCount(1)
+            self.mu_xray_search_result_table.setItem(0, 0, QTableWidgetItem("No matches."))
+            self.mu_xray_search_result_table.setItem(0, 1, QTableWidgetItem())
+            self.mu_xray_search_result_table.setItem(0, 2, QTableWidgetItem())
+            self.mu_xray_search_result_table.setItem(0, 3, QTableWidgetItem())
+            self.mu_xray_search_result_table.setItem(0, 4, QTableWidgetItem())
+        else:
+            self.mu_xray_search_result_table.setRowCount(len(muon_res))
+
+            for i, r in enumerate(muon_res):
+                if r["error"] == error: # Only get results that are within the search width (get_match will get matches within
+                    # 1x error, 2x error and 3x error)
+                    self.mu_xray_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["element"])))
+                    self.mu_xray_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(float(r["energy"]), 6))))
+                    self.mu_xray_search_result_table.setItem(i, 2, QTableWidgetItem(str(r["transition"])))
+                    self.mu_xray_search_result_table.setItem(i, 3, QTableWidgetItem(to_iupac(str(r["transition"]))))
+                    self.mu_xray_search_result_table.setItem(i, 4, QTableWidgetItem(str(abs(round(r["diff"], 6)))))
+
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
+
+        # display gamma results
+        gamma_res = search_gammas([[energy, error]])
+        print(gamma_res)
+
+        if not len(gamma_res):
+            self.gamma_search_result_table.setRowCount(1)
+            self.gamma_search_result_table.setItem(0, 0, QTableWidgetItem("No matches."))
+            self.gamma_search_result_table.setItem(0, 1, QTableWidgetItem())
+            self.gamma_search_result_table.setItem(0, 2, QTableWidgetItem())
+            self.gamma_search_result_table.setItem(0, 3, QTableWidgetItem())
+        else:
+            self.gamma_search_result_table.setRowCount(len(gamma_res))
+
+            for i, r in enumerate(gamma_res):
+                self.gamma_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["isotope"])))
+                self.gamma_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(r["energy"], 6))))
+                self.gamma_search_result_table.setItem(i, 2, QTableWidgetItem(str(round((float(r["intensity"])), 6))))
+                self.gamma_search_result_table.setItem(i, 3, QTableWidgetItem(str(abs(round(r["diff"], 6)))))
+
+        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+
+        # display e-xray results
+        e_xray_res = search_e_xrays([(energy, error)])
+
+        if not len(e_xray_res):
+            self.e_xray_search_result_table.setRowCount(1)
+            self.e_xray_search_result_table.setItem(0, 0, QTableWidgetItem("No matches."))
+            self.e_xray_search_result_table.setItem(0, 1, QTableWidgetItem())
+            self.e_xray_search_result_table.setItem(0, 2, QTableWidgetItem())
+            self.e_xray_search_result_table.setItem(0, 3, QTableWidgetItem())
+        else:
+            self.e_xray_search_result_table.setRowCount(len(e_xray_res))
+
+            for i, r in enumerate(e_xray_res):
+                self.e_xray_search_result_table.setItem(i, 0, QTableWidgetItem(r["element"]))
+                self.e_xray_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(r["energy"], 6))))
+                self.e_xray_search_result_table.setItem(i, 2, QTableWidgetItem(r["transition"]))
+                self.e_xray_search_result_table.setItem(i, 3, QTableWidgetItem(str(abs(round(r["diff"], 6)))))
+
+        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
 
         """ Previous method using the .dat files and custom search
         
@@ -149,4 +247,3 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
                     if re.match(energy_pattern, line):
                         self.x_ray_search.insertPlainText(line)
         """
-
