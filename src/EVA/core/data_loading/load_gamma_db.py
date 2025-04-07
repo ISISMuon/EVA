@@ -12,16 +12,11 @@ logger = logging.getLogger(__name__)
 bundle_dir = getattr(sys, '_MEIPASS', "")
 
 def load_gamma_data():
-    minZ, maxZ = 0, 117
+    minZ, maxZ = 0, 118
 
     gamma_levels_path = get_path('src/EVA/databases/gammas/levels/')
-    gamma_data = []
 
     logger.debug("working directory: %s", os.getcwd())
-
-    i = 0
-    for i in range(119):
-        gamma_data.append([])
 
     gamma_data = {}
 
