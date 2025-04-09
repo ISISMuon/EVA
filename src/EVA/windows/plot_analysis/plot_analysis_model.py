@@ -56,7 +56,7 @@ class PlotAnalysisModel(QObject):
             rowres = [match['isotope'], match['energy'], match['intensity'], match['lifetime']]
             for i in range(len(self.axs)):
                 self.axs[i].axvline(
-                    float(rowres[1]), color=next_color, linestyle='--', label=name)
+                    rowres[1], color=next_color, linestyle='--', label=name)
 
         self.plotted_gamma_lines.append(name)
         return name

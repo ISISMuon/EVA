@@ -17,6 +17,8 @@ def load_mudirac_data():
         z_numbers = {}
         capture_ratios = {}
         abundancies = {}
+        infos = {}
+        isotope_names = {}
 
         # sort data
         for element, element_data in data.items():
@@ -25,6 +27,8 @@ def load_mudirac_data():
             capture_prob = element_data["Capture ratio"].split("+-")
             capture_ratios[element] = {"Value": float(capture_prob[0]), "Error": float(capture_prob[1])}
             abundancies[element] = {}
+            infos[element] = element_data["Info"]
+            isotope_names[element] = list(element_data["Isotopes"].keys())
 
             for isotope, isotope_data in element_data["Isotopes"].items():
                 primary_energy = isotope_data["Primary"]
@@ -49,6 +53,8 @@ def load_mudirac_data():
             "All energies": all_energies_default_isotope,
             "Atomic numbers": z_numbers,
             "Capture ratios": capture_ratios,
+            "Infos": infos,
+            "Isotope names": isotope_names,
             "Abundancies": abundancies,
             "All isotopes": {
                 "Primary energies": primary_energies_all_isotopes,

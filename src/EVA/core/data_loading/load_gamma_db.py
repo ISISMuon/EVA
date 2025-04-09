@@ -12,25 +12,24 @@ logger = logging.getLogger(__name__)
 bundle_dir = getattr(sys, '_MEIPASS', "")
 
 def load_gamma_data():
-    minA, maxA = 0, 117
+    minZ, maxZ = 0, 118
 
     gamma_levels_path = get_path('src/EVA/databases/gammas/levels/')
-    gamma_data = []
 
     logger.debug("working directory: %s", os.getcwd())
 
-    i = 0
-    for i in range(119):
-        gamma_data.append([])
+    gamma_data = {}
 
-    for i in range(minA, maxA):
-        A = i + 1
-        if len(str(A)) == 1:
-            gamma_data = decode_gammas(os.path.abspath(os.path.join(gamma_levels_path, f"z00{str(A)}.dat")), A, gamma_data)
-        if len(str(A)) == 2:
-            gamma_data = decode_gammas(os.path.abspath(os.path.join(gamma_levels_path, f"z0{str(A)}.dat")), A, gamma_data)
-        if len(str(A)) == 3:
-            gamma_data = decode_gammas(os.path.abspath(os.path.join(gamma_levels_path, f"z{str(A)}.dat")), A, gamma_data)
+    for i in range(minZ, maxZ):
+        Z = i + 1
+        if len(str(Z)) == 1:
+            data, elem_name = decode_gammas(os.path.abspath(os.path.join(gamma_levels_path, f"z00{str(Z)}.dat")))
+        if len(str(Z)) == 2:
+            data, elem_name = decode_gammas(os.path.abspath(os.path.join(gamma_levels_path, f"z0{str(Z)}.dat")))
+        if len(str(Z)) == 3:
+            data, elem_name = decode_gammas(os.path.abspath(os.path.join(gamma_levels_path, f"z{str(Z)}.dat")))
+
+        gamma_data[elem_name] = data
 
     return gamma_data
 
@@ -58,7 +57,7 @@ def loadgammascan(minA,maxA):
     #print('gammas',globals.Full_Gammas)
 """
 
-def decode_gammas(filename, A, Full_Gammas):
+def decode_gammas(filename):
     f = open(filename, 'r')
     record = namedtuple('Isotope',
                         'SYMB A Z Nol Nog Nmax Nc Sn Sp')
@@ -72,15 +71,17 @@ def decode_gammas(filename, A, Full_Gammas):
                          'Nf Eg Pg Pe ICC')
     columns3 = ((39, 43), (45, 55), (55, 65), (66, 76), (77, 87))
 
+    gamma_data = []
+    symb = ""
+
     while f:
         string = f.readline()
+
         if string == "":
             break
 
-        dataline = [string[c[0]:c[1]] for c in columns1]
-
         nucl = record._make([string[c[0]:c[1]] for c in columns1])
-
+        symb = nucl.SYMB
 
         if int(nucl.Nol) >= 1:
 
@@ -92,10 +93,11 @@ def decode_gammas(filename, A, Full_Gammas):
                     for y in range(int(level.Ng)):
                         string = f.readline()
                         gammas = record3._make([string[c[0]:c[1]] for c in columns3])
-
-                        Full_Gammas[A].append((nucl.SYMB, gammas.Eg, gammas.Pg, level.T_half))
+                        gamma_data.append((nucl.SYMB, float(gammas.Eg)*1000, float(gammas.Pg)*100, level.T_half))
     f.close()
-    return Full_Gammas
+
+    elem_name = str("".join(filter(lambda c: c.isalpha(), symb)))
+    return gamma_data, elem_name
 
 """
 def decodegammas(filename, A):

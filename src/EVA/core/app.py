@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 import matplotlib
@@ -52,6 +53,10 @@ class App(QApplication):
         self.gamma_database = load_gamma_db.load_gamma_data()
         self.mudirac_muon_database = load_mu_xray_db.load_mudirac_data()
         self.legacy_muon_database = load_mu_xray_db.load_legacy_data()
+
+        with open(get_path("src/EVA/databases/electronic_xrays/xray_booklet_data.json")) as e_xray_file:
+            self.e_xray_database = json.load(e_xray_file)
+
         logger.debug("Loaded all databases in %ss.", (time.time_ns()-t0)/1e9)
 
         # Check config and set default "muon database" accordingly
