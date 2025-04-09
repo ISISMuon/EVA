@@ -6,7 +6,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QTreeWidgetItem, QTableWidgetItem, QMessageBox, QHeaderView
 from functools import partial
 
-from EVA.core.app import get_app
+from EVA.core.app import get_app, get_config
 from EVA.core.data_searching.get_match import search_muxrays, search_muxrays_all_isotopes, search_gammas, search_e_xrays
 from EVA.gui.periodic_table import Ui_MainWindow
 from EVA.util.path_handler import get_path
@@ -159,7 +159,11 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
         else:
             muon_res, _, _ = search_muxrays([[energy, error]])
 
-        if not len(muon_res):
+        # Only get results that are within the search width (get_match will get matches within
+        # 1x error, 2x error and 3x error)
+        filtered_muon_res = [res for res in muon_res if res["error"] == error]
+
+        if not len(filtered_muon_res):
             self.mu_xray_search_result_table.setRowCount(1)
             self.mu_xray_search_result_table.setItem(0, 0, QTableWidgetItem("No matches."))
             self.mu_xray_search_result_table.setItem(0, 1, QTableWidgetItem())
@@ -167,16 +171,14 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
             self.mu_xray_search_result_table.setItem(0, 3, QTableWidgetItem())
             self.mu_xray_search_result_table.setItem(0, 4, QTableWidgetItem())
         else:
-            self.mu_xray_search_result_table.setRowCount(len(muon_res))
+            self.mu_xray_search_result_table.setRowCount(len(filtered_muon_res))
 
-            for i, r in enumerate(muon_res):
-                if r["error"] == error: # Only get results that are within the search width (get_match will get matches within
-                    # 1x error, 2x error and 3x error)
-                    self.mu_xray_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["element"])))
-                    self.mu_xray_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(float(r["energy"]), 6))))
-                    self.mu_xray_search_result_table.setItem(i, 2, QTableWidgetItem(str(r["transition"])))
-                    self.mu_xray_search_result_table.setItem(i, 3, QTableWidgetItem(to_iupac(str(r["transition"]))))
-                    self.mu_xray_search_result_table.setItem(i, 4, QTableWidgetItem(str(abs(round(r["diff"], 6)))))
+            for i, r in enumerate(filtered_muon_res):
+                self.mu_xray_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["element"])))
+                self.mu_xray_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(float(r["energy"]), 6))))
+                self.mu_xray_search_result_table.setItem(i, 2, QTableWidgetItem(str(r["transition"])))
+                self.mu_xray_search_result_table.setItem(i, 3, QTableWidgetItem(to_iupac(str(r["transition"]))))
+                self.mu_xray_search_result_table.setItem(i, 4, QTableWidgetItem(str(abs(round(r["diff"], 6)))))
 
         self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -186,18 +188,22 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
 
         # display gamma results
         gamma_res = search_gammas([[energy, error]])
-        print(gamma_res)
+        filtered_gammas = [res for res in gamma_res
+                           if res["intensity"] >= float(get_config()["database"]["gamma_intensity_threshold"])]
 
-        if not len(gamma_res):
+        if not len(filtered_gammas):
             self.gamma_search_result_table.setRowCount(1)
             self.gamma_search_result_table.setItem(0, 0, QTableWidgetItem("No matches."))
             self.gamma_search_result_table.setItem(0, 1, QTableWidgetItem())
             self.gamma_search_result_table.setItem(0, 2, QTableWidgetItem())
             self.gamma_search_result_table.setItem(0, 3, QTableWidgetItem())
         else:
-            self.gamma_search_result_table.setRowCount(len(gamma_res))
+            self.gamma_search_result_table.setRowCount(len(filtered_gammas))
 
-            for i, r in enumerate(gamma_res):
+            for i, r in enumerate(filtered_gammas):
+                if r["intensity"] < 20:
+                    continue
+
                 self.gamma_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["isotope"])))
                 self.gamma_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(r["energy"], 6))))
                 self.gamma_search_result_table.setItem(i, 2, QTableWidgetItem(str(round((float(r["intensity"])), 6))))
