@@ -65,6 +65,8 @@ class TrimFitModel(TrimModel):
             ax.plot(self.momentum, self.proportions[i, :], "o-", label=self.sample_names[i])
 
         ax.legend()
+        ax.set_xlabel("Momentum (MeV/c)")
+        ax.set_ylabel("Proportions")
 
         return fig, ax
 
@@ -77,6 +79,9 @@ class TrimFitModel(TrimModel):
             color = ax[0]._get_lines.get_next_color()
             ax[0].plot(self.momentum, (self.proportions_per_layer[ix, :] / 100), "o--", color=color,
                        label=f"{self.sample_names[ix]} (sim)")
+
+            ax[0].set_xlabel("Momentum")
+            ax[0].set_ylabel("Proportion")
 
             ax[0].plot(self.momentum, self.proportions[ix, :], "o-", color=color,
                        label=f"{self.sample_names[ix]}")
@@ -140,14 +145,23 @@ class TrimFitModel(TrimModel):
             ax[0].plot(xdata, (ydatas[ix, :] / 100), "o--", color=color,
                        label=f"{self.sample_names[ix]} (sim)")
 
+            ax[0].set_xlabel("Momentum (MeV/c)")
+            ax[0].set_ylabel("Proportion")
+
             ax[0].plot(self.momentum, self.proportions[ix, :], "o-", color=color,
                        label=f"{self.sample_names[ix]}")
 
+            ax[1].set_title("Residuals")
+
+            ax[1].set_xlabel("Momentum (MeV/c)")
+            ax[1].set_ylabel("Error")
             ax[1].plot(self.momentum, ((ydatas[ix, :] / 100) - self.proportions[ix]),
                        label=f"{self.sample_names[ix]}")
 
         ax[0].legend(fontsize=8)
         ax[1].legend(fontsize=8)
+
+        fig.tight_layout()
 
         return fig, ax
 
