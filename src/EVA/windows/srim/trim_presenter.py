@@ -239,7 +239,7 @@ class TrimPresenter(QWidget):
                                      "Please ensure you have SRIM2013 installed.")
             return
 
-        if form_data["momentum_spread"] and form_data["stats"] < 500:
+        if form_data["sim_type"] == "Momentum Spread" and form_data["stats"] < 500:
             self.view.display_error_message(message="Momentum spread simulation requires a minimum of 500 muons.")
             return
 
