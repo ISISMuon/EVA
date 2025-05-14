@@ -30,7 +30,7 @@ class MultiPlotWindow(QWidget):
         self.setMinimumSize(1100, 600)
 
         # set up containers and layouts
-        self.layout = QGridLayout()
+        layout = QGridLayout()
         self.side_panel = QWidget()
         self.side_panel_layout = QVBoxLayout()
 
@@ -79,9 +79,9 @@ class MultiPlotWindow(QWidget):
         self.side_panel_layout.addWidget(self.settings_form)
         self.side_panel_layout.addWidget(self.RunListTable)
 
-        self.setLayout(self.layout)
-        self.layout.addWidget(self.side_panel, 0, 0, 0, 1)
-        self.layout.addWidget(self.plot, 0, 1)
+        self.setLayout(layout)
+        layout.addWidget(self.side_panel, 0, 0, 0, 1)
+        layout.addWidget(self.plot, 0, 1)
 
     def loadandplot(self):
         #print('hello')

@@ -7,6 +7,8 @@ from PyQt6.QtWidgets import (
     QVBoxLayout
 )
 
+from EVA.core.app import get_app
+
 matplotlib.use("QtAgg")
 
 
@@ -18,17 +20,18 @@ class FigureCanvas(FigureCanvasQTAgg):
         super().__init__(fig)
         self.axs = axs
 
-
 class PlotWidget(QWidget):
     """
     This is a "wrapper" widget class that contains both the navigation bar and the figure canvas, to avoid having to
     link the two manually every time a PlotWidget is needed. It also takes care of figure resizing and linking the
     navbar and plot together.
     """
-    def __init__(self, fig=None, axs=None, parent=None):
+    def __init__(self, fig=None, axs=None, parent=None, plot_name=None, plot_manager=None):
         super().__init__()
         # create the figure canvas
         self.canvas = FigureCanvas(fig=fig, axs=axs)
+        self.plot_manager = plot_manager
+        self.plot_name = plot_name
 
         # this avoids having a navbar when there is no figure
         if fig is None:
@@ -42,7 +45,14 @@ class PlotWidget(QWidget):
         self.layout.addWidget(self.canvas)
         self.setLayout(self.layout)
 
-    def update_plot(self, fig=None, axs=None):
+
+    def trigger_update(self, plot_id):
+        if self.plot_id == plot_id:
+            self.update_plot()
+
+    def update_plot(self, fig=None,axs=None):
+        print("Triggered!")
+
         """
         For a simple axes update, it is enough to update the axs parameter of the canvas and redraw.
 
@@ -79,3 +89,4 @@ class PlotWidget(QWidget):
         # Removes any current zoom or pan
         self.navbar.release_zoom(event)
         self.navbar.release_pan(event)
+

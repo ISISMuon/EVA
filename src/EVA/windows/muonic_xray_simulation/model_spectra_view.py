@@ -21,8 +21,8 @@ class ModelSpectraView(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.layout = QHBoxLayout()
-        self.setLayout(self.layout)
+        layout = QHBoxLayout()
+        self.setLayout(layout)
 
         self.side_panel_scroll = QScrollArea()
         self.side_panel_scroll.setWidgetResizable(True)
@@ -118,8 +118,8 @@ class ModelSpectraView(QWidget):
 
         # add side panel and plot to main gui
         self.side_panel_scroll.setMaximumWidth(300)
-        self.layout.addWidget(self.side_panel_scroll)
-        self.layout.addWidget(self.plot)
+        layout.addWidget(self.side_panel_scroll)
+        layout.addWidget(self.plot)
 
     def populate_gui(self, element_list):
         self.element_list = element_list

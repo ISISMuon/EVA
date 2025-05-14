@@ -1,5 +1,7 @@
 import logging
-from PyQt6.QtCore import Qt
+from types import NoneType
+
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
     QLabel,
     QPushButton,
@@ -15,6 +17,8 @@ from EVA.core.app import get_app, get_config
 logger = logging.getLogger(__name__)
 
 class MainView(QWidget):
+    update_all_plots_s = pyqtSignal(NoneType, NoneType)
+
     def __init__(self, parent):
         self.parent = parent
         super().__init__(parent)
@@ -28,61 +32,6 @@ class MainView(QWidget):
         self.file_browse_dir = self.file_menu.addAction('Browse to data directory')
         self.file_save = self.file_menu.addAction("Save all settings")
 
-        self.plot_menu = self.bar.addMenu('Plot')
-        #self.plot_settings = self.plot_menu.addAction('Plot settings')
-        self.plot_multiplot = self.plot_menu.addAction('Multi-run plot')
-        self.plot_detectors_menu = self.plot_menu.addMenu('Select detectors')
-
-        self.plot_detectors_actions = []
-
-        for i, detector in enumerate(self.detector_list):
-            action = self.plot_detectors_menu.addAction(detector)
-            action.setCheckable(True)
-            action.setChecked(config.parser.getboolean(detector, "show_plot"))
-            action.setShortcut(f"Alt+{i+1}")
-            self.plot_detectors_actions.append(action)
-
-        self.normalisation_menu = self.bar.addMenu('Normalisation')
-        self.norm_none = self.normalisation_menu.addAction('Use raw data')
-        self.norm_none.setCheckable(True)
-        self.norm_none.setShortcut("Alt+D")
-
-        self.norm_counts = self.normalisation_menu.addAction('Normalise by total counts')
-        self.norm_counts.setCheckable(True)
-        self.norm_counts.setShortcut("Alt+C")
-
-        self.norm_events = self.normalisation_menu.addAction('Normalise by events')
-        self.norm_events.setCheckable(True)
-        self.norm_events.setShortcut("Alt+S")
-
-        self.corrections_menu = self.bar.addMenu('Corrections')
-
-        # efficiency corrections currently not implemented
-        #self.efficiency_corrections = self.corrections_menu.addAction('Efficiency Corrections')
-        self.energy_corrections = self.corrections_menu.addAction('Energy Corrections')
-
-        self.analysis_menu = self.bar.addMenu('Analysis')
-        self.peakfit_menu = self.analysis_menu.addMenu('Peak Fitting')
-        self.peakfit_menu.setDisabled(True)
-
-        self.peakfit_menu_actions = []
-
-        for detector in self.detector_list:
-            action = self.peakfit_menu.addAction(detector)
-            self.peakfit_menu_actions.append(action)
-
-        #self.trim_fit = self.analysis_menu.addAction("Trim fitting")
-
-
-        self.tools_menu = self.bar.addMenu('Tools')
-        self.trim_simulation = self.tools_menu.addAction('SRIM/TRIM Simulation')
-
-        # currently not implemented
-        #self.trim_simulation_test = self.tools_menu.addAction('SRIM/TRIM Simulation test')
-
-        self.model_muon_spectrum = self.tools_menu.addAction("Simulate muonic X-ray spectra")
-
-        self.periodic_table = self.tools_menu.addAction("Periodic table")
 
         self.help_menu = self.bar.addMenu('Help')
         self.help_manual = self.help_menu.addAction("Manual")
@@ -214,4 +163,6 @@ class MainView(QWidget):
         _ = QMessageBox.information(self, title, msg,
                                  buttons=QMessageBox.StandardButton.Ok,
                                  defaultButton=QMessageBox.StandardButton.Ok)
+
+
 

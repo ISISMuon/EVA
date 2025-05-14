@@ -8,7 +8,9 @@ def multi_plot(runs, offset):
     config = get_config()
 
     # Sort the runs in the run list by detector to make it easier to plot
-    detectors = list(zip(*[run.data for run in runs]))
+    detectors = list(zip(*[run.data.values() for run in runs]))
+
+    print(detectors)
 
     # Remove detectors which either contain no data or are set to not be plotted by config
     plot_detectors = [detector_data for detector_data in detectors if not is_empty(detector_data)

@@ -1,5 +1,9 @@
 import logging
+from multiprocessing.managers import Value
 
+from PyQt6.QtCore import Qt
+
+from EVA.core.app import get_config
 from EVA.core.data_searching.get_match import search_muxrays_single_element, search_gammas_single_isotope
 from EVA.util.transition_utils import is_primary
 
@@ -27,6 +31,9 @@ class PlotAnalysisPresenter(object):
         self.view.routine_select_combo.addItems(self.model.peakfind_functions)
         self.view.routine_select_combo.setCurrentText(self.model.peakfind_selected_function)
 
+        #self.view.bin_size_spin_box.setMinimum(1)
+        #self.view.bin_size_spin_box.setMaximum(100)
+
         # set up all connections:
         self.view.mu_xray_search_width_line_edit.textEdited.connect(self.set_mu_xray_search_width)
         self.view.gamma_search_width_line_edit.textEdited.connect(self.set_gamma_search_width)
@@ -52,6 +59,24 @@ class PlotAnalysisPresenter(object):
 
         self.view.muon_search_button.clicked.connect(self.search_muonic_xrays)
         self.view.gamma_search_button.clicked.connect(self.search_gammas)
+
+        self.view.ge1_checkbox.checkStateChanged.connect(lambda x: self.checkbox_checked(x, "GE1",
+                                                                                         self.view.ge1_checkbox))
+        self.view.ge2_checkbox.checkStateChanged.connect(lambda x: self.checkbox_checked(x, "GE2",
+                                                                                         self.view.ge2_checkbox))
+        self.view.ge3_checkbox.checkStateChanged.connect(lambda x: self.checkbox_checked(x, "GE3",
+                                                                                         self.view.ge3_checkbox))
+        self.view.ge4_checkbox.checkStateChanged.connect(lambda x: self.checkbox_checked(x, "GE4",
+                                                                                         self.view.ge4_checkbox))
+
+        plot_detectors = self.model.get_plot_detectors()
+
+        self.view.ge1_checkbox.setChecked("GE1" in plot_detectors)
+        self.view.ge2_checkbox.setChecked("GE2" in plot_detectors)
+        self.view.ge3_checkbox.setChecked("GE3" in plot_detectors)
+        self.view.ge4_checkbox.setChecked("GE4" in plot_detectors)
+
+        #self.view.bin_size_spin_box.valueChanged.connect(self.update_binning)
 
     def search_muonic_xrays(self):
         try:
@@ -252,3 +277,16 @@ class PlotAnalysisPresenter(object):
         self.view.peakfind_results_tree.clear()
         self.view.peakfind_results_table.setRowCount(0)
         self.view.plot.canvas.draw()
+
+
+    def checkbox_checked(self, checkstate, detector, checkbox):
+        checked = checkstate == Qt.CheckState.Checked
+
+        if len(self.model.get_plot_detectors()) == 1 and checked == False:
+            checkbox.setChecked(True)
+            return
+
+        self.model.update_detector_plot_selection(checked, detector)
+
+        self.view.plot.update_plot(self.model.fig, self.model.axs)
+        self.view.plot.canvas.mpl_connect('button_press_event', self.on_plot_clicked)

@@ -23,7 +23,7 @@ class ModelFitModel(QObject):
 
         # Get loaded spectrum from app
         self.run = run
-        self.spectrum = self.run.data[DetectorIndices[detector].value]
+        self.spectrum = self.run.data[detector]
         self.detector = detector
 
         # Set up containers to store initial and fitted parameters

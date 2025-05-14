@@ -11,6 +11,7 @@ from EVA.windows.manual import manual_window
 from EVA.windows.peakfit import peakfit_widget
 from EVA.windows.srim.trim_window import TrimWindow
 from EVA.util.path_handler import get_path
+from EVA.windows.test.test_main_view import TestMainView
 from EVA.windows.trim_fitting.trim_fit_widget import TrimFitWidget
 
 logger = logging.getLogger(__name__)
@@ -26,39 +27,11 @@ class MainPresenter(object):
         self.view.file_browse_dir.triggered.connect(self.set_default_directory)
         self.view.file_load_default.triggered.connect(self.load_default_config)
 
-        for i, det in enumerate(self.view.detector_list):
-            self.view.plot_detectors_actions[i].triggered.connect(lambda check_state, detector=det:
-                                                                  self.model.toggle_plot_detector(check_state, detector))
-
-        self.view.plot_multiplot.triggered.connect(self.open_multiplot)
-
-        self.view.update_normalisation_menu(config["general"]["normalisation"])
-        self.view.norm_none.triggered.connect(lambda: self.set_norm_none(self.view.norm_none.isChecked()))
-        self.view.norm_counts.triggered.connect(lambda: self.set_norm_counts(self.view.norm_counts.isChecked()))
-        self.view.norm_events.triggered.connect(lambda: self.set_norm_events(self.view.norm_events.isChecked()))
-
-        self.view.energy_corrections.triggered.connect(self.open_energy_corrections)
-
-        # efficiency corrections currently not implemented
-        #self.view.efficiency_corrections.triggered.connect(self.open_efficiency_corrections)
-
-        for i, detector in enumerate(self.view.detector_list):
-            self.view.peakfit_menu_actions[i].triggered.connect(lambda _, det=detector: self.open_peakfit(det))
-
-        #self.view.trim_fit.triggered.connect(self.open_trim_fit)
-
-        self.view.trim_simulation.triggered.connect(self.open_trim)
-        #self.view.trim_simulation_test.triggered.connect(self.RunTrimExample)
-        self.view.model_muon_spectrum.triggered.connect(self.open_model_muon_spectrum)
-        self.view.periodic_table.triggered.connect(self.open_periodic_table)
-
-        self.view.help_manual.triggered.connect(self.open_manual)
-
         self.view.get_next_run_button.clicked.connect(self.increment_run_num)
         self.view.load_next_run_button.clicked.connect(lambda: self.increment_run_num(load=True))
         self.view.get_prev_run_button.clicked.connect(self.decrement_run_num)
         self.view.load_prev_run_button.clicked.connect(lambda: self.decrement_run_num(load=True))
-        self.view.load_button.clicked.connect(self.load_run_num)
+        self.view.load_button.clicked.connect(self.test_load_run_num)
 
     def save_settings(self):
         config = get_config()
@@ -179,6 +152,41 @@ class MainPresenter(object):
         self.open_plot_window()
         self.view.peakfit_menu.setDisabled(False)
 
+    def test_load_run_num(self):
+        try:
+            run_num = self.view.get_run_num_line_edit()
+        except (ValueError, AttributeError):
+            self.view.show_error_box("Invalid run number!")
+            return
+
+        flags = self.model.load_run(run_num)
+
+        if flags["no_files_found"]: #  no data was loaded - return now
+            # Update GUI
+            self.view.set_run_num_label(f"No files found for run {run_num} in {get_path(get_config()["general"]["working_directory"])}")
+            self.view.set_comment_labels("Comment file not found.", "N/A", "N/A", "N/A")
+            return
+
+        self.view.set_run_num_label(str(run_num))
+
+        if flags["comment_not_found"]: # Comment file was not found
+            self.view.set_comment_labels(comment="Comment file not found", start="N/A", end="N/A", events="N/A")
+
+        else: # write comment info to GUI
+            comment, start, end, events = self.model.read_comment_data()
+            self.view.set_comment_labels(comment, start, end, events)
+
+        if flags["norm_by_spills_error"]:  # normalisation by spills failed
+            self.view.update_normalisation_menu("none")
+
+            # display error message to let user know what happened
+            err_str = ("Cannot use normalisation by spills when comment file has not been loaded. Normalisation has been "
+                       "set to none.")
+
+            self.view.show_error_box(err_str, title="Normalisation error")
+
+        self.open_test_main()
+
     def open_multiplot(self):
         logger.info("Launching multiplot window.")
         self.view.multiplot_window = MultiPlotWindow()
@@ -233,6 +241,10 @@ class MainPresenter(object):
             self.view.manual_window = manual_window.ManualWindow()
 
         self.view.manual_window.show()
+
+    def open_test_main(self):
+        self.test_window = TestMainView(run=self.model.run)
+        self.test_window.showMaximized()
 
     def open_plot_window(self):
         config = get_config()

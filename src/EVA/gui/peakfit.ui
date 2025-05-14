@@ -15,6 +15,21 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
+    <widget class="QStackedWidget" name="plot_container_widget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>2</horstretch>
+       <verstretch>2</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background: white</string>
+     </property>
+     <widget class="PlotWidget" name="plot"/>
+     <widget class="PlotWidget" name="model_plot"/>
+    </widget>
+   </item>
+   <item>
     <widget class="QTabWidget" name="side_panel_tabs">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -1071,34 +1086,19 @@
      </widget>
     </widget>
    </item>
-   <item>
-    <widget class="QStackedWidget" name="plot_container_widget">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>2</horstretch>
-       <verstretch>2</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background: white</string>
-     </property>
-     <widget class="PlotWidget" name="plot"/>
-     <widget class="PlotWidget" name="model_plot"/>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>BaseTable</class>
+   <extends>QTableWidget</extends>
+   <header>EVA.widgets.base.base_table</header>
+  </customwidget>
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
    <header>EVA.widgets.plot.plot_widget</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BaseTable</class>
-   <extends>QTableWidget</extends>
-   <header>EVA.widgets.base.base_table</header>
   </customwidget>
  </customwidgets>
  <resources>

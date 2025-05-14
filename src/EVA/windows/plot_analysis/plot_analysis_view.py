@@ -37,6 +37,7 @@ class PlotAnalysisView(BaseView, Ui_plot_analysis):
         self.plot = PlotWidget()
         plot_layout = QVBoxLayout()
         plot_layout.addWidget(self.plot)
+        plot_layout.setContentsMargins(0,0,0,0)
         self.plot_widget_container.setLayout(plot_layout)
 
         # configure peakfind results tree

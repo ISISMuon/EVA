@@ -19,7 +19,7 @@ class PeakFitWidget(QWidget):
         # Using a layout for this is excessive, but for some reason just parenting the view doesn't
         # force the PlotWidget to resize to fit the window, while using a layout does...?
 
-        self.layout = QHBoxLayout()
-        self.layout.addWidget(self.view)
-        self.setLayout(self.layout)
-        self.layout.setContentsMargins(0,0,0,0)
+        layout = QHBoxLayout()
+        layout.addWidget(self.view)
+        self.setLayout(layout)
+        layout.setContentsMargins(0,0,0,0)

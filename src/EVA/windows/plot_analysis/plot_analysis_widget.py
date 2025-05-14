@@ -9,6 +9,7 @@ class PlotAnalysisWidget(QWidget):
     def __init__(self, run, parent=None):
         super().__init__()
 
+
         self.view = PlotAnalysisView()
         self.model = PlotAnalysisModel(run)
         self.presenter = PlotAnalysisPresenter(self.view, self.model)

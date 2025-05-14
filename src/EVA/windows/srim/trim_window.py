@@ -20,7 +20,6 @@ class TrimWindow(QWidget):
         self.presenter = TrimPresenter(self.view, self.model)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.view.menubar)
         layout.addWidget(self.view)
         layout.setContentsMargins(0, 0, 0, 0)
 

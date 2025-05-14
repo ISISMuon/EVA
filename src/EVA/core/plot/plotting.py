@@ -50,7 +50,7 @@ def plot_spectrum(spectrum: Spectrum, normalisation: str, **settings: dict) -> t
         fig.supylabel("Intensity")
 
     ax.fill_between(spectrum.x, spectrum.y, step='mid', color=colour)
-    ax.step(spectrum.x, spectrum.y, where='mid', color='black')
+    ax.step(spectrum.x, spectrum.y, where='mid', color='black', label=f"_{spectrum.detector}")
     ax.set_ylim(0.0)
     ax.set_xlim(0.0)
 
@@ -78,16 +78,16 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
         matplotlib Figure and Axes with plotted data
     """
     default_adjustments = {
-        "top": 0.9,
-        "bottom": 0.1,
-        "left": 0.1,
-        "right": 0.9,
-        "hspace": 0.45,
+        "top": 0.875,
+        "bottom": 0.085,
+        "left": 0.095,
+        "right": 0.99,
+        "hspace": 0.53,
         "wspace": 0.23
     }
 
     show_detectors = settings.get("show_detectors", run.loaded_detectors)
-    title = settings.get("title", f"Run Number: {run.run_num} {run.comment}")
+    title = settings.get("title", f"Run Number: {run.run_num}\n{run.comment}")
     colour = settings.get("colour", "yellow")
     size = settings.get("size", (16, 7))
     adjustments = settings.get("adjustment_dict", default_adjustments)
@@ -112,10 +112,10 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
         fig.supylabel("Intensity")
 
     i = 0
-    for dataset in run.data:
-        if dataset.detector in show_detectors:
+    for detector, dataset in run.data.items():
+        if detector in show_detectors:
             axs[i].fill_between(dataset.x, dataset.y, step='mid', color=colour)
-            axs[i].step(dataset.x, dataset.y, where='mid', color='black')
+            axs[i].step(dataset.x, dataset.y, where='mid', color='black', label=f"_{detector}")
             axs[i].set_ylim(0.0)
             axs[i].set_xlim(0.0)
             axs[i].set_title(dataset.detector)
