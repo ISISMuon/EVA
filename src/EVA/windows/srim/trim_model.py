@@ -42,7 +42,7 @@ class TrimModel(QObject):
         self.layer_boundary_positions = []
 
         ### Default SRIM settings ###
-        self.stats = 100
+        self.stats = 1000
         self.srim_exe_dir = get_config()["SRIM"]["installation_directory"]
         self.srim_out_dir = get_config()["SRIM"]["output_directory"]
 
@@ -121,7 +121,7 @@ class TrimModel(QObject):
                 # calculate muon for given momentum
                 muon_ion = self.get_muon(mom)
 
-                x, y, cancel_flag = self.run_TRIM(target=target_sample, muon=muon_ion)
+                x, y, cancel_flag = self.run_TRIM(target=target_sample, muon=muon_ion, n_muons=self.stats)
                 simulation_count += 1
 
                 # if simulation stop is requested
@@ -164,7 +164,7 @@ class TrimModel(QObject):
                     # get muon information
                     muon_ion = self.get_muon(P)
 
-                    x1, y1, cancel_flag = self.run_TRIM(target_sample, muon_ion)
+                    x1, y1, cancel_flag = self.run_TRIM(target_sample, muon_ion, n_muons=NE)
                     simulation_count += 1
 
                     # if simulation stop is requested
@@ -338,13 +338,14 @@ class TrimModel(QObject):
 
         return muon_ion
 
-    def run_TRIM(self, target: Target, muon: Ion) -> tuple[list | None, list | None, int]:
+    def run_TRIM(self, target: Target, muon: Ion, n_muons: int) -> tuple[list | None, list | None, int]:
         """
         Runs TRIM simulation for a single momentum.
 
         Args:
             target: sample target
             muon: muon object
+            n_muons: number of muons to simulate for
 
         Returns: xdata, ydata, cancel_flag - 1 is simulation stop was requested while simulating, 0 if all good
         """
@@ -352,7 +353,7 @@ class TrimModel(QObject):
         if self.cancel_sim:
             return None, None, 1
 
-        trim_sim = TRIM(target, muon, number_ions= self.stats, calculation=1)
+        trim_sim = TRIM(target, muon, number_ions=n_muons, calculation=1)
 
         try:
             trim_data_output = trim_sim.run(self.srim_exe_dir)  # Simulation run by executing SRIM.exe in directory
@@ -369,7 +370,7 @@ class TrimModel(QObject):
 
         y1 = np.array(trim_data.ions)  # SRIM has weird units for y axis
 
-        y1_corrected = self.correct_to_counts(self.total_thickness, y1, self.stats)
+        y1_corrected = self.correct_to_counts(self.total_thickness, y1, n_muons)
 
         # e1 = list(trim_data.ions)
 

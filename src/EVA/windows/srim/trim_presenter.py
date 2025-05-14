@@ -22,7 +22,7 @@ class TrimPresenter(QWidget):
         self.view = view
         self.model = model
 
-        self.view.sample_name_linedit.setText("Cu")
+        self.view.sample_name_linedit.setText("Sample")
         self.view.momentum_linedit.setText(str(self.model.momentum[0]))
         self.view.momentum_spread_linedit.setText(str(self.model.momentum_spread))
         self.view.min_momentum_linedit.setText(str(self.model.min_momentum))
@@ -237,6 +237,10 @@ class TrimPresenter(QWidget):
         if not srimdir_valid or not outputdir_valid:
             self.view.display_error_message(message="Could not find SRIM.exe at specified location. "
                                      "Please ensure you have SRIM2013 installed.")
+            return
+
+        if form_data["sim_type"] == "Momentum Spread" and form_data["stats"] < 500:
+            self.view.display_error_message(message="Momentum spread simulation requires a minimum of 500 muons.")
             return
 
         # if everything is ok, send data to model and simulate
