@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QWidget, QTableWidgetItem
 from pytestqt.plugin import qtbot
 
 
-from EVA.windows.multiplot.multi_plot_window import MultiPlotWindow
+from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.core.app import get_config, get_app
 
 channels = {

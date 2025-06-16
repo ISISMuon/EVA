@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -5,6 +6,22 @@ from EVA.core.app import get_app
 from EVA.core.data_structures.run import Run
 from EVA.core.data_structures.spectrum import Spectrum
 
+def get_ylabel(normalisation: str) -> str:
+    """
+    Returns the appropriate ylabel for given normalisation
+    Args:
+        normalisation: normalisation type
+
+    Returns:
+        formatted ylabel
+    """
+
+    if normalisation == "counts":
+        return "Intensity Normalised to Counts (10^5)"
+    elif normalisation == "events":
+        return "Intensity Normalised to Spills (10^5)"
+    else:
+        return "Intensity"
 
 def Plot_Peak_Location(ax: plt.Axes, x: np.ndarray, y: np.ndarray, peak_indices: np.ndarray):
     """
@@ -42,12 +59,7 @@ def plot_spectrum(spectrum: Spectrum, normalisation: str, **settings: dict) -> t
     fig.supxlabel("Energy (keV)")
 
     # sets the correct labels
-    if normalisation == "counts":
-        fig.supylabel("Intensity Normalised to Counts (10^5)")
-    elif normalisation == "events":
-        fig.supylabel("Intensity Normalised to Spills (10^5)")
-    else:
-        fig.supylabel("Intensity")
+    fig.supylabel(get_ylabel(normalisation))
 
     ax.fill_between(spectrum.x, spectrum.y, step='mid', color=colour)
     ax.step(spectrum.x, spectrum.y, where='mid', color='black', label=f"_{spectrum.detector}")
@@ -88,7 +100,9 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
 
     show_detectors = settings.get("show_detectors", run.loaded_detectors)
     title = settings.get("title", f"Run Number: {run.run_num}\n{run.comment}")
-    colour = settings.get("colour", "yellow")
+    ylabel = settings.get("ylabel", None)
+    xlabel = settings.get("xlabel", None)
+    colour = settings.get("colour", "white")
     size = settings.get("size", (16, 7))
     adjustments = settings.get("adjustment_dict", default_adjustments)
 
@@ -101,26 +115,55 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
         axs = [axs]
 
     fig.suptitle(title)
-    fig.supxlabel("Energy (keV)")
+
+    if xlabel is not None:
+        fig.supxlabel(xlabel)
+    else:
+        fig.supxlabel("Energy (keV)")
 
     # sets the correct labels
-    if run.normalisation == "counts":
-        fig.supylabel("Intensity Normalised to Counts (10^5)")
-    elif run.normalisation == "events":
-        fig.supylabel("Intensity Normalised to Spills (10^5)")
+
+    if ylabel is not None:
+        fig.supylabel(ylabel)
     else:
-        fig.supylabel("Intensity")
+        fig.supylabel(get_ylabel(run.normalisation))
 
     i = 0
     for detector, dataset in run.data.items():
+        print(run.loaded_detectors)
         if detector in show_detectors:
             axs[i].fill_between(dataset.x, dataset.y, step='mid', color=colour)
             axs[i].step(dataset.x, dataset.y, where='mid', color='black', label=f"_{detector}")
-            axs[i].set_ylim(0.0)
             axs[i].set_xlim(0.0)
+            axs[i].set_ylim(0.0)
             axs[i].set_title(dataset.detector)
             i += 1
 
     # Adjustments
     plt.subplots_adjust(**adjustments)
     return fig, axs
+
+
+def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
+    fig.supylabel(get_ylabel(run.normalisation))
+    axes = [axs] if not isinstance(axs, np.ndarray) else axs
+
+    for ax in axes:
+        print([line.get_label() for line in ax.lines])
+        detector, line = [(line.get_label()[1:], line) for line in ax.lines if
+                          line.get_label()[1:] in run.loaded_detectors][0]
+
+        xdata = run.data[detector].x
+        ydata = run.data[detector].y
+
+        line.set_xdata(xdata)
+        line.set_ydata(ydata)
+
+        fill_obj = [child for child in ax.get_children() if
+                    isinstance(child, matplotlib.collections.FillBetweenPolyCollection)][0]
+
+        # lastly, re-fill the histogram
+        fill_obj.set_data(xdata, 0, ydata)
+
+        if "colour" in settings.keys():
+            fill_obj.set_color(settings["colour"])

@@ -25,6 +25,8 @@ def numpy_rebin(x0: np.ndarray, y0: np.ndarray, bin_size: int) -> tuple[np.ndarr
     # get the histogram (y-values) and bin edges (x-values) which are of size len(hist) + 1
     hist, bin_edges = np.histogram(energies, n_bins)
 
+    hist = hist / bin_size
+
     # center bin edges (drop the last element and shift all bin edges by 0.5x bin width)
     bin_centres = bin_edges[:-1] + (bin_edges[1]-bin_edges[0]) / 2
 

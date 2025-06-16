@@ -1,0 +1,59 @@
+[general]
+normalisation = "none"
+binning = 1.0
+
+[GE1]
+show_plot = true
+e_corr_coeffs = [0, 1]
+e_corr_enabled = false
+eff_corr_coeffs = [93.2, 59.2, -13.6, 1.35, -0.049]
+eff_corr_enabled = false
+
+[GE2]
+show_plot = true
+e_corr_coeffs = [0, 1]
+e_corr_enabled = false
+eff_corr_coeffs = [0, 1, 0, 0, 0]
+eff_corr_enabled = false
+
+[GE3]
+show_plot = true
+e_corr_coeffs = [0, 1]
+e_corr_enabled = false
+eff_corr_coeffs = [-1.79, 0.805, -0.0711, 0, 0]
+eff_corr_enabled = false
+
+[GE4]
+show_plot = false
+e_corr_coeffs = [0, 1]
+e_corr_enabled = false
+eff_corr_coeffs = [0, 1, 0, 0, 0]
+eff_corr_enabled = false
+
+[GE5]
+show_plot = false
+e_corr_coeffs = [0, 1]
+e_corr_enabled = false
+eff_corr_coeffs = [0, 1, 0, 0, 0]
+eff_corr_enabled = false
+
+[GE6]
+show_plot = false
+e_corr_coeffs = [0, 1]
+e_corr_enabled = false
+eff_corr_coeffs = [0, 1, 0, 0, 0]
+eff_corr_enabled = false
+
+[GE7]
+show_plot = false
+e_corr_coeffs = [0, 1]
+e_corr_enabled = false
+eff_corr_coeffs = [0, 1, 0, 0, 0]
+eff_corr_enabled = false
+
+[GE8]
+show_plot = false
+e_corr_coeffs = [0, 1]
+e_corr_enabled = false
+eff_corr_coeffs = [0, 1, 0, 0, 0]
+eff_corr_enabled = false

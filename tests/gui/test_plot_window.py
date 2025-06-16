@@ -1,11 +1,9 @@
-import matplotlib.collections
 import pytest
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget
 from pytestqt.plugin import qtbot
 from matplotlib.backend_bases import MouseButton
 
-from EVA.windows.plot_analysis.plot_analysis_widget import PlotAnalysisWidget
+from EVA.gui.windows.elemental_analysis.plot_analysis_widget import PlotAnalysisWidget
 from EVA.core.data_loading import load_data
 from EVA.core.app import get_app, get_config
 

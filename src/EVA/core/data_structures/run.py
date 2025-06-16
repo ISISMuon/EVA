@@ -1,6 +1,7 @@
 from copy import deepcopy
 
 import numpy as np
+from PyQt6.QtCore import QObject, pyqtSignal
 
 from EVA.core.data_structures.spectrum import Spectrum
 from EVA.core.physics import rebin
@@ -8,7 +9,9 @@ from EVA.core.physics.normalisation import normalise_events, normalise_counts
 
 normalisation_types = ("none", "counts", "events")
 
-class Run:
+class Run(QObject):
+    corrections_updated_s = pyqtSignal()
+
     """
     The Run class specifies the experiment data and context for all detectors during a single measurement run.
 
@@ -24,6 +27,7 @@ class Run:
        """
     def __init__(self, raw : dict[Spectrum], loaded_detectors : list[str], run_num: str, start_time: str, end_time: str,
                  events_str: str, comment: str):
+        super().__init__()
 
         # Main data containers
         self._raw = raw # raw, unprocessed data as read from file - is NOT to be changed
@@ -33,12 +37,13 @@ class Run:
         self.loaded_detectors = loaded_detectors
         self.run_num = run_num
 
-        # Normalisation and energy correction info (initial read from default.ini)
+        # Normalisation and energy correction info
         self.normalisation = None
-        self.normalise_which = []
-        self.e_corr_params = None
-        self.e_corr_which = []
+        self.normalise_which = loaded_detectors # currently normalising all detectors
         self.bin_rate = 1
+
+        # energy corrections
+        self.energy_corrections = {}
 
         # Metadata from comment file (may not be available)
         self.start_time = start_time
@@ -46,7 +51,7 @@ class Run:
         self.events_str = events_str
         self.comment = comment
 
-    def set_corrections(self, e_corr_params: dict[tuple[float]] | None = None, e_corr_which: list[str] | None = None,
+    def set_corrections(self, energy_corrections: dict[dict] | None = None,
                         normalisation: str | None = None, normalise_which: list[str] | None = None, bin_rate: float | None = None):
         """
         Reapplies all normalisation, corrections and binning specified for the data. Order here is important, and so
@@ -56,16 +61,22 @@ class Run:
 
         The order of
         processing is:
-            * energy calibrations
-            * binning
+            * energy calibrations / corrections
             * normalisation
+            * binning
         """
+
+        if normalise_which is None:
+            normalise_which = self.normalise_which
 
         self.data = deepcopy(self._raw)
 
-        self._set_energy_correction(e_corr_params, e_corr_which)
+        self._set_energy_correction(energy_corrections)
         self._set_normalisation(normalisation, normalise_which)
         self._set_binning(bin_rate)
+
+        # emit a signal to let program know the run has changed
+        self.corrections_updated_s.emit()
 
     # dispatcher method to set normalisation type from string
     def _set_normalisation(self, normalisation: str, normalise_which: list[str] | None = None):
@@ -156,38 +167,35 @@ class Run:
             self.normalise_which = self.loaded_detectors
             raise ValueError("Normalisation by events failed.")
 
-    def _set_energy_correction(self, e_corr_params: dict[tuple[float]], e_corr_which: list[str] | None = None):
+    def _set_energy_correction(self, energy_corrections: dict):
         """
         Sets current energy correction.
 
         Args:
-            e_corr_params: Dict of tuples containing energy correction (gradient, offset) for each detector.
-            e_corr_which: Names of which detectors to apply energy correction to.
+            energy_corrections: Dict of containing energy correction parameters (gradient, offset) for each detector.
         """
 
-        if e_corr_which is None:
-            e_corr_which = self.e_corr_which
-
-        if e_corr_params is None:
-            e_corr_params = self.e_corr_params
+        if energy_corrections is None:
+            energy_corrections = self.energy_corrections
 
         # Iterate through each Spectrum in the run and apply energy correction if the detector is in e_corr_which
         for detector, spectrum in self.data.items():
-            if detector in e_corr_which:
-                gradient = e_corr_params[detector][0]
-                offset = e_corr_params[detector][1]
+            if energy_corrections[detector]["use_e_corr"]:
+                gradient, offset = energy_corrections[detector]["e_corr_coeffs"]
 
                 self.data[detector].x = self.data[detector].x * gradient + offset # store energy correction in data
 
-        self.e_corr_which = e_corr_which
-        self.e_corr_params = e_corr_params
+        self.energy_corrections = energy_corrections
 
     def _set_binning(self, binning_rate: float | None = None):
         if binning_rate is None:
             binning_rate = self.bin_rate
+        else:
+           self.bin_rate = binning_rate
 
         # avoid weird glitches
         if binning_rate == 1.0:
+            self.bin_rate = 1.0
             return
 
         for detector, spectrum in self._raw.items():

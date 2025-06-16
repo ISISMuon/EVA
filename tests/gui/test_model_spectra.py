@@ -1,10 +1,9 @@
 import pytest
 from pytestqt.plugin import qtbot
-from EVA.core.app import get_config, get_app
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import Qt
 
-from EVA.windows.muonic_xray_simulation.model_spectra_widget import ModelSpectraWidget
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_view import ModelSpectraView
 
 base_test = {
     "elements": ["Ag", "Hg"],
@@ -21,12 +20,12 @@ class TestModelSpectrumWindow:
     @pytest.fixture(autouse=True)
     def setup(self, qtbot):
         self.widget = QWidget()
-        self.window = ModelSpectraWidget(self.widget)
+        self.window = ModelSpectraView(self.widget)
         qtbot.addWidget(self.window)
 
     @pytest.fixture()
     def add_and_remove_elements(self, qtbot):
-        element_selector = self.window.view.element_selector
+        element_selector = self.window.element_selector
         # add 8 element selectors to get a total of 9 (remember there already exists one element selector on start)
         for i in range(8):
             qtbot.mouseClick(element_selector.add_element_button, Qt.MouseButton.LeftButton)

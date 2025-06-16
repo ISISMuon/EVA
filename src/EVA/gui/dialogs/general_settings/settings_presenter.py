@@ -1,0 +1,51 @@
+import logging
+
+from EVA.core.app import get_config
+
+logger = logging.getLogger(__name__)
+
+class SettingsPresenter:
+    def __init__(self, view, model):
+        self.view = view
+        self.model = model
+
+        self.load_current_settings()
+
+        self.view.plot_fill_colour_button.clicked.connect(self.view.open_colour_dialog)
+        self.view.colour_dialog.currentColorChanged.connect(
+            lambda: self.view.set_fill_colour_preview(self.view.colour_dialog.currentColor().name()))
+        self.view.apply_button.clicked.connect(self.on_apply)
+
+    def load_current_settings(self):
+        config = get_config()
+
+        settings = {
+            "working_dir": config["general"]["working_directory"],
+            "srim_exe_dir": config["SRIM"]["installation_directory"],
+            "srim_out_dir": config["SRIM"]["output_directory"],
+            "fill_colour": config["plot"]["fill_colour"]
+        }
+
+        self.view.set_settings(settings)
+
+    def on_apply(self):
+        settings = self.view.get_settings()
+
+        restructured_settings = {
+            "general": {
+                "working_directory": settings["working_dir"]
+            },
+            "SRIM": {
+                "installation_directory": settings["srim_exe_dir"],
+                "output_directory": settings["srim_out_dir"],
+            },
+            "plot": {
+                "fill_colour": settings["fill_colour"]
+            }
+        }
+
+        self.model.apply_settings(restructured_settings)
+
+        self.view.settings_applied_s.emit(restructured_settings)
+
+
