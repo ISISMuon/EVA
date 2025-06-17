@@ -235,5 +235,4 @@ class ModelSpectraModel(object):
                 raise ValueError("Invalid notation index!")
 
     def close_figures(self):
-        print("closing fig!")
         plt.close(self.fig)

@@ -60,7 +60,6 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
         self.element_info_text.setReadOnly(True)
 
         self.element_info_muonic_xray_tree.clear()
-        print(abundancies)
 
         mu_xray_items = []
         for i, isotope_name in enumerate(isotopes):
