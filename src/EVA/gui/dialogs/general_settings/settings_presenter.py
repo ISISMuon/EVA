@@ -16,6 +16,24 @@ class SettingsPresenter:
             lambda: self.view.set_fill_colour_preview(self.view.colour_dialog.currentColor().name()))
         self.view.apply_button.clicked.connect(self.on_apply)
 
+        self.view.working_dir_browse_button.clicked.connect(self.on_wdir_btn_click)
+        self.view.srim_exe_dir_button.clicked.connect(self.on_srim_exe_dir_btn_click)
+        self.view.srim_output_directory_button.clicked.connect(self.on_srim_out_dir_btn_click)
+
+    def on_wdir_btn_click(self):
+        dir = self.view.get_directory()
+
+        print(dir)
+        self.view.working_dir_label.setText(dir)
+
+    def on_srim_exe_dir_btn_click(self):
+        dir = self.view.get_directory()
+        self.view.srim_exe_dir_label.setText(dir)
+
+    def on_srim_out_dir_btn_click(self):
+        dir = self.view.get_directory()
+        self.view.srim_out_dir_label.setText(dir)
+
     def load_current_settings(self):
         config = get_config()
 
@@ -45,7 +63,8 @@ class SettingsPresenter:
         }
 
         self.model.apply_settings(restructured_settings)
-
         self.view.settings_applied_s.emit(restructured_settings)
+
+        self.view.display_message(title="Success", message="Settings were successfully applied.")
 
 

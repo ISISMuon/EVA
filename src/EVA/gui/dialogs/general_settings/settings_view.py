@@ -1,6 +1,7 @@
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtGui import QCloseEvent
-from PyQt6.QtWidgets import QDialog, QMessageBox, QLineEdit, QCheckBox, QLabel, QDialogButtonBox, QColorDialog
+from PyQt6.QtGui import QCloseEvent, QColor
+from PyQt6.QtWidgets import QDialog, QMessageBox, QLineEdit, QCheckBox, QLabel, QDialogButtonBox, QColorDialog, \
+    QFileDialog
 
 from EVA.gui.ui_files.settings_widget_gui import Ui_settings
 
@@ -23,6 +24,7 @@ class SettingsView(QDialog, Ui_settings):
         self.srim_exe_dir_label.setText(settings["srim_exe_dir"])
         self.srim_out_dir_label.setText(settings["srim_out_dir"])
         self.set_fill_colour_preview(settings["fill_colour"])
+        self.colour_dialog.setCurrentColor(QColor(settings["fill_colour"]))
 
     def set_fill_colour_preview(self, colour):
         print(colour)
@@ -40,6 +42,12 @@ class SettingsView(QDialog, Ui_settings):
 
     def display_error_message(self, title="Error", message="", buttons=QMessageBox.StandardButton.Ok):
         _ = QMessageBox.critical(self, title, message, buttons)
+
+    def display_message(self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok):
+        _ = QMessageBox.information(self, title, message, buttons)
+
+    def get_directory(self):
+        return QFileDialog.getExistingDirectory(self, "Choose Directory", "C:\\")
 
     def closeEvent(self, event: QCloseEvent):
         self.dialog_closed_s.emit(event)
