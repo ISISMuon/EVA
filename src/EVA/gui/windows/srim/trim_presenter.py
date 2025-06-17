@@ -59,9 +59,8 @@ class TrimPresenter(QWidget):
         self.view.show_plot_s.connect(self.show_plot)
         self.view.momentum_slider.valueChanged.connect(self.on_slider_moved)
 
-        self.view.file_load.triggered.connect(self.load_settings)
-        self.view.file_save.triggered.connect(self.save_settings)
-        self.view.file_reset.triggered.connect(self.load_default_settings)
+        self.view.load_settings_btn.clicked.connect(self.load_settings)
+        self.view.save_settings_btn.clicked.connect(self.save_settings)
 
         # set up simulation worker to run simulation on separate thread
         self.simulation_worker = None

@@ -259,7 +259,6 @@ class TrimView(BaseView, Ui_trim):
 
     def file_save(self,SampleName, SimType, Momentum, MomentumSpread, ScanType, MinMomentum, MaxMomentum,
                    StepMomentum, SRIMdir, TRIMOutDir, Stats):
-        print('in save file')
         save_file = QFileDialog.getSaveFileName(self, caption = "Save TRIM/SRIM Settings")
         print(save_file[0])
         file2 = open(save_file[0], "w")

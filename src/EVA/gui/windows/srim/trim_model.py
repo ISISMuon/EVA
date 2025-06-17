@@ -233,9 +233,6 @@ class TrimModel(QObject):
             self.proportions_per_layer[:, m] = np.round(frac*100, 4)
             self.proportions_per_layer_err[:, m] = np.round(frac_err_filtered*100, 4)
 
-        print(self.proportions_per_layer)
-        print(self.proportions_per_layer_err)
-
         # set all plot origins to be shifted by default so that 0 on the x-axis is located at end of aluminium layer
         self.default_origin_position = self.layer_boundary_positions[3]
         self.plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
@@ -713,5 +710,4 @@ class TrimModel(QObject):
 
     @staticmethod
     def close_figure(fig):
-        print("closed fig!")
         plt.close(fig)
