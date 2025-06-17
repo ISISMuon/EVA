@@ -5,7 +5,7 @@ import pytest
 from pandas.core.dtypes.missing import array_equals
 
 from EVA.core.data_searching.get_match import search_muxrays_single_element
-from EVA.gui.windows import ModelSpectraModel
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_model import ModelSpectraModel
 
 base_test = {
     "elements": ["Ag"],

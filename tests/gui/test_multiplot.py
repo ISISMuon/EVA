@@ -16,7 +16,7 @@ channels = {
 }
 
 
-TIME_DELAY = 500
+TIME_DELAY = 1000
 
 class TestMultiPlotWindow:
     # this will run once before all other tests in the class
@@ -25,18 +25,17 @@ class TestMultiPlotWindow:
         config = get_config()
 
         # set up test conditions
-        config["general"]["normalisation"] = "none"
-        config["GE1"]["show_plot"] = "yes"
-        config["GE2"]["show_plot"] = "no"
-        config["GE3"]["show_plot"] = "yes"
-        config["GE4"]["show_plot"] = "no"
+        config["default_corrections"]["normalisation"] = "none"
+        config["plot"]["show_plot"]["GE1"] = True
+        config["plot"]["show_plot"]["GE2"] = False
+        config["plot"]["show_plot"]["GE3"] = True
+        config["plot"]["show_plot"]["GE4"] = False
 
-        self.widget = QWidget()
-        self.window = MultiPlotWindow(parent=self.widget)
-        qtbot.addWidget(self.widget)
 
-        self.widget.showMaximized()
-        qtbot.wait(TIME_DELAY)
+        self.window = MultiPlotWindow()
+        qtbot.addWidget(self.window)
+
+        self.window.show()
 
     # utility function to load data manually to compare with loaded data
     def get_data(self, run_list, detectors):

@@ -3,10 +3,8 @@ from pytestqt.plugin import qtbot
 
 from EVA.core.app import get_app
 
-
 class TestPeakFitWindow:
-    # TODO add tests after making peakfit work for any data
-
+    # TODO add tests
     @pytest.fixture(autouse=True)
     def setup(self, qtbot):
         pass

@@ -1,5 +1,6 @@
 import pytest
-from EVA.gui.windows.srim import TrimModel
+
+from EVA.gui.windows.srim.trim_model import TrimModel
 
 
 class TestSRIM:
