@@ -135,7 +135,7 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
             axs[i].fill_between(dataset.x, dataset.y, step='mid', color=colour)
             axs[i].step(dataset.x, dataset.y, where='mid', color='black', label=f"_{detector}")
             axs[i].set_xlim(0.0)
-            axs[i].set_ylim(0.0)
+            axs[i].set_ylim((0, 1.1*np.max(dataset.y)))
             axs[i].set_title(dataset.detector)
             i += 1
 
@@ -167,3 +167,5 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
 
         if "colour" in settings.keys():
             fill_obj.set_color(settings["colour"])
+
+        ax.set_ylim((0, 1.1 * np.max(ydata)))
