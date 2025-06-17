@@ -48,6 +48,9 @@ class EnergyCorrectionsView(QDialog, Ui_Energycorrections):
     def display_error_message(self, title="Error", message="", buttons=QMessageBox.StandardButton.Ok):
         _ = QMessageBox.critical(self, title, message, buttons)
 
+    def display_message(self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok):
+        _ = QMessageBox.information(self, title, message, buttons)
+
     def closeEvent(self, event: QCloseEvent):
         self.dialog_closed_s.emit(event)
         event.accept()

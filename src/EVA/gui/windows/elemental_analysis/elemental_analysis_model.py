@@ -313,7 +313,7 @@ class ElementalAnalysisModel(QObject):
 
         for dataset in self.run.data.values():
             # only find peaks in data which is plotted
-            if config.parser.getboolean(dataset.detector, "show_plot"):
+            if config["plot"]["show_plot"][dataset.detector]:
                 peakfind_res[dataset.detector] = {}
                 peaks, peaks_pos = func(dataset.x, dataset.y,
                                         self.default_height, self.default_threshold, self.default_distance)

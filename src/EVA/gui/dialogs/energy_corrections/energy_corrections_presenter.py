@@ -24,7 +24,10 @@ class EnergyCorrectionsPresenter:
         self.view.setup_table_checkboxes(use_corrections)
 
     def on_apply(self):
-        self.model.corrections = self.view.get_energy_correction_selections()
-        self.model.apply_corrections()
+        try:
+            self.model.corrections = self.view.get_energy_correction_selections()
+            self.model.apply_corrections()
+            self.view.energy_corrections_applied_s.emit(self.model.corrections)
 
-        self.view.energy_corrections_applied_s.emit(self.model.corrections)
+        except (ValueError, AttributeError):
+            self.view.display_error_message(title="Form error", message="Invalid energy corrections in table!")
