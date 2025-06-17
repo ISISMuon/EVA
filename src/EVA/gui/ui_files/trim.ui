@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>838</width>
-    <height>652</height>
+    <width>905</width>
+    <height>783</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -52,25 +52,15 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>100</height>
+          <height>200</height>
          </size>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="1" column="0">
-          <widget class="QLabel" name="momentum_label">
-           <property name="text">
-            <string>Momentum (MeV/c)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLineEdit" name="srim_exe_dir_linedit"/>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLineEdit" name="min_momentum_linedit"/>
+         <item row="10" column="1">
+          <widget class="QLineEdit" name="stats_linedit"/>
          </item>
          <item row="10" column="0">
           <widget class="QLabel" name="stats_label">
@@ -79,37 +69,6 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="momentum_spread_label">
-           <property name="text">
-            <string>Momentum Spread (%)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="srim_exe_dir_label">
-           <property name="text">
-            <string>SRIM.exe directory</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="sample_name_label">
-           <property name="text">
-            <string>Sample Name</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="max_momentum_label">
-           <property name="text">
-            <string>Max Momentum (MeV/c)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="momentum_linedit"/>
-         </item>
          <item row="7" column="0">
           <widget class="QLabel" name="momentum_step_label">
            <property name="text">
@@ -117,61 +76,8 @@
            </property>
           </widget>
          </item>
-         <item row="10" column="1">
-          <widget class="QLineEdit" name="stats_linedit"/>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="momentum_spread_linedit"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="sim_type_label">
-           <property name="text">
-            <string>Simulation type</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="min_momentum_label">
-           <property name="text">
-            <string>Min Momentum (MeV/c)</string>
-           </property>
-           <property name="margin">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QComboBox" name="scan_momentum_combo">
-           <item>
-            <property name="text">
-             <string>No</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Yes</string>
-            </property>
-           </item>
-          </widget>
-         </item>
          <item row="9" column="1">
           <widget class="QLineEdit" name="trim_out_dir_linedit"/>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="scan_momentum_label">
-           <property name="text">
-            <string>Scan Momentum?</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="sample_name_linedit"/>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLineEdit" name="max_momentum_linedit"/>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLineEdit" name="momentum_step_linedit"/>
          </item>
          <item row="2" column="1">
           <widget class="QComboBox" name="sim_type_combo">
@@ -187,10 +93,136 @@
            </item>
           </widget>
          </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="sim_type_label">
+           <property name="text">
+            <string>Simulation type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLineEdit" name="srim_exe_dir_linedit"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="sample_name_label">
+           <property name="text">
+            <string>Sample Name</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="momentum_label">
+           <property name="text">
+            <string>Momentum (MeV/c)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="momentum_linedit"/>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="srim_exe_dir_label">
+           <property name="text">
+            <string>SRIM.exe directory</string>
+           </property>
+          </widget>
+         </item>
          <item row="9" column="0">
           <widget class="QLabel" name="trim_out_dir_label">
            <property name="text">
             <string>SRIM output directory</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="momentum_spread_linedit"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="momentum_spread_label">
+           <property name="text">
+            <string>Momentum Spread (%)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="max_momentum_linedit"/>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="sample_name_linedit"/>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="min_momentum_linedit"/>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="momentum_step_linedit"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QComboBox" name="scan_momentum_combo">
+           <item>
+            <property name="text">
+             <string>No</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Yes</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="max_momentum_label">
+           <property name="text">
+            <string>Max Momentum (MeV/c)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="min_momentum_label">
+           <property name="text">
+            <string>Min Momentum (MeV/c)</string>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="scan_momentum_label">
+           <property name="text">
+            <string>Scan Momentum?</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_3" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="load_settings_btn">
+           <property name="text">
+            <string>Load settings</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="save_settings_btn">
+           <property name="text">
+            <string>Save settings</string>
            </property>
           </widget>
          </item>
@@ -370,7 +402,7 @@
       </item>
       <item>
        <widget class="QWidget" name="widget_2" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QGridLayout" name="gridLayout_4">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -383,14 +415,14 @@
          <property name="bottomMargin">
           <number>0</number>
          </property>
-         <item>
+         <item row="0" column="0">
           <widget class="QPushButton" name="run_sim_button">
            <property name="text">
             <string>Run Simulations</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="0" column="3">
           <widget class="QPushButton" name="cancel_sim_button">
            <property name="text">
             <string>Cancel</string>
@@ -504,12 +536,12 @@ QSlider::ticks {color: grey}</string>
   <customwidget>
    <class>BaseTable</class>
    <extends>QTableWidget</extends>
-   <header>EVA.widgets.base.base_table</header>
+   <header>EVA.gui.base.base_table</header>
   </customwidget>
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header>EVA.widgets.plot.plot_widget</header>
+   <header>EVA.gui.widgets.plot.plot_widget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

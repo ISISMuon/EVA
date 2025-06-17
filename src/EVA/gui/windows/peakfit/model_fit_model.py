@@ -133,7 +133,6 @@ class ModelFitModel(QObject):
 
     def calculate_x_range(self):
         # extract peak centres and sigmas from all loaded parameters
-        print(self.initial_peak_params)
 
         # extract all peak centres and sigmas
         center_list = []
@@ -170,8 +169,6 @@ class ModelFitModel(QObject):
         if self.fit_result is None:
             raise AttributeError("No fit result found in model!")
 
-        print(self.x_range)
-
         # removes previous fit from figure is prompted
         if overwrite_old:
             for line in self.axs.lines:
@@ -193,7 +190,6 @@ class ModelFitModel(QObject):
         self.axs.legend()
 
     def save_params(self, path, x_range):
-        print(x_range)
         obj = {
             "background": self.initial_bg_params,
             "peaks": self.initial_peak_params,

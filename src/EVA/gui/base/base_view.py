@@ -1,6 +1,6 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QCloseEvent
-from PyQt6.QtWidgets import QWidget, QHeaderView, QMessageBox, QTableWidgetItem
+from PyQt6.QtWidgets import QWidget, QHeaderView, QMessageBox, QTableWidgetItem, QErrorMessage
 from matplotlib import pyplot as plt
 
 
@@ -21,11 +21,15 @@ class BaseView(QWidget):
     def display_message(self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok):
         _ = QMessageBox.information(self, title, message, buttons)
 
-    def display_question(self) -> QMessageBox.StandardButton:
-        reply = QMessageBox.question(self, title="Message", message="", buttons= QMessageBox.StandardButton.Yes |
-                                     QMessageBox.StandardButton.No | QMessageBox.StandardButton.Cancel,
-                                    defaultButton=QMessageBox.StandardButton.Yes)
-        return reply
+    def display_question(self,
+                         title: str = "Question",
+                         message: str = "",
+                         buttons: QMessageBox.StandardButton = QMessageBox.StandardButton.Yes |
+                                    QMessageBox.StandardButton.No | QMessageBox.StandardButton.Cancel,
+                         default_button: QMessageBox.standardButton = QMessageBox.StandardButton.Yes) \
+            -> QMessageBox.StandardButton:
+
+        return QMessageBox.question(self, title, message, buttons, default_button)
 
     @staticmethod
     def update_table(table, data, resize_columns=True, resize_rows=True):

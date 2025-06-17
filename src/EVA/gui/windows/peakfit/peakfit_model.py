@@ -187,8 +187,6 @@ class PeakFitModel(QObject):
         if self.fit_result is None:
             raise AttributeError("No fit result found in model!")
 
-        print(self.x_range)
-
         # removes previous fit from figure is prompted
         if overwrite_old:
             for line in self.axs.lines:
@@ -215,7 +213,6 @@ class PeakFitModel(QObject):
         self.y_range = y_range
 
     def save_params(self, path: str, x_range: tuple):
-        print(x_range)
         obj = {
             "background": self.initial_bg_params,
             "peaks": self.initial_peak_params,

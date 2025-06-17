@@ -202,7 +202,7 @@ class WorkspacePresenter:
         logger.info("Launching multiplot tab.")
 
         window = MultiPlotWindow()
-        self.view.open_new_tab(window, "Multiplot")
+        self.view.open_new_tab(window.widget(), "Multiplot")
 
     def open_peakfit(self, detector):
         """ Opens a tab for peakfit. """

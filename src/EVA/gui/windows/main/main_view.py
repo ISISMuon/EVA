@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
 from EVA.core.app import get_config
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.windows.manual.manual_window import ManualWindow
+from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
@@ -31,6 +32,7 @@ class MainView(QMainWindow):
     workspaces : list[WorkspaceWindow] = []
     model_spectra_windows : list[ModelSpectraWindow] = []
     manual_windows : list[ManualWindow] = []
+    multiplot_windows : list[MultiPlotWindow] = []
     srim_windows : list[TrimWindow] = []
     periodic_table_windows : list[PeriodicTableWidget] = []
     general_settings_dialogs : list[SettingsDialog] = []
@@ -50,12 +52,15 @@ class MainView(QMainWindow):
         self.bar = self.menuBar()
         self.file_menu = self.bar.addMenu('File')
         self.file_browse_dir = self.file_menu.addAction('Browse to data directory')
-        self.file_save = self.file_menu.addAction("Save all settings")
 
 
         self.settings_menu = self.bar.addMenu('Settings')
         self.general_settings = self.settings_menu.addAction("General settings")
+        self.file_save = self.settings_menu.addAction("Save all settings")
         self.file_load_default = self.settings_menu.addAction('Load default settings')
+
+        self.plotting_menu = self.bar.addMenu("Plotting")
+        self.multiplot_action = self.plotting_menu.addAction("Multi-run Plot")
 
         self.tools_menu = self.bar.addMenu('Tools')
         self.srim_sim_action = self.tools_menu.addAction('SRIM/TRIM Simulation')
@@ -168,6 +173,18 @@ class MainView(QMainWindow):
         _ = QMessageBox.information(self, title, msg,
                                  buttons=QMessageBox.StandardButton.Ok,
                                  defaultButton=QMessageBox.StandardButton.Ok)
+
+    def show_question_box(self,
+                         title: str = "Question",
+                         message: str = "",
+                         buttons: QMessageBox.StandardButton = QMessageBox.StandardButton.Yes |
+                                                               QMessageBox.StandardButton.No | QMessageBox.StandardButton.Cancel,
+                         default_button: QMessageBox.standardButton = QMessageBox.StandardButton.Yes) \
+            -> QMessageBox.StandardButton:
+
+        reply = QMessageBox.question(self, title, message, buttons, default_button)
+
+        return reply == QMessageBox.StandardButton.Yes
 
     def closeEvent(self, event: QCloseEvent):
         #close window cleanly

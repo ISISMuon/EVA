@@ -130,7 +130,6 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
 
     i = 0
     for detector, dataset in run.data.items():
-        print(run.loaded_detectors)
         if detector in show_detectors:
             axs[i].fill_between(dataset.x, dataset.y, step='mid', color=colour)
             axs[i].step(dataset.x, dataset.y, where='mid', color='black', label=f"_{detector}")
@@ -149,7 +148,6 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
     axes = [axs] if not isinstance(axs, np.ndarray) else axs
 
     for ax in axes:
-        print([line.get_label() for line in ax.lines])
         detector, line = [(line.get_label()[1:], line) for line in ax.lines if
                           line.get_label()[1:] in run.loaded_detectors][0]
 

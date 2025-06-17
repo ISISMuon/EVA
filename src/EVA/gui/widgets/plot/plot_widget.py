@@ -52,7 +52,6 @@ class PlotWidget(QWidget):
             self.update_plot()
 
     def update_plot(self, fig=None,axs=None):
-        print("Triggered!")
 
         """
         For a simple axes update, it is enough to update the axs parameter of the canvas and redraw.

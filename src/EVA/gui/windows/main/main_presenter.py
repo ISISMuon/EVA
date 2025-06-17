@@ -6,6 +6,7 @@ from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.windows.main.main_model import MainModel
 from EVA.gui.windows.main.main_view import MainView
 from EVA.gui.windows.manual.manual_window import ManualWindow
+from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
@@ -31,6 +32,8 @@ class MainPresenter:
         self.view.file_save.triggered.connect(self.save_settings)
         self.view.file_browse_dir.triggered.connect(self.set_default_directory)
         self.view.file_load_default.triggered.connect(self.load_default_config)
+
+        self.view.multiplot_action.triggered.connect(self.open_multiplot)
 
         self.view.srim_sim_action.triggered.connect(self.open_trim)
         self.view.periodic_table_action.triggered.connect(self.open_periodic_table)
@@ -70,6 +73,12 @@ class MainPresenter:
         """
         Resets current config to defaults.
         """
+        # confirm that user wants to reset
+        confirm = self.view.show_question_box(title="Confirm reset", message="Are you sure you want to reset all settings?")
+
+        if not confirm:
+            return
+
         config = get_config()
         config.restore_defaults()
 
@@ -188,6 +197,23 @@ class MainPresenter:
 
         self.view.general_settings_dialogs.remove(dialog)
         dialog.view.deleteLater()
+
+    def open_multiplot(self):
+        """ Opens multiplot window """
+        logger.info("Opening multiplot window.")
+
+        window = MultiPlotWindow()
+        self.view.multiplot_windows.append(window)
+
+        window.showMaximized()
+        window.widget().window_closed_s.connect(lambda: self.close_multiplot(window))
+
+    def close_multiplot(self, window):
+        """ Remove reference to multiplot window when closed """
+        logger.info("Closing multiplot window.")
+
+        self.view.multiplot_windows.remove(window)
+        window.widget().deleteLater()
 
     def open_manual(self):
         """ Opens manual window. """

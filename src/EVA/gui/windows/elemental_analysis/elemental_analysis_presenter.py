@@ -112,7 +112,7 @@ class ElementalAnalysisPresenter(object):
         """
 
         try:
-            element = self.view.muon_search_line_edit.text()
+            element = self.view.muon_search_line_edit.text().title()
             res = search_muxrays_single_element(element)
 
             # if no matches
@@ -151,7 +151,7 @@ class ElementalAnalysisPresenter(object):
         """
 
         try:
-            isotope = self.view.gamma_search_line_edit.text().strip()
+            isotope = self.view.gamma_search_line_edit.text().strip().title()
             res = search_gammas_single_isotope(isotope)
 
             # if no matches

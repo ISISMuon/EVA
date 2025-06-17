@@ -75,7 +75,6 @@ def TRIMInit():
     # target input
     #self.declareProperty("Sample Name", "Cu", direction=Direction.Input,doc="Sample Name")
     SimPara = {}
-    print('hello')
     SimPara['SampleName'] = "Cu"
 
     #self.declareProperty("Sample Thickness (mm)", 5.0, direction=Direction.Input,doc="Target thickness in mm.")
@@ -192,7 +191,6 @@ def matdef2(mat, rho, thickness):
 
     LayerThickness = [0.05, 0.067, 0.05, thickness]
     LayerLabels = ['Window', 'air (compressed)', 'Al', 'Cu', 'Total']
-    print(LayerLabels)
 
     beamwindow = Layer({'H': {'stoich': 8, 'E_d': 10, 'lattice': 3, 'surface': 2
                                   },
@@ -230,11 +228,6 @@ def matdef2(mat, rho, thickness):
 
     # sample.append(matlayer1)
     sample = Target([beamwindow, air, Al_sample_holder, matlayer1])
-    print(beamwindow)
-    print(air)
-    print(Al_sample_holder)
-    print(sample)
-
     return sample, LayerThickness, LayerLabels
 
 def iondef(Mom):
@@ -244,7 +237,6 @@ def iondef(Mom):
     # kintetic energy associatd with the momentum (relitavistic)
     Ek = np.sqrt(105.6583745 ** 2 + Mom ** 2) - 105.6583745
 
-    print('Momentum=' + str(Mom) + ' Energy=' + str(Ek))
 
     # corresponding SRIM muon ion definitions
     muon_ion = Ion('H', Ek * 1e6,
@@ -332,7 +324,6 @@ def CalcProfileWithMomBite(sample, Mom, NFinal, Mombite, SRIMdirectory, output_d
 
         NE = NFinal * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) * np.exp(
             -0.5 * (P - Mom) ** 2 / (MomSigma ** 2))
-        print('Number of Counts', NE)
 
         x1, y1, e1, Temp_WS = CalcProfileWithMonoMom(sample, P, NE, SRIMdirectory, output_directory, WriteWKSP)
 
@@ -381,7 +372,7 @@ def CalcProfileWithMonoMom(sample, Mom, NFinal, SRIMdirectory, output_directory,
     y1 = CorrectToCounts(thickness, y1, NFinal)
 
     if (SaveWKSP):
-        print('SaveWKSP=', SaveWKSP)
+        pass
         #SaveToWorkspace(x1, y1, e1, Name_WS, Title_WS)
 
     return x1, y1, e1, Name_WS
@@ -406,7 +397,6 @@ def ScanMom(MomMin, MomMax, MomStep, Mombite, sample, NFinal, Simtype, SRIMdirec
     # Scans the stopping profile fro a range of momenta
     for MomScan in my_range(MomMin, MomMax, MomStep):
 
-        print(MomScan)
         if Simtype == "Both" or Simtype == "Mono":
             writeWKSP = True
             del1, del2, del3, Name_WS = CalcProfileWithMonoMom(sample, MomScan, NFinal, SRIMdirectory,

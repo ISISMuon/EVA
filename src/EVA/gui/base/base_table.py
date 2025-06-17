@@ -125,8 +125,6 @@ class BaseTable(QTableWidget):
         first_row = copied_cells[0].row()
         first_column = copied_cells[0].column()
 
-        print(first_row, first_column)
-
         clipboard_text = get_app().clipboard().text()
 
         rows = clipboard_text.split("\n")

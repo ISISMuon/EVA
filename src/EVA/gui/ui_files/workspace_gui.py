@@ -223,7 +223,6 @@ class Ui_workspace(object):
         self.plot_menu.addAction(self.plot_multiplot)
         self.settings_menu.addAction(self.general_settings)
         self.settings_menu.addAction(self.energy_correction_settings)
-        self.peak_fit_menu.addAction(self.actiontest)
         self.analysis_menu.addAction(self.peak_fit_menu.menuAction())
         self.tools_menu.addAction(self.trim_simulation)
         self.tools_menu.addAction(self.model_muon_spectrum)

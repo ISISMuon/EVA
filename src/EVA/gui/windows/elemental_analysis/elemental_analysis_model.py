@@ -115,7 +115,7 @@ class ElementalAnalysisModel(QObject):
         res = get_match.search_gammas_single_transition(isotope, energy)
         for match in res:
             rowres = [match['isotope'], match['energy'], match['intensity'], match['lifetime']]
-            next_colour = self.axs[i]._get_lines.get_next_color()
+            next_colour = self.axs[0]._get_lines.get_next_color()
 
             for i in range(len(self.axs)):
                 self.axs[i].axvline(
@@ -222,8 +222,6 @@ class ElementalAnalysisModel(QObject):
         """
 
         for label, values in self.plotted_mu_xray_lines.items():
-            print(label)
-            print(values)
             energies, colour = values
             for energy in energies:
                 for i in range(len(self.axs)):

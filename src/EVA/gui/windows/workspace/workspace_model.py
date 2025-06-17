@@ -60,7 +60,4 @@ class WorkspaceModel:
             "detector_specific": self.run.energy_corrections,
         }
 
-        print(self.run.normalisation)
-        print(self.run.bin_rate)
-
         config["saved_corrections"][working_dir][run_num] = corrections

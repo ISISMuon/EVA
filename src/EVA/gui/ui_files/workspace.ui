@@ -405,7 +405,6 @@ padding: 0;</string>
      <property name="title">
       <string>Peak Fitting</string>
      </property>
-     <addaction name="actiontest"/>
     </widget>
     <addaction name="peak_fit_menu"/>
    </widget>
