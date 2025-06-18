@@ -27,7 +27,6 @@ class SettingsView(QDialog, Ui_settings):
         self.colour_dialog.setCurrentColor(QColor(settings["fill_colour"]))
 
     def set_fill_colour_preview(self, colour):
-        print(colour)
         self.plot_fill_colour_preview.setStyleSheet(f"background-color: {colour}")
 
     def get_settings(self):
