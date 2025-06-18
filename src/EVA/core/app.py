@@ -46,7 +46,6 @@ class App(QApplication):
 
         # store config in app
         self.config = Config()
-        self.config.load()
 
         # load and store databases in app
         t0 = time.time_ns()

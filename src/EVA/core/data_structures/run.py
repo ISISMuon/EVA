@@ -1,9 +1,17 @@
 from copy import deepcopy
 
+import numpy as np
+from PyQt6.QtCore import QObject, pyqtSignal
+
 from EVA.core.data_structures.spectrum import Spectrum
+from EVA.core.physics import rebin
 from EVA.core.physics.normalisation import normalise_events, normalise_counts
 
-class Run:
+normalisation_types = ("none", "counts", "events")
+
+class Run(QObject):
+    corrections_updated_s = pyqtSignal()
+
     """
     The Run class specifies the experiment data and context for all detectors during a single measurement run.
 
@@ -17,8 +25,9 @@ class Run:
        events_str: Number of events registered.
        comment: All metadata available for the run.
        """
-    def __init__(self, raw : list[Spectrum], loaded_detectors : list[str], run_num: str, start_time: str, end_time: str,
+    def __init__(self, raw : dict[Spectrum], loaded_detectors : list[str], run_num: str, start_time: str, end_time: str,
                  events_str: str, comment: str):
+        super().__init__()
 
         # Main data containers
         self._raw = raw # raw, unprocessed data as read from file - is NOT to be changed
@@ -28,11 +37,13 @@ class Run:
         self.loaded_detectors = loaded_detectors
         self.run_num = run_num
 
-        # Normalisation and energy correction info (initial read from default.ini)
+        # Normalisation and energy correction info
         self.normalisation = None
-        self.normalise_which = []
-        self.e_corr_params = None
-        self.e_corr_which = []
+        self.normalise_which = loaded_detectors # currently normalising all detectors
+        self.bin_rate = 1
+
+        # energy corrections
+        self.energy_corrections = {}
 
         # Metadata from comment file (may not be available)
         self.start_time = start_time
@@ -40,8 +51,35 @@ class Run:
         self.events_str = events_str
         self.comment = comment
 
-    # dispatcher method to set normalisation from string
-    def set_normalisation(self, normalisation: str, normalise_which: bool=None):
+    def set_corrections(self, energy_corrections: dict[dict] | None = None,
+                        normalisation: str | None = None, normalise_which: list[str] | None = None, bin_rate: float | None = None):
+        """
+        Reapplies all normalisation, corrections and binning specified for the data. Order here is important, and so
+        to be safe, any time any form of correction is wanted, everything should be re-calculated. This could become
+        inefficient if many more complicated processing methods are implemented, so another approach could be
+        considered here in the future.
+
+        The order of
+        processing is:
+            * energy calibrations / corrections
+            * normalisation
+            * binning
+        """
+
+        if normalise_which is None:
+            normalise_which = self.normalise_which
+
+        self.data = deepcopy(self._raw)
+
+        self._set_energy_correction(energy_corrections)
+        self._set_normalisation(normalisation, normalise_which)
+        self._set_binning(bin_rate)
+
+        # emit a signal to let program know the run has changed
+        self.corrections_updated_s.emit()
+
+    # dispatcher method to set normalisation type from string
+    def _set_normalisation(self, normalisation: str, normalise_which: list[str] | None = None):
         """
         Sets normalisation to ``data``.
 
@@ -56,47 +94,50 @@ class Run:
         if normalise_which is None:
             normalise_which = self.normalise_which
 
+        if normalisation is None:
+            normalisation = self.normalisation
+
         if normalisation == "counts":
-            self.set_normalisation_counts(normalise_which)
+            self._set_normalisation_counts(normalise_which)
 
         elif normalisation == "events":
-            self.set_normalisation_events(normalise_which)
+            self._set_normalisation_events(normalise_which)
 
         elif normalisation == "none":
-            self.set_normalisation_none()
+            self._set_normalisation_none()
 
         else:
             raise TypeError(f"Normalisation type '{normalisation}' is not valid.")
 
-    def set_normalisation_none(self):
+    def _set_normalisation_none(self):
         """
         Resets all normalisation applied for each detector.
         """
-        for i, spectrum in enumerate(self._raw):
-            self.data[i].y = self._raw[i].y
+        for detector in self._raw.keys():
+            self.data[detector].y = self.data[detector].y
 
         self.normalisation = "none"
         self.normalise_which = self.loaded_detectors
 
-    def set_normalisation_counts(self, normalise_which: list[str]):
+    def _set_normalisation_counts(self, normalise_which: list[str]):
         """
         Sets normalisation by counts for each detector specified.
 
         Args:
             normalise_which: Names of which detectors to apply normalisation by counts for.
         """
-        for i, spectrum in enumerate(self._raw):
+        for detector, spectrum in self._raw.items():
             # Apply normalisation to specified spectra
-            if spectrum.detector in normalise_which:
-                self.data[i].y = normalise_counts(spectrum.y)
+            if detector in normalise_which:
+                self.data[detector].y = normalise_counts(spectrum.y)
             else:
-                self.data[i].y = self._raw[i].y
+                self.data[detector].y = self.data[detector].y
 
         # Update the normalisation status
         self.normalisation = "counts"
         self.normalise_which = normalise_which
 
-    def set_normalisation_events(self, normalise_which: list[str]):
+    def _set_normalisation_events(self, normalise_which: list[str]):
         """
         Sets normalisation by events for each detector specified.
 
@@ -105,12 +146,12 @@ class Run:
         """
         try:
             spills = int(self.events_str[19:])
-            for i, spectrum in enumerate(self._raw):
+            for detector, spectrum in self._raw.items():
                 # Apply normalisation to specified spectra
-                if spectrum.detector in self.normalise_which:
-                    self.data[i].y = normalise_events(spectrum.y, spills)
+                if detector in self.normalise_which:
+                    self.data[detector].y = normalise_events(spectrum.y, spills)
                 else:
-                    self.data[i].y = self._raw[i].y
+                    self.data[detector].y = self.data[detector].y
 
             # Update the normalisation status
             self.normalisation = "events"
@@ -118,38 +159,51 @@ class Run:
 
         except ValueError:
             # If spills data is not available, revert normalisation to none
-            for i, spectrum in enumerate(self._raw):
-                self.data[i].y = self._raw[i].y
+            for detector, spectrum in self._raw.items():
+                self.data[detector].y = self.data[detector].y
 
             # set normalisation status to "none"
             self.normalisation = "none"
             self.normalise_which = self.loaded_detectors
-            raise ValueError
+            raise ValueError("Normalisation by events failed.")
 
-    def set_energy_correction(self, e_corr_params: list[tuple[float]], e_corr_which=list[str]):
+    def _set_energy_correction(self, energy_corrections: dict):
         """
         Sets current energy correction.
 
         Args:
-            e_corr_params: List of tuples containing energy correction (gradient, offset) for each detector.
-            e_corr_which: Names of which detectors to apply energy correction to.
+            energy_corrections: Dict of containing energy correction parameters (gradient, offset) for each detector.
         """
 
-        if e_corr_which is None:
-            e_corr_which = self.e_corr_which
+        if energy_corrections is None:
+            energy_corrections = self.energy_corrections
 
         # Iterate through each Spectrum in the run and apply energy correction if the detector is in e_corr_which
-        for i, spectrum in enumerate(self._raw):
-            detector = spectrum.detector
+        for detector, spectrum in self.data.items():
+            if energy_corrections[detector]["use_e_corr"]:
+                gradient, offset = energy_corrections[detector]["e_corr_coeffs"]
 
-            if detector in e_corr_which:
-                gradient = e_corr_params[i][0]
-                offset = e_corr_params[i][1]
+                self.data[detector].x = self.data[detector].x * gradient + offset # store energy correction in data
 
-                self.data[i].x = self._raw[i].x * gradient + offset # store energy correction in data
+        self.energy_corrections = energy_corrections
 
-        self.e_corr_which = e_corr_which
-        self.e_corr_params = e_corr_params
+    def _set_binning(self, binning_rate: float | None = None):
+        if binning_rate is None:
+            binning_rate = self.bin_rate
+        else:
+           self.bin_rate = binning_rate
+
+        # avoid weird glitches
+        if binning_rate == 1.0:
+            self.bin_rate = 1.0
+            return
+
+        for detector, spectrum in self._raw.items():
+            if self.data[detector].x.size == 0:
+                continue
+
+            self.data[detector].x, self.data[detector].y = rebin.numpy_rebin(self.data[detector].x,
+                                                                                   self.data[detector].y, binning_rate)
 
     def is_empty(self) -> bool:
         """
@@ -161,9 +215,9 @@ class Run:
         """
         Returns: Copy of ``data`` without empty Spectrum objects for missing detectors.
         """
-        return [spectrum for spectrum in self.data if spectrum.x.size != 0]
+        return [spectrum for spectrum in self.data.values() if spectrum.x.size != 0]
 
-    def get_raw(self) -> list[Spectrum]:
+    def get_raw(self) -> dict[Spectrum]:
         """
         Returns: Copy of ``raw``.
         """

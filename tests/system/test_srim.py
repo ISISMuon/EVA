@@ -1,8 +1,7 @@
 import pytest
-from EVA.windows.srim import trim_window
-from EVA.windows.srim.trim_model import TrimModel
-from EVA.windows.srim.trim_window import TrimWindow
-from srim import Ion, Layer
+
+from EVA.gui.windows.srim.trim_model import TrimModel
+
 
 class TestSRIM:
     # will run once before every test

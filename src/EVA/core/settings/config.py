@@ -1,91 +1,86 @@
 import os.path
-from configparser import ConfigParser
+import json
 import logging
+from copy import deepcopy
+
+from PyQt6.QtCore import QObject, pyqtSignal
 
 from EVA.util.path_handler import get_path
 
 logger = logging.getLogger(__name__)
 
-default_config_path = get_path("src/EVA/core/settings/defaults.ini")
-config_path = get_path("src/EVA/core/settings/config.ini")
+default_config_path = get_path("src/EVA/core/settings/defaults.json")
+config_path = get_path("src/EVA/core/settings/config.json")
 
-class Config:
+class Config(QObject):
+    config_modified_s = pyqtSignal(dict)
+
     """
-    The Config class uses the python built-in module configparser to read and write configurations as .ini files.
-    Configparser stores the config as a dictionary, which allows reading and writing to the configuration in memory.
-    Any changes in the configuration can be saved to the file using the save_config() function.
-    The configparser is stored under the 'parser' attribute of the Config class, but can also be accessed by indexing
-    directly into the Config object.
+    The config class manages reading and writing all settings to file.
     """
     def __init__(self):
-        self.parser = ConfigParser()
-        self.default_parser = ConfigParser()
+        super().__init__()
+        with open(default_config_path, "r") as default_file:
+            self._defaults = json.load(default_file)
 
-    # This magic function allows the parser to be accessed when indexing directly into a config object:
-    # Ex: it makes 'Config()["plot"]["fill_colour"]' equivalent to 'Config().parser["plot"]["fill_colour"]'
-    def __getitem__(self, field: str):
-        return self.parser[field]
-
-    def load(self):
-        """
-        Loads settings from config.ini file.
-        """
-        self.default_parser = ConfigParser()
-        self.default_parser.read(default_config_path)
-
-        # if config.ini does not exist, create new config file from defaults settings
+        # if config.json does not exist, create new config file from defaults settings
         if not os.path.exists(config_path):
-            with open(config_path, "w") as file:
-                logger.debug("Creating new configuration file from defaults.ini")
-                self.default_parser.write(file)
+            self._data = deepcopy(self._defaults)
+            with open(config_path, "w") as config_file:
+                logger.debug("Creating new configuration file from defaults.json")
+                json.dump(self._defaults, config_file, indent=4)
+        else:
+            with open(config_path, "r") as file:
+                self._data = json.load(file)
 
-        # read configurations from config.ini into ConfigParser
-        self.parser.read(config_path)
-        logger.debug("Loading configuration from config.ini")
+    def __getitem__(self, item):
+        return self._data[item]
+
+    def get_run_save(self, working_dir, run_num):
+        default_corrections = self._data["default_corrections"]
+        saved_corrections = self._data["saved_corrections"]
+
+        if working_dir in saved_corrections.keys():
+            if run_num in saved_corrections[working_dir].keys():
+                return self._data["saved_corrections"][working_dir][run_num]
+            else:
+                self._data["saved_corrections"][working_dir][run_num] = default_corrections
+        else:
+            self._data["saved_corrections"][working_dir] = {
+               run_num: default_corrections
+            }
+
+        return self._data["saved_corrections"][working_dir][run_num]
+
+
+
 
     def save_config(self):
         """
-        Writes current settings stored in memory to config.ini file.
+        Writes current settings stored in memory to config.json file.
         """
         with open(config_path, "w") as config_file:
-            self.parser.write(config_file)
-            config_file.close()
+            json.dump(self._data, config_file, indent=4)
 
         logger.info("Current configuration has been saved to file.")
 
     def restore_defaults(self):
         """
-        Resets current settings stored in memory to default settings by reading defaults.ini and overwriting each
-        key in config dictionary with corresponding key in default config dictionary.
+        Resets current settings stored in memory to default settings.
         """
-        for section in self.default_parser:
-            self.parser[section] = self.default_parser[section]
+        self._data = deepcopy(self._defaults)
 
         logger.info("Configuration has been reset to defaults.")
+
 
     def is_changed(self) -> bool:
         """
         Returns:
             Boolean indicating whether config loaded in memory is different to config saved in config.ini.
         """
-        temp_parser = ConfigParser()
-        temp_parser.read(config_path)
 
-        for section in self.parser:
-            if self.parser[section] != temp_parser[section]:
-                return True # return True as soon as a difference is found
-        return False
+        with open(config_path, "r") as file:
+            config_in_file = json.load(file)
 
+        return not (config_in_file == self._data)
 
-    def to_array(self, input_str: str) -> list:
-        """
-        Args:
-            input_str: string to convert to list
-
-        Returns:
-            list containing space-separated values in input string.
-
-        Splits space-separated string into a list. Ex: "1 2 3 4" -> ["1", "2", "3", "4"].
-        Useful for reading arrays in config,ini as .ini format does not support array data types.
-        """
-        return input_str.split(" ")

@@ -1,13 +1,11 @@
 import matplotlib.text
 import numpy as np
 import pytest
-from pytestqt.plugin import qapp
 
 from pandas.core.dtypes.missing import array_equals
 
-from EVA.core.app import get_app
 from EVA.core.data_searching.get_match import search_muxrays_single_element
-from EVA.windows.muonic_xray_simulation.model_spectra_model import ModelSpectraModel
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_model import ModelSpectraModel
 
 base_test = {
     "elements": ["Ag"],

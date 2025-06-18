@@ -1,16 +1,18 @@
 import os
+import sys
+import logging
 from pathlib import Path
+
+from EVA.gui.windows.main.main_window import MainWindow
 
 # Changes cwd to root so that paths can be specified relative to root level - MUST BE BEFORE ANY EVA IMPORTS
 ROOT = Path(__file__).resolve().parent.parent.parent # get root dir using pathlib
 os.chdir(ROOT) # change cwd to root
 
-import sys
-import logging
-
-from EVA.windows.main.main_window import MainWindow
+from EVA.gui.windows.main.main_view import MainView
 from EVA.core.app import App
 
+# set up logging and handling exceptions
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='EVA.log', encoding='utf-8', level=logging.DEBUG, filemode="w",
                     format='%(asctime)s %(levelname)s: %(message)s')
@@ -34,10 +36,8 @@ if __name__ == "__main__":
     logger.debug("Root directory: %s", ROOT)
 
     app = App(sys.argv)
-    #QIcon.setThemeName("TangoMFK")
-
-    logger.debug("Initialising main window.")
     app.main_window = MainWindow()
     logger.info("Launching main window.")
-    app.main_window.show()
+
+    app.main_window.widget().show()
     sys.exit(app.exec())

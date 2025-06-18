@@ -1,0 +1,103 @@
+{
+  "general": {
+    "working_directory": "./",
+    "default_run_num": "0000",
+    "enabled_detectors": [
+      "GE1",
+      "GE2",
+      "GE3",
+      "GE4"
+    ]
+  },
+  "database": {
+    "gamma_db": "IAEA",
+    "mu_xray_db": "mudirac",
+    "e_xray_db": "xray_booklet_2009",
+    "gamma_intensity_threshold": 20
+  },
+
+  "SRIM": {
+    "installation_directory": "C:/SRIM2013",
+    "output_directory": "C:/SRIM2013/SRIM Outputs/"
+  },
+
+  "plot": {
+    "fill_colour": "yellow",
+    "show_plot": {
+      "GE1": true,
+      "GE2": false,
+      "GE3": true,
+      "GE4": false
+    }
+  },
+
+  "default_corrections": {
+    "normalisation": "none",
+    "binning": 1,
+    "detector_specific": {
+      "GE1": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "use_eff_corr": false
+      },
+      "GE2": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "use_eff_corr": false
+      },
+      "GE3": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          93.2,
+          59.2,
+          -13.6,
+          1.35,
+          -0.049
+        ],
+        "use_eff_corr": false
+      },
+      "GE4": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "use_eff_corr": false
+      }
+    }
+  },
+    "saved_corrections": {
+
+  }
+}

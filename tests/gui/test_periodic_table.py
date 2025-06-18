@@ -1,4 +1,4 @@
-from EVA.windows.periodic_table.periodic_table_widget import PeriodicTableWidget, elements, elements_disable
+from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget, elements, elements_disable
 import pytest
 
 atm_nos = range(1, 119)

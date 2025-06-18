@@ -1,10 +1,9 @@
 import pytest
 from pytestqt.plugin import qtbot
-from EVA.core.app import get_config, get_app
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import Qt
 
-from EVA.windows.muonic_xray_simulation.model_spectra_widget import ModelSpectraWidget
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 
 base_test = {
     "elements": ["Ag", "Hg"],
@@ -20,13 +19,16 @@ class TestModelSpectrumWindow:
     # this will run once before all other tests in the class
     @pytest.fixture(autouse=True)
     def setup(self, qtbot):
-        self.widget = QWidget()
-        self.window = ModelSpectraWidget(self.widget)
-        qtbot.addWidget(self.window)
+        parent = QWidget()
+
+        self.window = ModelSpectraWindow(parent)
+        self.view = self.window.widget()
+
+        qtbot.addWidget(self.view)
 
     @pytest.fixture()
     def add_and_remove_elements(self, qtbot):
-        element_selector = self.window.view.element_selector
+        element_selector = self.window.widget().element_selector
         # add 8 element selectors to get a total of 9 (remember there already exists one element selector on start)
         for i in range(8):
             qtbot.mouseClick(element_selector.add_element_button, Qt.MouseButton.LeftButton)
@@ -42,22 +44,22 @@ class TestModelSpectrumWindow:
 
     def test_add_and_remove_element_selection(self, qtbot, add_and_remove_elements):
         order = [2,3,5,6,8,9] # expected order of items
-        actual_order = [item.id for item in self.window.view.element_selector.element_selector_items]
+        actual_order = [item.id for item in self.view.element_selector.element_selector_items]
 
         # check that the element selector ids are in the expected order
         assert actual_order == order
 
     def test_simulation_start_on_button_click(self, qtbot):
-        axes = self.window.view.plot.canvas.axs
-        qtbot.mouseClick(self.window.view.start_button, Qt.MouseButton.LeftButton)
-        new_axes = self.window.view.plot.canvas.axs
+        axes = self.view.plot.canvas.axs
+        qtbot.mouseClick(self.view.start_button, Qt.MouseButton.LeftButton)
+        new_axes = self.view.plot.canvas.axs
 
         # check that there was a change in the axes
         assert new_axes != axes
 
     def test_set_and_get_form_data(self, qtbot):
-        self.window.view.set_form_data(base_test)
-        form_data = self.window.view.get_form_data()
+        self.view.set_form_data(base_test)
+        form_data = self.view.get_form_data()
 
         assert form_data == base_test
 
