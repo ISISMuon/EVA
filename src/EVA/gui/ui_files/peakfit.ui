@@ -1092,12 +1092,12 @@
   <customwidget>
    <class>BaseTable</class>
    <extends>QTableWidget</extends>
-   <header>EVA.widgets.base.base_table</header>
+   <header>EVA.gui.base.base_table</header>
   </customwidget>
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header>EVA.widgets.plot.plot_widget</header>
+   <header>EVA.gui.widgets.plot.plot_widget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
