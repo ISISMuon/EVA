@@ -22,7 +22,7 @@
   },
 
   "plot": {
-    "fill_colour": "yellow",
+    "fill_colour": "#d0f4ff",
     "show_plot": {
       "GE1": true,
       "GE2": false,
