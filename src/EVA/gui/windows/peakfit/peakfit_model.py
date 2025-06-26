@@ -189,8 +189,9 @@ class PeakFitModel(QObject):
 
         # removes previous fit from figure is prompted
         if overwrite_old:
+            blacklisted_labels = ["Best fit", "Residuals", "Initial parameters"]
             for line in self.axs.lines:
-                if line.get_label() == "Best fit" or line.get_label() == "Residuals":
+                if line.get_label() in blacklisted_labels:
                     line.remove()
 
         x_data = self.fit_result.userkws["x"]
