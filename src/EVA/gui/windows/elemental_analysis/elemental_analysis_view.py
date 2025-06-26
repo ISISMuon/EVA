@@ -22,7 +22,7 @@ class ElementalAnalysisView(BaseView, Ui_elemental_analysis):
         self.setupUi(self)
 
         # Set up window
-        self.setWindowTitle("Plot Window")
+        self.setWindowTitle("Elemental Analysis - EVA")
 
         # stretch all the table headers so that they resize to occupy maximum space
         self.muonic_xray_table_all.stretch_horizontal_header()

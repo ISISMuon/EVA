@@ -223,6 +223,10 @@ class ElementalAnalysisModel(QObject):
 
         for label, values in self.plotted_mu_xray_lines.items():
             energies, colour = values
+
+            if not isinstance(energies, list):
+                energies = [energies]
+
             for energy in energies:
                 for i in range(len(self.axs)):
                     self.axs[i].axvline(
@@ -230,6 +234,10 @@ class ElementalAnalysisModel(QObject):
 
         for label, values in self.plotted_gamma_lines.items():
             energies, colour = values
+
+            if not isinstance(energies, list):
+                energies = [energies]
+
             for energy in energies:
                 for i in range(len(self.axs)):
                     self.axs[i].axvline(

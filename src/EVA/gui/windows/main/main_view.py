@@ -46,7 +46,7 @@ class MainView(QMainWindow):
 
     def init_gui(self):
         # Set up action bar items
-        self.setWindowTitle("Elemental Analysis")
+        self.setWindowTitle("EVA")
         self.setFixedSize(QSize(650, 300))
 
         self.bar = self.menuBar()

@@ -31,6 +31,7 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setWindowTitle("Periodic Table - EVA")
 
         # disable buttons for some of the elements for which no muonic X-ray data exist
         for element in elements_disable:

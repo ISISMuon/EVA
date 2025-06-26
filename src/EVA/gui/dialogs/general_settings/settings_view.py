@@ -46,7 +46,12 @@ class SettingsView(QDialog, Ui_settings):
         _ = QMessageBox.information(self, title, message, buttons)
 
     def get_directory(self):
-        return QFileDialog.getExistingDirectory(self, "Choose Directory", "C:\\")
+        dir = QFileDialog.getExistingDirectory(self, "Choose Directory", "C:\\")
+
+        if dir == "":
+            return None
+        else:
+            return dir
 
     def closeEvent(self, event: QCloseEvent):
         self.dialog_closed_s.emit(event)

@@ -26,7 +26,7 @@ class ModelSpectraView(BaseView):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle("Muonic X-ray Simulations")
+        self.setWindowTitle("Muonic X-ray Simulations - EVA")
         self.init_gui()
 
         self.layout().setContentsMargins(0, 0, 0, 0)

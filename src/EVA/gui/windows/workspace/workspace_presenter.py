@@ -202,7 +202,7 @@ class WorkspacePresenter:
         logger.info("Launching multiplot tab.")
 
         window = MultiPlotWindow()
-        self.view.open_new_tab(window.widget(), "Multiplot")
+        self.view.open_new_tab(window.widget(), "Multi-Run Plot")
 
     def open_peakfit(self, detector):
         """ Opens a tab for peakfit. """
@@ -216,7 +216,7 @@ class WorkspacePresenter:
 
         logger.info("Launching TRIM tab.")
         window = TrimWindow()
-        self.view.open_new_tab(window.widget(), "TRIM simulations")
+        self.view.open_new_tab(window.widget(), "TRIM Simulations")
 
     def open_model_muon_spectrum(self):
         """ Opens a tab for muonic x-ray modelling. """

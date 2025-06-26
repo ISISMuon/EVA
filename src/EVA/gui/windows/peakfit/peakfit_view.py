@@ -29,7 +29,7 @@ class PeakFitView(BaseView, Ui_peak_fit):
         self.setupUi(self)
 
         self.setMinimumSize(1000, 700)
-        self.setWindowTitle("Peak Fitting")
+        self.setWindowTitle("Peak Fitting - EVA")
 
         # resize all table headers to fit screen nicely
         self.initial_bg_params_table.stretch_horizontal_header([0])

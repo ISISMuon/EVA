@@ -23,16 +23,20 @@ class SettingsPresenter:
     def on_wdir_btn_click(self):
         dir = self.view.get_directory()
 
-        print(dir)
-        self.view.working_dir_label.setText(dir)
+        if dir is not None:
+            self.view.working_dir_label.setText(dir)
 
     def on_srim_exe_dir_btn_click(self):
         dir = self.view.get_directory()
-        self.view.srim_exe_dir_label.setText(dir)
+
+        if dir is not None:
+            self.view.srim_exe_dir_label.setText(dir)
 
     def on_srim_out_dir_btn_click(self):
         dir = self.view.get_directory()
-        self.view.srim_out_dir_label.setText(dir)
+
+        if dir is not None:
+            self.view.srim_out_dir_label.setText(dir)
 
     def load_current_settings(self):
         config = get_config()
