@@ -16,8 +16,7 @@ def gaussian(x: np.ndarray, mean: float, sigma: float, intensity: float = 1., of
     Returns:
         Array of points corresponding to the Gaussian function.
     """
-
-    return (intensity / (sigma * np.sqrt(2 * np.pi))) * np.exp(-(x - mean)**2 / (2 * sigma)**2) + offset
+    return ((intensity / (sigma * np.sqrt(2 * np.pi))) * np.exp(-0.5 * (x - mean)**2 / sigma**2)) + offset
 
 def line(x: np.ndarray, x0: float, x1: float) -> np.ndarray:
     """

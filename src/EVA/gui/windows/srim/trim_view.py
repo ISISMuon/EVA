@@ -37,7 +37,7 @@ class TrimView(BaseView, Ui_trim):
         self.parent = parent
         self.setupUi(self)
 
-        self.setWindowTitle("TRIM Simulations")
+        self.setWindowTitle("TRIM Simulations - EVA")
         self.setMinimumSize(1100, 600)
         self.plot_stacks = []
         self.origin_shift_line_edits = []

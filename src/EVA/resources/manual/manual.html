@@ -18,7 +18,7 @@
             p, li { font-size: 14px }
 
             .img_wrap {
-                margin: 5px 0px;
+                margin: 20px 0px;
             }
 
             a {
@@ -43,147 +43,128 @@
     </head>
     <body>
         <h1>EVA User Manual </h1>
-        <p>EVA is a data analysis tool to be used for the MuX instrument at ISIS Neutron and Muon Source. Please note
-            that this manual may not be up to date, so if you have any enquiries or encounter any problems, please reach
-            out on GitHub or contact tea.bjorklund@stfc.ac.uk.</p>
-
+        <p>EVA is a data analysis tool to be used for the MuX instrument at ISIS Neutron and Muon Source.
+            If you have any enquiries or encounter any problems, feel free to reach out on GitHub.</p>
         <hr>
         <h2>Table of contents</h2>
-        <ol>
-            <li><a href="#loading-data">Getting started and loading data</a></li>
-            <li><a href="#using-the-plot-analysis-tool">Using the plot analysis tool</a></li>
-                <li><ul>
-                        <li><a href="#peak-identification">Peak identification</a></li>
-                        <li><a href="#element-search">Element search</a></li>
-                        <li><a href="#adjust-and-customise">Adjust and customise figure</a></li>
-                </ul></li>
-            <li><a href="#configurations">Configurations</a></li>
-                <li><ul>
-                        <li><a href="#selecting-detectors">Selecting detectors to plot</a></li>
-                        <li><a href="#energy-corrections">Energy corrections and normalisation</a></li>
-                        <li><a href="#saving-resetting">Saving and resetting EVA</a></li>
-                </ul></li>
+        <ol type="1">
+            <li><a href="#getting-started">Getting started</a></li>
+            <li><ul>
+                <li><a href="#loading-data">Loading data</a></li>
+                <li><a href="#workspaces">Workspaces</a></li>
+                <li><a href="#corrections">Run corrections and settings</a></li>
+            </ul></li>
+            <li><a href="#elemental-analysis">Elemental analysis</a></li>
+            <li><ul>
+                <li><a href="#element-search">Peak Identification</a></li>
+                <li><a href="#peak-detection">Automatic Element Detection</a></li>
+            </ul></li>
             <li><a href="#multiplot">Multiplot</a></li>
             <li><a href="#peakfit">Peak fitting</a></li>
-                <li><ul>
-                    <li><a href="#fitting-peaks">Select and fit peaks</a></li>
-                    <li><a href="#constraints">Set up parameter constraints and bounds</a></li>
-                </ul></li>
+            <li><ul>
+                <li><a href="#fitting-peaks">Select and fit peaks</a></li>
+                <li><a href="#constraints">Set up parameter constraints and bounds</a></li>
+                <li><a href="#modelfit">Model fitting</a></li>
+            </ul></li>
             <li><a href="#muonic-xray-sim">Muonic X-ray simulations</a></li>
             <li><a href="#srimtrim">SRIM/TRIM simulations</a></li>
             <li><ul>
-                    <li><a href="#installing-srim">Installing SRIM</a></li>
-                    <li><a href="#using-interface">Using the SRIM/TRIM tool</a></li>
+                <li><a href="#installing-srim">Installing SRIM</a></li>
+                <li><a href="#using-srim">Using the SRIM/TRIM tool</a></li>
             </ul></li>
+            <li><a href="#periodic-table">Periodic Table</a></li>
+            <li><a href="#links">Useful links</a></li>
 
         </ol>
         <hr>
 
-        <h2 id="loading-data">Getting started and loading data</h2>
-        <p>To load your data into EVA, you can either select a folder to load by navigating to 'File>Browse Data Directory'.
-            By default, EVA will search for files in the EVA folder, so you can also drop your files in there.
-            You can then enter the run number you'd like to load in the field at the center of the control panel.
-            Press the 'load' button to load the run and open the plot analysis window.</p>
+        <h2 id="getting-started">Getting started</h2>
+        <h3 id="loading-data">Loading data</h3>
+        <p>To load your data into EVA, select a folder to load by navigating to 'File>Browse to data directory' or via 'Settings>General settings'.
+            By default, EVA will search for files in the EVA folder, so you can also drop your data files in there.
+            Then, enter the run number you'd like to load in the main window and press the 'load' button to open a new workspace.</p>
         <div class="img_wrap">
-            <img src="./src/EVA/resources/manual/img/cover_650px.png">
+            <img src="./src/EVA/resources/manual/img/loading_data.png">
         </div>
+        <h3 id="workspaces">Workspaces</h3>
+        <p>When loading a run, EVA will create a new workspace for that run. In the workspace, you can do elemental analysis or peak fitting on the data from that run.
+            To load a new run, navigate back to the main window and load a new run number. You can have multiple workspaces open for different runs at a time.</p>
+        <div class="img_wrap">
+            <img src="./src/EVA/resources/manual/img/sample_workspace.png">
+        </div>
+        <h3 id="corrections">Run corrections and settings</h3>
+        <p>In the workspaces, you can apply corrections to your data such as normalising, binning rate or energy corrections. Binning rate and normalisation
+            can be set in the 'Run settings' area in the side panel of the workspace.
+            Note that corrections by events is currently only possible if there exists a comment.dat file in the working directory.
+        <br><br>
+        You can set energy corrections by navigating to 'Settings>Energy corrections'. Corrections will only be enabled for detectors with 'Use correcion' checked.</p>
+
         <hr>
-        <h2 id="using-the-plot-analysis-tool">Using the plot analysis tool</h2>
-        <h3 id="peak-identification">Peak identification</h3>
-        <p>In the "peak identification" tab you can left-click on a peak in the figure to search for possible muonic x-ray transitions,
-            or right-click to search for gamma transitions. Within the gamma transitions table, you can click on either a
-            specific energy or a source to plot all transition lines for that element.</p>
+        <h2 id="elemental-analysis">Elemental Analysis</h2>
+        <h3 id="element-search">Peak Identification</h3>
+        <p>In the elemental analysis tab you can interactively search for elements within your spectrum. Left-click on a peak in the spectrum to search for possible muonic x-ray transitions,
+            or right-click to search for gamma transitions. For muonic X-rays, EVA uses a database of energies generated by mudirac, and for gamma transitions EVA uses the IAEA database.
+            Possible matches will appear in the tables next to the plots, and you can click on either a source name or a specific
+            energy to plot either all transitions for that source or plot a specific energy. Vertical lines will appear on the
+            figure as shown below, indicating the different possible transitions for that element.</p>
+
             <div class="img_wrap">
-                <img src="./src/EVA/resources/manual/img/vlines_add_500px">
+                <img src="./src/EVA/resources/manual/img/plot_clicking.png">
             </div>
-        <br>
-        <p>Vertical lines will appear on the figure as shown below, indicating the different possible transitions for
-        that element.</p>
-            <div class="img_wrap">
-                <img src="./src/EVA/resources/manual/img/vlines_plotted_500px.png">
-            </div>
-            <p> To remove lines, navigate to the
-            "remove plot lines" tab in the muonic transition table and click the source to remove. </p>
-            <div class="img_wrap">
-                <img src="./src/EVA/resources/manual/img/vlines_remove_500px.png">
-            </div>
-        <hr>
-        <h3 id="element-search">Element search</h3>
-        <p>In the "element search" tab you can select a subroutine to automatically find peaks within your data,
-            such as SciPy's find_peaks() routine.</p>
-        <hr>
-        <h3 id="adjust-and-customise">Adjust and customise figure</h3>
-        <p>You can adjust the margins and spacing between subplots if needed from the plot menu above the graph.</p>
 
-        <div class="img_wrap">
-            <img src="./src/EVA/resources/manual/img/plotmenu_figure_settings_300px.png">
-        </div>
+            <p>To remove lines, navigate to the "remove lines" tab in the tables and click the source to remove.</p>
 
-        <div class="img_wrap">
-            <img src="./src/EVA/resources/manual/img/plotmenu_figure_settings_open_300px.png">
-        </div>
-
-        <p><strong>Note:</strong> You may experience a visual bug when incrementing the spacings. You will still be able to change spacings,
-            but to see the values you will have to press "export values".</p>
-        <p>You can also adjust the colours, titles and more for each subplot in the "customize" menu.</p>
-
-        <div class="img_wrap">
-            <img src="./src/EVA/resources/manual/img/plotmenu_axes_settings_300px.png">
-        </div>
-        <div class="img_wrap">
-            <img src="./src/EVA/resources/manual/img/plotmenu_axes_settings_open_300px.png">
-        </div>
-
+        <h3 id="peak-detection">Automatic Element Detection</h3>
+        <p>In the "Peak detection" tab of the elemental analysis area you can select a subroutine to automatically find peaks within your data,
+            such as SciPy's find_peaks() routine. After detecting peaks, EVA will search for all muonic x-ray transitions within 3keV for each peak, and display the most commonly
+        detected elements. A detailed summary of which peaks were detected and possible sources for each peak can be seen in the tree view below the results table.</p>
         <hr>
 
-        <h2 id="configurations">Configurations</h2>
-        <h3 id="selecting-detectors">Selecting detectors to plot</h3>
-        <p>You can select which detectors to plot for by navigating to 'Plot>select Detectors'. Detectors with no loaded
-            data will appear as empty figures when plotted.</p>
-
-        <h3 id="energy-corrections">Energy corrections and normalisation</h3>
-        <p>Linear energy corrections can be applied from 'Corrections>Energy Corrections'. Remember to apply energy corrections before saving. <br>
-        You can choose to normalise the spectra either by 1e5 counts or by spill events from the 'Normalisation>' menu. If you would like to normalise
-        by spill events you must have the Comment.dat file in the working directory containing the run information, otherwise it will fail.</p>
-
-        <h3 id="saving-resetting">Saving and resetting EVA</h3>
-        <p>Saving settings will save the currently loaded data and settings in between sessions. If you would like to reset your settings to defaults
-        you can do so at 'File>Restore Default Settings'.</p>
-
-        <hr>
         <h2 id="multiplot">Multiplot</h2>
-        <p>In multiplot you can plot multiple runs on the same figure to compare the spectra in between runs.
-        You can specify which runs to plot in the table. If your run numbers are non-consecutive you can enter them in one by one in the 'start' column.
+        <p>Multiplot allows you to plot multiple runs on the same figure to compare the spectra in between runs.
+        You can specify which runs to plot in the table. If your run numbers are non-consecutive you can enter them in one-by-one in the 'start' column.
         Alternatively, if you have a series of consecutive runs you can specify a start number, stop number and a step size to load them all at once.
-        The 'offset' parameter can be used to offset the runs vertically on the figure.</p>
+        The 'offset' parameter can be used to offset the runs vertically on the figure. Multiplot will only plot uncorrected data (raw data as loaded from file).</p>
 
         <hr>
         <h2 id="peakfit">Peak fitting</h2>
         <h3 id="fitting-peaks">Select and fit peaks</h3>
-        <p>To start peak fitting you must first ensure you have already loaded a run in the main window. In the peak fit window, click on the 'Add peak' button, then right-click on a peak in the spectrum to add it to the fitting.
-            You can modify the initial parameters in the table. Once you have added all the peaks you would like to fig you can fit them by pressing 'Fit peaks'.
-            EVA will then use the least squares method (with lmfit) to optimise the fit. The fitted parameters will be displayed in the table and overwrite the initial parameters. If the fit result is poor, try increase the initial width parameters.
-            If you would like to specify a custom fitting range you can do so in the top left. If using auto range the fitting range will be set to 8 peak widths away from the lowest and highest energy peak selected.</p>
+        <p>In the peak fit window, click on the 'Add peak' button, then right-click on a peak in the spectrum to add it to the fitting.
+            You can modify the initial parameters in the table. You can either specify a custom fitting range, or leave the 'Auto' parameter checked,
+            which will automatically calculate an appropriate range.
+            EVA will fit a polynomial background as well to the data, but you can change this by setting up constraints (see below).
+            Once you have added all the peaks you would like to fit you can fit them by pressing 'Fit all parameters'.
+            EVA will then use the least squares method (with lmfit) to optimise the fit. The fitted parameters will be displayed under the 'Fit result' tab.
+            </p>
 
         <h3 id="constraints">Set up parameter constraints and bounds</h3>
-        <p>The constraints menu can be used to specify bounds for a parameter, set a parameter to be fixed to a certain value or constrain two or more parameters together with a function.
-            A few presets are available for commonly used constraints for spectrum analysis such as fitting the same peak width to all peaks or fitting the same area.</p>
-        <br>
+        <p>The 'Set up constraints' button will open the constraints menu, which can be used to specify bounds for a parameter,
+            set a parameter to be fixed to a certain value or constrain two or more parameters together with a function.
+            To add a constraint, simply type the mathematical expression you want to constrain the parameter by,
+            referencing the names of other parameters. Below are a few examples.
+        </p>
         <p>Constraining amplitude of peak 0 to be 1.4x the amplitude of peak 1:</p>
-        <div class="img_wrap">
-            <img src="./src/EVA/resources/manual/img/peakfit_area_constraint_300px.png">
-        </div>
+            <div class="img_wrap">
+                <img src="./src/EVA/resources/manual/img/peakfit_amplitude_constraint.png">
+            </div>
         <p>Constraining two peaks to have the same width:</p>
         <div class="img_wrap">
-            <img src="./src/EVA/resources/manual/img/peakfit_sigma_constraint_300px.png">
+            <img src="./src/EVA/resources/manual/img/peakfit_sigma_constraint.png">
         </div>
 
         <p>Take care to avoid any circular definitions in your constraints:</p>
         <div class="img_wrap">
-            <img src="./src/EVA/resources/manual/img/peakfit_constraints_recursion_300px.png">
+            <img src="./src/EVA/resources/manual/img/peakfit_recursive_constraints.png">
         </div>
         <p>This will cause a recursion error as sigma0 = sigma1 but sigma1 = sigma0 and so on...
-            <br><br> Tip: If the fit is struggling to converge, try set your peak positions to 'fixed' in the constraints menu.</p>
+            <br> Tip: If the fit is struggling to converge, try set your peak positions to 'fixed' in the constraints menu.</p>
+        <p>You can also set limits to parameters in the 'Bounds' tab, or fix parameter values in the 'Fixed Parameters' tab.</p>
+        <h3 id="modelfit">Model fitting</h3>
+        <p> If you are using standards in your experiment to quantitatively measure elements, you can use the model fitting tab to fit previously measured spectra to your data.
+            Firstly, fit the spectrum from your standards in the peak fitting tab, then save your model to a file using the 'Save fitted model' button.
+            After this, load your experiment data and navigate to the model fitting tab. Here you can load previously fitted models and fit them to your spectrum, only varying the scale
+            of the previously fitted curve and a vertical offset. If you are fitting multiple models,
+            you can constrain the sum of all model proportions equal to some value by ticking the checkbox below the model table.</p>
 
         <hr>
         <h2 id="muonic-xray-sim">Muonic X-ray Simulations</h2>
@@ -200,22 +181,54 @@
         <p>To use the SRIM/TRIM tool you must have SRIM 2013 installed on your computer. You can get it
             at http://www.srim.org/SRIM/SRIMLEGL.htm. Before running a SRIM simulation in EVA, you should locate where SRIM is installed on your system and run
             SRIM.exe and TRIM.exe to ensure everything is properly installed.</p>
-
-        <p><strong>Note:</strong> If you're installing SRIM on
-            Windows 7 or newer, you may run into issues when trying to run SRIM.exe or TRIM.exe. After you've installed SRIM2013,
+        <h4>Windows installation</h4>
+        <p>If you're installing SRIM on
+            Windows 7 or newer (which I sincerely hope you are!), you may run into issues when trying to run SRIM.exe or TRIM.exe. After you've installed SRIM2013,
                 you can find a nice step-by-step guide on how to fix these issues within the SRIM2013/SRIM Setup folder.
         </p>
+        <h4>Other platforms</h4>
+            <p>SRIM is a windows-only application. To use the SRIM features of EVA on non-windows
+            platforms, you need to install SRIM through Wine. You can find some instructions here:
+                https://pysrim.readthedocs.io/en/latest/installation.html#linux-and-osx. </p>
 
-        <h3 id="using-interface">Using the SRIM/TRIM tool</h3>
+        <h3 id="using-srim">Using the SRIM/TRIM tool</h3>
         <p>Enter your desired TRIM parameters in the form and ensure SRIM.exe is located at the specified path.
-            You can add your sample layers in the table below the form. Press 'Run Simulations' to start SRIM. The simulation resutls can be found in the
-            'Results' tab. The 'Momentum' column will show the momentum for which the simulation was run for, and the
-            '% component' column will show the proportions of muons were stopped in each layer. You can plot
-            the results by navigating to the 'results tab' in the table and pressing 'plot whole' to plot the entire
-            spectrum or 'plot comp' to plot components. To save the simulation results, press the 'save' button to save
-            the results to current working directory.
+            You can either specify a single momentum, or select 'Yes' under the 'Scan Momentum' dropdown menu to select a
+            range of momenta to simulate for. Using the 'Mono' simulation type will run a quick simulation assuming a perfect
+            single momentum, while 'Momentum Spread' will simulate a gaussian beam profile. For simulating MuX experiments, 4% is recommended.
+            Using a higher number of stats will make your simulation more accurate, but will also increase the simulation time. A minimum of 1000 is recommended.
+            <br><br>
+            You can build your sample layers in the table below the form, with the top layers being closest to the beam window.
+            It is recommended that you do not modify the compressed air and beamline window layers, as they have been optimised
+            to simulate the conditions in MuX experiments. By default, the SRIM window will load with sample layers of
+            aluminium foil and a copper plate.
+            <br><br>
+            SRIM will accept either element names or chemical formulas (case sensitive) for the sample materials. Thicknesses are
+            specified in mm and density is specified in g/cm<sup>3</sup>. SRIM will assume perfect layer boundaries, but if you want
+            to simulate diffuse layer boundaries you can (roughly!) approximate this by adding intermediate layers. For example,
+            if your sample has a diffuse boundary between Al and Cu, the following can be done:
+            <div class="img_wrap">
+                <img src="./src/EVA/resources/manual/img/srim_diffuse_boundaries.png">
+            </div>
+            Keep in mind that SRIM will calculate the total thickness of your sample and divide the total thickness into 100 bins
+            to simulate for, so keep your total sample thickness as thin as possible to ensure good simulation resolution.
+            However, it can be useful to add an extra layer at the end of your sample with high density for muons to stop
+            in if you are simulating close to the edge of your sample.
+            <br><br>
+            Press 'Run Simulations' to start SRIM. Once complete, the simulation curves can be saved under the 'Results' tab. Under the 'Implantation'
+            tab you can see the proportion of muons in each layer. This will save a zip file containing a data file for each layer in the plot with only
+            the implantation profile in that layer, as well as a file containing the total implantation profile. If you used a momentum scan, a depth profile plot is generated
+            and shown under the 'Depth profile' tab, which is just a plot of number of muons in each layer against momentum. Keep in mind that the layer boundaries displayed on the depth-profile
+            plot are only estimates and will be more accurate for momentum scans with more momenta.
 
-            <br>To save or load your SRIM settings and layers, go to 'File>' in the top menu.
-            </p>
+        <h2 id="periodic-table">Periodic table</h2>
+        <p>The interactive periodic table can be used to browse the energy databases available in EVA.
+        The database only has records for stable isotopes, and there are therefore some elements which have no data.</p>
+        <h2 id="links">Useful links</h2>
+        <ol type="1">
+            <li>EVA GitHub: https://github.com/ISISMuon/EVA</li>
+            <li>SRIM webpage: https://www.srim.org/</li>
+            <li>Mudirac documentation: https://muon-spectroscopy-computational-project.github.io/mudirac/</li>
+        </ol>
     </body>
 </html>

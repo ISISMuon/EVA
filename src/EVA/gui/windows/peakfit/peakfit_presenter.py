@@ -189,6 +189,14 @@ class PeakFitPresenter(object):
                 self.view.display_error_message(message="Please specify a valid energy range.")
                 logger.error("Invalid energy range - aborting peakfit.")
                 return
+
+        if self.view.constrain_proportions_checkbox.isChecked():
+            try:
+                self.mf_model.proportions_constraint = float(self.view.constrain_proportions_lineedit.text())
+            except (ValueError, AttributeError):
+                self.view.display_error_message(message="Invalid proportions constraint")
+                logger.error("Invalid proportion constraint - aborting peakfit.")
+                return
         try:
             self.mf_model.fit_model()
             self.mf_model.plot_fit()

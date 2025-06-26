@@ -14,8 +14,8 @@ from EVA.util.path_handler import get_path
 class ManualWindow(BaseView):
     def __init__(self, parent=None):
         super(ManualWindow, self).__init__(parent)
-        self.setWindowTitle("Manual")
-        self.setMinimumSize(700, 650)
+        self.setWindowTitle("Manual - EVA")
+        self.setMinimumSize(850, 700)
 
         self.page = QTextBrowser(self)
         self.page.setOpenLinks(True)

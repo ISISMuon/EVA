@@ -33,9 +33,10 @@ class WorkspaceView(Ui_workspace, QMainWindow):
         """
         super().__init__()
         self.run = run
-        
+
         self.setupUi(self)
-        
+        self.setWindowTitle(f"Workspace {run.run_num} - EVA")
+
         self.detector_list = list(run.data.keys())
 
         self.layout().setContentsMargins(0, 0, 0, 0)
@@ -58,30 +59,6 @@ class WorkspaceView(Ui_workspace, QMainWindow):
         # initialise elemental analysis widget
         self.elemental_analysis_widget = ElementalAnalysisWindow(parent=self, run=run)
         self.open_new_tab(self.elemental_analysis_widget.widget(), "Elemental Analysis", closable=False)
-
-        self.setup_splitter()
-
-    def setup_splitter(self):
-        """
-        Sets up the splitter (the three dots between side panel and tab area) which allows the side
-        panel to be resized.
-        """
-
-        self.splitter.handle(1).setFixedWidth(6)
-
-        # style the splitter
-        path = get_path("src/EVA/resources/icons/splitter.png")
-        sheet = "QSplitter::handle { \
-                                       image: url(" + path + "); \
-                                   } \
-                                   QSplitter::handle:horizontal {\
-                                       width: 2px;\
-                                   }\
-                                   QSplitter::handle:vertical {\
-                                       height: 2px;\
-                                   }"
-
-        self.setStyleSheet(sheet)
 
     def display_error_message(self, message: str = "", title: str = "Error",
                               buttons: QMessageBox.StandardButton = QMessageBox.StandardButton.Ok):

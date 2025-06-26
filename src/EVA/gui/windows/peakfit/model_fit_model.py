@@ -55,6 +55,7 @@ class ModelFitModel(QObject):
         self.fit_result = None
         self.x_range = None
         self.y_range = None
+        self.proportions_constraint = None
 
         plot_settings = {"colour": get_config()["plot"]["fill_colour"]}
         self.fig, self.axs = plotting.plot_spectrum(self.spectrum, self.run.normalisation, **plot_settings)
@@ -81,14 +82,16 @@ class ModelFitModel(QObject):
 
         t0 = time.time_ns()
         self.fit_result = fit_data.fit_model_lmfit(x_data, y_data, self.initial_peak_params, self.initial_bg_params,
-                                                  self.initial_model_params)
+                                                  self.initial_model_params, constrain_scale=self.proportions_constraint)
         t1 = time.time_ns()
         logger.info("Peak fitting finished in %ss.", round((t1-t0)/1e9, 3))
+        print(self.fit_result.params.items())
 
         self.fitted_bg_params = deepcopy(self.initial_bg_params)
         self.fitted_model_params = deepcopy(self.initial_model_params)
 
         for param_name, param in self.fit_result.params.items():
+            print(param_name)
             prefix, var_name = param_name.split("_")
 
             # if error is not available, set error to 0
@@ -97,6 +100,12 @@ class ModelFitModel(QObject):
             # separate the background parameters and the peak parameters
             if prefix == "background":
                 self.fitted_bg_params["background"][var_name] = {
+                    "value": param.value,
+                    "stderr": stderr
+                }
+
+            elif prefix == "scale":
+                self.const = {
                     "value": param.value,
                     "stderr": stderr
                 }

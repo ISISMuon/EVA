@@ -26,7 +26,7 @@ class MultiPlotView(BaseView):
         self.init_gui()
 
     def init_gui(self):
-        self.setWindowTitle("Multi-Plot Window ")
+        self.setWindowTitle("Multi-Run Plot - EVA")
         self.setMinimumSize(1100, 600)
 
         # set up containers and layouts

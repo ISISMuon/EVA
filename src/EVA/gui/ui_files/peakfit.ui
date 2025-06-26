@@ -812,6 +812,29 @@
         </widget>
        </item>
        <item>
+        <widget class="QWidget" name="widget" native="true">
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="1" colspan="2">
+           <widget class="QCheckBox" name="constrain_proportions_checkbox">
+            <property name="text">
+             <string>Constrain sum of model proportions to equal:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="constrain_proportions_lineedit">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="poly_bg_label_2">
          <property name="font">
           <font>
@@ -1092,17 +1115,15 @@
   <customwidget>
    <class>BaseTable</class>
    <extends>QTableWidget</extends>
-   <header>EVA.widgets.base.base_table</header>
+   <header>EVA.gui.base.base_table</header>
   </customwidget>
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header>EVA.widgets.plot.plot_widget</header>
+   <header>EVA.gui.widgets.plot.plot_widget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../resources/tangomfk.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

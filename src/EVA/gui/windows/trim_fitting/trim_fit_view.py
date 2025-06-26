@@ -9,3 +9,4 @@ class TrimFitView(BaseView, Ui_trim_fit):
 
         self.layer_table.stretch_horizontal_header()
         self.setMinimumSize(800, 600)
+        self.setWindowTitle("TRIM fitting - EVA")

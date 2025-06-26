@@ -1,8 +1,9 @@
 import lmfit.model
 import numpy as np
 from functools import partial
-from lmfit import Model
-from lmfit.models import GaussianModel, QuadraticModel
+
+from lmfit import Model, Parameter
+from lmfit.models import GaussianModel, QuadraticModel, ConstantModel
 
 from EVA.core.physics.functions import gaussian
 
@@ -58,8 +59,9 @@ def scaled_shifted_gaussians(x: np.ndarray, scale: float, x0: float, params: dic
     return scale * np.sum([gaussian(x-x0, param["center"]["value"], param["sigma"]["value"],
                      param["amplitude"]["value"], offset=0) for param in params.values()], axis=0)
 
+
 def fit_model_lmfit(x_data: np.ndarray, y_data:np.ndarray, peak_params: dict, bg_params: dict, model_params: dict,
-                    constrain_scale: bool=True) -> lmfit.model.ModelResult:
+                    constrain_scale: float | None = None) -> lmfit.model.ModelResult:
     """
     Fit a sum of previously defined fixed-shape N-Gaussian spectra with scale factors and shift parameters
     for each spectrum using the least-squares method.
@@ -74,16 +76,12 @@ def fit_model_lmfit(x_data: np.ndarray, y_data:np.ndarray, peak_params: dict, bg
         peak_params: parameter dictionary for the gaussian peaks within each model
         bg_params: background parameters
         model_params: parameter dictionary for each model containing scale and offset parameters
-        constrain_scale: if True, all scale parameters will obey the constraint A + B ... + Z = 1
+        constrain_scale: if not None, all scale parameters will obey the constraint A + B ... + Z = constrain_scale
 
     Returns:
         lmfit model result object.
     """
-    # First set up the background model
-    model = QuadraticModel(prefix="background_", nan_policy="omit")
-    model.set_param_hint("a", **bg_params["background"]["a"])
-    model.set_param_hint("b", **bg_params["background"]["b"])
-    model.set_param_hint("c", **bg_params["background"]["c"])
+    gaussian_sum_model = None
 
     # Check how many models will be fitted
     n_models = len(model_params)
@@ -106,26 +104,39 @@ def fit_model_lmfit(x_data: np.ndarray, y_data:np.ndarray, peak_params: dict, bg
         spectrum_model = Model(func, prefix=f"{model_id}_")
         spectrum_model.set_param_hint("x0", **params["x0"], vary=True)
 
-        # if user wants scale parameters to be constrained as scale1 + scale2 + scale3 = 1
-        if constrain_scale:
-            if n_models == 1: # if there is only one model, force scale=1
-                spectrum_model.set_param_hint("scale", value=1, vary=False, min=0, max=1)
+        # if user wants scale parameters to be constrained as scale1 + scale2 + scale3 = value
+        if constrain_scale is not None:
+            if n_models == 1: # if there is only one model, force scale=constrain_scale
+                spectrum_model.set_param_hint("scale", value=constrain_scale, vary=False, min=0, max=constrain_scale)
 
-            elif i < n_models - 1: # set all but the last scale parameters to be between 0 and 1
-                spectrum_model.set_param_hint("scale", **params["scale"], min=0, max=1)
+            elif i < n_models - 1: # set all but the last scale parameters to be between 0 and scale constraint
+                spectrum_model.set_param_hint("scale", **params["scale"], min=0, max=constrain_scale)
                 scale_param_names.append(f"{model_id}_scale")
             else:
-                # Constrain the last scale parameter to be equal to 1 - A - B... etc. to satisfy A + B + C = 1
+                # Constrain the last scale parameter to be equal to constraint - A - B... etc. to satisfy A + B + C = constraint
                 # Only one of the scale parameters should have this constraint, otherwise we get recursion errors
-                constraint = "1 - " + " - ".join(scale_param_names)
-                spectrum_model.set_param_hint("scale", **params["scale"], min=0, max=1, expr=constraint)
+                constraint = f"{constrain_scale} - " + " - ".join(scale_param_names)
+                spectrum_model.set_param_hint("scale", **params["scale"], min=0, max=constrain_scale, expr=constraint)
 
         # if no scale constraints are wanted
         else:
             spectrum_model.set_param_hint("scale", **params["scale"])
 
         # finally, add this model to the total model
-        model += spectrum_model
+        if gaussian_sum_model is None:
+            gaussian_sum_model = spectrum_model
+        else:
+            gaussian_sum_model += spectrum_model
+
+
+    # First set up the background model
+    bg_model = QuadraticModel(prefix="background_", nan_policy="omit")
+    bg_model.set_param_hint("a", **bg_params["background"]["a"])
+    bg_model.set_param_hint("b", **bg_params["background"]["b"])
+    bg_model.set_param_hint("c", **bg_params["background"]["c"])
+
+    # Add everything together
+    model = gaussian_sum_model + bg_model
 
     return model.fit(y_data, x=x_data, weights=1/np.sqrt(y_data))
 

@@ -11,6 +11,7 @@ class EnergyCorrectionsView(QDialog, Ui_Energycorrections):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setWindowTitle("Energy corrections")
         self.apply_button = self.buttonBox.button(QDialogButtonBox.StandardButton.Apply)
 
         self.checkboxes = []

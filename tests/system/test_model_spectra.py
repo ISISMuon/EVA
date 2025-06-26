@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 from pandas.core.dtypes.missing import array_equals
-
+from EVA.core.physics.functions import gaussian
 from EVA.core.data_searching.get_match import search_muxrays_single_element
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_model import ModelSpectraModel
 
@@ -83,9 +83,6 @@ class TestModelSpectrumModel:
                 assert round(sigma, 6) == round(sigma2, 6)
 
     def test_gaussian(self):
-        def gaussian(x, mu, sigma, a):
-            return (a / (sigma * np.sqrt(2 * np.pi))) * np.exp(-(x - mu)**2 / (2*sigma)**2)
-
         test = base_test
         self.model.model_spectrum(**test)
 
@@ -93,8 +90,8 @@ class TestModelSpectrumModel:
 
         total_curve = np.zeros_like(spectrum.x)
         for transition in self.model.all_transitions[0]:
-            total_curve += (transition["weights"] * gaussian(spectrum.x, mu=transition["E"],
-                                                             sigma=transition["sigma"], a=transition["intensity"]))
+            total_curve += (transition["weights"] * gaussian(spectrum.x, mean=transition["E"],
+                                                             sigma=transition["sigma"], intensity=transition["intensity"]))
 
         assert array_equals(spectrum.y, total_curve), "Incorrect Gaussian calculated"
 
