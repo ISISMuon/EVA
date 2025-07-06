@@ -1,5 +1,5 @@
 Code documentation
-=====
+=====================
 
 Below you will find all code documentation available. If you can't find what you're looking for, try search!
 (this is me admitting I have structured this poorly :') ).

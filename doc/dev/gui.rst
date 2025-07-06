@@ -1,12 +1,12 @@
 GUI implementation
------
+---------------------
 
 .. contents:: Contents
     :depth: 3
     :local:
 
 MVP design pattern
-.....
+........................
 EVA uses the MVP/MVC design pattern to separate GUI code and logi
 c code. This helps write "cleaner" code and allows us
 to pick out the logic bits and test them independently without having to deal with the GUI. The implementation of this
@@ -25,7 +25,7 @@ BaseView, BaseTableWidget and PlotWidget. If you see a method being used in a wi
 it was likely inherited from one of these base widgets.
 
 Qt Designer
-.....
+..............
 If you are designing a new interface or widget, it is strongly recommended that you use Qt Designer
 (not to be confused with Qt Creator!) to do this, rather than writing the GUI code yourself.
 

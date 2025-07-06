@@ -1,5 +1,5 @@
 Developer documentation
-=====
+============================
 
 Welcome to the EVA developer documentation! Click here_ to go straight to the code documentation.
 

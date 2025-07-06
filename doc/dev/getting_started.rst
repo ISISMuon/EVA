@@ -1,12 +1,12 @@
 Getting started
-=====
+====================
 
 .. contents:: Contents
     :depth: 3
     :local:
 
 Setting up your environment
------
+------------------------------
 EVA requires Python 3.12 or newer. If you do not have a preferred text editor/IDE I recommend using PyCharm or VSCode
 as they both have many integrated tools that make the development process much easier and faster.
 
@@ -34,7 +34,7 @@ which will update the installed EVA package every time you edit the code, meanin
 once when setting up the environment and forget about it.
 
 Pyinstaller setup
------
+----------------------
 EVA uses pyinstaller_ to freeze the python project into an executable which contains all requirements and
 dependencies needed to run. (This is why the c++ compiler is needed). The ``EVA.spec`` file specifies all the settings
 and parameters we want for the executable. Pyinstaller has two different modes it can use when creating the
