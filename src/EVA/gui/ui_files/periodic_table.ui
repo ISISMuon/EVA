@@ -3115,7 +3115,7 @@
        <item row="1" column="0">
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -3228,6 +3228,12 @@
           <layout class="QGridLayout" name="gridLayout_7">
            <item row="0" column="0">
             <widget class="QTableWidget" name="element_info_electronic_xray_table">
+             <property name="minimumSize">
+              <size>
+               <width>862</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="alternatingRowColors">
               <bool>false</bool>
              </property>
@@ -3249,6 +3255,11 @@
                <font>
                 <pointsize>10</pointsize>
                </font>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Relative Intensity</string>
               </property>
              </column>
             </widget>

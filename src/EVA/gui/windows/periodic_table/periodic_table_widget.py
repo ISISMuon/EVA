@@ -137,10 +137,14 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
 
         for i, data in enumerate(e_xray_data.items()):
             self.element_info_electronic_xray_table.setItem(i, 0, QTableWidgetItem(data[0]))
-            self.element_info_electronic_xray_table.setItem(i, 1, QTableWidgetItem(data[1]))
+            self.element_info_electronic_xray_table.setItem(i, 1, QTableWidgetItem(data[1][0]))
+            self.element_info_electronic_xray_table.setItem(i, 2, QTableWidgetItem(data[1][1]))
+
 
         self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+
 
     def energy_search(self):
         try:
