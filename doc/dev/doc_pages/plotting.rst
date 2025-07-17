@@ -1,5 +1,5 @@
 Plotting
-=====
+=============
 
-.. automodule:: EVA.core.plot.plotting
+.. automodule::  EVA.core.plot.plotting
     :members:

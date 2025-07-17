@@ -1,12 +1,12 @@
 GUI implementation
------
+---------------------
 
 .. contents:: Contents
     :depth: 3
     :local:
 
 MVP design pattern
-.....
+........................
 EVA uses the MVP/MVC design pattern to separate GUI code and logi
 c code. This helps write "cleaner" code and allows us
 to pick out the logic bits and test them independently without having to deal with the GUI. The implementation of this
@@ -18,19 +18,21 @@ There are many tutorials on how this is done, such as this_ one.
 .. _this: https://developer.mantidproject.org/MVPDesign.html
 
 The model, view, and presenter are linked together by a 4th object, usually named ``xxx_widget.py``, and this widget
-is what you would then import into your code to use your custom widget/window as if it was any other PyQt widget.
+is what you would then import into your code to use your custom widget/window as if it was any other PyQt widget. There are some
+templates available for this in gui/base - refer to the code for examples of how this can be used.
 
 There are a few reusable widgets available which provide methods that are commonly used to avoid code duplication, such as
 BaseView, BaseTableWidget and PlotWidget. If you see a method being used in a widget that you cannot find within the class definition,
 it was likely inherited from one of these base widgets.
 
 Qt Designer
-.....
+..............
 If you are designing a new interface or widget, it is strongly recommended that you use Qt Designer
 (not to be confused with Qt Creator!) to do this, rather than writing the GUI code yourself.
 
 Here_ is a tutorial on how to install and use Qt Designer (because for some reason there is no standalone installer),
-as well as how generate code from the .ui file.
+as well as how generate code from the .ui file. There seems to be an issue with installing qt designer for newer versions of
+python, so I recommend following the tutorial in a clean project with python 3.9 or older.
 
 .. _Here: https://www.youtube.com/watch?v=FVpho_UiDAY
 
@@ -49,6 +51,6 @@ Here is a relevant guide_.
 .. _guide: https://www.youtube.com/watch?v=VFV1nljhfJ8.
 
 As an example, if you want to promote your QTableWidget to BaseTableWidget, in the widget promotion menu
-you would enter "BaseTableWidget" under class name and "EVA.widgets.base.base_table" under header file.
+you would enter "BaseTableWidget" under class name and "EVA.gui.base.base_table" under header file.
 This will then automatically include the custom widget when generating the gui file.
 

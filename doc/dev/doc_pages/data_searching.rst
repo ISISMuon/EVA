@@ -1,5 +1,5 @@
 Data searching
-=====
+====================
 
 
 Descriptions of all functions used for database searching. Note that there are inconsistencies within the naming
