@@ -13,7 +13,9 @@ Welcome to the EVA developer documentation! Click here_ to go straight to the co
     code_overview
     gui
     unit_testing
+    versioning
     writing_documentation
+    pyinstaller
 
 .. toctree::
     :maxdepth: 2

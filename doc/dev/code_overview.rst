@@ -1,7 +1,9 @@
 Code overview
 ===============
 EVA is based on PyQt6, which is a Python binding of Qt which is a C++ library for creating cross-platform GUIs.
-If you are new to PyQt I recommend going through one of the many PyQt6 tutorials out there.
+If you are new to PyQt I recommend these_ tutorials.
+
+.. _these: https://www.pythonguis.com/pyqt6-tutorial/
 
 .. contents:: Contents
     :depth: 3
@@ -24,15 +26,13 @@ Within the EVA folder we have:
 
 * ``core/`` contains most of the fundamental non-gui things such as fitting functions, database loading, data loading, config files etc.
 * ``databases/`` contains JSON databases for muonic xray transitions, gamma transitions and electronic xrays.
-* ``gui/`` contains all Qt Designer .ui files and generated python files for the GUI
+* ``gui/`` contains all of the GUI code and "features"
 * ``resources/`` contains images, icons, manual etc.
 * ``util/`` contains a few "utility" functions
-* ``widgets/`` contains all custom widgets for EVA such as custom tables, plotting widgets, as well view "templates"
-* ``windows/`` contains all the standalone windows, including the ``main_window.py`.
 
 Code entry point
 ------------------
-The main code entry point is ``src/EVA/main.py``, which creates an instance of the QApplication and runs it. This is the
+The main code entry point is ``src/EVA/main.py``. main.py creates an instance of the QApplication and runs it. This is the
 main "event loop" which keeps the program running until user closes the application.
 
 Custom app class
@@ -40,22 +40,30 @@ Custom app class
 EVA uses a custom subclass of QApplication which is located under ``src/EVA/core/app.py``. All global information,
 such as user configurations and databases, are stored within this class, and can be accessed anywhere. Take care not to
 clutter this too much - only store things in the app if the need to be globally accessible. The App class is a singleton
-instance, meaning there is only ever one App instance at once.
+instance, meaning there is only ever one App instance at once, and all references to the app will point to the same object.
 
 The App instance can be quickly accessed anywhere by calling ``QApplication.instance()`` or using the wrapper
-function ``get_app()`` from app.py. The App class also has a wrapper function ``get_config()`` which returns the current config.
+function ``get_app()`` from app.py. The App class also has a wrapper function ``get_config()`` which returns the
+current configuration of the app.
 
 Main window
 ---------------
-``src/EVA/windows/main/main_window.py`` is the EVA "main window" which is shown on start up. This window is responsible
+``src/EVA/gui/windows/main/main_window.py`` is the EVA "main window" which is shown on start up. This window is responsible
 for launching all other windows. It is made up of a view, model, and presenter - see the GUI guide for more on this.
-When a user loads data, the loaded data will be stored in this window and passed around whenever needed.
+All EVA features which do not require experiment data to run can be accessed from this window. When a user loads a run number,
+the main window will open up a workspace window.
+
+Workspaces
+---------------
+Every time a run is loaded, a new workspace is loaded. In the workspace, the user can use elemental analysis and peak fitting tools.
+All other tools are also available here, most of which will open as tabs to avoid having many windows opening.
 
 Config files
 -------------------
-EVA uses the configparser library to manage configurations, which is a part of the Python standard library as of version 3.12.
-The configurations are stored in .ini files. The config class, located under ``src/EVA/core/settings/config.py``, handles
-everything related to configurations.
+EVA uses .json files to save configurations. The config class, located under ``src/EVA/core/settings/config.py``, handles
+everything related to configurations. Default settings are stored in ``src/EVA/core/settings/defaults.json``
+The first time EVA is ran, a copy of defaults.json is created under ``src/EVA/core/settings/config.json``. When settings are saved
+by the user, config.json is updated.
 
 pysrim implementation
 ------------------------
