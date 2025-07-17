@@ -192,7 +192,9 @@ class ModelFitModel(QObject):
         # Because for some reason, this is not always the case... The residuals could be calculated manually
         # to avoid this, but it seems to only happen when the fit is really bad, so ignoring for now.
         if len(x_data) == len(self.fit_result.residual):
-            self.axs.plot(x_data, self.fit_result.residual, label="Residuals")
+            self.residual_axs = self.fig.add_subplot(2, 1, 2)
+            self.residual_axs.plot(x_data, self.fit_result.residual, label="Residuals")
+
 
         self.axs.set_xlim(self.x_range)
         self.axs.set_ylim(self.calculate_y_range(y_data))

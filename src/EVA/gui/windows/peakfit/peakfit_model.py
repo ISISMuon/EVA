@@ -59,8 +59,8 @@ class PeakFitModel(QObject):
 
         self.add_peak_mode = False
 
-        plot_settings = {"colour": get_config()["plot"]["fill_colour"]}
-        self.fig, self.axs = plotting.plot_spectrum(self.run.data[self.detector], self.run.normalisation, **plot_settings)
+        self.plot_settings = {"colour": get_config()["plot"]["fill_colour"]}
+        self.fig, self.axs = plotting.plot_spectrum(self.run.data[self.detector], self.run.normalisation, **self.plot_settings)
 
     # im sure there is a nice way to do this. exercise for the reader...
     def next_id(self) -> str:
@@ -202,7 +202,17 @@ class PeakFitModel(QObject):
         # Because for some reason, this is not always the case... The residuals could be calculated manually
         # to avoid this, but it seems to only happen when the fit is really bad, so ignoring for now.
         if len(x_data) == len(self.fit_result.residual):
-            self.axs.plot(x_data, self.fit_result.residual, label="Residuals")
+            residual_data = self.fit_result.residual
+            self.residual_axs = self.fig.add_subplot(2, 1, 2)
+            #self.residual_axs.plot(x_data, self.fit_result.residual, label="Residuals")
+            self.residual_axs.fill_between(x_data, residual_data, step='mid', color="blue")
+            self.residual_axs.step(x_data, residual_data, where='mid', color='black', label="Residuals")
+            self.residual_axs.set_ylim(-np.max(np.abs(residual_data)) * 1.2 , np.max(np.abs(residual_data)) * 1.2)
+            self.residual_axs.set_xlim(self.x_range)
+
+            self.residual_axs.set_title("Residuals")
+            self.residual_axs.set_xlabel("Energy (keV)") 
+            self.residual_axs.set_ylabel("Intensity")
 
         self.axs.set_xlim(self.x_range)
         self.axs.set_ylim(self.calculate_y_range(y_data))

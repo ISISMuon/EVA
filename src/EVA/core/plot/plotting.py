@@ -167,3 +167,34 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
             fill_obj.set_color(settings["colour"])
 
         ax.set_ylim((0, 1.1 * np.max(ydata)))
+
+
+def plot_spectrum_residual(spectrum: Spectrum, normalisation: str, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
+    """
+    Plots a single spectrum (for a single detector).
+
+    Args:
+        spectrum: Spectrum object to plot
+        normalisation: Normalisation type - valid options are "counts", "none", "spills"
+        **settings:
+            * **title** (str): plot title
+            * **colour** (str): plot fill colour
+
+    Returns:
+        matplotlib Figure and Axes with plotted spectrum
+    """
+    title = settings.get("title", f"Run Number: {spectrum.run_number} {spectrum.detector}")
+    colour = settings.get("colour", "yellow")
+
+    fig, ax = plt.subplots(1)
+    fig.suptitle(title)
+    fig.supxlabel("Energy (keV)")
+
+    # sets the correct labels
+    fig.supylabel(get_ylabel(normalisation))
+
+    ax.fill_between(spectrum.x, spectrum.y, step='mid', color=colour)
+    ax.step(spectrum.x, spectrum.y, where='mid', color='black', label=f"_{spectrum.detector}")
+    ax.set_ylim(0.0)
+    ax.set_xlim(0.0)
+    return fig, ax
