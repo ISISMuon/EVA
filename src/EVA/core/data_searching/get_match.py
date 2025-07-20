@@ -372,7 +372,7 @@ def search_gammas(input_peaks: list[list[float]]) -> list[dict]:
                         "isotope": raw_data[0],
                         "energy": raw_data_kev,
                         "diff": peak - float(raw_data_kev),
-                        "intensity": raw_data[2],
+                        "intensity": float(raw_data[2]),
                         "lifetime": raw_data[3]
                     }
 

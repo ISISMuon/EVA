@@ -31,6 +31,7 @@ class BaseView(QWidget):
 
         return QMessageBox.question(self, title, message, buttons, default_button)
 
+
     @staticmethod
     def update_table(table, data, resize_columns=True, resize_rows=True):
         input_n_rows = len(data)
@@ -66,3 +67,4 @@ class BaseView(QWidget):
         self.window_closed_s.emit(event)
 
         event.accept()
+
