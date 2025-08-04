@@ -1686,8 +1686,8 @@ class Ui_MainWindow(object):
         item = self.gamma_search_result_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Error"))
         self.gamma_search_result_table.setSortingEnabled(True)
-
         self.search_result_tab.setTabText(self.search_result_tab.indexOf(self.gamma_search_tab), _translate("MainWindow", "Gamma results"))
+
         item = self.e_xray_search_result_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Source"))
         item = self.e_xray_search_result_table.horizontalHeaderItem(1)
@@ -1698,6 +1698,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Error"))
         self.e_xray_search_result_table.setSortingEnabled(True)
         self.search_result_tab.setTabText(self.search_result_tab.indexOf(self.e_xray_search_tab), _translate("MainWindow", "Electronic X-ray results"))
+        
         self.print_button.setText(_translate("MainWindow", "Find"))
         self.energy_label.setText(_translate("MainWindow", "Energy (keV)"))
         self.search_isotopes_checkbox.setText(_translate("MainWindow", "Search isotope-specific muonic X-rays"))

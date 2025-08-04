@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1836</width>
-    <height>948</height>
+    <height>947</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -68,7 +68,7 @@
           </font>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="mu_xray_search_tab">
           <attribute name="title">

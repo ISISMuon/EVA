@@ -403,7 +403,7 @@ def search_e_xrays(values: list[tuple[float, float]]) -> list[dict]:
     results = []
 
     for element, element_data in get_app().e_xray_database.items():
-        for transition, energy in element_data.items():
+        for transition, (energy, intensity) in element_data.items():
             energy = float(energy)
             for search_energy, search_width in values:
                 if (energy - search_width) <= search_energy <= (energy + search_width):
