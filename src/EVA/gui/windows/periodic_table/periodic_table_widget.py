@@ -1,8 +1,8 @@
 # imports
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QMainWindow, QTreeWidgetItem, QTableWidgetItem, QMessageBox, QHeaderView
+from EVA.util.qt6_widgets import NumericTableWidgetItem
 from functools import partial
-
 from EVA.core.app import get_app, get_config
 from EVA.core.data_searching.get_match import search_muxrays, search_muxrays_all_isotopes, search_gammas, search_e_xrays
 from EVA.gui.ui_files.periodic_table import Ui_MainWindow
@@ -137,10 +137,14 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
 
         for i, data in enumerate(e_xray_data.items()):
             self.element_info_electronic_xray_table.setItem(i, 0, QTableWidgetItem(data[0]))
-            self.element_info_electronic_xray_table.setItem(i, 1, QTableWidgetItem(data[1]))
+            self.element_info_electronic_xray_table.setItem(i, 1, QTableWidgetItem(data[1][0]))
+            self.element_info_electronic_xray_table.setItem(i, 2, QTableWidgetItem(data[1][1]))
+
 
         self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+
 
     def energy_search(self):
         try:
@@ -173,10 +177,10 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
 
             for i, r in enumerate(filtered_muon_res):
                 self.mu_xray_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["element"])))
-                self.mu_xray_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(float(r["energy"]), 6))))
+                self.mu_xray_search_result_table.setItem(i, 1, NumericTableWidgetItem(str(round(float(r["energy"]), 6))))
                 self.mu_xray_search_result_table.setItem(i, 2, QTableWidgetItem(str(r["transition"])))
                 self.mu_xray_search_result_table.setItem(i, 3, QTableWidgetItem(to_iupac(str(r["transition"]))))
-                self.mu_xray_search_result_table.setItem(i, 4, QTableWidgetItem(str(abs(round(r["diff"], 6)))))
+                self.mu_xray_search_result_table.setItem(i, 4, NumericTableWidgetItem(str(abs(round(r["diff"], 6)))))
 
         self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -203,9 +207,9 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
                     continue
 
                 self.gamma_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["isotope"])))
-                self.gamma_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(r["energy"], 6))))
-                self.gamma_search_result_table.setItem(i, 2, QTableWidgetItem(str(round((float(r["intensity"])), 6))))
-                self.gamma_search_result_table.setItem(i, 3, QTableWidgetItem(str(abs(round(r["diff"], 6)))))
+                self.gamma_search_result_table.setItem(i, 1, NumericTableWidgetItem(str(round(r["energy"], 6))))
+                self.gamma_search_result_table.setItem(i, 2, NumericTableWidgetItem(str(round((float(r["intensity"])), 6))))
+                self.gamma_search_result_table.setItem(i, 3, NumericTableWidgetItem(str(abs(round(r["diff"], 6)))))
 
         self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -226,9 +230,9 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
 
             for i, r in enumerate(e_xray_res):
                 self.e_xray_search_result_table.setItem(i, 0, QTableWidgetItem(r["element"]))
-                self.e_xray_search_result_table.setItem(i, 1, QTableWidgetItem(str(round(r["energy"], 6))))
+                self.e_xray_search_result_table.setItem(i, 1, NumericTableWidgetItem(str(round(r["energy"], 6))))
                 self.e_xray_search_result_table.setItem(i, 2, QTableWidgetItem(r["transition"]))
-                self.e_xray_search_result_table.setItem(i, 3, QTableWidgetItem(str(abs(round(r["diff"], 6)))))
+                self.e_xray_search_result_table.setItem(i, 3, NumericTableWidgetItem(str(abs(round(r["diff"], 6)))))
 
         self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
