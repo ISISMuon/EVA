@@ -48,6 +48,7 @@ class MainPresenter:
         self.view.get_prev_run_button.clicked.connect(self.decrement_run_num)
         self.view.load_prev_run_button.clicked.connect(lambda: self.decrement_run_num(load=True))
         self.view.load_button.clicked.connect(self.load_run_num)
+        self.view.load_button.clicked.connect(self.load_run_num)
 
     def save_settings(self):
         """

@@ -98,49 +98,55 @@ class MainView(QMainWindow):
         # setting up the buttons and run number
         self.run_number_line_edit = QLineEdit(self)
         self.run_number_line_edit.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.run_number_line_edit.setMinimumWidth(200)
+ #       self.run_number_line_edit.setMinimumWidth(200)
         self.run_number_line_edit.setSizePolicy(QSizePolicy.Policy.MinimumExpanding,
                                                 QSizePolicy.Policy.MinimumExpanding)
 
         self.get_next_run_button = QPushButton(self)
         self.get_next_run_button.setText('+1')
-        self.get_next_run_button.setMinimumWidth(200)
+   #     self.get_next_run_button.setMinimumWidth(200)
         self.get_next_run_button.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
         self.load_next_run_button = QPushButton(self)
         self.load_next_run_button.setText('Load +1')
-        self.load_next_run_button.setMinimumWidth(200)
+   #     self.load_next_run_button.setMinimumWidth(200)
         self.load_next_run_button.setSizePolicy(QSizePolicy.Policy.MinimumExpanding,
                                                 QSizePolicy.Policy.MinimumExpanding)
 
         self.get_prev_run_button = QPushButton(self)
         self.get_prev_run_button.setText('-1')
-        self.get_prev_run_button.setMinimumWidth(200)
+   #     self.get_prev_run_button.setMinimumWidth(200)
         self.get_prev_run_button.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
         self.load_prev_run_button = QPushButton(self)
         self.load_prev_run_button.setText('Load -1')
-        self.load_prev_run_button.setMinimumWidth(200)
+   #     self.load_prev_run_button.setMinimumWidth(200)
         self.load_prev_run_button.setSizePolicy(QSizePolicy.Policy.MinimumExpanding,
                                                 QSizePolicy.Policy.MinimumExpanding)
 
         self.load_button = QPushButton(self)
         self.load_button.setText('Load')
-        self.load_button.setMinimumWidth(200)
+    #    self.load_button.setMinimumWidth(200)
         self.load_button.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+
+        self.data_type_toggle = QPushButton(self)
+        self.data_type_toggle.setText('Toggle')
+   #     self.data_type_toggle.setMinimumWidth(500)
+        self.data_type_toggle.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
         self.layout.addWidget(self.run_number_label, 0, 0, 1, 3)
         self.layout.addWidget(self.comment_label, 1, 0, 1, 3)
         self.layout.addWidget(self.events_label, 2, 0, 1, 3)
         self.layout.addWidget(self.start_label, 3, 0, 1, 3)
         self.layout.addWidget(self.end_label, 4, 0, 1, 3)
-
-        self.layout.addWidget(self.run_number_line_edit, 5, 1)
-        self.layout.addWidget(self.get_next_run_button, 5, 2)
-        self.layout.addWidget(self.load_next_run_button, 6, 2)
-        self.layout.addWidget(self.get_prev_run_button, 5, 0)
-        self.layout.addWidget(self.load_prev_run_button, 6, 0)
-        self.layout.addWidget(self.load_button, 6, 1)
+        self.layout.addWidget(self.data_type_toggle, 5, 1)
+        self.layout.addWidget(self.run_number_line_edit, 6, 1)
+        self.layout.addWidget(self.run_number_line_edit, 6, 1)
+        self.layout.addWidget(self.get_next_run_button, 6, 2)
+        self.layout.addWidget(self.load_next_run_button, 7, 2)
+        self.layout.addWidget(self.get_prev_run_button, 6, 0)
+        self.layout.addWidget(self.load_prev_run_button, 7, 0)
+        self.layout.addWidget(self.load_button, 7, 1)
 
         self.setCentralWidget(self.container)
 

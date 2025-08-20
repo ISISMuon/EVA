@@ -21,7 +21,7 @@ def get_ylabel(normalisation: str) -> str:
     elif normalisation == "events":
         return "Intensity Normalised to Spills (10^5)"
     else:
-        return "Intensity"
+        return "Unnormalised Intensity"
 
 def Plot_Peak_Location(ax: plt.Axes, x: np.ndarray, y: np.ndarray, peak_indices: np.ndarray):
     """
@@ -36,6 +36,7 @@ def Plot_Peak_Location(ax: plt.Axes, x: np.ndarray, y: np.ndarray, peak_indices:
     peak_heights = y[peak_indices]
     peak_positions = x[peak_indices]
     ax.scatter(peak_positions, peak_heights, color='r', s=20, marker='X', label='peaks')
+
 
 def plot_spectrum(spectrum: Spectrum, normalisation: str, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     """
@@ -66,6 +67,48 @@ def plot_spectrum(spectrum: Spectrum, normalisation: str, **settings: dict) -> t
     ax.set_ylim(0.0)
     ax.set_xlim(0.0)
 
+    return fig, ax
+
+
+def plot_spectrum_residual(spectrum: Spectrum, normalisation: str, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
+    """
+    Plots a single spectrum (for a single detector) and creates an empty plot to be populated with fit residuals.
+
+    Args:
+        spectrum: Spectrum object to plot
+        normalisation: Normalisation type - valid options are "counts", "none", "spills"
+        **settings:
+            * **title** (str): plot title
+            * **colour** (str): plot fill colour
+
+    Returns:
+        matplotlib Figure and Axes with plotted spectrum and empty Axis for residuals
+    """
+    title = settings.get("title", f"Run Number: {spectrum.run_number} {spectrum.detector}")
+    colour = settings.get("colour", "yellow")
+
+    fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [3, 1]})
+    main_ax = ax[0]  # use the first Axes for the spectrum plot
+    residual_ax = ax[1]  # use the second Axes for the residuals
+
+    # sets the correct labels
+    fig.suptitle(title)
+    fig.supylabel(get_ylabel(normalisation))
+
+    main_ax.set_ylabel("Intensity")
+    residual_ax.set_ylabel(f"$\\Delta$ Intensity")
+    residual_ax.set_xlabel("Energy (keV)")
+    residual_ax.grid(True)
+
+    # Plot the spectrum data in main_ax
+    main_ax.fill_between(spectrum.x, spectrum.y, step='mid', color=colour)
+    main_ax.step(spectrum.x, spectrum.y, where='mid', color='black', label=f"_{spectrum.detector}")
+    main_ax.set_ylim(0.0)
+    main_ax.set_xlim(0.0)
+    main_ax.tick_params(labelbottom=True)
+
+    fig.tight_layout()
+    
     return fig, ax
 
 def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
@@ -144,12 +187,16 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
 
 
 def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
+
     fig.supylabel(get_ylabel(run.normalisation))
     axes = [axs] if not isinstance(axs, np.ndarray) else axs
-
     for ax in axes:
-        detector, line = [(line.get_label()[1:], line) for line in ax.lines if
-                          line.get_label()[1:] in run.loaded_detectors][0]
+        candidates = [(line.get_label()[1:], line) for line in ax.lines if line.get_label()[1:] in run.loaded_detectors]
+
+        if not candidates:
+            raise ValueError("No matching lines found in ax.lines with labels matching run.loaded_detectors")
+
+        detector, line = candidates[0]
 
         xdata = run.data[detector].x
         ydata = run.data[detector].y
@@ -167,3 +214,8 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
             fill_obj.set_color(settings["colour"])
 
         ax.set_ylim((0, 1.1 * np.max(ydata)))
+
+def replot_run_residual(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
+    replot_run(run, fig, axs[0], **settings)
+    fig.supylabel(get_ylabel(run.normalisation))
+    fig.tight_layout()
