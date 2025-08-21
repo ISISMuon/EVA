@@ -33,7 +33,7 @@ class PeakFitPresenter(object):
         self.view.plot_initial_params_button.clicked.connect(self.plot_initial)
 
         # display figure from model in the PlotWidget
-        self.view.plot.update_plot(self.model.fig, self.model.fig)
+        self.view.plot.update_plot(self.model.fig, self.model.axs)
         self.view.model_plot.update_plot(self.mf_model.fig, self.mf_model.axs)
         self.view.plot.canvas.mpl_connect('button_press_event', self.on_plot_click)
 

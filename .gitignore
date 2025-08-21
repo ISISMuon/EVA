@@ -4,4 +4,5 @@ dist
 docs/doctrees
 docs/html
 src/EVA/core/settings/config.ini
-EVA.log"src/EVA/core/settings/config.json" 
+EVA.log
+"src/EVA/core/settings/config.json" 
