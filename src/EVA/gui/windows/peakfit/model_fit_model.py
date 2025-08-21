@@ -8,7 +8,7 @@ from PyQt6.QtCore import QObject
 from matplotlib import pyplot as plt
 
 from EVA.core.fitting import fit_data
-from EVA.core.plot.plotting import replot_run
+from EVA.core.plot.plotting import replot_run, replot_run_residual
 from EVA.util.trim_data import Trimdata
 
 from EVA.core.app import get_config
@@ -58,7 +58,7 @@ class ModelFitModel(QObject):
         self.proportions_constraint = None
 
         plot_settings = {"colour": get_config()["plot"]["fill_colour"]}
-        self.fig, self.axs = plotting.plot_spectrum(self.spectrum, self.run.normalisation, **plot_settings)
+        self.fig, self.axs = plotting.plot_spectrum_residual(self.spectrum, self.run.normalisation, **plot_settings)
 
     def next_id(self, name):
         filtered_name = name.replace("_", "")  # if there is an underscore in the file name things will break
@@ -121,6 +121,9 @@ class ModelFitModel(QObject):
 
     def replot_spectrum(self):
         replot_run(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
+
+    def replot_spectrum_residual(self):
+            replot_run_residual(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
 
     def load_and_add_model(self, path):
         with open(path, "r") as file:
@@ -192,7 +195,8 @@ class ModelFitModel(QObject):
         # Because for some reason, this is not always the case... The residuals could be calculated manually
         # to avoid this, but it seems to only happen when the fit is really bad, so ignoring for now.
         if len(x_data) == len(self.fit_result.residual):
-            self.axs.plot(x_data, self.fit_result.residual, label="Residuals")
+            self.residual_axs.plot(x_data, self.fit_result.residual, label="Residuals")
+
 
         self.axs.set_xlim(self.x_range)
         self.axs.set_ylim(self.calculate_y_range(y_data))

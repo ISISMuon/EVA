@@ -39,6 +39,7 @@ def fit_gaussian_lmfit(x_data: np.ndarray, y_data: np.ndarray, peak_params: dict
         raise TypeError("Not enough points")
 
     fit_res = model.fit(y_data, x=x_data, weights=1/np.sqrt(y_data))
+    fit_res.residual = y_data - fit_res.best_fit
     return fit_res
 
 
@@ -137,6 +138,8 @@ def fit_model_lmfit(x_data: np.ndarray, y_data:np.ndarray, peak_params: dict, bg
 
     # Add everything together
     model = gaussian_sum_model + bg_model
+    fit_res = model.fit(y_data, x=x_data, weights=1/np.sqrt(y_data))
+    fit_res.residual = y_data - fit_res.best_fit
 
-    return model.fit(y_data, x=x_data, weights=1/np.sqrt(y_data))
+    return fit_res
 

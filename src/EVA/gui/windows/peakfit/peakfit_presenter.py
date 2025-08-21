@@ -318,12 +318,12 @@ class PeakFitPresenter(object):
         self.model.initial_peak_params = peak_params
         self.model.initial_bg_params = bg_params
 
-    def get_e_range(self) -> (float, float):
+    def get_e_range(self) -> tuple[float, float]:
         e_min = float(self.view.e_range_min_line_edit.text())
         e_max = float(self.view.e_range_max_line_edit.text())
         return e_min, e_max
 
-    def get_model_e_range(self) -> (float, float):
+    def get_model_e_range(self) -> tuple[float, float]:
         e_min = float(self.view.model_e_range_min_line_edit.text())
         e_max = float(self.view.model_e_range_max_line_edit.text())
         return e_min, e_max
@@ -385,8 +385,8 @@ class PeakFitPresenter(object):
 
 
     def on_replot_needed(self):
-        self.model.replot_spectrum()
+        self.model.replot_spectrum_residual()
         self.view.plot.update_plot()
 
-        self.mf_model.replot_spectrum()
+        self.mf_model.replot_spectrum_residual()
         self.view.model_plot.update_plot()
