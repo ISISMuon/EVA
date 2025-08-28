@@ -16,3 +16,4 @@ class Spectrum:
     run_number: str
     x: np.ndarray
     y: np.ndarray
+    t: np.ndarray

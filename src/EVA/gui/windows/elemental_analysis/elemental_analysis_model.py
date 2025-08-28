@@ -66,7 +66,6 @@ class ElementalAnalysisModel(QObject):
 
         # check config to see which detectors should be loaded
         colour = config["plot"]["fill_colour"]
-
         return plot_run(self.run, show_detectors=self.get_plot_detectors(), colour=colour)
 
     def plot_vlines_all_gammas(self, isotope: str) -> str | None:
@@ -396,6 +395,7 @@ class ElementalAnalysisModel(QObject):
 
     def replot_all_run_data(self):
         replot_run(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
+    #    plot_run()
 
     def close_figure(self):
         plt.close(self.fig)

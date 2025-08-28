@@ -22,6 +22,7 @@
   },
 
   "plot": {
+    "show_mode": "Prompt Spectrum",
     "fill_colour": "#d0f4ff",
     "show_plot": {
       "GE1": true,

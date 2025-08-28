@@ -83,6 +83,7 @@ class WorkspacePresenter:
 
         self.view.binning_spin_box.setValue(self.model.binning)
         self.view.normalisation_type_combo_box.setCurrentIndex(normalisation_types.index(self.model.normalisation))
+        self.view.nexus_plot_display_combo_box.setCurrentText(self.model.plot_mode)
 
     def on_apply_settings(self):
         """
@@ -91,12 +92,11 @@ class WorkspacePresenter:
         """
         binning = self.view.binning_spin_box.value()
         normalisation_index = self.view.normalisation_type_combo_box.currentIndex()
-
         norm_type = normalisation_types[normalisation_index]
-
+        plot_type = self.view.nexus_plot_display_combo_box.currentText()
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
-            self.model.run.set_corrections(normalisation=norm_type, bin_rate=binning)
+            self.model.run.set_corrections(normalisation=norm_type, bin_rate=binning, plot_mode=plot_type)
 
         except ValueError:
             self.view.display_error_message(title="Normalisation error",

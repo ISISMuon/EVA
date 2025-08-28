@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QWidget, QMainWindow, QMessageBox, QTabBar, QFileDia
 from EVA.core.data_structures.run import Run
 from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import EnergyCorrectionsDialog
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
-from EVA.gui.ui_files.workspace_gui import Ui_workspace
+from EVA.gui.ui_files.workspace_nxs_gui import Ui_workspace
 from EVA.gui.windows.elemental_analysis.elemental_analysis_window import ElementalAnalysisWindow
 from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget

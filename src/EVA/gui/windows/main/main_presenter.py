@@ -160,7 +160,6 @@ class MainPresenter:
                        "set to none.")
 
             self.view.show_error_box(err_str, title="Normalisation error")
-
         # open workspace
         self.open_workspace(run)
 

@@ -36,6 +36,17 @@ def numpy_rebin(x0: np.ndarray, y0: np.ndarray, bin_size: int) -> tuple[np.ndarr
 
     return bin_centres, hist
 
+
+def nxs_rebin(energy_data: np.ndarray, bin_size: int) -> tuple[np.ndarray, np.ndarray]:
+
+        counts, bin_edges = np.histogram(energy_data, bins = bin_size)
+
+        # Bin centers = average of consecutive edges
+        bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
+
+        # Assign to x, y
+        return bin_centers, counts
+
 def simple_rebin(x0: np.ndarray, y0: np.ndarray, bin_factor: int) -> tuple[np.ndarray, np.ndarray]:
     """
     Rebin data into desired bin sizes. Only works for values bin_factor that are factors len(x0).

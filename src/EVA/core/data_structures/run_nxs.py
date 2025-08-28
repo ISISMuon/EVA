@@ -26,7 +26,7 @@ class Run(QObject):
        comment: All metadata available for the run.
        """
     def __init__(self, raw : dict[Spectrum], loaded_detectors : list[str], run_num: str, start_time: str, end_time: str,
-                 events_str: str, comment: str, plot_mode: str, prompt_limit: int):
+                 events_str: str, comment: str):
         super().__init__()
 
         # Main data containers
@@ -41,8 +41,7 @@ class Run(QObject):
         self.normalisation = None
         self.normalise_which = loaded_detectors # currently normalising all detectors
         self.bin_rate = 1
-        self.plot_mode = plot_mode
-        self.prompt_limit = prompt_limit
+
         # energy corrections
         self.energy_corrections = {}
 
@@ -53,7 +52,7 @@ class Run(QObject):
         self.comment = comment
 
     def set_corrections(self, energy_corrections: dict[dict] | None = None,
-                        normalisation: str | None = None, normalise_which: list[str] | None = None, bin_rate: float | None = None, plot_mode: str | None = None, prompt_limit: int | None = None):
+                        normalisation: str | None = None, normalise_which: list[str] | None = None, bin_rate: float | None = None):
         """
         Reapplies all normalisation, corrections and binning specified for the data. Order here is important, and so
         to be safe, any time any form of correction is wanted, everything should be re-calculated. This could become
@@ -71,14 +70,13 @@ class Run(QObject):
             normalise_which = self.normalise_which
 
         self.data = deepcopy(self._raw)
-        self._set_mode(plot_mode, prompt_limit)
+
         self._set_energy_correction(energy_corrections)
         self._set_normalisation(normalisation, normalise_which)
         self._set_binning(bin_rate)
 
         # emit a signal to let program know the run has changed
         self.corrections_updated_s.emit()
-
 
     # dispatcher method to set normalisation type from string
     def _set_normalisation(self, normalisation: str, normalise_which: list[str] | None = None):
@@ -202,36 +200,11 @@ class Run(QObject):
 
         for detector, spectrum in self._raw.items():
             if self.data[detector].x.size == 0:
+                print("continued")
                 continue
+            print("binning")
             self.data[detector].x, self.data[detector].y = rebin.numpy_rebin(self.data[detector].x,
                                                                                    self.data[detector].y, binning_rate)
-
-    def _set_mode(self, plot_mode: str | None = None, prompt_limit: int | None = None):
-        if plot_mode is None:
-            plot_mode = self.plot_mode
-        else:
-           self.plot_mode = plot_mode
-
-        if prompt_limit is None:
-            prompt_limit = self.prompt_limit
-        else:
-           self.prompt_limit = prompt_limit
-
-        for detector, spectrum in self._raw.items():
-            if plot_mode == "Prompt Spectrum":
-                mask = (self._raw[detector].t > 0) & (self._raw[detector].t < prompt_limit)
-                prompt_spectrum_data = self._raw[detector].x[mask]
-                self.data[detector].x, self.data[detector].y = rebin.nxs_rebin(prompt_spectrum_data, bin_size=4000)
-                spectrum.y = self.data[detector].y
-                
-            elif plot_mode == "Delayed Spectrum":
-                mask = (self._raw[detector].t > prompt_limit) & (self._raw[detector].t < 10000)
-                delayed_spectrum_data = self._raw[detector].x[mask]
-                self.data[detector].x, self.data[detector].y = rebin.nxs_rebin(delayed_spectrum_data, bin_size=4000)
-
-            else:
-                raise ValueError(f"Plot mode '{plot_mode}' is not valid.")
-
 
     def is_empty(self) -> bool:
         """

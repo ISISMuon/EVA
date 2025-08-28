@@ -20,8 +20,9 @@ class MainModel(QObject):
         energy_corrections = corrections["detector_specific"]
         normalisation = corrections["normalisation"]
         binning = corrections["binning"]
+        plot_mode = config["plot"]["show_mode"]
+        run, flags = load_data.load_run_nxs(run_num, working_directory, energy_corrections, normalisation, binning, plot_mode)
 
-        run, flags = load_data.load_run(run_num, working_directory, energy_corrections, normalisation, binning)
         all_detectors = config["general"]["enabled_detectors"]
 
         if flags["no_files_found"]:  # no data was loaded - return now
