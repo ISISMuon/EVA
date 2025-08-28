@@ -189,10 +189,18 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
 def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
 
     fig.supylabel(get_ylabel(run.normalisation))
-    axes = [axs] if not isinstance(axs, np.ndarray) else axs
+    if isinstance(axs, plt.Axes):
+        axes = [axs]
+    elif isinstance(axs, np.ndarray):
+        axes = axs.ravel().tolist()
+    elif isinstance(axs, list):
+        axes = axs
+    else:
+        raise TypeError(f"Unexpected axs type: {type(axs)}")
     for ax in axes:
+        print(run.loaded_detectors)
         candidates = [(line.get_label()[1:], line) for line in ax.lines if line.get_label()[1:] in run.loaded_detectors]
-
+        print(candidates)
         if not candidates:
             raise ValueError("No matching lines found in ax.lines with labels matching run.loaded_detectors")
 
