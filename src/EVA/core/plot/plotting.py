@@ -107,7 +107,7 @@ def plot_spectrum_residual(spectrum: Spectrum, normalisation: str, **settings: d
     main_ax.set_xlim(0.0)
     main_ax.tick_params(labelbottom=True)
 
-    fig.tight_layout()
+  #  fig.tight_layout()
     
     return fig, ax
 
@@ -142,7 +142,7 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     }
 
     show_detectors = settings.get("show_detectors", run.loaded_detectors)
-    title = settings.get("title", f"Run Number: {run.run_num}\n{run.comment}")
+    title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}\n{run.comment}")
     ylabel = settings.get("ylabel", None)
     xlabel = settings.get("xlabel", None)
     colour = settings.get("colour", "white")
@@ -198,9 +198,7 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
     else:
         raise TypeError(f"Unexpected axs type: {type(axs)}")
     for ax in axes:
-        print(run.loaded_detectors)
         candidates = [(line.get_label()[1:], line) for line in ax.lines if line.get_label()[1:] in run.loaded_detectors]
-        print(candidates)
         if not candidates:
             raise ValueError("No matching lines found in ax.lines with labels matching run.loaded_detectors")
 
@@ -223,7 +221,9 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
 
         ax.set_ylim((0, 1.1 * np.max(ydata)))
 
-def replot_run_residual(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
+def replot_run_residual(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, fit_result, **settings: dict):
     replot_run(run, fig, axs[0], **settings)
+    if fit_result is not None:
+        axs[1].set_ylim(-np.max(np.abs(fit_result.residual)) * 1.2 , np.max(np.abs(fit_result.residual)) * 1.2)
     fig.supylabel(get_ylabel(run.normalisation))
-    fig.tight_layout()
+ #   fig.tight_layout()

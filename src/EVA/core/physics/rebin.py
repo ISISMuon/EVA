@@ -37,9 +37,9 @@ def numpy_rebin(x0: np.ndarray, y0: np.ndarray, bin_size: int) -> tuple[np.ndarr
     return bin_centres, hist
 
 
-def nxs_rebin(energy_data: np.ndarray, bin_size: int) -> tuple[np.ndarray, np.ndarray]:
+def nxs_rebin(energy_data: np.ndarray, bin_size: int, range: tuple[float, float]) -> tuple[np.ndarray, np.ndarray]:
 
-        counts, bin_edges = np.histogram(energy_data, bins = bin_size)
+        counts, bin_edges = np.histogram(energy_data, bins = bin_size, range=(0, 2000))
 
         # Bin centers = average of consecutive edges
         bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])

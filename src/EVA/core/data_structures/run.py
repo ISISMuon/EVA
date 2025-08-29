@@ -220,15 +220,28 @@ class Run(QObject):
         for detector, spectrum in self._raw.items():
             if plot_mode == "Prompt Spectrum":
                 mask = (self._raw[detector].t > 0) & (self._raw[detector].t < prompt_limit)
-                prompt_spectrum_data = self._raw[detector].x[mask]
-                self.data[detector].x, self.data[detector].y = rebin.nxs_rebin(prompt_spectrum_data, bin_size=4000)
-                spectrum.y = self.data[detector].y
-                
+                prompt_spectrum_data = self._raw[detector].count[mask]
+                spectrum.x, spectrum.y = rebin.nxs_rebin(prompt_spectrum_data, bin_size=8000,range=(0,2000))
+
+                self.data[detector].x = spectrum.x
+                self.data[detector].y = spectrum.y
+
             elif plot_mode == "Delayed Spectrum":
                 mask = (self._raw[detector].t > prompt_limit) & (self._raw[detector].t < 10000)
-                delayed_spectrum_data = self._raw[detector].x[mask]
-                self.data[detector].x, self.data[detector].y = rebin.nxs_rebin(delayed_spectrum_data, bin_size=4000)
+                delayed_spectrum_data = self._raw[detector].count[mask]
+                spectrum.x, spectrum.y = rebin.nxs_rebin(delayed_spectrum_data, bin_size=8000,range=(0,2000))
 
+                self.data[detector].x = spectrum.x
+                self.data[detector].y = spectrum.y
+            
+            elif plot_mode == "Time Plot":
+                print("timeplot")
+                mask = (self._raw[detector].t > 0) & (self._raw[detector].t < prompt_limit)
+                filtered_time_data = self._raw[detector].t[mask]
+                spectrum.x, spectrum.y = rebin.nxs_rebin(filtered_time_data, bin_size=100, range=(0,2000))
+
+                self.data[detector].x = spectrum.x
+                self.data[detector].y = spectrum.y
             else:
                 raise ValueError(f"Plot mode '{plot_mode}' is not valid.")
 

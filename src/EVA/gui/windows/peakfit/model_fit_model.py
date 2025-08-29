@@ -123,7 +123,7 @@ class ModelFitModel(QObject):
         replot_run(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
 
     def replot_spectrum_residual(self):
-            replot_run_residual(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
+            replot_run_residual(self.run, self.fig, self.axs, self.fit_result, colour=get_config()["plot"]["fill_colour"])
 
     def load_and_add_model(self, path):
         with open(path, "r") as file:

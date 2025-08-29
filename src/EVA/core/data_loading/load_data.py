@@ -121,12 +121,14 @@ def load_run(run_num: str, working_directory: str, energy_corrections: dict,
 
 
 def open_hex_file(run_num: int, channels: list, base_path: str, max_digits: int = 10):
+
     for digits in range(len(str(run_num)), max_digits + 1):
-        filename = f"{channels[0]}_{run_num:0{digits}d}_{channels[1]}.nxs"
+        adjusted_run_num = str(run_num).zfill(digits)
+        filename = f"{channels[0]}_{run_num:0{digits}d}_{channels[1]}.nxs" # e.g. hex0_000123_ch0.nxs
         file_path = os.path.join(base_path, filename)
         file_path = os.path.normpath(file_path)
         if os.path.exists(file_path):
-            return h5py.File(file_path, 'r')
+            return adjusted_run_num, h5py.File(file_path, 'r')
     # If loop finishes without returning, raise an error
     raise FileNotFoundError(f"No file found for run number {run_num} in {base_path}")
 
@@ -167,7 +169,7 @@ def load_run_nxs(run_num: str, working_directory: str, energy_corrections: dict,
     for detector, channel in channels.items():
         try:
             # Store data read from file in a Spectrum object
-            data_file = open_hex_file(run_num=int(run_num), channels=channel, base_path=working_directory)
+            detected_run_num, data_file = open_hex_file(run_num=int(run_num), channels=channel, base_path=working_directory)
             count_data = data_file['/raw_data_1/detector_1_events/event_energy'][:]
             tdata = data_file['/raw_data_1/detector_1_events/event_time_offset'][:]
 
@@ -191,7 +193,7 @@ def load_run_nxs(run_num: str, working_directory: str, energy_corrections: dict,
             xdata = bin_centers
             ydata = counts
             """
-            spectrum = Spectrum(detector=detector, run_number=run_num, x=count_data, y=None, t =tdata)
+            spectrum = Spectrum(detector=detector, run_number=detected_run_num, x=None, y=None, t =tdata, count=count_data)
 
             raw[detector] = spectrum # Add Spectrum to list of spectra
             detectors.append(detector) # Add detector name to list of detectors
@@ -204,7 +206,7 @@ def load_run_nxs(run_num: str, working_directory: str, energy_corrections: dict,
             raw[detector] = Spectrum(detector=detector, run_number=run_num, x=np.array([]), y=np.array([]))
 
     # Add everything into a Run object
-    run = Run(raw=raw, loaded_detectors=detectors, run_num=str(run_num), start_time=comment_data[0],
+    run = Run(raw=raw, loaded_detectors=detectors, run_num=str(detected_run_num), start_time=comment_data[0],
               end_time=comment_data[1], events_str=comment_data[2], comment=comment_data[3], plot_mode=plot_mode, prompt_limit=2000)
     
     try:

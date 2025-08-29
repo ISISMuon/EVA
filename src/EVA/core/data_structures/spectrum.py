@@ -17,3 +17,4 @@ class Spectrum:
     x: np.ndarray
     y: np.ndarray
     t: np.ndarray
+    count: np.ndarray

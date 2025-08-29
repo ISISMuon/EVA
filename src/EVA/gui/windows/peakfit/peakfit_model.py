@@ -225,7 +225,7 @@ class PeakFitModel(QObject):
 
 			self.plot_residual()
 
-			self.fig.tight_layout()
+		#	self.fig.tight_layout()
 
 		# y range for plotting (to make plot look nice)
 		def calculate_y_range(self, ydata: np.ndarray):
@@ -245,13 +245,8 @@ class PeakFitModel(QObject):
 
 				file.close()
 
-
-		def replot_spectrum(self):
-				replot_run(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
-
-
 		def replot_spectrum_residual(self):
-				replot_run_residual(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
+				replot_run_residual(self.run, self.fig, self.axs, self.fit_result, colour=get_config()["plot"]["fill_colour"])
 
 
 		def load_params(self, path: str):
