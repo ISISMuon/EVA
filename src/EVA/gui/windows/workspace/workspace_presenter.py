@@ -97,7 +97,7 @@ class WorkspacePresenter:
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
             self.model.run.set_corrections(normalisation=norm_type, bin_rate=binning, plot_mode=plot_type)
-
+            
         except ValueError:
             self.view.display_error_message(title="Normalisation error",
                                             message="Cannot normalise by events when comment file is not loaded. Please ensure that the comment.dat file is in your loaded directory.")

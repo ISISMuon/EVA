@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import h5py
-from EVA.core.data_structures.run import Run
+from EVA.core.data_structures.run_nxs import Run
 from EVA.core.data_structures.spectrum import Spectrum
 from EVA.core.settings.config import Config
 

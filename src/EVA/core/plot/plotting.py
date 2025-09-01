@@ -148,7 +148,7 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     colour = settings.get("colour", "white")
     size = settings.get("size", (16, 7))
     adjustments = settings.get("adjustment_dict", default_adjustments)
-
+    plot_type = settings.get("plot_mode", run.plot_mode)
     num_plots = len(show_detectors)
 
     fig, axs = plt.subplots(nrows=num_plots, figsize=size)
@@ -173,13 +173,35 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
 
     i = 0
     for detector, dataset in run.data.items():
-        if detector in show_detectors:
-            axs[i].fill_between(dataset.x, dataset.y, step='mid', color=colour)
-            axs[i].step(dataset.x, dataset.y, where='mid', color='black', label=f"_{detector}")
-            axs[i].set_xlim(0.0)
-            axs[i].set_ylim((0, 1.1*np.max(dataset.y)))
-            axs[i].set_title(dataset.detector)
-            i += 1
+        if plot_type != "2D Time-Energy Spectrum":
+            if detector in show_detectors:
+                axs[i].fill_between(dataset.x, dataset.y, step='mid', color=colour)
+                axs[i].step(dataset.x, dataset.y, where='mid', color='black', label=f"_{detector}")
+                axs[i].set_xlim(0.0)
+                axs[i].set_ylim((0, 1.1*np.max(dataset.y)))
+                axs[i].set_title(dataset.detector)
+                i += 1
+        else:
+            if detector in show_detectors:
+                print(plot_type)
+                # Define number of bins
+                x_bins = 8000
+                y_bins = 1000
+
+                # Define ranges (same as range=((1,8000),(1,10000)))
+                x_range = (1, 8000)
+                y_range = (1, 10000)
+
+                # Compute 2D histogram
+                H, xedges, yedges = np.histogram2d(dataset.x, dataset.y, bins=[x_bins, y_bins], range=[x_range, y_range])
+                mesh = axs[i].pcolormesh(xedges, yedges, H.T, cmap="rainbow", norm="log")
+
+                fig.colorbar(mesh, ax=axs[i], label="Counts")
+                axs[i].set_xlim(0, 1.1*np.max(dataset.x))
+                axs[i].set_ylim((0, 1.1*np.max(dataset.y)))
+                axs[i].set_title(dataset.detector)
+                i += 1
+ #   h2(data["calib_energy"], data["time"], [8000, 1000], range=((1,8000),(1,10000))).plot("image", cmap="rainbow", cmap_normalize="log", ax=axes[0,1], title="2D time-energy spectrum", xlabel="Energy", ylabel="Time (ns)")
 
     # Adjustments
     plt.subplots_adjust(**adjustments)
@@ -187,6 +209,8 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
 
 
 def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
+    title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}\n{run.comment}")
+    fig.suptitle(title)
 
     fig.supylabel(get_ylabel(run.normalisation))
     if isinstance(axs, plt.Axes):
