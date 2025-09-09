@@ -213,7 +213,8 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
 
         ax.set_ylim((0, 1.1 * np.max(ydata)))
 
-def replot_run_residual(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
+def replot_run_residual(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, fit_result, **settings: dict):
     replot_run(run, fig, axs[0], **settings)
+    if fit_result is not None:
+        axs[1].set_ylim(-np.max(np.abs(fit_result.residual)) * 1.2 , np.max(np.abs(fit_result.residual)) * 1.2)
     fig.supylabel(get_ylabel(run.normalisation))
-  #  fig.tight_layout()
