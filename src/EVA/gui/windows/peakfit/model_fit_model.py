@@ -59,6 +59,8 @@ class ModelFitModel(QObject):
 
         plot_settings = {"colour": get_config()["plot"]["fill_colour"]}
         self.fig, self.axs = plotting.plot_spectrum_residual(self.spectrum, self.run.normalisation, **plot_settings)
+        self.main_axs = self.axs[0]
+        self.residual_axs = self.axs[1]
 
     def next_id(self, name):
         filtered_name = name.replace("_", "")  # if there is an underscore in the file name things will break
@@ -85,13 +87,11 @@ class ModelFitModel(QObject):
                                                   self.initial_model_params, constrain_scale=self.proportions_constraint)
         t1 = time.time_ns()
         logger.info("Peak fitting finished in %ss.", round((t1-t0)/1e9, 3))
-        print(self.fit_result.params.items())
 
         self.fitted_bg_params = deepcopy(self.initial_bg_params)
         self.fitted_model_params = deepcopy(self.initial_model_params)
 
         for param_name, param in self.fit_result.params.items():
-            print(param_name)
             prefix, var_name = param_name.split("_")
 
             # if error is not available, set error to 0
@@ -123,7 +123,7 @@ class ModelFitModel(QObject):
         replot_run(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
 
     def replot_spectrum_residual(self):
-            replot_run_residual(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
+            replot_run_residual(self.run, self.fig, self.axs, self.fit_result, colour=get_config()["plot"]["fill_colour"])
 
     def load_and_add_model(self, path):
         with open(path, "r") as file:
@@ -177,30 +177,40 @@ class ModelFitModel(QObject):
         y_range = (-np.max(ydata) * 0.05, np.max(ydata) * 1.3)
         self.y_range = y_range
 
+    def plot_residual(self):
+        # Because for some reason, this is not always the case... The residuals could be calculated manually
+        # to avoid this, but it seems to only happen when the fit is really bad, so ignoring for now.
+        x_data = self.fit_result.userkws["x"]
+        if len(x_data) == len(self.fit_result.residual):
+            residual_data = self.fit_result.residual
+            self.residual_axs.plot(x_data, self.fit_result.residual, label="Residuals (Data - Best Fit)")
+            self.residual_axs.set_ylim(-np.max(np.abs(residual_data)) * 1.2 , np.max(np.abs(residual_data)) * 1.2)
+            self.residual_axs.set_xlim(self.x_range)
+            self.residual_axs.grid(True)
+            self.residual_axs.legend()
+            
     def plot_fit(self, overwrite_old=True):
         if self.fit_result is None:
             raise AttributeError("No fit result found in model!")
 
         # removes previous fit from figure is prompted
         if overwrite_old:
-            for line in self.axs.lines:
-                if line.get_label() == "Best fit" or line.get_label() == "Residuals":
-                    line.remove()
+            blacklisted_labels = ["Best fit", "Residuals (Data - Best Fit)", "Initial parameters"]
+            for ax in self.axs:
+                for line in ax.lines:
+                    if line.get_label() in blacklisted_labels:
+                        line.remove()
 
-        x_data = self.fit_result.userkws["x"]
-        y_data = self.fit_result.best_fit
+        x_data_high_res = np.linspace(self.x_range[0], self.x_range[1], 1000)
+        y_data_high_res = self.fit_result.eval(x=x_data_high_res)
 
-        self.axs.plot(x_data, y_data, label="Best fit")
+        self.main_axs.plot(x_data_high_res, y_data_high_res, label="Best fit")
+        self.main_axs.set_xlim(self.x_range)
+        self.main_axs.set_ylim(self.calculate_y_range(y_data_high_res))
+        self.main_axs.legend()
 
-        # Because for some reason, this is not always the case... The residuals could be calculated manually
-        # to avoid this, but it seems to only happen when the fit is really bad, so ignoring for now.
-        if len(x_data) == len(self.fit_result.residual):
-            self.residual_axs.plot(x_data, self.fit_result.residual, label="Residuals")
+        self.plot_residual()
 
-
-        self.axs.set_xlim(self.x_range)
-        self.axs.set_ylim(self.calculate_y_range(y_data))
-        self.axs.legend()
 
     def save_params(self, path, x_range):
         obj = {
