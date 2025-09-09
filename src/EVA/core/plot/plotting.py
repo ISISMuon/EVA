@@ -106,8 +106,6 @@ def plot_spectrum_residual(spectrum: Spectrum, normalisation: str, **settings: d
     main_ax.set_ylim(0.0)
     main_ax.set_xlim(0.0)
     main_ax.tick_params(labelbottom=True)
-
-    fig.tight_layout()
     
     return fig, ax
 
@@ -218,4 +216,4 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
 def replot_run_residual(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
     replot_run(run, fig, axs[0], **settings)
     fig.supylabel(get_ylabel(run.normalisation))
-    fig.tight_layout()
+  #  fig.tight_layout()
