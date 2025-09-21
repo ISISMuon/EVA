@@ -17,7 +17,7 @@ def load_comment(run_num: str, file_path: str) -> tuple[list[str], int]:
 
     """
     try:
-        fd = open(file_path + '/comment.dat', 'r')
+        fd = open(file_path + '/Comment.dat', 'r')
         #commenttext = open(globals.workingdirectory + '/comment.dat', 'r').readlines()
         commenttext = fd.readlines()
 
