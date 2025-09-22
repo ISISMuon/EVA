@@ -38,7 +38,7 @@ class TestModelSpectrumModel:
         for j, transition in enumerate(modelled_transitions):
             modelled_transition = [transition["name"], float(transition["E"])]
             assert modelled_transition in get_match_transitions, \
-                f"Missing transition for {transition["element"]}: {modelled_transition}"
+                f"Missing transition for {transition['element']}: {modelled_transition}"
 
     def test_linear_sigma_model(self):
         sigma_params = np.loadtxt("src/EVA/databases/detectors/energy_resolution_linear.txt",
