@@ -243,7 +243,6 @@ class Ui_workspace(object):
         self.energy_correction_settings.setObjectName("energy_correction_settings")
         self.fit_table_plot = QtGui.QAction(parent=workspace)
         self.fit_table_plot.setObjectName("fit_table_plot")
-        self.plot_menu.addAction(self.plot_multiplot)
         self.plot_menu.addAction(self.fit_table_plot)
         self.settings_menu.addAction(self.general_settings)
         self.settings_menu.addAction(self.energy_correction_settings)
