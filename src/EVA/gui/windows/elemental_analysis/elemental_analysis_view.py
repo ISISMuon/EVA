@@ -112,7 +112,7 @@ class ElementalAnalysisView(BaseView, Ui_elemental_analysis):
                     e_item = QTreeWidgetItem()
                     e_item.setText(2, energy["element"])
                     e_item.setText(3, energy["transition"])
-                    e_item.setText(4, f"{energy["diff"]:.3f} keV")
+                    e_item.setText(4, f"{energy['diff']:.3f} keV")
                     p_item.addChild(e_item)
 
             items.append(item)

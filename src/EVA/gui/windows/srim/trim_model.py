@@ -560,7 +560,7 @@ class TrimModel(QObject):
             momentum = "all"
         else:
             momentum = f"{momentum:.5f}"
-        return os.path.join(f"{get_config()["general"]["working_directory"]}", f"SRIM_{momentum}_MeVc.zip")
+        return os.path.join(f"{get_config()['general']['working_directory']}", f"SRIM_{momentum}_MeVc.zip")
 
     def save_sim(self, path: str, rows: list | int | None = None):
         if isinstance(rows, int):

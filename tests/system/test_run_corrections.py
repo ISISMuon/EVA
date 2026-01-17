@@ -50,4 +50,4 @@ class TestRunCorrections:
                 corrected = raw[detector].x
 
             assert np.array_equal(corrected, run.data[detector].x), (f"energy correction failed when correcting "
-                                                                   f"{" and ".join(e_corr_which)}")
+                                                                   f"{' and '.join(e_corr_which)}")
