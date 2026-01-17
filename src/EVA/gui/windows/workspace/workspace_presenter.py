@@ -1,5 +1,5 @@
 import logging
-
+import inspect
 from PyQt6.QtGui import QCloseEvent
 
 from EVA.core.app import get_config
@@ -8,7 +8,6 @@ from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import EnergyC
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.windows.manual import manual_window
 from EVA.gui.windows.manual.manual_window import ManualWindow
-from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 from EVA.gui.windows.peakfit.peakfit_window import PeakFitWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
@@ -34,8 +33,6 @@ class WorkspacePresenter:
         self.model = model
 
         # Set up action bar connections
-
-        self.view.plot_multiplot.triggered.connect(self.open_multiplot)
 
         for i, detector in enumerate(self.view.detector_list):
             self.view.peakfit_menu_actions[i].triggered.connect(lambda _, det=detector: self.open_peakfit(det))
@@ -83,6 +80,8 @@ class WorkspacePresenter:
 
         self.view.binning_spin_box.setValue(self.model.binning)
         self.view.normalisation_type_combo_box.setCurrentIndex(normalisation_types.index(self.model.normalisation))
+        self.view.nexus_plot_display_combo_box.setCurrentText(self.model.plot_mode)
+        self.view.prompt_limit_textbox.setText(str(self.model.prompt_limit))
 
     def on_apply_settings(self):
         """
@@ -91,12 +90,22 @@ class WorkspacePresenter:
         """
         binning = self.view.binning_spin_box.value()
         normalisation_index = self.view.normalisation_type_combo_box.currentIndex()
-
         norm_type = normalisation_types[normalisation_index]
-
+        plot_type = self.view.nexus_plot_display_combo_box.currentText()
+        prompt_limit = self.view.prompt_limit_textbox.text()
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
-            self.model.run.set_corrections(normalisation=norm_type, bin_rate=binning)
+            kwargs = dict(
+                normalisation=norm_type,
+                bin_rate=binning,
+                plot_mode=plot_type,
+                prompt_limit=int(prompt_limit),
+                )
+            # dynamically filter only supported arguments for loaded run type
+            sig = inspect.signature(self.model.run.set_corrections)
+            valid_params = sig.parameters.keys()
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_params}
+            self.model.run.set_corrections(**filtered_kwargs)
 
         except ValueError:
             self.view.display_error_message(title="Normalisation error",
@@ -197,13 +206,6 @@ class WorkspacePresenter:
         window.deleteLater()
 
     #### OPENING TABS ##################################################
-    def open_multiplot(self):
-        """ Opens a tab for multiplot. """
-        logger.info("Launching multiplot tab.")
-
-        window = MultiPlotWindow()
-        self.view.open_new_tab(window.widget(), "Multi-Run Plot")
-
     def open_peakfit(self, detector):
         """ Opens a tab for peakfit. """
 

@@ -16,12 +16,14 @@ class MainModel(QObject):
         # create new record for the run if it has never been loaded before
         working_directory = config["general"]["working_directory"]
         corrections = config.get_run_save(working_directory, run_num)
-
         energy_corrections = corrections["detector_specific"]
         normalisation = corrections["normalisation"]
         binning = corrections["binning"]
+        plot_mode = corrections["plot_mode"]
+        prompt_limit = corrections["prompt_limit"]
 
-        run, flags = load_data.load_run(run_num, working_directory, energy_corrections, normalisation, binning)
+        run, flags = load_data.load_run(run_num, working_directory, energy_corrections, normalisation, binning, plot_mode, prompt_limit)
+
         all_detectors = config["general"]["enabled_detectors"]
 
         if flags["no_files_found"]:  # no data was loaded - return now
@@ -50,15 +52,6 @@ class MainModel(QObject):
             logging.error("Failed to apply normalisation by spills due to missing comment file. Normalisation set to None.")
 
         return flags, run
-
-    def read_comment_data(self):
-        mapping = dict.fromkeys(range(32))
-        start = self.run.start_time.translate(mapping)[21:]
-        end = self.run.end_time.translate(mapping)[21:]
-        events = self.run.events_str.translate(mapping)[20:]
-        comment = self.run.comment.translate(mapping)[11:]
-
-        return comment, start, end, events
 
     @staticmethod
     def set_default_directory(new_dir):

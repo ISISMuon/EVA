@@ -11,6 +11,7 @@ cycler==0.12.1
 dill==0.3.8
 docutils==0.21.2
 fonttools==4.53.1
+h5py==3.14.0
 idna==3.10
 imagesize==1.4.1
 iniconfig==2.0.0

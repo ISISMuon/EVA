@@ -151,7 +151,7 @@ class MainPresenter:
             self.view.set_comment_labels(comment="Comment file not found", start="N/A", end="N/A", events="N/A")
 
         else: # write comment info to GUI
-            comment, start, end, events = self.model.read_comment_data()
+            comment, start, end, events = self.model.run.read_comment_data()
             self.view.set_comment_labels(comment, start, end, events)
 
         if flags["norm_by_spills_error"]:  # normalisation by spills failed

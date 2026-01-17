@@ -2,14 +2,14 @@ import matplotlib.pyplot as plt
 
 from EVA.core.app import get_config
 from EVA.core.data_loading import load_data
+from EVA.core.data_structures.run import Run, normalisation_types
+from EVA.core.plot.plotting import get_ylabel
 
 class MultiPlotModel:
     def _init__(self):
         self.fig, self.ax = None, None
-
         self.offset = 1
-        self.detector_selection = ["GE1"]
-        self.loaded_runs = None
+        self.loaded_runs = []
 
     @staticmethod
     def multi_plot(runs, offset, plot_detectors):
@@ -19,7 +19,7 @@ class MultiPlotModel:
         detectors = list(zip(*[run.data.values() for run in runs]))
 
         # Remove detectors which either contain no data or are set to not be plotted by config
-        data = [detector_data for detector_data in detectors if detector_data[0].detector in plot_detectors]
+        data = [detector_data for detector_data in detectors if plot_detectors[detector_data[0].detector]]
 
         numplots = len(data)
 
@@ -31,11 +31,11 @@ class MultiPlotModel:
             fig, temp = plt.subplots(nrows=1, figsize=(16, 7), squeeze=False)
             axs = [temp[0][0]]
 
-            # labels figures
-            fig.suptitle("MultiPlot")
-            fig.supxlabel("Energy (keV)")
+        # labels figures
+        fig.suptitle(f"{runs[0].plot_mode} - MultiPlot")
+        fig.supxlabel("Energy (keV)")
 
-            fig.supylabel("Intensity (raw)")
+        fig.supylabel(get_ylabel(runs[0].normalisation))
 
         # loop through each detector
         for i, detector_data in enumerate(data):
@@ -85,14 +85,17 @@ class MultiPlotModel:
         return RunList
 
     @staticmethod
-    def load_runs(run_list):
-        dir = get_config()["general"]["working_directory"]
-        e_corr = get_config()["default_corrections"]["detector_specific"]
-        norm = get_config()["default_corrections"]["normalisation"]
-        binning = get_config()["default_corrections"]["binning"]
-
-        result = [load_data.load_run(run_num, working_directory=dir, energy_corrections=e_corr,
-                                     normalisation=norm, binning=binning) for run_num in run_list]
+    def load_multirun(run_list):
+        config = get_config()
+        working_directory = config["general"]["working_directory"]
+        corrections = config["default_corrections"]
+        energy_corrections = corrections["detector_specific"]
+        normalisation = corrections["normalisation"]
+        binning = corrections["binning"]
+        plot_mode = corrections["plot_mode"]
+        prompt_limit = corrections["prompt_limit"]
+        result = [load_data.load_run(run_num, working_directory, energy_corrections,
+                        normalisation, binning, plot_mode, prompt_limit) for run_num in run_list]
 
         runs, flags = list(zip(*result))
 
@@ -112,3 +115,35 @@ class MultiPlotModel:
 
         return good_runs, blank_runs, norm_failed_runs
 
+    def get_plot_detectors(self) -> list[str]:
+        """
+        Gets which detectors to plot for from the loaded config.
+
+        Returns: list of detector names to plot for.
+
+        """
+        config = get_config()
+        show_plot = config.get_run_save(config["general"]["working_directory"], self.loaded_runs[0].run_num)["show_plot"]
+        plot_detectors = [det for det, show in show_plot.items() if show and det in self.loaded_runs[0].loaded_detectors]
+        return plot_detectors
+
+    def multirun_corrections(self):
+        """
+        Apply run corrections to all loaded runs using settings from workspace view.
+        """
+        workspace_view = self.workspace.view
+        binning = workspace_view.binning_spin_box.value()
+        normalisation_index = workspace_view.normalisation_type_combo_box.currentIndex()
+        norm_type = normalisation_types[normalisation_index]
+        plot_type = workspace_view.nexus_plot_display_combo_box.currentText()
+        prompt_limit = workspace_view.prompt_limit_textbox.text()
+        # normalisation can fail if user wants to normalise by events but no comment file have been loaded
+        try:
+            [run.set_corrections(normalisation=norm_type, bin_rate=binning, plot_mode=plot_type, prompt_limit=prompt_limit)
+             for run in self.model.loaded_runs]
+            
+        except ValueError:
+            workspace_view.display_error_message(title="Normalisation error",
+                                            message="Cannot normalise by events when comment file is not loaded. Please ensure that the comment.dat file is in your loaded directory.")
+
+            self.populate_settings_panel()

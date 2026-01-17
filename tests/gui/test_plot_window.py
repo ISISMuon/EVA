@@ -31,8 +31,9 @@ class TestPlotWindow:
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
-
-        run, _ = load_data.load_run("2630", wdir, energy_corrections, normalisation, binning)
+        plot_mode = get_config()["default_corrections"]["plot_mode"]
+        prompt_limit = get_config()["default_corrections"]["prompt_limit"]
+        run, _ = load_data.load_run("2630", wdir, energy_corrections, normalisation, binning, plot_mode, prompt_limit)
 
         self.window = ElementalAnalysisWindow(run)
         self.view = self.window.widget()

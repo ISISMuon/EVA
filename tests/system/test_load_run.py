@@ -29,16 +29,21 @@ class TestLoadRun:
     def test_load_run(self, qapp, run_num, filenames):
 
         wdir = get_config()["general"]["working_directory"]
-        corrections = get_config()["default_corrections"]
+        energy_corrections = get_config()["default_corrections"]["detector_specific"]
+        normalisation = get_config()["default_corrections"]["normalisation"]
+        binning = get_config()["default_corrections"]["binning"]
+        plot_mode = get_config()["default_corrections"]["plot_mode"]
+        prompt_limit = get_config()["default_corrections"]["prompt_limit"]
+        run, _ = load_data.load_run(run_num, wdir, energy_corrections, normalisation, binning, plot_mode, prompt_limit)
 
-        run, flags = load_data.load_run(run_num, working_directory=wdir, energy_corrections=corrections["detector_specific"],
-                                        normalisation=corrections["normalisation"], binning=corrections["binning"])
-
-        # Check that run is None if no detector data was loaded (invalid run number)
-        if all([filename == "" for filename in filenames]):
-            assert run.loaded_detectors is not None, "Invalid run was specified but run is not empty"
+        # Check that run is 0 if no detector data was loaded (invalid run number)
+        if run == 0:
+            assert run == 0
         else:
+            assert run.loaded_detectors is not None
+
             for i, dataset in enumerate(run.get_raw().values()):
                 xdata, ydata = self.manual_load(filenames[i])
 
-                assert np.array_equal(dataset.x, xdata) and np.array_equal(dataset.y, ydata)
+                assert np.array_equal(dataset.x, xdata)
+                assert np.array_equal(dataset.y, ydata)

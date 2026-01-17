@@ -5,4 +5,5 @@ docs/doctrees
 docs/html
 src/EVA/core/settings/config.ini
 EVA.log
-"src/EVA/core/settings/config.json" 
+src/EVA/core/settings/config.json
+.vscode/launch.json

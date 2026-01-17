@@ -1,7 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-
 from EVA.core.app import get_app
 from EVA.core.data_structures.run import Run
 from EVA.core.data_structures.spectrum import Spectrum
@@ -140,15 +139,17 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     }
 
     show_detectors = settings.get("show_detectors", run.loaded_detectors)
-    title = settings.get("title", f"Run Number: {run.run_num}\n{run.comment}")
+    # Format title, if comment data exists include it
+    try:
+        title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}\n{run.comment_data[0]}")
+    except AttributeError:
+        title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}")
     ylabel = settings.get("ylabel", None)
     xlabel = settings.get("xlabel", None)
     colour = settings.get("colour", "white")
     size = settings.get("size", (16, 7))
     adjustments = settings.get("adjustment_dict", default_adjustments)
-
     num_plots = len(show_detectors)
-
     fig, axs = plt.subplots(nrows=num_plots, figsize=size)
 
     # hack to loop through all axes even if number of subplots == 1
@@ -172,13 +173,13 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     i = 0
     for detector, dataset in run.data.items():
         if detector in show_detectors:
-            axs[i].fill_between(dataset.x, dataset.y, step='mid', color=colour)
-            axs[i].step(dataset.x, dataset.y, where='mid', color='black', label=f"_{detector}")
+            axs[i].step(dataset.x, dataset.y, where="mid", color="black", label=f"_{detector}")
+            axs[i].fill_between(dataset.x, dataset.y, step="mid", color=colour)
+
             axs[i].set_xlim(0.0)
-            axs[i].set_ylim((0, 1.1*np.max(dataset.y)))
+            axs[i].set_ylim((0, 1.2*np.max(dataset.y)))
             axs[i].set_title(dataset.detector)
             i += 1
-
     # Adjustments
     plt.subplots_adjust(**adjustments)
     return fig, axs
@@ -186,11 +187,23 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
 
 def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
 
+    # Regenerate title in-case plot mode changed
+    try:
+        title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}\n{run.comment_data[0]}")
+    except AttributeError:
+        title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}")
+
+    fig.suptitle(title)
     fig.supylabel(get_ylabel(run.normalisation))
-    axes = [axs] if not isinstance(axs, np.ndarray) else axs
+    if isinstance(axs, plt.Axes):
+        axes = [axs]
+    elif isinstance(axs, np.ndarray):
+        axes = axs.ravel().tolist()
+    else:
+        axes = axs
+
     for ax in axes:
         candidates = [(line.get_label()[1:], line) for line in ax.lines if line.get_label()[1:] in run.loaded_detectors]
-
         if not candidates:
             raise ValueError("No matching lines found in ax.lines with labels matching run.loaded_detectors")
 
@@ -211,7 +224,7 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
         if "colour" in settings.keys():
             fill_obj.set_color(settings["colour"])
 
-        ax.set_ylim((0, 1.1 * np.max(ydata)))
+        ax.set_ylim((0, 1.2 * np.max(ydata)))
 
 def replot_run_residual(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, fit_result, **settings: dict):
     replot_run(run, fig, axs[0], **settings)

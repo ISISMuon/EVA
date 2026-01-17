@@ -45,12 +45,13 @@ class ElementalAnalysisModel(QObject):
 
     def get_plot_detectors(self) -> list[str]:
         """
-        Gets which detectors to plot for from the loaded config.
+        Gets which detectors to plot for the given run number for from the loaded config.
 
         Returns: list of detector names to plot for.
 
         """
-        show_plot = get_config()["plot"]["show_plot"]
+        config = get_config()
+        show_plot = config.get_run_save(config["general"]["working_directory"], self.run.run_num)["show_plot"]
         plot_detectors = [det for det, show in show_plot.items() if show and det in self.run.loaded_detectors]
 
         return plot_detectors
@@ -66,7 +67,6 @@ class ElementalAnalysisModel(QObject):
 
         # check config to see which detectors should be loaded
         colour = config["plot"]["fill_colour"]
-
         return plot_run(self.run, show_detectors=self.get_plot_detectors(), colour=colour)
 
     def plot_vlines_all_gammas(self, isotope: str) -> str | None:
@@ -316,10 +316,12 @@ class ElementalAnalysisModel(QObject):
 
         peakfind_res = {}
         result_simplified = []
-
+        config = get_config()
+        show_plot = config.get_run_save(config["general"]["working_directory"], self.run.run_num)["show_plot"]
         for dataset in self.run.data.values():
             # only find peaks in data which is plotted
-            if config["plot"]["show_plot"][dataset.detector]:
+
+            if show_plot[dataset.detector]:
                 peakfind_res[dataset.detector] = {}
                 peaks, peaks_pos = func(dataset.x, dataset.y,
                                         self.default_height, self.default_threshold, self.default_distance)
@@ -383,12 +385,12 @@ class ElementalAnalysisModel(QObject):
         """
         # generate figure
         config = get_config()
-
+        show_plot = config.get_run_save(config["general"]["working_directory"], self.run.run_num)["show_plot"]
         if show_detector:
-            config["plot"]["show_plot"][detector] = True
+            show_plot[detector] = True
             logger.debug("Enabled %s for plotting.", detector)
         else:
-            config["plot"]["show_plot"][detector] = False
+            show_plot[detector] = False
             logger.debug("Disabled %s for plotting.", detector)
 
         self.fig, self.axs = self.plot_run()

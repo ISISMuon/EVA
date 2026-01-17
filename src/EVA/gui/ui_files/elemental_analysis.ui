@@ -43,28 +43,28 @@
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QCheckBox" name="ge1_checkbox">
+       <widget class="QCheckBox" name="det1_checkbox">
         <property name="text">
          <string>2099 (GE1)</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="ge2_checkbox">
+       <widget class="QCheckBox" name="det2_checkbox">
         <property name="text">
          <string>3099 (GE2)</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="ge3_checkbox">
+       <widget class="QCheckBox" name="det3_checkbox">
         <property name="text">
          <string>4099 (GE3)</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="ge4_checkbox">
+       <widget class="QCheckBox" name="det4_checkbox">
         <property name="text">
          <string>5099 (GE4)</string>
         </property>

@@ -29,13 +29,13 @@ class TestRunCorrections:
                 "use_e_corr": use_e_corr
             }
 
-        default_e_corr = get_config()["default_corrections"]["detector_specific"]
+        wdir = get_config()["general"]["working_directory"]
+        energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
-
-        run, _ = load_data.load_run("2630", working_directory=wdir, energy_corrections=default_e_corr,
-                                    normalisation=normalisation, binning=binning)
-
+        plot_mode = get_config()["default_corrections"]["plot_mode"]
+        prompt_limit = get_config()["default_corrections"]["prompt_limit"]
+        run, _ = load_data.load_run("2630", wdir, energy_corrections, normalisation, binning, plot_mode, prompt_limit)
         # energy correction done by EVA
         run.set_corrections(energy_corrections=e_corr)
 
