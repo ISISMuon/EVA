@@ -6,11 +6,11 @@ class LoadComment(unittest.TestCase):
     '''def test_something(self):
         #self.assertEqual(True, False)  # add assertion here
         print('hello')'''
-    def test_loadcomment(self):
+    def test_loadcomment1(self):
         #print('loadcomment test')
         directory = './test_data/'
         RunNum = "2630"
-        rtnstr, flag = load_data.load_comment(RunNum, directory)
+        rtnstr, flag = load_data.load_comment_brni(RunNum, directory)
         self.assertEqual(flag, 0, 'did return flag')
         self.assertEqual(rtnstr,['Start Time        :  Thu May 3 13:08:56 2018\n',
                                  'End   Time        :  Thu May 3 13:58:33 2018\n',
@@ -22,7 +22,7 @@ class LoadComment(unittest.TestCase):
         #print('loadcomment2 test')
         directory = './test_data/'
         RunNum = "999"
-        rtnstr, flag = load_data.load_comment(RunNum, directory)
+        rtnstr, flag = load_data.load_comment_brni(RunNum, directory)
         self.assertEqual(flag, 1, 'did return flag')
         self.assertEqual(rtnstr,[" ", " ", " ", " "],
                          'didnt load comment file')
@@ -31,7 +31,7 @@ class LoadComment(unittest.TestCase):
         #print('loadcomment3 test')
         directory= './'
         RunNum = "2631"
-        rtnstr, flag = load_data.load_comment(RunNum, directory)
+        rtnstr, flag = load_data.load_comment_brni(RunNum, directory)
         self.assertEqual(flag, 1, 'did return flag')
         self.assertEqual(rtnstr,[" ", " ", " ", " "],
-                         'didnt load commnet file')
+                         'didnt load comment file')
