@@ -51,8 +51,11 @@ class TrimPresenter(QWidget):
 
         self.view.run_sim_button.clicked.connect(self.start_sim)
         self.view.cancel_sim_button.clicked.connect(self.cancel_sim)
-        self.view.shift_plot_origin_s.connect(self.shift_plot_origin)
-        self.view.reset_plot_origin_s.connect(self.reset_plot_origin)
+        self.view.stopping_shift_plot_origin_s.connect(self.stopping_shift_plot_origin)
+        self.view.stopping_reset_plot_origin_s.connect(self.stopping_reset_plot_origin)
+        
+        self.view.depth_shift_plot_origin_s.connect(self.depth_shift_plot_origin)
+        self.view.depth_reset_plot_origin_s.connect(self.depth_reset_plot_origin)
 
         self.view.save_s.connect(self.on_save_sim_result)
         self.view.save_all_sims_button.clicked.connect(self.on_save_all_sim_results)
@@ -111,10 +114,10 @@ class TrimPresenter(QWidget):
         if row == (self.view.layer_setup_table.rowCount()-1):
             self.view.layer_setup_table.append_row()
 
-    def shift_plot_origin(self, index):
+    def stopping_shift_plot_origin(self, index):
         try:
-            new_shift = float(self.view.origin_shift_line_edits[index].text())
-            self.model.plot_origin_shifts[index] += new_shift
+            new_shift = float(self.view.stopping_origin_shift_line_edits[index].text())
+            self.model.stopping_plot_origin_shifts[index] += new_shift
 
             fig_comp, ax_comp = self.model.plot_components(index, self.model.momentum[index])
             fig_whole, ax_whole = self.model.plot_whole(index, self.model.momentum[index])
@@ -133,9 +136,9 @@ class TrimPresenter(QWidget):
             self.view.display_error_message(message="Invalid shift value!")
             raise e
 
-    def reset_plot_origin(self, index):
-        self.model.plot_origin_shifts[index] = self.model.default_origin_position
-        self.view.origin_shift_line_edits[index].setText("0")
+    def stopping_reset_plot_origin(self, index):
+        self.model.stopping_plot_origin_shifts[index] = self.model.default_origin_position
+        self.view.stopping_origin_shift_line_edits[index].setText("0")
 
         fig_comp, ax_comp = self.model.plot_components(index, self.model.momentum[index])
         fig_whole, ax_whole = self.model.plot_whole(index, self.model.momentum[index])
@@ -149,6 +152,32 @@ class TrimPresenter(QWidget):
 
         plot_widget_comp = plot_stack.widget(1)
         plot_widget_comp.update_plot(fig_comp, ax_comp)
+
+
+    def depth_shift_plot_origin(self):
+        try:
+            new_shift = float(self.view.depth_shift_origin_linedit.text())
+            self.model.depth_plot_origin_shift = new_shift
+
+            fig, ax = self.model.plot_depth_profile()
+
+            self.view.depth_profile_plot.update_plot(fig, ax)
+
+        except (ValueError, AttributeError) as e:
+            self.view.display_error_message(message="Invalid shift value!")
+            raise e
+
+    def depth_reset_plot_origin(self):
+        try:
+            self.model.depth_plot_origin_shift = 0
+            self.view.depth_shift_origin_linedit.setText("0")
+            fig, ax = self.model.plot_depth_profile()
+
+            self.view.depth_profile_plot.update_plot(fig, ax)
+
+        except (ValueError, AttributeError) as e:
+            self.view.display_error_message(message="Invalid shift value!")
+            raise e
 
     def save_result(self, index):
         logger.debug("Saving result for index %s", index)

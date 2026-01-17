@@ -29,8 +29,10 @@ class TrimView(BaseView, Ui_trim):
 
     show_plot_s = pyqtSignal(int, str)
     save_s = pyqtSignal(int)
-    shift_plot_origin_s = pyqtSignal(int)
-    reset_plot_origin_s = pyqtSignal(int)
+    depth_shift_plot_origin_s = pyqtSignal()
+    depth_reset_plot_origin_s = pyqtSignal()
+    stopping_shift_plot_origin_s = pyqtSignal(int)
+    stopping_reset_plot_origin_s = pyqtSignal(int)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -40,7 +42,7 @@ class TrimView(BaseView, Ui_trim):
         self.setWindowTitle("TRIM Simulations - EVA")
         self.setMinimumSize(1100, 600)
         self.plot_stacks = []
-        self.origin_shift_line_edits = []
+        self.stopping_origin_shift_line_edits = []
 
         self.layer_setup_table.stretch_horizontal_header()
 
@@ -161,12 +163,33 @@ class TrimView(BaseView, Ui_trim):
         # hide text saying more momentum is needed for depth profile
         self.not_enough_momentum_label.hide()
 
+        container = self.depth_settings_widget
+        settings_container = QFrame()
+        settings_layout = QGridLayout()
+
+        settings_container.setLayout(settings_layout)
+
+        shift_origin_label = QLabel("Shift plot origin to: (mm)")
+        self.depth_shift_origin_linedit = QLineEdit("0")
+
+        depth_shift_button = QPushButton("Shift")
+        depth_reset_button = QPushButton("Reset origin")
+        settings_layout.addWidget(shift_origin_label, 1, 0)
+        settings_layout.addWidget(self.depth_shift_origin_linedit, 1, 1)
+        settings_layout.addWidget(depth_shift_button, 1, 2)
+        settings_layout.addWidget(depth_reset_button, 1, 3)
+        layout = QVBoxLayout()
+        layout.addWidget(settings_container)
+
+        container.setLayout(layout)
+        depth_shift_button.clicked.connect(self.depth_shift_plot_origin_s.emit)
+        depth_reset_button.clicked.connect(self.depth_reset_plot_origin_s.emit)
         self.depth_profile_plot.show()
         self.depth_profile_plot.update_plot(fig, ax)
 
     def reset(self):
         # set up results table
-        self.origin_shift_line_edits = []
+        self.stopping_origin_shift_line_edits = []
         self.plot_stacks = []
 
         self.slider_container.hide()
@@ -194,17 +217,17 @@ class TrimView(BaseView, Ui_trim):
 
         show_comp = QCheckBox("Show components")
 
-        shift_origin_label = QLabel("Shift plot origin to: (mm)")
-        shift_origin_linedit = QLineEdit("0")
+        stopping_shift_origin_label = QLabel("Shift plot origin to: (mm)")
+        stopping_shift_origin_linedit = QLineEdit("0")
 
-        shift_button = QPushButton("Shift")
-        reset_button = QPushButton("Reset origin")
+        stopping_shift_button = QPushButton("Shift")
+        stopping_reset_button = QPushButton("Reset origin")
 
         settings_layout.addWidget(show_comp, 0, 0, 1, -1)
-        settings_layout.addWidget(shift_origin_label, 1, 0)
-        settings_layout.addWidget(shift_origin_linedit, 1, 1)
-        settings_layout.addWidget(shift_button, 1, 2)
-        settings_layout.addWidget(reset_button, 1, 3)
+        settings_layout.addWidget(stopping_shift_origin_label, 1, 0)
+        settings_layout.addWidget(stopping_shift_origin_linedit, 1, 1)
+        settings_layout.addWidget(stopping_shift_button, 1, 2)
+        settings_layout.addWidget(stopping_reset_button, 1, 3)
 
         layout = QVBoxLayout()
         layout.addWidget(plot_stack)
@@ -214,11 +237,11 @@ class TrimView(BaseView, Ui_trim):
 
          # connect all buttons
         show_comp.checkStateChanged.connect(lambda check_state, i=index: self.swap_plot_stack(check_state, i))
-        shift_button.clicked.connect(lambda x, i=index: self.shift_plot_origin_s.emit(i))
-        reset_button.clicked.connect(lambda x, i=index: self.reset_plot_origin_s.emit(i))
+        stopping_shift_button.clicked.connect(lambda x, i=index: self.stopping_shift_plot_origin_s.emit(i))
+        stopping_reset_button.clicked.connect(lambda x, i=index: self.stopping_reset_plot_origin_s.emit(i))
 
         self.plot_stacks.append(plot_stack)
-        self.origin_shift_line_edits.append(shift_origin_linedit)
+        self.stopping_origin_shift_line_edits.append(stopping_shift_origin_linedit)
         self.stopping_profiles_tab_widget.addTab(container, str(round(momentum, 4)))
 
     def swap_plot_stack(self, check_state, index):

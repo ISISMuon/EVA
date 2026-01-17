@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>905</width>
-    <height>783</height>
+    <width>929</width>
+    <height>749</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -456,7 +456,7 @@
       <item>
        <widget class="QTabWidget" name="results_tabs">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="stopping_profiles_tab">
          <attribute name="title">
@@ -523,6 +523,22 @@ QSlider::ticks {color: grey}</string>
             </property>
            </widget>
           </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QWidget" name="depth_settings_widget" native="true"/>
+          </item>
          </layout>
         </widget>
        </widget>
@@ -534,15 +550,15 @@ QSlider::ticks {color: grey}</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BaseTable</class>
-   <extends>QTableWidget</extends>
-   <header>EVA.gui.base.base_table</header>
-  </customwidget>
-  <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header>EVA.gui.widgets.plot.plot_widget</header>
+   <header location="global">EVA.widgets.plot.plot_widget</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BaseTable</class>
+   <extends>QTableWidget</extends>
+   <header>EVA.widgets.base.base_table</header>
   </customwidget>
  </customwidgets>
  <resources/>
