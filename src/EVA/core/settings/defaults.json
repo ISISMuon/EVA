@@ -1,12 +1,19 @@
 {
   "general": {
     "working_directory": "./",
+    "fit_table_save_file": 0,
+    "fit_table_plot_file": 0,
     "default_run_num": "0000",
     "enabled_detectors": [
-      "GE1",
-      "GE2",
-      "GE3",
-      "GE4"
+        "GE1",
+        "GE2",
+        "GE3",
+        "GE4",
+        "GE5",
+        "GE6",
+        "GE7",
+        "GE8",
+        "GE9"
     ]
   },
   "database": {
@@ -25,15 +32,32 @@
     "fill_colour": "#d0f4ff",
     "show_plot": {
       "GE1": true,
-      "GE2": false,
+      "GE2": true,
       "GE3": true,
-      "GE4": false
+      "GE4": true,
+      "GE5": true,
+      "GE6": true,
+      "GE7": true,
+      "GE8": true,
+      "GE9": true
     }
   },
 
   "default_corrections": {
     "normalisation": "none",
     "binning": 1,
+    "prompt_limit": 2000,
+    "plot_mode": "IBEX Prompt Spectrum",
+    "show_plot": {
+        "GE1": true,
+        "GE2": true,
+        "GE3": true,
+        "GE4": true,
+        "GE5": true,
+        "GE6": true,
+        "GE7": true,
+        "GE8": true
+        },
     "detector_specific": {
       "GE1": {
         "e_corr_coeffs": [
@@ -92,6 +116,66 @@
           0.0,
           0.0,
           0.0
+        ],
+        "use_eff_corr": false
+      },
+      "GE5": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          93.2,
+          59.2,
+          -13.6,
+          1.35,
+          -0.049
+        ],
+        "use_eff_corr": false
+      },
+      "GE6": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          93.2,
+          59.2,
+          -13.6,
+          1.35,
+          -0.049
+        ],
+        "use_eff_corr": false
+      },
+      "GE7": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          93.2,
+          59.2,
+          -13.6,
+          1.35,
+          -0.049
+        ],
+        "use_eff_corr": false
+      },
+      "GE8": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          93.2,
+          59.2,
+          -13.6,
+          1.35,
+          -0.049
         ],
         "use_eff_corr": false
       }
