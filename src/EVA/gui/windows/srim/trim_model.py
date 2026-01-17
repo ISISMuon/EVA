@@ -74,7 +74,6 @@ class TrimModel(QObject):
         self.depth_plot_origin_shift = 0
         self.cancel_sim = False
         self.simulation_times = None # to store the time taken for each simulation
-        self.transmit_counter = 1
 
     def number_of_sims(self) -> int:
         """
@@ -97,10 +96,6 @@ class TrimModel(QObject):
         """
         Runs the srim simulation using parameters set in the model.
         """
-        self.transmit_counter = 1
-        combined_transmit = os.path.join(self.srim_out_dir, "combined_TRANSMIT.txt")
-        if os.path.exists(combined_transmit):
-            os.remove(combined_transmit)
         # Calculate momentum array if momentum scan is wanted
         if self.scan_type == 'Yes':
             self.momentum = np.round(np.arange(start=self.min_momentum, stop=self.max_momentum, step=self.step_momentum), 5)
@@ -166,14 +161,6 @@ class TrimModel(QObject):
                     NE = int(self.stats * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) * np.exp(
                         -0.5 * (P - mom) ** 2 / (MomSigma ** 2)))
 
-                    dP = 0.5 * MomSigma
-
-                    NE = int(round(
-                        self.stats
-                        * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma))
-                        * np.exp(-0.5 * (P - mom) ** 2 / (MomSigma ** 2))
-                        * dP
-                    ))
                     # get muon information
                     muon_ion = self.get_muon(P)
 
@@ -364,12 +351,13 @@ class TrimModel(QObject):
             return None, None, 1
 
         trim_sim = TRIM(target, muon, number_ions=n_muons, calculation=1)
-        print(n_muons)
+
         try:
             trim_data_output = trim_sim.run(self.srim_exe_dir)  # Simulation run by executing SRIM.exe in directory
+
             # output files from SRIM copied to desired output directory
-            TRIM.copy_output_files(self.srim_exe_dir, self.srim_out_dir, transmit_counter_ref = self)
-            print("model ", self.transmit_counter)
+            TRIM.copy_output_files(self.srim_exe_dir, self.srim_out_dir)
+
         except FileNotFoundError:
             return
 
