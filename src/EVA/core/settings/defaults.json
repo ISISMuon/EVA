@@ -56,7 +56,8 @@
         "GE5": true,
         "GE6": true,
         "GE7": true,
-        "GE8": true
+        "GE8": true,
+        "GE9": true
         },
     "detector_specific": {
       "GE1": {
@@ -165,6 +166,21 @@
         "use_eff_corr": false
       },
       "GE8": {
+        "e_corr_coeffs": [
+          1.0,
+          0.0
+        ],
+        "use_e_corr": false,
+        "eff_corr_coeffs": [
+          93.2,
+          59.2,
+          -13.6,
+          1.35,
+          -0.049
+        ],
+        "use_eff_corr": false
+      },
+      "GE9": {
         "e_corr_coeffs": [
           1.0,
           0.0
