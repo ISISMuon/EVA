@@ -70,10 +70,11 @@ class TrimModel(QObject):
 
         # for storing an x-axis shift for each momentum plot (one for each momentum)
         self.default_origin_position = 0
-        self.plot_origin_shifts = []
-
+        self.stopping_plot_origin_shifts = []
+        self.depth_plot_origin_shift = 0
         self.cancel_sim = False
         self.simulation_times = None # to store the time taken for each simulation
+        self.transmit_counter = 1
 
     def number_of_sims(self) -> int:
         """
@@ -96,6 +97,10 @@ class TrimModel(QObject):
         """
         Runs the srim simulation using parameters set in the model.
         """
+        self.transmit_counter = 1
+        combined_transmit = os.path.join(self.srim_out_dir, "combined_TRANSMIT.txt")
+        if os.path.exists(combined_transmit):
+            os.remove(combined_transmit)
         # Calculate momentum array if momentum scan is wanted
         if self.scan_type == 'Yes':
             self.momentum = np.round(np.arange(start=self.min_momentum, stop=self.max_momentum, step=self.step_momentum), 5)
@@ -161,6 +166,14 @@ class TrimModel(QObject):
                     NE = int(self.stats * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) * np.exp(
                         -0.5 * (P - mom) ** 2 / (MomSigma ** 2)))
 
+                    dP = 0.5 * MomSigma
+
+                    NE = int(round(
+                        self.stats
+                        * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma))
+                        * np.exp(-0.5 * (P - mom) ** 2 / (MomSigma ** 2))
+                        * dP
+                    ))
                     # get muon information
                     muon_ion = self.get_muon(P)
 
@@ -235,7 +248,7 @@ class TrimModel(QObject):
 
         # set all plot origins to be shifted by default so that 0 on the x-axis is located at end of aluminium layer
         self.default_origin_position = self.layer_boundary_positions[3]
-        self.plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
+        self.stopping_plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
 
         # after sucessful run, update srim installation directory in config
         get_config()["SRIM"]["installation_directory"] = self.srim_exe_dir
@@ -351,13 +364,12 @@ class TrimModel(QObject):
             return None, None, 1
 
         trim_sim = TRIM(target, muon, number_ions=n_muons, calculation=1)
-
+        print(n_muons)
         try:
             trim_data_output = trim_sim.run(self.srim_exe_dir)  # Simulation run by executing SRIM.exe in directory
-
             # output files from SRIM copied to desired output directory
-            TRIM.copy_output_files(self.srim_exe_dir, self.srim_out_dir)
-
+            TRIM.copy_output_files(self.srim_exe_dir, self.srim_out_dir, transmit_counter_ref = self)
+            print("model ", self.transmit_counter)
         except FileNotFoundError:
             return
 
@@ -438,7 +450,7 @@ class TrimModel(QObject):
         Returns:
             matplotlib figure and axes objects with plotted data.
         """
-        x_shift = self.plot_origin_shifts[momentum_index]
+        x_shift = self.stopping_plot_origin_shifts[momentum_index]
 
         figt, axx = plt.subplots()
 
@@ -471,7 +483,7 @@ class TrimModel(QObject):
             matplotlib figure and axes objects with plotted data.
         """
 
-        x_shift = self.plot_origin_shifts[momentum_index]
+        x_shift = self.stopping_plot_origin_shifts[momentum_index]
 
         # plot components
         figt, axx = plt.subplots()
@@ -519,9 +531,11 @@ class TrimModel(QObject):
             # layer boundary (lower and upper)
             boundary = (self.layer_boundary_positions[i:i+2])
 
-            if not any([boundary[0] < peak <= boundary[1] for peak in centroids]):
-                continue  # skip all layers with no peaks within it
-
+            # if not any([boundary[0] < peak <= boundary[1] for peak in centroids]):
+            #     print(f"Skipping layer {self.sample_names[i]} as no peaks found within it.")
+            #     continue  # skip all layers with no peaks within it
+            # else:
+            #     print(f"Not skipping layer {self.sample_names[i]} as peak(s) found within it.")
             ax.plot(self.momentum, self.proportions_per_layer[i, :], "o-", label=self.sample_names[i], ms=4)
 
             # find momentum point closest to layer boundary - COULD REPLACE THIS WITH LINEAR INTERPOLATION
@@ -535,7 +549,7 @@ class TrimModel(QObject):
         ax2 = ax.twiny()
         ax2.set_xticks(closest_momenta)
         ax2.set_xbound(ax.get_xbound())
-        ax2.set_xticklabels([f"{(b - self.default_origin_position):.3f}" for b in boundaries])
+        ax2.set_xticklabels([f"{(b - self.depth_plot_origin_shift):.3f}" for b in boundaries])
 
         ax2.set_xlabel("Depth (mm)")
         ax.vlines(closest_momenta, 0, 100, colors="black", linestyles="--")
