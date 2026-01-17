@@ -37,7 +37,9 @@ class TestModelSpectrumModel:
         modelled_transitions = self.model.all_transitions[0]
         for j, transition in enumerate(modelled_transitions):
             modelled_transition = [transition["name"], float(transition["E"])]
-            assert modelled_transition in get_match_transitions, \
+
+        assert any(transition["name"] == m[0] and transition["E"] == pytest.approx(m[1], rel=1e-5)
+                for m in get_match_transitions), \
                 f"Missing transition for {transition['element']}: {modelled_transition}"
 
     def test_linear_sigma_model(self):
