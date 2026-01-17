@@ -11,7 +11,6 @@ class WorkspaceWindow(BaseWindow):
         Args:
             run: Run object
         """
-
         view = WorkspaceView(run)
         model = WorkspaceModel(run)
         presenter = WorkspacePresenter(view, model)

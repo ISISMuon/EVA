@@ -5,8 +5,9 @@ from PyQt6.QtWidgets import QWidget, QMainWindow, QMessageBox, QTabBar, QFileDia
 from EVA.core.data_structures.run import Run
 from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import EnergyCorrectionsDialog
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
-from EVA.gui.ui_files.workspace_gui import Ui_workspace
+from EVA.gui.ui_files.workspace_nxs_gui import Ui_workspace
 from EVA.gui.windows.elemental_analysis.elemental_analysis_window import ElementalAnalysisWindow
+from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.util.path_handler import get_path
@@ -17,6 +18,7 @@ class WorkspaceView(Ui_workspace, QMainWindow):
     """
     manual_windows : list[ManualWindow] = []
     periodic_table_windows : list[PeriodicTableWidget] = []
+
     general_settings_dialogs : list[SettingsDialog] = []
     energy_corrections_dialogs : list[EnergyCorrectionsDialog] = []
 
@@ -47,15 +49,18 @@ class WorkspaceView(Ui_workspace, QMainWindow):
         for detector in self.detector_list:
             action = self.peak_fit_menu.addAction(detector)
             self.peakfit_menu_actions.append(action)
+        try:
+            self.comment_text.setText(run.run_info)
+        except AttributeError:
+            self.comment_text.setText("No run metadata detected.")
 
-        # Store references to all windows in the view
-        self.set_run_info()
-
+        if run.data_type == "biriani":
+            self.nexus_plot_display_combo_box.setDisabled(True)
+            self.prompt_limit_textbox.setDisabled(True)
         self.binning_spin_box.setSuffix("x")
 
         # hide the logbook for now (not implemented)
         self.logbook_group_box.hide()
-
         # initialise elemental analysis widget
         self.elemental_analysis_widget = ElementalAnalysisWindow(parent=self, run=run)
         self.open_new_tab(self.elemental_analysis_widget.widget(), "Elemental Analysis", closable=False)
@@ -125,32 +130,15 @@ class WorkspaceView(Ui_workspace, QMainWindow):
 
         widget.close()
 
-    def set_run_info(self):
-        """
-        Updates the run info in the view.
-        """
 
-        mapping = dict.fromkeys(range(32))
-        start = self.run.start_time.translate(mapping)[21:]
-        end = self.run.end_time.translate(mapping)[21:]
-        events = self.run.events_str.translate(mapping)[20:]
-        comment = self.run.comment.translate(mapping)[11:]
+    def set_plot_range(self):
+        run = self.run
+        x_max = max([max(run.data[detector].x) for detector in run.loaded_detectors if run.data[detector].x.size > 0])
 
-        run_str = f"Run number: {self.run.run_num}\n\n{comment}\nEvents:{events}\n\nStart time:\n{start}\n\nEnd time:\n{end}"
-        """
-        self.run_number_label.setText(f"Run number {self.run.run_num}")
-        self.time_label.setText(f"Start time {self.run.start_time}, End time {self.run.end_time}")
-        self.events_label.setText(f"Events {self.run.events_str}")
-        """
-        self.comment_text.setText(f"{run_str}")
+        y_max = max([max(run.data[detector].y) for detector in run.loaded_detectors if run.data[detector].y.size > 0])
 
-        """
-        # lastly, resize all columns
-        self.treeWidget.resizeColumnToContents(0)
-        self.treeWidget.resizeColumnToContents(1)
-        self.treeWidget.resizeColumnToContents(2)
-        self.treeWidget.resizeColumnToContents(3)
-        """
+        self.x_upper_limit.setText(str(x_max * 1.1))
+        self.y_upper_limit.setText(str(y_max * 1.1))
 
     def closeEvent(self, event: QCloseEvent):
         self.save_and_close_requested_s.emit(event)
