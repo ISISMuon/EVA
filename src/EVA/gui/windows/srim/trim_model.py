@@ -32,7 +32,7 @@ class TrimModel(QObject):
             {
                 "name": "Cu",
                 "thickness": 0.5,
-                "density": 6.7
+                "density": 8.96
             }]
 
         # initialising layer variables
