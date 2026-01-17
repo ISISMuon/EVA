@@ -446,7 +446,6 @@ padding: 0;</string>
     <property name="title">
      <string>Plotting</string>
     </property>
-    <addaction name="plot_multiplot"/>
     <addaction name="fit_table_plot"/>
    </widget>
    <widget class="QMenu" name="settings_menu">

@@ -158,8 +158,8 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
 
     fig.suptitle(title)
 
-    if xlabel is not None:
-        fig.supxlabel(xlabel)
+    if run.plot_mode == "Time Plot":
+        fig.supxlabel(" Time (ns)")
     else:
         fig.supxlabel("Energy (keV)")
 
@@ -194,7 +194,13 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
         title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}")
 
     fig.suptitle(title)
+
     fig.supylabel(get_ylabel(run.normalisation))
+    if run.plot_mode == "Time Plot":
+        fig.supxlabel(" Time (ns)")
+    else:
+        fig.supxlabel("Energy (keV)")
+        
     if isinstance(axs, plt.Axes):
         axes = [axs]
     elif isinstance(axs, np.ndarray):
