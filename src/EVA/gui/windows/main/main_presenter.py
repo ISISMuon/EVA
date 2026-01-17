@@ -7,6 +7,8 @@ from EVA.gui.windows.main.main_model import MainModel
 from EVA.gui.windows.main.main_view import MainView
 from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
+from EVA.gui.windows.fit_table_plot.fit_table_plot_window import FitTablePlotWindow
+
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
@@ -40,7 +42,7 @@ class MainPresenter:
         self.view.muxray_sim_action.triggered.connect(self.open_model_muon_spectrum)
 
         self.view.general_settings.triggered.connect(self.open_general_settings_dialog)
-
+        self.view.fit_table_plot_action.triggered.connect(self.open_fit_table_plot)
         self.view.help_manual.triggered.connect(self.open_manual)
 
         self.view.get_next_run_button.clicked.connect(self.increment_run_num)
@@ -214,6 +216,19 @@ class MainPresenter:
 
         self.view.multiplot_windows.remove(window)
         window.widget().deleteLater()
+
+    def open_fit_table_plot(self):
+        """ Opens a tab for fit table plot. """
+        logger.info("Opening fit table plot window.")
+
+        window = FitTablePlotWindow(parent=self)
+        self.view.fit_table_plot_windows.append(window)
+
+        window.showMaximized()
+
+    def close_fit_table_plot(self, window):
+        self.view.fit_table_plot_windows.remove(window)
+        window.deleteLater()
 
     def open_manual(self):
         """ Opens manual window. """
