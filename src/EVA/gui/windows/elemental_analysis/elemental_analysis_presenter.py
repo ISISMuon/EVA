@@ -44,8 +44,32 @@ class ElementalAnalysisPresenter(object):
         self.view.routine_select_combo.addItems(self.model.peakfind_functions)
         self.view.routine_select_combo.setCurrentText(self.model.peakfind_selected_function)
 
-        #self.view.bin_size_spin_box.setMinimum(1)
-        #self.view.bin_size_spin_box.setMaximum(100)
+        plot_detectors = self.model.get_plot_detectors()
+
+        self.checkboxes = [
+            self.view.det1_checkbox,
+            self.view.det2_checkbox,
+            self.view.det3_checkbox,
+            self.view.det4_checkbox,
+        ]
+
+        # Loop through and set up checkboxes
+        for i, checkbox in enumerate(self.checkboxes):
+            if i < len(self.model.run.loaded_detectors):
+                label = self.model.run.loaded_detectors[i]
+
+                checkbox.setText(label)
+                checkbox.show()
+
+                # set checked state based on plot_detectors
+                checkbox.setChecked(label in plot_detectors)
+
+                # connect with frozen values
+                checkbox.checkStateChanged.connect(
+                    lambda state, name=label, cb=checkbox: self.checkbox_checked(state, name, cb)
+                )
+            else:
+                checkbox.hide()
 
         # set up all connections:
         self.view.mu_xray_search_width_line_edit.textEdited.connect(self.set_mu_xray_search_width)
@@ -72,22 +96,7 @@ class ElementalAnalysisPresenter(object):
 
         self.view.muon_search_button.clicked.connect(self.search_muonic_xrays)
         self.view.gamma_search_button.clicked.connect(self.search_gammas)
-
-        self.view.ge1_checkbox.checkStateChanged.connect(lambda x: self.checkbox_checked(x, "GE1",
-                                                                                         self.view.ge1_checkbox))
-        self.view.ge2_checkbox.checkStateChanged.connect(lambda x: self.checkbox_checked(x, "GE2",
-                                                                                         self.view.ge2_checkbox))
-        self.view.ge3_checkbox.checkStateChanged.connect(lambda x: self.checkbox_checked(x, "GE3",
-                                                                                         self.view.ge3_checkbox))
-        self.view.ge4_checkbox.checkStateChanged.connect(lambda x: self.checkbox_checked(x, "GE4",
-                                                                                         self.view.ge4_checkbox))
-
-        plot_detectors = self.model.get_plot_detectors()
-
-        self.view.ge1_checkbox.setChecked("GE1" in plot_detectors)
-        self.view.ge2_checkbox.setChecked("GE2" in plot_detectors)
-        self.view.ge3_checkbox.setChecked("GE3" in plot_detectors)
-        self.view.ge4_checkbox.setChecked("GE4" in plot_detectors)
+        
 
         self.view.window_closed_s.connect(self.model.close_figure)
 
@@ -391,10 +400,20 @@ class ElementalAnalysisPresenter(object):
             self.view.display_error_message(title="Detector not loaded", message=f"No data found for {detector}.")
             return
 
-        # if last detector has been
-        if len(self.model.get_plot_detectors()) == 1 and checked == False:
-            checkbox.setChecked(True)
-            return
+        # if last detector has been unchecked
+        if not checked:
+            # Count how many checkboxes are still checked
+            checked_boxes = [cb for cb in self.checkboxes if cb.isChecked()]
+
+            # If this was the last one
+            if len(checked_boxes) == 0:
+                # Recheck it immediately
+                checkbox.setChecked(True)
+                self.view.display_error_message(
+                    title="Invalid selection",
+                    message="At least one detector must remain selected."
+                )
+                return
 
         self.model.update_detector_plot_selection(checked, detector)
 
