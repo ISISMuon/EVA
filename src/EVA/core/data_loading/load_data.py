@@ -256,5 +256,5 @@ def load_run_nxs(run_num: str, working_directory: str,
         return run, flags
     
     except FileNotFoundError:
-        run = RunNexus.empty(str(run_num))
+        run = RunNexus.empty()
         return run, {"no_files_found": 1}

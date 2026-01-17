@@ -1,14 +1,14 @@
 import numpy as np
 
-def numpy_rebin(x0: np.ndarray, y0: np.ndarray, bin_size: int) -> tuple[np.ndarray, np.ndarray]:
+def numpy_rebin(x0: np.ndarray, y0: np.ndarray, bin_size: int, bin_range: tuple[float,float] = None) -> tuple[np.ndarray, np.ndarray]:
     """
-    Rebins data using numpy's histogram() function. Will use linear interpolation if bin rate is less than 1.
+    Rebins pre-binned data using numpy's histogram() function. Will use linear interpolation if bin rate is less than 1.
 
     Args:
         x0: input x-data
         y0: input y-data
         bin_size: bin size, must be positive.
-
+        bin_range: tuple specifying min and max range for binning. If none, full range of x_0 used for range.
     Returns:
         Rebinned data using numpy's 'histogram' function. If binning rate is greater than 1, the data will be rebinned
         according to numpy's 'histogram()'. If binning rate is less than 1, bin positions will be calculated from
@@ -23,7 +23,7 @@ def numpy_rebin(x0: np.ndarray, y0: np.ndarray, bin_size: int) -> tuple[np.ndarr
     n_bins = int(n_init / bin_size)
 
     # get the histogram (y-values) and bin edges (x-values) which are of size len(hist) + 1
-    hist, bin_edges = np.histogram(energies, n_bins)
+    hist, bin_edges = np.histogram(energies, n_bins, range=bin_range)
 
     hist = hist / bin_size
 
@@ -35,6 +35,27 @@ def numpy_rebin(x0: np.ndarray, y0: np.ndarray, bin_size: int) -> tuple[np.ndarr
         hist = np.interp(bin_centres, x0, y0)
 
     return bin_centres, hist
+
+
+def nxs_rebin(x_data: np.ndarray, bin_num: int, bin_range: tuple[float, float] = None):
+    """
+    Rebin raw data into desired bin sizes.
+
+    Args:
+        x0: input xvalues (energy bins)
+        y0: input yvalues (counts per bin)
+        bin_factor: bin size
+
+    Returns:
+        Rebinned data with bin centers for use with matplotlib step plots.
+    """
+    if range is None:
+        counts, bin_edges = np.histogram(x_data, bins=bin_num)
+    else:
+        counts, bin_edges = np.histogram(x_data, bins=bin_num, range=bin_range)
+
+    bin_centres = bin_edges[:-1] + (bin_edges[1]-bin_edges[0]) / 2
+    return bin_centres, counts
 
 def simple_rebin(x0: np.ndarray, y0: np.ndarray, bin_factor: int) -> tuple[np.ndarray, np.ndarray]:
     """
@@ -147,3 +168,9 @@ def rebin_interpolate(x0: np.ndarray, y0: np.ndarray, bin_size: int) -> tuple[np
     y1_binned = np.sum(y1.reshape(N_bins, bin_size), axis=1) # calculate total count in bin
 
     return x1_binned, y1_binned
+
+def bin_2d(x_data: np.ndarray, y_data: np.ndarray, num_bin: int, range_param: tuple[(tuple[float, float], tuple[float, float])]):
+
+    # Compute 2D histogram
+    H, xedges, yedges = np.histogram2d(x_data, y_data, bins=[num_bin, num_bin], range=range_param)
+    return H, xedges, yedges

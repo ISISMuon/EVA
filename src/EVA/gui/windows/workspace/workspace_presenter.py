@@ -36,7 +36,6 @@ class WorkspacePresenter:
         # Set up action bar connections
 
         self.view.plot_multiplot.triggered.connect(self.open_multiplot)
-        self.view.fit_table_plot.triggered.connect(self.open_fit_table_plot)
         for i, detector in enumerate(self.view.detector_list):
             self.view.peakfit_menu_actions[i].triggered.connect(lambda _, det=detector: self.open_peakfit(det))
 
