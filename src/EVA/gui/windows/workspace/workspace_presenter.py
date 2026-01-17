@@ -8,7 +8,6 @@ from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import EnergyC
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.windows.manual import manual_window
 from EVA.gui.windows.manual.manual_window import ManualWindow
-from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 from EVA.gui.windows.peakfit.peakfit_window import PeakFitWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
@@ -35,7 +34,6 @@ class WorkspacePresenter:
 
         # Set up action bar connections
 
-        self.view.plot_multiplot.triggered.connect(self.open_multiplot)
         for i, detector in enumerate(self.view.detector_list):
             self.view.peakfit_menu_actions[i].triggered.connect(lambda _, det=detector: self.open_peakfit(det))
 
@@ -208,14 +206,6 @@ class WorkspacePresenter:
         window.deleteLater()
 
     #### OPENING TABS ##################################################
-    def open_multiplot(self):
-        """ Opens a tab for multiplot. """
-        logger.info("Launching multiplot tab.")
-
-        window = MultiPlotWindow(parent=self)
-        self.view.open_new_tab(window.widget(), "Multi-Run Plot")
-
-
     def open_peakfit(self, detector):
         """ Opens a tab for peakfit. """
 

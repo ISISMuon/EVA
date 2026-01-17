@@ -16,9 +16,9 @@ def load_run(run_num: str, working_directory: str,
     brni_run, brni_flags = load_run_brni(run_num, working_directory, energy_corrections, normalisation, binning)
     nxs_run, nxs_flags = load_run_nxs(run_num, working_directory, energy_corrections, normalisation, binning, plot_mode, prompt_limit)
     if brni_flags["no_files_found"] == 1 and nxs_flags["no_files_found"] == 1:
-        return 0, {"no_files_found": 1}
+        return brni_run, {"no_files_found": 1} #uses the empty run implementation from brni as default
     if brni_flags["no_files_found"] == 0 and nxs_flags["no_files_found"] == 0:
-        return 0, {"duplicate_files_found": 1}
+        return brni_run, {"duplicate_files_found": 1}
 
     elif brni_flags["no_files_found"] == 0:
         return brni_run, brni_flags

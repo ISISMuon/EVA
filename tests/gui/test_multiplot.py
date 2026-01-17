@@ -25,12 +25,12 @@ class TestMultiPlotWindow:
         config = get_config()
 
         self.window = MultiPlotWindow()
-        self.view = self.window.widget()
+        self.view = self.window._view
 
         # set up test conditions
         config["default_corrections"]["normalisation"] = "none"
-        self.view.ge1_checkbox.setChecked(True)
-        self.view.ge3_checkbox.setChecked(True)
+        self.view.det1_checkbox.setChecked(True)
+        self.view.det3_checkbox.setChecked(True)
 
         qtbot.addWidget(self.view)
         self.window.show()
@@ -45,6 +45,7 @@ class TestMultiPlotWindow:
                     file = f"./test_data/ral0{run}.rooth{channels[detector]}.dat"
                     dets.append(np.loadtxt(file, delimiter=" "))
                 except FileNotFoundError:
+                    print("f")
                     pass
             data.append(dets)
         return data
@@ -54,9 +55,12 @@ class TestMultiPlotWindow:
         self.view.RunListTable.setItem(0, 0, QTableWidgetItem("3063"))
         qtbot.wait(TIME_DELAY)
 
+        qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
+        qtbot.wait(int(TIME_DELAY*1.5))
+        self.view.det2_checkbox.setChecked(False)
+        self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY*1.5))
-
         # load data manually and assert that plotted data matches the expected
         run_list = ["3063"]
         target_data = self.get_data(run_list, ["GE1", "GE3"])
@@ -74,6 +78,10 @@ class TestMultiPlotWindow:
         self.view.RunListTable.setItem(1, 0, QTableWidgetItem("3050"))
         qtbot.wait(TIME_DELAY)
 
+        qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
+        qtbot.wait(int(TIME_DELAY*1.5))
+        self.view.det2_checkbox.setChecked(False)
+        self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY*1.5))
 
@@ -104,6 +112,10 @@ class TestMultiPlotWindow:
         qtbot.wait(TIME_DELAY)
 
         # click button to load multi run
+        qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
+        qtbot.wait(int(TIME_DELAY*1.5))
+        self.view.det2_checkbox.setChecked(False)
+        self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY*1.5))
 
@@ -134,6 +146,10 @@ class TestMultiPlotWindow:
         qtbot.wait(TIME_DELAY)
 
         # click button to load multi run
+        qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
+        qtbot.wait(int(TIME_DELAY*1.5))
+        self.view.det2_checkbox.setChecked(False)
+        self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY*1.5))
 
@@ -160,6 +176,10 @@ class TestMultiPlotWindow:
         mocker.patch.object(QMessageBox, 'critical', return_value=QMessageBox.StandardButton.Ok)
 
         # click load without any data
+        qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
+        qtbot.wait(int(TIME_DELAY*1.5))
+        self.view.det2_checkbox.setChecked(False)
+        self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY*1.5))
 
@@ -172,6 +192,10 @@ class TestMultiPlotWindow:
         # try to load invalid run number 'A'
         self.view.RunListTable.setItem(0, 0, QTableWidgetItem("A"))
         qtbot.wait(TIME_DELAY)
+        qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
+        qtbot.wait(int(TIME_DELAY*1.5))
+        self.view.det2_checkbox.setChecked(False)
+        self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY*1.5))
 
