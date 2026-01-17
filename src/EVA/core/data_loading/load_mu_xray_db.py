@@ -66,6 +66,71 @@ def load_mudirac_data():
     read_file.close()
     return peak_data
 
+def load_extended_mudirac_data():
+    with open(get_path("src/EVA/databases/muonic_xrays/mudirac_data_extended_missing_intensities_unindented.json"), 'r') as read_file:
+
+        data = json.load(read_file)
+
+        primary_energies_all_isotopes = {}
+        secondary_energies_all_isotopes = {}
+        all_energies_all_isotopes = {}
+
+        primary_energies_default_isotope = {}
+        secondary_energies_default_isotope = {}
+        all_energies_default_isotope = {}
+
+        z_numbers = {}
+        capture_ratios = {}
+        abundancies = {}
+        infos = {}
+        isotope_names = {}
+
+        # sort data
+        for element, element_data in data.items():
+            default_isotope = element_data["Default"]
+            z_numbers[element] = element_data["Z"]
+            capture_prob = element_data["Capture ratio"].split("+-")
+            capture_ratios[element] = {"Value": float(capture_prob[0]), "Error": float(capture_prob[1])}
+            abundancies[element] = {}
+            infos[element] = element_data["Info"]
+            isotope_names[element] = list(element_data["Isotopes"].keys())
+
+            for isotope, isotope_data in element_data["Isotopes"].items():
+                primary_energy = isotope_data["Primary"]
+                secondary_energy = isotope_data["Secondary"]
+                abundancies[element][isotope] = isotope_data["Abundancy"]
+
+                # Insert isotope data into dictionaries
+                primary_energies_all_isotopes[isotope] = primary_energy
+                secondary_energies_all_isotopes[isotope] = secondary_energy
+                all_energies_all_isotopes[isotope] = dict(**primary_energy, **secondary_energy)
+
+                # If isotope is the default isotope into a separate set of dictionaries
+                if isotope == default_isotope:
+                    primary_energies_default_isotope[element] = primary_energy
+                    secondary_energies_default_isotope[element] = secondary_energy
+                    all_energies_default_isotope[element] = dict(**primary_energy, **secondary_energy)
+
+        # Default to using only most abundant isotope
+        peak_data = {
+            "Primary energies": primary_energies_default_isotope,
+            "Secondary energies": secondary_energies_default_isotope,
+            "All energies": all_energies_default_isotope,
+            "Atomic numbers": z_numbers,
+            "Capture ratios": capture_ratios,
+            "Infos": infos,
+            "Isotope names": isotope_names,
+            "Abundancies": abundancies,
+            "All isotopes": {
+                "Primary energies": primary_energies_all_isotopes,
+                "Secondary energies": secondary_energies_all_isotopes,
+                "All energies": all_energies_all_isotopes
+            }
+        }
+
+    read_file.close()
+    return peak_data
+
 def load_legacy_data():
 
     legacy_db_path = get_path('src/EVA/databases/muonic_xrays/peak_data.json')

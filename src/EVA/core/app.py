@@ -50,7 +50,8 @@ class App(QApplication):
         # load and store databases in app
         t0 = time.time_ns()
         self.gamma_database = load_gamma_db.load_gamma_data()
-        self.mudirac_muon_database = load_mu_xray_db.load_mudirac_data()
+        self.mudirac_muon_database_with_intensity = load_mu_xray_db.load_mudirac_data()
+        self.mudirac_muon_database = load_mu_xray_db.load_extended_mudirac_data()
         self.legacy_muon_database = load_mu_xray_db.load_legacy_data()
 
         with open(get_path("src/EVA/databases/electronic_xrays/xray_booklet_data.json")) as e_xray_file:

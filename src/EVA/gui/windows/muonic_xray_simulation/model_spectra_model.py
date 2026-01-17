@@ -21,9 +21,9 @@ class ModelSpectraModel(object):
         super().__init__()
         app = get_app()
 
-        self.element_names = app.mudirac_muon_database["Atomic numbers"].keys()
-        self.mu_capture_ratios = app.mudirac_muon_database["Capture ratios"]
-        self.energies = app.mudirac_muon_database
+        self.element_names = app.mudirac_muon_database_with_intensity["Atomic numbers"].keys()
+        self.mu_capture_ratios = app.mudirac_muon_database_with_intensity["Capture ratios"]
+        self.energies = app.mudirac_muon_database_with_intensity
 
         self.all_spectra = []
         self.all_transitions = []
