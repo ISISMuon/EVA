@@ -1,5 +1,5 @@
 import logging
-
+import os
 import matplotlib.backend_bases
 from matplotlib.backend_bases import MouseButton
 
@@ -25,13 +25,13 @@ class PeakFitPresenter(object):
         self.view.load_initial_params_button.clicked.connect(self.load_init_params)
         self.view.save_fit_report_button.clicked.connect(self.save_fit_report)
         self.view.save_fitted_model_button.clicked.connect(self.save_fitted_model)
+        self.view.fit_table_select_button.clicked.connect(self.browse_fit_table_file)
 
         self.view.add_model_button.clicked.connect(self.add_model)
         self.view.fit_model_button.clicked.connect(self.start_model_fit)
 
         self.view.fit_initial_params_button.clicked.connect(self.start_peakfit)
         self.view.plot_initial_params_button.clicked.connect(self.plot_initial)
-
         # display figure from model in the PlotWidget
         self.view.plot.update_plot(self.model.fig, self.model.axs)
         self.view.model_plot.update_plot(self.mf_model.fig, self.mf_model.axs)
@@ -328,6 +328,14 @@ class PeakFitPresenter(object):
         e_max = float(self.view.model_e_range_max_line_edit.text())
         return e_min, e_max
 
+    def browse_fit_table_file(self):
+        def_dir = get_config()["general"]["working_directory"]
+        path = self.view.get_load_file_path(default_dir=def_dir, file_filter="CSV files (*.csv)")
+        if path:
+            self.view.set_loaded_file_text(path)
+            get_config()["general"]["fit_table_save_file"] = path
+            logger.info("Selected fit table file: %s", path)
+
     def save_init_params(self):
         x_range = None if self.view.auto_e_range_checkbox.isChecked() else self.get_e_range()
         def_dir = get_config()["general"]["working_directory"]
@@ -360,10 +368,33 @@ class PeakFitPresenter(object):
             self.model.save_fit_report(path)
 
     def save_fitted_model(self):
-        def_dir = get_config()["general"]["working_directory"]
-        path = self.view.get_save_file_path(default_dir=def_dir, file_filter="JSON files (*.json)")
-        if path:
+        path = get_config()["general"]["fit_table_save_file"]
+        if not path:
+            self.view.display_error_message(message="No fit table file selected.")
+            return
+
+        parent_dir = os.path.dirname(path)
+        if parent_dir and not os.path.isdir(parent_dir):
+            self.view.display_error_message(
+                message="Selected directory does not exist."
+            )
+            return
+        if not self.model.fit_result:
+            self.view.display_error_message(message="Please perform a peak fit to save fitted model.")
+            return
+        if self.model.run.momentum < 0:
+            logger.warning("Run momentum not found, saving with value -100.")
+            self.view.display_error_message(
+                message="Run momentum not found, please manually replace -100 in fit table or "
+                    "place the .nxs_se file in same folder as the .nxs run file and try again."
+                
+            )
+
+        try:
             self.model.save_fitted_model(path)
+
+        except PermissionError:
+            self.view.display_error_message(message="Unable to save data to fit table, ensure it is not open elsewhere.")
 
     def add_model(self):
         def_dir = get_config()["general"]["working_directory"]

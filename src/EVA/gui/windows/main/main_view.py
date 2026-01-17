@@ -18,6 +18,7 @@ from EVA.core.app import get_config
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
+from EVA.gui.windows.fit_table_plot.fit_table_plot_window import FitTablePlotWindow
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
@@ -32,6 +33,7 @@ class MainView(QMainWindow):
     workspaces : list[WorkspaceWindow] = []
     model_spectra_windows : list[ModelSpectraWindow] = []
     manual_windows : list[ManualWindow] = []
+    fit_table_plot_windows : list[FitTablePlotWindow] = []
     multiplot_windows : list[MultiPlotWindow] = []
     srim_windows : list[TrimWindow] = []
     periodic_table_windows : list[PeriodicTableWidget] = []
@@ -58,10 +60,9 @@ class MainView(QMainWindow):
         self.general_settings = self.settings_menu.addAction("General settings")
         self.file_save = self.settings_menu.addAction("Save all settings")
         self.file_load_default = self.settings_menu.addAction('Load default settings')
-
         self.plotting_menu = self.bar.addMenu("Plotting")
         self.multiplot_action = self.plotting_menu.addAction("Multi-run Plot")
-
+        self.fit_table_plot_action = self.plotting_menu.addAction("Fit-Table Plot")
         self.tools_menu = self.bar.addMenu('Tools')
         self.srim_sim_action = self.tools_menu.addAction('SRIM/TRIM Simulation')
         self.periodic_table_action = self.tools_menu.addAction('Periodic Table')

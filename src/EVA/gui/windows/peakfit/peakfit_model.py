@@ -1,6 +1,8 @@
 import json
 import time
 import logging
+import os
+import csv
 from copy import copy, deepcopy
 
 import numpy as np
@@ -191,9 +193,9 @@ class PeakFitModel(QObject):
 			self.main_axs.legend()
 
 		def plot_residual(self):
+			x_data = self.fit_result.userkws["x"]
 			# Because for some reason, this is not always the case... The residuals could be calculated manually
 			# to avoid this, but it seems to only happen when the fit is really bad, so ignoring for now.
-			x_data = self.fit_result.userkws["x"]
 			if len(x_data) == len(self.fit_result.residual):
 				residual_data = self.fit_result.residual
 				self.residual_axs.plot(x_data, self.fit_result.residual, label="Residuals (Data - Best Fit)")
@@ -280,6 +282,64 @@ class PeakFitModel(QObject):
 						logger.debug("Saved fitted parameters to %s", path)
 
 				file.close()
+
+		def is_duplicate_param(self, new_peak, existing_peaks):
+			"""Check if new_peak is a duplicate within stderr bounds of existing peaks."""
+			for peak in existing_peaks:
+				duplicate = True
+				for key in ["center", "sigma", "amplitude"]:
+					val_new = new_peak[key]["value"]
+					err_new = new_peak[key]["stderr"]
+					val_existing = peak[key]["value"]
+					# consider it a duplicate if values overlap within 1-sigma
+					if not (val_existing - err_new <= val_new <= val_existing + err_new):
+						duplicate = False
+						break
+				if duplicate:
+					return True
+			return False
+		
+		def save_fitted_model(self, path: str):
+			if self.run.momentum < 0:
+				logger.warning("Run momentum not found, saving with value -100.")
+
+			momentum = self.run.momentum
+			run_number = self.run.run_num
+
+			file_exists = os.path.isfile(path)
+			with open(path, "a", newline="") as csvfile:
+				writer = csv.DictWriter(
+					csvfile,
+					fieldnames=[
+						"momentum",
+						"run_number",
+						"center_val",
+						"center_err",
+						"amplitude_val",
+						"amplitude_err",
+						"sigma_val",
+						"sigma_err",
+					]
+				)
+
+				# Write header only once
+				if not file_exists:
+					writer.writeheader()
+
+				for peak, params in self.fitted_peak_params.items():
+					row = {
+						"momentum": momentum,
+						"run_number": run_number,
+						"center_val": params["center"]["value"],
+						"center_err": params["center"]["stderr"],
+						"amplitude_val": params["amplitude"]["value"],
+						"amplitude_err": params["amplitude"]["stderr"],
+						"sigma_val": params["sigma"]["value"],
+						"sigma_err": params["sigma"]["stderr"],
+					}
+
+					writer.writerow(row)
+			logger.debug("Saved fitted parameters to CSV: %s", path)
 
 		def close_figures(self):
 				plt.close(self.fig)

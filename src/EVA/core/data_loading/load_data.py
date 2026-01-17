@@ -118,7 +118,7 @@ def load_run_brni(run_num: str, working_directory: str, energy_corrections: dict
             raw[detector] = Spectrum(detector=detector, run_number=run_num, x=np.array([]), y=np.array([]))
 
     # Add everything into a Run object
-    run = RunBiriani(raw=raw, loaded_detectors=detectors, run_num=str(run_num), comment_data=comment_data, momentum=0)
+    run = RunBiriani(raw=raw, loaded_detectors=detectors, run_num=str(run_num), comment_data=comment_data, momentum=-1)
 
     try:
         # Apply corrections

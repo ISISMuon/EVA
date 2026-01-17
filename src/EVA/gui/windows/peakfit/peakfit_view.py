@@ -1,4 +1,5 @@
 import logging
+import os
 from PyQt6.QtCore import pyqtSignal
 
 from PyQt6.QtWidgets import (
@@ -8,6 +9,8 @@ from PyQt6.QtWidgets import (
 )
 
 from EVA.gui.ui_files.peak_fit_gui import Ui_peak_fit
+# from EVA.gui.ui_files.scrollpeaktest_gui import Ui_peak_fit
+
 from EVA.gui.base.base_view import BaseView
 from EVA.core.app import get_config
 from EVA.gui.windows.peakfit.peakfit_presenter import PeakFitPresenter
@@ -23,7 +26,8 @@ class PeakFitView(BaseView, Ui_peak_fit):
     save_fit_report_s = pyqtSignal(str)
     peak_removal_requested_s = pyqtSignal(str)
     model_removal_requested_s = pyqtSignal(str)
-
+    select_fit_table_s = pyqtSignal(str)
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -64,7 +68,8 @@ class PeakFitView(BaseView, Ui_peak_fit):
 
         self.cancel_add_peak_button.hide()
         self.add_peak_label.hide()
-
+        self.set_loaded_file_text(get_config()["general"]["fit_table_save_file"])
+        
     def update_e_range_form(self, e_range: list):
         # Writes new energy range to energy range form
         self.e_range_min_line_edit.setText(f"{e_range[0]:.2f}")
@@ -88,9 +93,23 @@ class PeakFitView(BaseView, Ui_peak_fit):
             self.initial_model_params_table.setCellWidget(row, col, btn)
 
     def get_load_file_path(self, default_dir: str, file_filter: str) -> str:
-        file = QFileDialog.getOpenFileName(self, 'Load File', directory=default_dir, filter=file_filter)
-        if file:
-            return file[0]
+        dialog = QFileDialog(self, "Open or Create File", default_dir)
+        dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
+        dialog.setNameFilter(file_filter)
+
+        # Disable overwrite confirmation
+        dialog.setOption(QFileDialog.Option.DontConfirmOverwrite, True)
+
+        if dialog.exec() != QFileDialog.DialogCode.Accepted:
+            return ""
+
+        path = dialog.selectedFiles()[0]
+
+        # Ensure extension
+        if file_filter.endswith("(*.csv)") and not path.lower().endswith(".csv"):
+            path += ".csv"
+
+        return os.path.abspath(path)
 
     def get_save_file_path(self, default_dir: str, file_filter: str) -> str:
         file = QFileDialog.getSaveFileName(self, 'Save File', directory=default_dir, filter=file_filter)
@@ -108,3 +127,10 @@ class PeakFitView(BaseView, Ui_peak_fit):
                                                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                                                 QMessageBox.StandardButton.No)
         return reply == QMessageBox.StandardButton.Yes
+    
+    def set_loaded_file_text(self, filename: str):
+        if filename:
+            self.loaded_fit_table_label.setText(filename)
+        
+        else:
+            self.loaded_fit_table_label.setText("No file loaded.")

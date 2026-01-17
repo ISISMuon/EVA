@@ -10,6 +10,7 @@ from EVA.gui.windows.manual import manual_window
 from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 from EVA.gui.windows.peakfit.peakfit_window import PeakFitWindow
+from EVA.gui.windows.fit_table_plot.fit_table_plot_window import FitTablePlotWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
 from EVA.gui.windows.trim_fitting.trim_fit_widget import TrimFitWidget
@@ -42,7 +43,7 @@ class WorkspacePresenter:
         self.view.model_muon_spectrum.triggered.connect(self.open_model_muon_spectrum)
         self.view.periodic_table.triggered.connect(self.open_periodic_table)
         self.view.apply_run_settings_button.clicked.connect(self.on_apply_settings)
-
+        self.view.fit_table_plot.triggered.connect(self.open_fit_table_plot)
         self.view.energy_correction_settings.triggered.connect(self.open_energy_corrections_dialog)
         self.view.general_settings.triggered.connect(self.open_general_settings_dialog)
 
@@ -212,6 +213,13 @@ class WorkspacePresenter:
         logger.info("Launching peak fitting tab for %s.", detector)
         window = PeakFitWindow(self.view.run, detector, parent=self.view)
         self.view.open_new_tab(window.widget(), f"{detector} Peak Fitting")
+
+    def open_fit_table_plot(self, detector):
+        """ Opens a tab for peakfit. """
+
+        logger.info("Launching fit table plot tab.")
+        window = FitTablePlotWindow()
+        self.view.open_new_tab(window.widget(), "Fit Table Plotting")
 
     def open_trim(self):
         """ Opens a tab for TRIM. """

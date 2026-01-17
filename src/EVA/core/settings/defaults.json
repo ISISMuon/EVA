@@ -1,6 +1,8 @@
 {
   "general": {
     "working_directory": "./",
+    "fit_table_save_file": 0,
+    "fit_table_plot_file": 0,
     "default_run_num": "0000",
     "enabled_detectors": [
         "GE1",
@@ -54,7 +56,8 @@
         "GE5": true,
         "GE6": true,
         "GE7": true,
-        "GE8": true
+        "GE8": true,
+        "GE9": true
         },
     "detector_specific": {
       "GE1": {

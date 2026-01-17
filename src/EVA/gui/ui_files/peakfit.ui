@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>914</width>
-    <height>718</height>
+    <width>916</width>
+    <height>793</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -51,7 +51,7 @@
        <string>Gaussian Fitting</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="11" column="0">
+       <item row="14" column="0">
         <widget class="QTabWidget" name="bg_params_tabs">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -66,7 +66,7 @@
           </size>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="initial_bg_params_tab">
           <property name="sizePolicy">
@@ -215,17 +215,46 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QWidget" name="peak_menu_widget" native="true">
+        <widget class="QLabel" name="add_peak_label">
+         <property name="text">
+          <string>Click on a peak in the plot to select it.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="0">
+        <widget class="QLabel" name="bg_function_label">
+         <property name="text">
+          <string>Function: f(x) = ax² + bx + c</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="poly_bg_label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Polynomial background parameters</string>
+         </property>
+        </widget>
+       </item>
+       <item row="35" column="0" rowspan="2">
+        <widget class="QWidget" name="save_load_buttons" native="true">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
           <property name="topMargin">
            <number>0</number>
           </property>
@@ -235,49 +264,53 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item>
-           <widget class="QPushButton" name="add_peak_button">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="save_fit_report_button">
             <property name="text">
-             <string>Add peak</string>
+             <string>Save fit report</string>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="cancel_add_peak_button">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="save_initial_params_button">
             <property name="text">
-             <string>Cancel add peak</string>
+             <string>Save initial parameters</string>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="constraints_button">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+          <item row="3" column="0" colspan="3">
+           <widget class="QPushButton" name="save_fitted_model_button">
             <property name="text">
-             <string>Set up constraints</string>
+             <string>Save fitted model to fit table</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="load_initial_params_button">
+            <property name="text">
+             <string>Load initial parameters</string>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
-       <item row="24" column="0">
+       <item row="1" column="0">
+        <widget class="QLabel" name="peak_params_label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Peak parameters</string>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="0">
         <widget class="QFrame" name="fit_report_area">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -335,10 +368,10 @@
          </layout>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="5" column="0">
         <widget class="QTabWidget" name="peak_params_tabs">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="initial_peak_params_tab">
           <attribute name="title">
@@ -463,19 +496,7 @@
          </widget>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="peak_params_label">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Peak parameters</string>
-         </property>
-        </widget>
-       </item>
-       <item row="23" column="0">
+       <item row="26" column="0">
         <widget class="QLabel" name="fit_report_label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -493,14 +514,54 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
-        <widget class="QLabel" name="bg_function_label">
+       <item row="0" column="0">
+        <widget class="QWidget" name="fit_settings_widget" native="true">
+         <layout class="QGridLayout" name="gridLayout_3">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="e_range_max_line_edit"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="auto_e_range_checkbox">
+            <property name="text">
+             <string>Auto</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="auto_e_range_label">
+            <property name="text">
+             <string>Set energy range</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLineEdit" name="e_range_min_line_edit"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="8" column="0" rowspan="3">
+        <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
-          <string>Function: f(x) = ax² + bx + c</string>
+          <string>Fit Table</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="0">
+       <item row="16" column="0">
         <widget class="QWidget" name="plot_fit_buttons" native="true">
          <layout class="QGridLayout" name="gridLayout">
           <item row="2" column="0">
@@ -520,21 +581,59 @@
          </layout>
         </widget>
        </item>
-       <item row="32" column="0" rowspan="2">
-        <widget class="QWidget" name="save_load_buttons" native="true">
+       <item row="11" column="0">
+        <widget class="QWidget" name="widget_2" native="true">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
+         <property name="mouseTracking">
+          <bool>false</bool>
          </property>
-         <layout class="QGridLayout" name="gridLayout_6">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLabel" name="loaded_fit_table_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="fit_table_select_button">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Browse</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QWidget" name="peak_menu_widget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
           <property name="topMargin">
            <number>0</number>
           </property>
@@ -544,92 +643,46 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="save_initial_params_button">
+          <item>
+           <widget class="QPushButton" name="add_peak_button">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
-             <string>Save initial parameters</string>
+             <string>Add peak</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
-           <widget class="QPushButton" name="save_fit_report_button">
+          <item>
+           <widget class="QPushButton" name="cancel_add_peak_button">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
-             <string>Save fit report</string>
+             <string>Cancel add peak</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="load_initial_params_button">
-            <property name="text">
-             <string>Load initial parameters</string>
+          <item>
+           <widget class="QPushButton" name="constraints_button">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="3">
-           <widget class="QPushButton" name="save_fitted_model_button">
             <property name="text">
-             <string>Save fitted model</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="add_peak_label">
-         <property name="text">
-          <string>Click on a peak in the plot to select it.</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QWidget" name="fit_settings_widget" native="true">
-         <layout class="QGridLayout" name="gridLayout_3">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <item row="0" column="3">
-           <widget class="QLineEdit" name="e_range_max_line_edit"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLineEdit" name="e_range_min_line_edit"/>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="auto_e_range_label">
-            <property name="text">
-             <string>Set energy range</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="auto_e_range_checkbox">
-            <property name="text">
-             <string>Auto</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>Set up constraints</string>
             </property>
            </widget>
           </item>
          </layout>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="poly_bg_label">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Polynomial background parameters</string>
-         </property>
         </widget>
        </item>
       </layout>
@@ -1120,7 +1173,7 @@
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header>EVA.gui.widgets.plot.plot_widget</header>
+   <header location="global">EVA.widgets.plot.plot_widget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
