@@ -77,7 +77,8 @@ class FitTablePlotView(BaseView, Ui_fit_table_plot):
 
         # Set table headers
         self.fit_table_data_table.setColumnCount(4)
-
+        self.fit_table_data_table.setHorizontalHeaderItem(2, QTableWidgetItem(model.plot_parameter.capitalize())
+)
         for run_num, momentum, parameter, stderr in zip(model.run_num_list, model.momentum_list, model.parameter_list, model.stderr_list):
             row_position = self.fit_table_data_table.rowCount()
             self.fit_table_data_table.insertRow(row_position)

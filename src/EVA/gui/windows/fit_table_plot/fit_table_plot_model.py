@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from EVA.core.app import get_config
 logger = logging.getLogger(__name__)
 
+parameter_units = {"center": "KeV", "amplitude": "Counts", "sigma": "KeV"}
+
 class FitTablePlotModel(QObject):
     def __init__(self, parent=None):
         super().__init__()
@@ -74,7 +76,7 @@ class FitTablePlotModel(QObject):
                 plot_parameter: row[plot_parameter]["value"],
                 "stderr": row[plot_parameter]["stderr"],
             })
-
+        self.plot_parameter = plot_parameter
         return filtered_data
         
     def plot_fit_table_data(self, momentum_range: tuple[float, float], energy_range: tuple[float, float], plot_parameter: str):
@@ -105,10 +107,10 @@ class FitTablePlotModel(QObject):
         self.axs.plot(self.momentum_list, self.parameter_list, linestyle='--', color='gray', alpha=0.5)
         self.axs.legend()
         self.axs.grid(True)
-
+        
         self.axs.set_title(f"{plot_parameter.capitalize()} vs Momentum")
         self.axs.set_xlabel("Momentum (MeV/c)")
-        self.axs.set_ylabel(plot_parameter.capitalize())
+        self.axs.set_ylabel(plot_parameter.capitalize() + f" ({parameter_units.get(plot_parameter, '')})")
 
     def save_plot_data(self, file_path: str, file_extension: str, plot_parameter: str):
         if file_extension == "Text Files (*.txt)":
