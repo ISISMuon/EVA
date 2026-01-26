@@ -13,8 +13,10 @@ from EVA.core.plot.plotting import plot_run, Plot_Peak_Location, replot_run
 
 logger = logging.getLogger(__name__)
 
+
 class ElementalAnalysisModel(QObject):
-    """ Model to handle the logic in the elemental analysis window """
+    """Model to handle the logic in the elemental analysis window"""
+
     def __init__(self, run: Run):
         """
         Args:
@@ -31,7 +33,10 @@ class ElementalAnalysisModel(QObject):
         self.default_threshold = 15
         self.default_distance = 1
 
-        self.peakfind_functions = ["SciPy find_peaks()", "SciPy find_peaks() w/ background filter"]
+        self.peakfind_functions = [
+            "SciPy find_peaks()",
+            "SciPy find_peaks() w/ background filter",
+        ]
         self.peakfind_selected_function = self.peakfind_functions[1]
 
         self.peakfind_result = []
@@ -51,8 +56,14 @@ class ElementalAnalysisModel(QObject):
 
         """
         config = get_config()
-        show_plot = config.get_run_save(config["general"]["working_directory"], self.run.run_num)["show_plot"]
-        plot_detectors = [det for det, show in show_plot.items() if show and det in self.run.loaded_detectors]
+        show_plot = config.get_run_save(
+            config["general"]["working_directory"], self.run.run_num
+        )["show_plot"]
+        plot_detectors = [
+            det
+            for det, show in show_plot.items()
+            if show and det in self.run.loaded_detectors
+        ]
 
         return plot_detectors
 
@@ -67,7 +78,9 @@ class ElementalAnalysisModel(QObject):
 
         # check config to see which detectors should be loaded
         colour = config["plot"]["fill_colour"]
-        return plot_run(self.run, show_detectors=self.get_plot_detectors(), colour=colour)
+        return plot_run(
+            self.run, show_detectors=self.get_plot_detectors(), colour=colour
+        )
 
     def plot_vlines_all_gammas(self, isotope: str) -> str | None:
         """
@@ -80,17 +93,31 @@ class ElementalAnalysisModel(QObject):
         """
         name = f"{isotope} (γ)"
         if name in self.plotted_gamma_lines.keys():
-            return # skip if element has already been plotted
+            return  # skip if element has already been plotted
 
         res = get_match.search_gammas_single_isotope(isotope)
 
-        next_colour = self.axs[0]._get_lines.get_next_color() # save next colour so that all lines have the same colour
+        next_colour = (
+            self.axs[0]._get_lines.get_next_color()
+        )  # save next colour so that all lines have the same colour
 
-        energies = [float([match['isotope'], match['energy'], match['intensity'], match['lifetime']][1]) for match in res]
+        energies = [
+            float(
+                [
+                    match["isotope"],
+                    match["energy"],
+                    match["intensity"],
+                    match["lifetime"],
+                ][1]
+            )
+            for match in res
+        ]
 
         for energy in energies:
             for i in range(len(self.axs)):
-                self.axs[i].axvline(energy, color=next_colour, linestyle='--', label=name)
+                self.axs[i].axvline(
+                    energy, color=next_colour, linestyle="--", label=name
+                )
 
         self.plotted_gamma_lines[name] = (energies, next_colour)
 
@@ -110,17 +137,22 @@ class ElementalAnalysisModel(QObject):
 
         name = f"{isotope} {energy}keV (γ)"
         if name in self.plotted_gamma_lines.keys():
-            return # ignore if it's already been plotted
+            return  # ignore if it's already been plotted
 
         res = get_match.search_gammas_single_transition(isotope, energy)
         for match in res:
-            rowres = [match['isotope'], match['energy'], match['intensity'], match['lifetime']]
+            rowres = [
+                match["isotope"],
+                match["energy"],
+                match["intensity"],
+                match["lifetime"],
+            ]
             next_colour = self.axs[0]._get_lines.get_next_color()
 
             for i in range(len(self.axs)):
                 self.axs[i].axvline(
-                    float(rowres[1]), color=next_colour, linestyle='--',
-                    label=name)
+                    float(rowres[1]), color=next_colour, linestyle="--", label=name
+                )
 
             self.plotted_gamma_lines[name] = (rowres[1], next_colour)
         return name
@@ -138,17 +170,22 @@ class ElementalAnalysisModel(QObject):
 
         name = f"{element} (μ)"
         if name in self.plotted_mu_xray_lines.keys():
-            return None # ignore if it's already been plotted
+            return None  # ignore if it's already been plotted
 
         res = get_match.search_muxrays_single_element(element)
 
-        energies = [float([match['element'], match['energy'], match['transition']][1]) for match in res]
+        energies = [
+            float([match["element"], match["energy"], match["transition"]][1])
+            for match in res
+        ]
 
         next_colour = self.axs[0]._get_lines.get_next_color()
 
         for energy in energies:
             for i in range(len(self.axs)):
-                self.axs[i].axvline(energy, color=next_colour, linestyle='--', label=name)
+                self.axs[i].axvline(
+                    energy, color=next_colour, linestyle="--", label=name
+                )
 
         self.plotted_mu_xray_lines[name] = (energies, next_colour)
         return name
@@ -167,17 +204,17 @@ class ElementalAnalysisModel(QObject):
 
         name = f"{element} {transition} (μ)"
         if name in self.plotted_mu_xray_lines.keys():
-            return None # ignore if it's already been plotted
+            return None  # ignore if it's already been plotted
 
         res = get_match.search_muxrays_single_transition(element, transition)
         next_colour = self.axs[0]._get_lines.get_next_color()
 
         for match in res:
-            rowres = [match['element'], match['energy'], match['transition']]
+            rowres = [match["element"], match["energy"], match["transition"]]
             for i in range(len(self.axs)):
                 self.axs[i].axvline(
-                    float(rowres[1]), color=next_colour, linestyle='--',
-                    label=name)
+                    float(rowres[1]), color=next_colour, linestyle="--", label=name
+                )
 
         self.plotted_mu_xray_lines[name] = (rowres[1], next_colour)
         return name
@@ -190,9 +227,10 @@ class ElementalAnalysisModel(QObject):
         """
 
         for i in range(len(self.axs)):
-
             # search for all lines with label == element
-            lines_to_remove = [line for line in self.axs[i].lines if line.get_label() == name]
+            lines_to_remove = [
+                line for line in self.axs[i].lines if line.get_label() == name
+            ]
             num = len(lines_to_remove)
             for j in range(num):
                 lines_to_remove[j].remove()
@@ -208,7 +246,9 @@ class ElementalAnalysisModel(QObject):
 
         for i in range(len(self.axs)):
             # search for all lines with label == element
-            lines_to_remove = [line for line in self.axs[i].lines if line.get_label() == name]
+            lines_to_remove = [
+                line for line in self.axs[i].lines if line.get_label() == name
+            ]
             num = len(lines_to_remove)
 
             for j in range(num):
@@ -230,7 +270,8 @@ class ElementalAnalysisModel(QObject):
             for energy in energies:
                 for i in range(len(self.axs)):
                     self.axs[i].axvline(
-                        float(energy), color=colour, linestyle='--', label=label)
+                        float(energy), color=colour, linestyle="--", label=label
+                    )
 
         for label, values in self.plotted_gamma_lines.items():
             energies, colour = values
@@ -241,10 +282,10 @@ class ElementalAnalysisModel(QObject):
             for energy in energies:
                 for i in range(len(self.axs)):
                     self.axs[i].axvline(
-                        float(energy), color=colour, linestyle='--', label=label)
+                        float(energy), color=colour, linestyle="--", label=label
+                    )
 
         self.update_legend()
-
 
     def update_legend(self):
         """
@@ -254,13 +295,15 @@ class ElementalAnalysisModel(QObject):
         for i in range(len(self.axs)):
             # get all unique labels for the legend to avoid duplicates when plotting multiple lines with same name
             h, l = self.axs[i].get_legend_handles_labels()
-            by_label = dict(zip(l, h)) # gets only unique labels
+            by_label = dict(zip(l, h))  # gets only unique labels
 
             # remove legend if there are no labels left
             if len(by_label) == 0 and self.axs[i].get_legend() is not None:
                 self.axs[i].get_legend().remove()
             else:
-                self.axs[i].legend(by_label.values(), by_label.keys(), loc="upper right")
+                self.axs[i].legend(
+                    by_label.values(), by_label.keys(), loc="upper right"
+                )
 
     def search_gammas(self, x: float) -> list[dict]:
         """
@@ -301,13 +344,22 @@ class ElementalAnalysisModel(QObject):
         """
 
         config = get_config()
-        logger.debug("Running peak finding method '%s' with height = %s, threshold = %s, distance = %s.",
-                     self.peakfind_selected_function, self.default_height, self.default_threshold, self.default_distance)
+        logger.debug(
+            "Running peak finding method '%s' with height = %s, threshold = %s, distance = %s.",
+            self.peakfind_selected_function,
+            self.default_height,
+            self.default_threshold,
+            self.default_distance,
+        )
 
         # get selected function
-        if self.peakfind_selected_function == self.peakfind_functions[0]: # scipy version
+        if (
+            self.peakfind_selected_function == self.peakfind_functions[0]
+        ):  # scipy version
             func = find_peaks.findpeaks
-        elif self.peakfind_selected_function == self.peakfind_functions[1]: # custom function
+        elif (
+            self.peakfind_selected_function == self.peakfind_functions[1]
+        ):  # custom function
             func = find_peaks.findpeak_with_bck_removed
         else:
             raise ValueError("Invalid peak find method specified!")
@@ -317,27 +369,39 @@ class ElementalAnalysisModel(QObject):
         peakfind_res = {}
         result_simplified = []
         config = get_config()
-        show_plot = config.get_run_save(config["general"]["working_directory"], self.run.run_num)["show_plot"]
+        show_plot = config.get_run_save(
+            config["general"]["working_directory"], self.run.run_num
+        )["show_plot"]
         for dataset in self.run.data.values():
             # only find peaks in data which is plotted
 
             if show_plot[dataset.detector]:
                 peakfind_res[dataset.detector] = {}
-                peaks, peaks_pos = func(dataset.x, dataset.y,
-                                        self.default_height, self.default_threshold, self.default_distance)
+                peaks, peaks_pos = func(
+                    dataset.x,
+                    dataset.y,
+                    self.default_height,
+                    self.default_threshold,
+                    self.default_distance,
+                )
 
                 peak_indices = peaks[0]
                 peak_positions = dataset.x[peak_indices]
-
 
                 # search first once to get all transitions
                 default_peaks = peak_positions
                 default_sigma = [1] * len(default_peaks)
                 input_data = list(zip(default_peaks, default_sigma))
-                res_all, _, _, = get_match.search_muxrays(input_data)
+                (
+                    res_all,
+                    _,
+                    _,
+                ) = get_match.search_muxrays(input_data)
 
                 out = sort_match.sort_match(res_all)
-                result_simplified.append([dataset.detector, str(dict(list(out.items())))])
+                result_simplified.append(
+                    [dataset.detector, str(dict(list(out.items())))]
+                )
 
                 # search then for each peak
                 for peak in peak_positions:
@@ -345,7 +409,11 @@ class ElementalAnalysisModel(QObject):
 
                     default_sigma = [1] * len(default_peaks)
                     input_data = list(zip(default_peaks, default_sigma))
-                    res_all, _, _, = get_match.search_muxrays(input_data)
+                    (
+                        res_all,
+                        _,
+                        _,
+                    ) = get_match.search_muxrays(input_data)
                     peakfind_res[dataset.detector][peak] = res_all
 
                 Plot_Peak_Location(self.axs[i], dataset.x, dataset.y, peak_indices)
@@ -369,8 +437,11 @@ class ElementalAnalysisModel(QObject):
         axes = [self.axs] if not isinstance(self.axs, np.ndarray) else self.axs
 
         for ax in axes:
-            fill_obj = [child for child in ax.get_children() if
-                        isinstance(child, matplotlib.collections.FillBetweenPolyCollection)][0]
+            fill_obj = [
+                child
+                for child in ax.get_children()
+                if isinstance(child, matplotlib.collections.FillBetweenPolyCollection)
+            ][0]
 
             # re-colour the histogram
             fill_obj.set_data(fill_color=colour)
@@ -385,7 +456,9 @@ class ElementalAnalysisModel(QObject):
         """
         # generate figure
         config = get_config()
-        show_plot = config.get_run_save(config["general"]["working_directory"], self.run.run_num)["show_plot"]
+        show_plot = config.get_run_save(
+            config["general"]["working_directory"], self.run.run_num
+        )["show_plot"]
         if show_detector:
             show_plot[detector] = True
             logger.debug("Enabled %s for plotting.", detector)
@@ -397,7 +470,9 @@ class ElementalAnalysisModel(QObject):
         self.plot_all_current_vlines()
 
     def replot_all_run_data(self):
-        replot_run(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
+        replot_run(
+            self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"]
+        )
 
     def close_figure(self):
         plt.close(self.fig)

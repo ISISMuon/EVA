@@ -8,10 +8,11 @@ class TestSRIM:
     @pytest.fixture(autouse=True)
     def setup(self):
         # use function below to set up sample
-        #sample_layers, sample_names, total_thickness, sample_density = self.make_setupsample()
+        # sample_layers, sample_names, total_thickness, sample_density = self.make_setupsample()
 
         # create trim model instance
         self.trim_model = TrimModel()
+
     """
     
         # set sample values in the model

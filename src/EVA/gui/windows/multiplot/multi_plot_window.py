@@ -5,8 +5,10 @@ from EVA.gui.windows.multiplot.multi_plot_model import MultiPlotModel
 from EVA.gui.windows.multiplot.multi_plot_presenter import MultiPlotPresenter
 from EVA.gui.windows.multiplot.multi_plot_view import MultiPlotView
 
+
 class MultiPlotWindow(BaseWindow):
-    """ Coordinator class to string together the MVP components of the multi plot window """
+    """Coordinator class to string together the MVP components of the multi plot window"""
+
     def __init__(self):
         """
         Args:

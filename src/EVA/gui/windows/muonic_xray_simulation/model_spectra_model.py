@@ -13,34 +13,52 @@ from EVA.core.physics.functions import quadratic, line, gaussian
 logger = logging.getLogger(__name__)
 from EVA.util.path_handler import get_path
 
+
 class ModelSpectraModel(object):
     """
     Model for generating muonic xray spectra
     """
+
     def __init__(self):
         super().__init__()
         app = get_app()
 
-        self.element_names = app.mudirac_muon_database_with_intensity["Atomic numbers"].keys()
-        self.mu_capture_ratios = app.mudirac_muon_database_with_intensity["Capture ratios"]
+        self.element_names = app.mudirac_muon_database_with_intensity[
+            "Atomic numbers"
+        ].keys()
+        self.mu_capture_ratios = app.mudirac_muon_database_with_intensity[
+            "Capture ratios"
+        ]
         self.energies = app.mudirac_muon_database_with_intensity
 
         self.all_spectra = []
         self.all_transitions = []
 
-        with open(get_path("src/EVA/databases/names/transition_notations_mathtext.json"), encoding="utf-8") as file:
+        with open(
+            get_path("src/EVA/databases/names/transition_notations_mathtext.json"),
+            encoding="utf-8",
+        ) as file:
             self.notations = json.load(file)
             file.close()
 
-        self.linear_e_res = np.loadtxt(get_path("./src/EVA/databases/detectors/energy_resolution_linear.txt"),
-                                    delimiter=",", skiprows=1, dtype=float)
-        self.quadratic_e_res = np.loadtxt(get_path("./src/EVA/databases/detectors/energy_resolution_quadratic.txt"),
-                                    delimiter=",", skiprows=1, dtype=float)
+        self.linear_e_res = np.loadtxt(
+            get_path("./src/EVA/databases/detectors/energy_resolution_linear.txt"),
+            delimiter=",",
+            skiprows=1,
+            dtype=float,
+        )
+        self.quadratic_e_res = np.loadtxt(
+            get_path("./src/EVA/databases/detectors/energy_resolution_quadratic.txt"),
+            delimiter=",",
+            skiprows=1,
+            dtype=float,
+        )
 
         self.fig, self.ax = None, None
 
-
-    def calculate_sigma(self, e_res_model: str, mean: np.ndarray, detector_name: str) -> np.ndarray:
+    def calculate_sigma(
+        self, e_res_model: str, mean: np.ndarray, detector_name: str
+    ) -> np.ndarray:
         """
 
         Args:
@@ -54,22 +72,41 @@ class ModelSpectraModel(object):
             ValueError: if invalid energy res model is specified.
         """
         if e_res_model == "linear":
-            detector_energy_res = self.linear_e_res[DetectorIndices[detector_name].value]
+            detector_energy_res = self.linear_e_res[
+                DetectorIndices[detector_name].value
+            ]
             sigma = line(mean, detector_energy_res[1], detector_energy_res[2]) / (
-                    2 * np.sqrt(2 * np.log(2)))
+                2 * np.sqrt(2 * np.log(2))
+            )
 
         elif e_res_model == "quadratic":
-            detector_energy_res = self.quadratic_e_res[DetectorIndices[detector_name].value]
-            sigma = quadratic(mean, detector_energy_res[1], detector_energy_res[2],
-                              detector_energy_res[3]) / (2 * np.sqrt(2 * np.log(2)))
+            detector_energy_res = self.quadratic_e_res[
+                DetectorIndices[detector_name].value
+            ]
+            sigma = quadratic(
+                mean,
+                detector_energy_res[1],
+                detector_energy_res[2],
+                detector_energy_res[3],
+            ) / (2 * np.sqrt(2 * np.log(2)))
         else:
             raise ValueError("Invalid energy resolution model")
 
         return sigma
 
-
-    def model_spectrum(self, elements, proportions, detectors, e_range=None, dx=1, e_res_model="linear",
-                 notation=0, show_components=False, show_primary=True, show_secondary=False):
+    def model_spectrum(
+        self,
+        elements,
+        proportions,
+        detectors,
+        e_range=None,
+        dx=1,
+        e_res_model="linear",
+        notation=0,
+        show_components=False,
+        show_primary=True,
+        show_secondary=False,
+    ):
         """
         Args:
             elements: list of element names to simulate for
@@ -87,10 +124,20 @@ class ModelSpectraModel(object):
 
         """
         logger.info("Modelling spectrum for %s.", elements)
-        logger.debug("Settings: elements = %s, proportions = %s, dx = %s, show_primary = %s, "
-                     "show_secondary = %s, show_components = %s, detectors = %s, "
-                     "energy_resolution_model = %s, notation = %s.", elements, proportions, dx, show_primary,
-                     show_secondary, show_components, detectors, e_res_model, notation)
+        logger.debug(
+            "Settings: elements = %s, proportions = %s, dx = %s, show_primary = %s, "
+            "show_secondary = %s, show_components = %s, detectors = %s, "
+            "energy_resolution_model = %s, notation = %s.",
+            elements,
+            proportions,
+            dx,
+            show_primary,
+            show_secondary,
+            show_components,
+            detectors,
+            e_res_model,
+            notation,
+        )
 
         t0 = time.time_ns()
 
@@ -131,8 +178,16 @@ class ModelSpectraModel(object):
 
                         # Store all transition info in dictionary
                         transitions.append(
-                            {"name": trans, "E": mean, "sigma": sigma, "weights": weights, "type": "primary",
-                             "element": element, "intensity": intensity})
+                            {
+                                "name": trans,
+                                "E": mean,
+                                "sigma": sigma,
+                                "weights": weights,
+                                "type": "primary",
+                                "element": element,
+                                "intensity": intensity,
+                            }
+                        )
 
                 if show_secondary:
                     for trans in sec_trans:
@@ -142,8 +197,16 @@ class ModelSpectraModel(object):
                         sigma = sigma_model(mean, *sigma_params)
 
                         transitions.append(
-                            {"name": trans, "E": mean, "sigma": sigma, "weights": weights, "type": "secondary",
-                             "element": element, "intensity": intensity})
+                            {
+                                "name": trans,
+                                "E": mean,
+                                "sigma": sigma,
+                                "weights": weights,
+                                "type": "secondary",
+                                "element": element,
+                                "intensity": intensity,
+                            }
+                        )
 
             # sort list of all transitions by ascending energy
             transitions = sorted(transitions, key=lambda d: d["E"])
@@ -160,9 +223,15 @@ class ModelSpectraModel(object):
             # calculate gaussian for each curve and sum all curves to obtain total curve
             g_time_start = time.time_ns()
             for trans in transitions:
-
-                trans["curve"] = (gaussian(xdata, mean=trans["E"], sigma=trans["sigma"], intensity=trans["intensity"])
-                                  * trans["weights"])
+                trans["curve"] = (
+                    gaussian(
+                        xdata,
+                        mean=trans["E"],
+                        sigma=trans["sigma"],
+                        intensity=trans["intensity"],
+                    )
+                    * trans["weights"]
+                )
                 total += trans["curve"]
 
             g_time_end = time.time_ns()
@@ -179,13 +248,20 @@ class ModelSpectraModel(object):
             ax.set_ylim((0, np.max(spectrum.y) * 1.25))
 
             if show_components:
-                self.plot_components(ax, spectrum=spectrum, transitions=transitions, notation_index=notation)
+                self.plot_components(
+                    ax,
+                    spectrum=spectrum,
+                    transitions=transitions,
+                    notation_index=notation,
+                )
 
-            plt.subplots_adjust(top=0.9, bottom=0.1, left=0.1, right=0.9, hspace=0.45, wspace=0.23)
+            plt.subplots_adjust(
+                top=0.9, bottom=0.1, left=0.1, right=0.9, hspace=0.45, wspace=0.23
+            )
             ax.legend()
 
         t1 = time.time_ns()
-        logger.info("Spectrum modelled in %ss.", round((t1-t0)/1e9, 4))
+        logger.info("Spectrum modelled in %ss.", round((t1 - t0) / 1e9, 4))
 
         self.fig = fig
         self.ax = axs
@@ -199,38 +275,54 @@ class ModelSpectraModel(object):
             ax.plot(spectrum.x, trans["curve"], color=color)
 
             # Calculate peak height
-            peak_height = (trans["intensity"] * trans["weights"]) / (trans["sigma"] * np.sqrt(2 * np.pi))
+            peak_height = (trans["intensity"] * trans["weights"]) / (
+                trans["sigma"] * np.sqrt(2 * np.pi)
+            )
 
             spec_name = trans["name"]
             element = trans["element"]
 
-            font = {
-                "size": 7,
-                "family": "sans-serif",
-                "color": color
-            }
+            font = {"size": 7, "family": "sans-serif", "color": color}
 
             # y_offset = (peak_height * 0.03) if i % 2 else (peak_height * 0.2) raise every other label
             y_offset = peak_height * 0.05
 
-            if notation_index == 0: # siegbahn notation
+            if notation_index == 0:  # siegbahn notation
                 name = self.notations[spec_name][1]
                 if not name:
-                    continue # skip if peak does not have siegbahn name
+                    continue  # skip if peak does not have siegbahn name
 
                 font["size"] = 9
-                ax.text(x=trans["E"], y=peak_height + y_offset, s=rf"{element} ${name}$",
-                        fontdict=font, horizontalalignment="center", rotation="vertical")
+                ax.text(
+                    x=trans["E"],
+                    y=peak_height + y_offset,
+                    s=rf"{element} ${name}$",
+                    fontdict=font,
+                    horizontalalignment="center",
+                    rotation="vertical",
+                )
 
-            elif notation_index == 1: # spectroscopic notation
+            elif notation_index == 1:  # spectroscopic notation
                 name = spec_name
-                ax.text(x=trans["E"], y=peak_height + y_offset, s=f"{element} {name}",
-                        fontdict=font, horizontalalignment="center", rotation="vertical")
+                ax.text(
+                    x=trans["E"],
+                    y=peak_height + y_offset,
+                    s=f"{element} {name}",
+                    fontdict=font,
+                    horizontalalignment="center",
+                    rotation="vertical",
+                )
 
-            elif notation_index == 2: # iupac notation
+            elif notation_index == 2:  # iupac notation
                 name = self.notations[spec_name][0]
-                ax.text(x=trans["E"], y=peak_height + y_offset, s=f"{element} {name}",
-                        fontdict=font, horizontalalignment="center", rotation="vertical")
+                ax.text(
+                    x=trans["E"],
+                    y=peak_height + y_offset,
+                    s=f"{element} {name}",
+                    fontdict=font,
+                    horizontalalignment="center",
+                    rotation="vertical",
+                )
             else:
                 raise ValueError("Invalid notation index!")
 

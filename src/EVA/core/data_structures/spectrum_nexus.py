@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 import h5py
 import numpy as np
+
+
 @dataclass
 class SpectrumNexus:
     detector: str

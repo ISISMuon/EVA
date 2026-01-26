@@ -17,10 +17,16 @@ class RunBiriani(Run):
         self.events_str = comment_data[2]
         self.comment = comment_data[3]
 
-    def set_corrections(self, energy_corrections=None, normalisation=None,
-                        normalise_which=None, bin_rate=None, default_bin=None,
-                        plot_mode=None, prompt_limit=None):
-        
+    def set_corrections(
+        self,
+        energy_corrections=None,
+        normalisation=None,
+        normalise_which=None,
+        bin_rate=None,
+        default_bin=None,
+        plot_mode=None,
+        prompt_limit=None,
+    ):
         if normalise_which is None:
             normalise_which = self.normalise_which
 
@@ -43,6 +49,7 @@ class RunBiriani(Run):
                 self.data[detector].y = self.data[detector].y
         self.normalisation = "counts"
         self.normalise_which = normalise_which
+
     def _set_normalisation_events(self, normalise_which):
         try:
             spills = int(self.events_str[19:])

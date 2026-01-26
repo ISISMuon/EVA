@@ -1,5 +1,6 @@
 import numpy as np
 
+
 # Normalisation by 100000 counts
 def normalise_counts(ydata: np.ndarray) -> np.ndarray:
     """

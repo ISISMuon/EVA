@@ -4,9 +4,24 @@ from PyQt6.QtWidgets import (
     QDialog,
     QGridLayout,
     QLabel,
-    QTextEdit, QPushButton, QTableWidget, QComboBox, QWidget, QHBoxLayout, QLineEdit, QVBoxLayout, QScrollArea,
-    QCheckBox, QTabWidget, QFormLayout, QSizePolicy, QDialogButtonBox, QTableWidgetItem, QMessageBox
+    QTextEdit,
+    QPushButton,
+    QTableWidget,
+    QComboBox,
+    QWidget,
+    QHBoxLayout,
+    QLineEdit,
+    QVBoxLayout,
+    QScrollArea,
+    QCheckBox,
+    QTabWidget,
+    QFormLayout,
+    QSizePolicy,
+    QDialogButtonBox,
+    QTableWidgetItem,
+    QMessageBox,
 )
+
 
 class ParameterConstraintWidget(QScrollArea):
     def __init__(self, parameter_names):
@@ -16,7 +31,9 @@ class ParameterConstraintWidget(QScrollArea):
         self.description = QLabel()
 
         # See https://lmfit.github.io/lmfit-py/constraints.html#supported-operators-functions-and-constants
-        self.description.setText("Constrain a parameter with a function expression. \nExample: p0_sigma = 2*p1_sigma")
+        self.description.setText(
+            "Constrain a parameter with a function expression. \nExample: p0_sigma = 2*p1_sigma"
+        )
         self.description.setMaximumHeight(50)
 
         self.parameter_name_labels = []
@@ -37,10 +54,11 @@ class ParameterConstraintWidget(QScrollArea):
             self.parameter_constraint_line_edits.append(line_edit)
             self.parameter_name_labels.append(label)
 
-            self.content_layout.addWidget(label, i+2, 0)
-            self.content_layout.addWidget(line_edit, i+2, 1)
+            self.content_layout.addWidget(label, i + 2, 0)
+            self.content_layout.addWidget(line_edit, i + 2, 1)
 
         self.content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
 
 class ParametersBoundsWidget(QWidget):
     def __init__(self, param_names):
@@ -63,6 +81,7 @@ class ParametersBoundsWidget(QWidget):
         self.layout.addWidget(self.description)
         self.layout.addWidget(self.table)
 
+
 class ParameterFixedWidget(QWidget):
     def __init__(self, available_params):
         super().__init__()
@@ -70,16 +89,19 @@ class ParameterFixedWidget(QWidget):
         self.setLayout(self.layout)
         self.checkboxes = []
 
-        self.description = QLabel("Ticked parameters will NOT be optimised and will remain at initial values.")
+        self.description = QLabel(
+            "Ticked parameters will NOT be optimised and will remain at initial values."
+        )
         self.description.setFixedHeight(25)
         self.layout.addWidget(self.description, 0, 0)
 
         for i, param in enumerate(available_params):
-            #row, col = divmod(i, 2)
+            # row, col = divmod(i, 2)
             self.checkboxes.append(QCheckBox(param))
-            self.layout.addWidget(self.checkboxes[i], i+1, 0)
+            self.layout.addWidget(self.checkboxes[i], i + 1, 0)
 
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
 
 class ConstraintsWindow(QDialog):
     param_settings_saved_s = pyqtSignal(dict)
@@ -100,7 +122,9 @@ class ConstraintsWindow(QDialog):
         # Displays all parameters in model and their initial values
         self.current_param_names = QLabel("Initial values")
         self.current_param_names_text_edit = QTextEdit()
-        self.current_param_names_text_edit.setText("\n".join(self.parameter_names_and_values))
+        self.current_param_names_text_edit.setText(
+            "\n".join(self.parameter_names_and_values)
+        )
         self.current_param_names_text_edit.setReadOnly(True)
         self.current_param_names_text_edit.setMaximumWidth(200)
 
@@ -135,9 +159,9 @@ class ConstraintsWindow(QDialog):
         # Add everything to layout
         self.layout.addWidget(self.current_param_names, 0, 0)
         self.layout.addWidget(self.current_param_names_text_edit, 1, 0, 3, 1)
-        #self.layout.addWidget(self.presets_label, 0, 1)
-        #self.layout.addWidget(self.preset_share_sigma, 1, 1)
-        #self.layout.addWidget(self.preset_share_area, 1, 2)
+        # self.layout.addWidget(self.presets_label, 0, 1)
+        # self.layout.addWidget(self.preset_share_sigma, 1, 1)
+        # self.layout.addWidget(self.preset_share_area, 1, 2)
         self.layout.addWidget(self.tabs, 1, 1, 3, -1)
         self.layout.addWidget(self.button_box, 4, 1, 1, -1)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -148,7 +172,7 @@ class ConstraintsWindow(QDialog):
         names_and_values = []
         for p in self.params:
             for var in self.params[p]:
-                names_and_values.append(f"{p}_{var} = {self.params[p][var]["value"]}")
+                names_and_values.append(f"{p}_{var} = {self.params[p][var]['value']}")
 
         return names_and_values
 
@@ -167,12 +191,16 @@ class ConstraintsWindow(QDialog):
 
             # load bounds data
             if obj.get("min", None) is not None:
-                self.bounds_menu.table.setItem(i, 0, QTableWidgetItem(f"{obj["min"]:.2f}"))
+                self.bounds_menu.table.setItem(
+                    i, 0, QTableWidgetItem(f"{obj['min']:.2f}")
+                )
             else:
                 self.bounds_menu.table.setItem(i, 0, QTableWidgetItem())
 
             if obj.get("max", None) is not None:
-                self.bounds_menu.table.setItem(i, 1, QTableWidgetItem(f"{obj["max"]:.2f}"))
+                self.bounds_menu.table.setItem(
+                    i, 1, QTableWidgetItem(f"{obj['max']:.2f}")
+                )
             else:
                 self.bounds_menu.table.setItem(i, 0, QTableWidgetItem())
 
@@ -184,7 +212,9 @@ class ConstraintsWindow(QDialog):
 
             # load constraints
             if obj.get("expr", None) is not None:
-                self.constraints_menu.parameter_constraint_line_edits[i].setText(obj["expr"])
+                self.constraints_menu.parameter_constraint_line_edits[i].setText(
+                    obj["expr"]
+                )
             else:
                 self.constraints_menu.parameter_constraint_line_edits[i].setText("")
 
@@ -196,10 +226,11 @@ class ConstraintsWindow(QDialog):
 
             # load constraints
             if obj.get("expr", None) is not None:
-                self.constraints_menu.parameter_constraint_line_edits[i].setText(obj["expr"])
+                self.constraints_menu.parameter_constraint_line_edits[i].setText(
+                    obj["expr"]
+                )
             else:
                 self.constraints_menu.parameter_constraint_line_edits[i].setText("")
-
 
     def save_current_settings(self):
         for i, param in enumerate(self.parameter_names):
@@ -209,7 +240,9 @@ class ConstraintsWindow(QDialog):
             lower_bound = self.bounds_menu.table.item(i, 0)
             upper_bound = self.bounds_menu.table.item(i, 1)
 
-            constraint = self.constraints_menu.parameter_constraint_line_edits[i].text().strip()
+            constraint = (
+                self.constraints_menu.parameter_constraint_line_edits[i].text().strip()
+            )
 
             is_fixed = self.set_fixed_menu.checkboxes[i].isChecked()
 
@@ -239,18 +272,22 @@ class ConstraintsWindow(QDialog):
         # NOTE: WILL BREAK IF ID SYSTEM IS CHANGED
         constraint = f"p0_{param_name}"
         for i, name in enumerate(self.constraints_menu.parameter_name_labels):
-            prefix, text = name.text().split("_") # get text from label and get prefix
-            var = text.split(" = ")[0] # get parameter name
+            prefix, text = name.text().split("_")  # get text from label and get prefix
+            var = text.split(" = ")[0]  # get parameter name
 
             if prefix != "background" and prefix != "p0" and var == param_name:
-                self.constraints_menu.parameter_constraint_line_edits[i].setText(constraint)
+                self.constraints_menu.parameter_constraint_line_edits[i].setText(
+                    constraint
+                )
 
     def on_apply(self):
         # save settings
         try:
             self.save_current_settings()
         except ValueError:
-            _ = QMessageBox.critical(self, "Constraint error", "Invalid bounds specified.")
+            _ = QMessageBox.critical(
+                self, "Constraint error", "Invalid bounds specified."
+            )
             return
         self.param_settings_saved_s.emit(self.params)
         self.close()

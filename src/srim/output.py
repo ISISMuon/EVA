@@ -1,7 +1,8 @@
-""" Read output files of SRIM simulation
+"""Read output files of SRIM simulation
 
 TODO: Read header information
 """
+
 import os
 import re
 from io import BytesIO
@@ -11,13 +12,14 @@ import numpy as np
 from .core.ion import Ion
 
 # Valid double_regex 4, 4.0, 4.0e100
-double_regex = r'[-+]?\d+\.?\d*(?:[eE][-+]?\d+)?'
-symbol_regex = r'[A-Z][a-z]?'
-int_regex = '[+-]?\d+'
+double_regex = r"[-+]?\d+\.?\d*(?:[eE][-+]?\d+)?"
+symbol_regex = r"[A-Z][a-z]?"
+int_regex = "[+-]?\d+"
 
 
 class SRIMOutputParseError(Exception):
     """SRIM error reading output file"""
+
     pass
 
 
@@ -26,29 +28,32 @@ class SRIM_Output(object):
         raise NotImplementedError()
 
     def _read_ion(self, output):
-        ion_regex = 'Ion\s+=\s+({})\s+Energy\s+=\s+({})\s+keV'.format(
-            symbol_regex, double_regex)
-        match = re.search(ion_regex.encode('utf-8'), output)
+        ion_regex = "Ion\s+=\s+({})\s+Energy\s+=\s+({})\s+keV".format(
+            symbol_regex, double_regex
+        )
+        match = re.search(ion_regex.encode("utf-8"), output)
         if match:
-            symbol = str(match.group(1).decode('utf-8'))
-            energy = float(match.group(2)) #keV
+            symbol = str(match.group(1).decode("utf-8"))
+            energy = float(match.group(2))  # keV
             return Ion(symbol, 1000.0 * energy)
         raise SRIMOutputParseError("unable to extract ion from file")
 
     def _read_target(self, output):
-        match_target = re.search(b'(?<=====\r\n)Layer\s+\d+\s+:.*?(?=====)', output, re.DOTALL)
+        match_target = re.search(
+            b"(?<=====\r\n)Layer\s+\d+\s+:.*?(?=====)", output, re.DOTALL
+        )
         if match_target:
             print(match_target.group(0))
             layer_regex = (
-                'Layer\s+(?P<i>\d+)\s+:\s+(.+)\r\n'
-                'Layer Width\s+=\s+({0})\s+A\s+;\r\n'
-                '\s+Layer #\s+(?P=i)- Density = ({0}) atoms/cm3 = ({0}) g/cm3\r\n'
-                '((?:\s+Layer #\s+(?P=i)-\s+{1}\s+=\s+{0}\s+Atomic Percent = {0}\s+Mass Percent\r\n)+)'
+                "Layer\s+(?P<i>\d+)\s+:\s+(.+)\r\n"
+                "Layer Width\s+=\s+({0})\s+A\s+;\r\n"
+                "\s+Layer #\s+(?P=i)- Density = ({0}) atoms/cm3 = ({0}) g/cm3\r\n"
+                "((?:\s+Layer #\s+(?P=i)-\s+{1}\s+=\s+{0}\s+Atomic Percent = {0}\s+Mass Percent\r\n)+)"
             ).format(double_regex, symbol_regex)
-            layers = re.findall(layer_regex.encode('utf-8'), match_target.group(0))
+            layers = re.findall(layer_regex.encode("utf-8"), match_target.group(0))
             if layers:
                 element_regex = (
-                    '\s+Layer #\s+(\d+)-\s+({1})\s+=\s+({0})\s+Atomic Percent = ({0})\s+Mass Percent\r\n'
+                    "\s+Layer #\s+(\d+)-\s+({1})\s+=\s+({0})\s+Atomic Percent = ({0})\s+Mass Percent\r\n"
                 ).format(double_regex, symbol_regex)
                 element_regex = element_regex.encode()
 
@@ -60,22 +65,20 @@ class SRIM_Output(object):
                 raise NotImpementedError()
 
                 import pytest
+
                 pytest.set_trace()
 
         raise SRIMOutputParseError("unable to extract total target from file")
 
     def _read_num_ions(self, output):
-        match = re.search(b'Total Ions calculated\s+=(\d+.\d+)', output)
+        match = re.search(b"Total Ions calculated\s+=(\d+.\d+)", output)
         if match:
             # Cast string -> float -> round down to nearest int
             return int(float(match.group(1)))
         raise SRIMOutputParseError("unable to extract total ions from file")
 
     def _read_table(self, output):
-        match = re.search((
-            b'=+(.*)'
-            b'-+(?:\s+-+)+'
-        ), output, re.DOTALL)
+        match = re.search((b"=+(.*)-+(?:\s+-+)+"), output, re.DOTALL)
         # Read Data from table
 
         if match:
@@ -83,13 +86,13 @@ class SRIM_Output(object):
             header = None
 
             # Data
-            data = np.genfromtxt(BytesIO(output[match.end():]), max_rows=100)
+            data = np.genfromtxt(BytesIO(output[match.end() :]), max_rows=100)
             return data
         raise SRIMOutputParseError("unable to extract table from file")
 
 
 class Results(object):
-    """ Gathers all results from folder
+    """Gathers all results from folder
 
     Parameters
     ----------
@@ -106,8 +109,9 @@ class Results(object):
       - ``PHONON.txt`` handled by :class:`srim.output.Phonons`
       - ``RANGE.txt`` handled by :class:`srim.output.Range`
     """
+
     def __init__(self, directory):
-        """ Retrives all the calculation files in a given directory"""
+        """Retrives all the calculation files in a given directory"""
         self.ioniz = Ioniz(directory)
         self.vacancy = Vacancy(directory)
 
@@ -131,8 +135,9 @@ class Ioniz(SRIM_Output):
     filename : :obj:`str`, optional
          filename for Ioniz. Default ``IONIZ.txt``
     """
-    def __init__(self, directory, filename='IONIZ.txt'):
-        with open(os.path.join(directory, filename), 'rb') as f:
+
+    def __init__(self, directory, filename="IONIZ.txt"):
+        with open(os.path.join(directory, filename), "rb") as f:
             output = f.read()
             ion = self._read_ion(output)
             num_ions = self._read_num_ions(output)
@@ -146,7 +151,7 @@ class Ioniz(SRIM_Output):
 
     @property
     def ion(self):
-        """ Ion used in SRIM calculation
+        """Ion used in SRIM calculation
 
         **mass** could be wrong
         """
@@ -154,12 +159,12 @@ class Ioniz(SRIM_Output):
 
     @property
     def num_ions(self):
-        """ Number of Ions in SRIM simulation """
+        """Number of Ions in SRIM simulation"""
         return self._num_ions
 
     @property
     def depth(self):
-        """ Depth [Ang] of bins in SRIM Calculation """
+        """Depth [Ang] of bins in SRIM Calculation"""
         return self._depth
 
     @property
@@ -185,8 +190,9 @@ class Vacancy(SRIM_Output):
     filename : :obj:`str`, optional
          filename for Vacancy. Default ``VACANCY.txt``
     """
-    def __init__(self, directory, filename='VACANCY.txt'):
-        with open(os.path.join(directory, filename), 'rb') as f:
+
+    def __init__(self, directory, filename="VACANCY.txt"):
+        with open(os.path.join(directory, filename), "rb") as f:
             output = f.read()
             ion = self._read_ion(output)
             num_ions = self._read_num_ions(output)
@@ -200,7 +206,7 @@ class Vacancy(SRIM_Output):
 
     @property
     def ion(self):
-        """ Ion used in SRIM calculation
+        """Ion used in SRIM calculation
 
         **mass** could be wrong
         """
@@ -228,7 +234,7 @@ class Vacancy(SRIM_Output):
 
 
 class NoVacancy(SRIM_Output):
-    """ ``NOVAC.txt`` Table of Replacement Collisions
+    """``NOVAC.txt`` Table of Replacement Collisions
 
     Parameters
     ----------
@@ -237,14 +243,16 @@ class NoVacancy(SRIM_Output):
     filename : :obj:`str`, optional
          filename for NoVacancy. Default ``NOVAC.txt``
     """
-    def __init__(self, directory, filename='NOVAC.txt'):
-        with open(os.path.join(directory, filename), 'rb') as f:
+
+    def __init__(self, directory, filename="NOVAC.txt"):
+        with open(os.path.join(directory, filename), "rb") as f:
             output = f.read()
 
             # Check if it is KP calculation
-            if re.search(b'Recoil/Damage Calculations made with Kinchin-Pease Estimates',
-                         output):
-                raise ValueError('NOVAC has no data for KP calculations')
+            if re.search(
+                b"Recoil/Damage Calculations made with Kinchin-Pease Estimates", output
+            ):
+                raise ValueError("NOVAC has no data for KP calculations")
 
             ion = self._read_ion(output)
             num_ions = self._read_num_ions(output)
@@ -257,7 +265,7 @@ class NoVacancy(SRIM_Output):
 
     @property
     def ion(self):
-        """ Ion used in SRIM calculation
+        """Ion used in SRIM calculation
 
         **mass** could be wrong
         """
@@ -289,8 +297,9 @@ class EnergyToRecoils(SRIM_Output):
     filename : :obj:`str`, optional
          filename for EnergyToRecoils. Default ``E2RECOIL.txt``
     """
-    def __init__(self, directory, filename='E2RECOIL.txt'):
-        with open(os.path.join(directory, filename), 'rb') as f:
+
+    def __init__(self, directory, filename="E2RECOIL.txt"):
+        with open(os.path.join(directory, filename), "rb") as f:
             output = f.read()
             ion = self._read_ion(output)
             num_ions = self._read_num_ions(output)
@@ -344,8 +353,9 @@ class Phonons(SRIM_Output):
     filename : :obj:`str`, optional
          filename for Phonons. Default ``PHONON.txt``
     """
-    def __init__(self, directory, filename='PHONON.txt'):
-        with open(os.path.join(directory, filename), 'rb') as f:
+
+    def __init__(self, directory, filename="PHONON.txt"):
+        with open(os.path.join(directory, filename), "rb") as f:
             output = f.read()
             ion = self._read_ion(output)
             num_ions = self._read_num_ions(output)
@@ -397,8 +407,9 @@ class Range(SRIM_Output):
     filename : :obj:`str`, optional
          filename for Range. Default ``RANGE.txt``
     """
-    def __init__(self, directory, filename='RANGE.txt'):
-        with open(os.path.join(directory, filename), 'rb') as f:
+
+    def __init__(self, directory, filename="RANGE.txt"):
+        with open(os.path.join(directory, filename), "rb") as f:
             output = f.read()
             ion = self._read_ion(output)
             num_ions = self._read_num_ions(output)
@@ -439,28 +450,30 @@ class Range(SRIM_Output):
         return self._elements
 
 
-
 class Backscat(object):
-    """ The kinetics of all backscattered ions (energy, location and trajectory)
+    """The kinetics of all backscattered ions (energy, location and trajectory)
 
     TODO: one day to be implemented! submit pull request please!
     """
+
     pass
 
 
 class Transmit(object):
-    """ The kinetics of all transmitted ions (energy, location and trajectory)
+    """The kinetics of all transmitted ions (energy, location and trajectory)
 
     TODO: one day to be implemented! submit pull request please!
     """
+
     pass
 
 
 class Sputter(object):
-    """ The kinetics of all target atoms sputtered from the target.
+    """The kinetics of all target atoms sputtered from the target.
 
     TODO: one day to be implemented! submit pull request please!
     """
+
     pass
 
 
@@ -481,7 +494,8 @@ class Collision:
          filename for Collisions. Default ``COLLISON.txt``
 
     """
-    def __init__(self, directory, filename='COLLISON.txt'):
+
+    def __init__(self, directory, filename="COLLISON.txt"):
         self.filename = os.path.join(directory, filename)
 
         with open(self.filename, encoding="latin-1") as f:
@@ -514,7 +528,7 @@ class Collision:
         # Notice that lines is an generator!
         # This makes it so we can walk through lines
         # in multiple for loops
-        lines = (line for line in ion_str.split('\n'))
+        lines = (line for line in ion_str.split("\n"))
 
         # Skip Ion Header
         for line in lines:
@@ -533,11 +547,9 @@ class Collision:
             # Check if a full_cascades simulation
             # Read Cascade information
             if re.match(r"\s+<== Start of New Cascade\s+", tokens[-1]):
-                (target_disp,
-                 target_vac,
-                 target_replac,
-                 target_inter,
-                 cascade) = self._read_cascade(lines)
+                (target_disp, target_vac, target_replac, target_inter, cascade) = (
+                    self._read_cascade(lines)
+                )
             else:
                 target_disp = float(tokens[8])
                 target_vac = 0
@@ -545,25 +557,27 @@ class Collision:
                 target_inter = 0
                 cascade = None
 
-            collisions.append({
-                'ion_number': int(tokens[0]),
-                'kinetic_energy': float(tokens[1]),
-                'depth': float(tokens[2]),
-                'lat_y_dist': float(tokens[3]),
-                'lat_z_dist': float(tokens[4]),
-                'stopping_energy': float(tokens[5]),
-                'atom': re.search("([A-Z][a-z]?)", tokens[6]).group(1),
-                'recoil_energy': float(tokens[7]),
-                'target_disp': target_disp,
-                'target_vac': target_vac,
-                'target_replac': target_replac,
-                'target_inter': target_inter,
-                'cascade': cascade
-            })
+            collisions.append(
+                {
+                    "ion_number": int(tokens[0]),
+                    "kinetic_energy": float(tokens[1]),
+                    "depth": float(tokens[2]),
+                    "lat_y_dist": float(tokens[3]),
+                    "lat_z_dist": float(tokens[4]),
+                    "stopping_energy": float(tokens[5]),
+                    "atom": re.search("([A-Z][a-z]?)", tokens[6]).group(1),
+                    "recoil_energy": float(tokens[7]),
+                    "target_disp": target_disp,
+                    "target_vac": target_vac,
+                    "target_replac": target_replac,
+                    "target_inter": target_inter,
+                    "cascade": cascade,
+                }
+            )
 
             # Handles weird case where no summary of cascade
             if target_disp is None:
-                break;
+                break
 
         # Reads ion footer
         ion_number = re.search(int_regex, next(lines)).group(0)
@@ -579,20 +593,20 @@ class Collision:
         line = next(lines)
 
         return {
-            'ion_number': int(ion_number),
-            'displacements': float(matches[0]),
-            'avg_displacements': float(matches[1]),
-            'replacements': float(matches[2]),
-            'avg_replacements': float(matches[3]),
-            'vacancies': float(matches[4]),
-            'avg_vacancies': float(matches[5]),
-            'interstitials': float(matches[6]),
-            'avg_interstitials': float(matches[7]),
-            'sputtered_atoms': float(matches[8]),
-            'avg_sputtered_atoms': float(matches[9]),
-            'transmitted_atoms': float(matches[10]),
-            'avg_transmitted_atoms': float(matches[11]),
-            'collisions': collisions
+            "ion_number": int(ion_number),
+            "displacements": float(matches[0]),
+            "avg_displacements": float(matches[1]),
+            "replacements": float(matches[2]),
+            "avg_replacements": float(matches[3]),
+            "vacancies": float(matches[4]),
+            "avg_vacancies": float(matches[5]),
+            "interstitials": float(matches[6]),
+            "avg_interstitials": float(matches[7]),
+            "sputtered_atoms": float(matches[8]),
+            "avg_sputtered_atoms": float(matches[9]),
+            "transmitted_atoms": float(matches[10]),
+            "avg_transmitted_atoms": float(matches[11]),
+            "collisions": collisions,
         }
 
     def _read_cascade(self, lines):
@@ -600,12 +614,14 @@ class Collision:
 
         assert re.match("^=+\r$", line)
 
-
         line = next(lines)
-        assert re.match((
+        assert re.match(
+            (
                 "  Recoil Atom Energy\(eV\)   X \(A\)      Y \(A\)      Z \(A\)"
                 "   Vac Repl Ion Numb \d+="
-        ), line)
+            ),
+            line,
+        )
 
         cascade = []
         for line in lines:
@@ -614,25 +630,26 @@ class Collision:
             tokens = line.split()[1:-1]
 
             print(tokens)
-            cascade.append({
-                'recoil': int(tokens[0]),
-                'atom': int(tokens[1]),
-                'recoil_energy': float(tokens[2]),
-                'position': np.array([float(tokens[3]),
-                                      float(tokens[4]),
-                                      float(tokens[5])]),
-                'vac': int(tokens[6]),
-                'repl': int(tokens[7])
-            })
+            cascade.append(
+                {
+                    "recoil": int(tokens[0]),
+                    "atom": int(tokens[1]),
+                    "recoil_energy": float(tokens[2]),
+                    "position": np.array(
+                        [float(tokens[3]), float(tokens[4]), float(tokens[5])]
+                    ),
+                    "vac": int(tokens[6]),
+                    "repl": int(tokens[7]),
+                }
+            )
 
-        if line.count('=') > 100:
+        if line.count("=") > 100:
             return None, None, None, None, cascade
 
         line = next(lines)
         tokens = line.split(chr(179))[1:-1]
 
         if tokens:
-
             target_disp = float(tokens[2])
             target_vac = float(tokens[3])
             target_replac = float(tokens[4])
@@ -651,13 +668,13 @@ class Collision:
         if i == len(self._ion_index):
             end = os.path.getsize(self.filename)
         else:
-            end = self._ion_index[i+1]
+            end = self._ion_index[i + 1]
 
         with open(self.filename, "rb") as f:
             f.seek(start)
             # We assume that ion_str will fit in RAM
             ion_str = f.read(end - start)
-            return self._read_ion(ion_str.decode('latin-1'))
+            return self._read_ion(ion_str.decode("latin-1"))
 
     def __len__(self):
         return len(self._ion_index) - 1
@@ -665,7 +682,7 @@ class Collision:
 
 def buffered_findall(filename, string, start=0):
     """A method of reading a file in buffered pieces (needed for HUGE files)"""
-    with open(filename, 'rb') as f:
+    with open(filename, "rb") as f:
         filesize = os.path.getsize(filename)
         BUFFERSIZE = 4096
         overlap = len(string) - 1
@@ -676,7 +693,7 @@ def buffered_findall(filename, string, start=0):
             f.seek(start)
 
         while True:
-            if (f.tell() >= overlap and f.tell() < filesize):
+            if f.tell() >= overlap and f.tell() < filesize:
                 f.seek(f.tell() - overlap)
             buffer = f.read(BUFFERSIZE)
             if buffer:
@@ -688,12 +705,13 @@ def buffered_findall(filename, string, start=0):
             else:
                 return positions
 
+
 class SRResults(object):
     """Read SR_OUTPUT.txt file generated by pysrim SR.run()"""
 
-    def __init__(self, directory, filename='SR_OUTPUT.txt'):
-        '''reads the file named SR_OUTPUT.txt in SR_Module folder'''
-        with open(os.path.join(directory, filename), 'rb') as f:
+    def __init__(self, directory, filename="SR_OUTPUT.txt"):
+        """reads the file named SR_OUTPUT.txt in SR_Module folder"""
+        with open(os.path.join(directory, filename), "rb") as f:
             output = f.read()
 
         self._units = self._read_stopping_units(output)
@@ -702,26 +720,31 @@ class SRResults(object):
         self._target = self._read_target_info(output)
 
     def _read_stopping_units(self, output):
-        '''read stopping units used in the calculation'''
-        match = re.search(br'\s+Stopping Units\s+=+\s+(?P<stopping_units>.*)\s+\r\n', output)
-        out_string = match.group(1).decode('utf-8')
+        """read stopping units used in the calculation"""
+        match = re.search(
+            rb"\s+Stopping Units\s+=+\s+(?P<stopping_units>.*)\s+\r\n", output
+        )
+        out_string = match.group(1).decode("utf-8")
         return out_string
 
     def _read_ion_info(self, output):
-        '''Example line to read from the file:
-        Ion = Nickel       [28] , Mass = 58.6934 amu'''
-        projectile_rexep = r'Ion\s+=\s+(.*?)\s+\[({})\]\s+, Mass\s+=\s({})\s+amu+\r\n'.format(int_regex, double_regex)
-        match = re.findall(projectile_rexep.encode('utf-8'), output, re.DOTALL)
+        """Example line to read from the file:
+        Ion = Nickel       [28] , Mass = 58.6934 amu"""
+        projectile_rexep = (
+            r"Ion\s+=\s+(.*?)\s+\[({})\]\s+, Mass\s+=\s({})\s+amu+\r\n".format(
+                int_regex, double_regex
+            )
+        )
+        match = re.findall(projectile_rexep.encode("utf-8"), output, re.DOTALL)
         out_dict = {
-            'name': match[0][0].decode('utf-8'),
-            'Z1': int(match[0][1]),
-            'A1': float(match[0][2])
+            "name": match[0][0].decode("utf-8"),
+            "Z1": int(match[0][1]),
+            "A1": float(match[0][2]),
         }
         return out_dict
 
-
     def _read_target_info(self, output):
-        '''lines to find from the file:
+        """lines to find from the file:
         Density =  2.3210E+00 g/cm3 = 4.9766E+22 atoms/cm3
         ======= Target  Composition ========
            Atom   Atom   Atomic    Mass
@@ -729,24 +752,28 @@ class SRResults(object):
            ----   ----   -------   -------
             Si     14    100.00    100.00
         ====================================
-        '''
+        """
 
         # first read the density info from the file
-        density_reexp = r'Density\s+=\s+({})\s+g/cm3\s+=\s({})\s+atoms/cm3'.format(double_regex, double_regex)
+        density_reexp = r"Density\s+=\s+({})\s+g/cm3\s+=\s({})\s+atoms/cm3".format(
+            double_regex, double_regex
+        )
 
-        density_match = re.search(density_reexp.encode('utf-8'), output)
+        density_match = re.search(density_reexp.encode("utf-8"), output)
 
-        density = np.array([density_match.group(1),density_match.group(2)], dtype='float')
+        density = np.array(
+            [density_match.group(1), density_match.group(2)], dtype="float"
+        )
 
         # find the target composition table
-        table_regexp = r'=*\s+Target\s+Composition\s+=*\r\n(.*\r\n){3}((?:\s*.+\s\r\n)+)\s=*\r\n\s+Bragg Correction'#.format(symbol_regex, int_regex, double_regex, double_regex)#(=*)\r\n'
-        table_match = re.search(table_regexp.encode('utf-8'), output)
+        table_regexp = r"=*\s+Target\s+Composition\s+=*\r\n(.*\r\n){3}((?:\s*.+\s\r\n)+)\s=*\r\n\s+Bragg Correction"  # .format(symbol_regex, int_regex, double_regex, double_regex)#(=*)\r\n'
+        table_match = re.search(table_regexp.encode("utf-8"), output)
 
         # rearrange the match into list of layer elements
-        target_comp = table_match.groups()[-1].decode('utf-8').strip().split('\r\n')
+        target_comp = table_match.groups()[-1].decode("utf-8").strip().split("\r\n")
 
-        #create a dict object for target layers
-        elements_dict ={}
+        # create a dict object for target layers
+        elements_dict = {}
 
         for line in target_comp:
             element = line.strip().split()
@@ -754,75 +781,97 @@ class SRResults(object):
             stoich_percent = float(element[2])
             mass_percent = float(element[3])
             elements_dict[element[0]] = [Z, stoich_percent, mass_percent]
-            #print()
+            # print()
 
         # create a output dict
-        target_dict = {'density g/cm3': density[0],
-                       'density atoms/cm3': density[1],
-                      'target composition': elements_dict
-                      }
+        target_dict = {
+            "density g/cm3": density[0],
+            "density atoms/cm3": density[1],
+            "target composition": elements_dict,
+        }
 
         return target_dict
 
     def _read_stopping_table(self, output):
-        '''table header:
-                Ion        dE/dx      dE/dx     Projected  Longitudinal   Lateral
-               Energy      Elec.      Nuclear     Range     Straggling   Straggling
-          --------------  ---------- ---------- ----------  ----------  ----------
+        """table header:
+               Ion        dE/dx      dE/dx     Projected  Longitudinal   Lateral
+              Energy      Elec.      Nuclear     Range     Straggling   Straggling
+         --------------  ---------- ---------- ----------  ----------  ----------
 
-          table footer:
-          -----------------------------------------------------------
-         Multiply Stopping by        for Stopping Units
-         -------------------        ------------------
-          2.2299E+01                 eV / Angstrom
-          2.2299E+02                keV / micron
-          2.2299E+02                MeV / mm
-          1.0000E+00                keV / (ug/cm2)
-          1.0000E+00                MeV / (mg/cm2)
-          1.0000E+03                keV / (mg/cm2)
-          3.1396E+01                 eV / (1E15 atoms/cm2)
-          1.8212E+01                L.S.S. reduced units
-         ==================================================================
-         (C) 1984,1989,1992,1998,2008 by J.P. Biersack and J.F. Ziegler
-        '''
+         table footer:
+         -----------------------------------------------------------
+        Multiply Stopping by        for Stopping Units
+        -------------------        ------------------
+         2.2299E+01                 eV / Angstrom
+         2.2299E+02                keV / micron
+         2.2299E+02                MeV / mm
+         1.0000E+00                keV / (ug/cm2)
+         1.0000E+00                MeV / (mg/cm2)
+         1.0000E+03                keV / (mg/cm2)
+         3.1396E+01                 eV / (1E15 atoms/cm2)
+         1.8212E+01                L.S.S. reduced units
+        ==================================================================
+        (C) 1984,1989,1992,1998,2008 by J.P. Biersack and J.F. Ziegler
+        """
 
-        table_header_regexp = r'\s+Ion\s+dE/dx\s+(.*\r\n){3}'
-        table_header_match = re.search(table_header_regexp.encode('utf-8'), output)
+        table_header_regexp = r"\s+Ion\s+dE/dx\s+(.*\r\n){3}"
+        table_header_match = re.search(table_header_regexp.encode("utf-8"), output)
 
-        table_footer_regexp = r'\s*-*\r\n\sMultiply'
-        table_footer_match = re.search(table_footer_regexp.encode('utf-8'), output)
+        table_footer_regexp = r"\s*-*\r\n\sMultiply"
+        table_footer_match = re.search(table_footer_regexp.encode("utf-8"), output)
 
         start_idx = table_header_match.end()
         stop_idx = table_footer_match.start()
 
-        rawdata = BytesIO(output[start_idx:stop_idx]).read().decode('utf-8')
+        rawdata = BytesIO(output[start_idx:stop_idx]).read().decode("utf-8")
 
         output_array = [[] for i in range(6)]
 
-        #function for
-        energy_conversion = lambda a: 1 if ('keV' in a) else (1e3 if ('MeV' in a) else (1e6 if 'GeV' in a else (1e-3 if 'eV' in a else None)))
+        # function for
+        energy_conversion = (
+            lambda a: 1
+            if ("keV" in a)
+            else (
+                1e3
+                if ("MeV" in a)
+                else (1e6 if "GeV" in a else (1e-3 if "eV" in a else None))
+            )
+        )
 
-        #function for
-        length_conversion = lambda a: 1 if ('um' in a) else (1e-4 if ('A' in a) else (1e3 if ('mm' in a) else None))
+        # function for
+        length_conversion = (
+            lambda a: 1
+            if ("um" in a)
+            else (1e-4 if ("A" in a) else (1e3 if ("mm" in a) else None))
+        )
 
-        for line in rawdata.split('\r\n'):
+        for line in rawdata.split("\r\n"):
             line_array = line.split()
-            #print(line_array)
+            # print(line_array)
 
-            #find conversion factors for all energy values (current unit --> keV)
-            E_coeff = list(map(energy_conversion,(filter(energy_conversion, line_array))))[0]
+            # find conversion factors for all energy values (current unit --> keV)
+            E_coeff = list(
+                map(energy_conversion, (filter(energy_conversion, line_array)))
+            )[0]
 
-            #find conversion factors for all length values (current unit --> um)
-            L_coeff = list(map(length_conversion, filter(length_conversion, line_array)))
+            # find conversion factors for all length values (current unit --> um)
+            L_coeff = list(
+                map(length_conversion, filter(length_conversion, line_array))
+            )
 
-            energy = float(line_array[0])*E_coeff
+            energy = float(line_array[0]) * E_coeff
             Se = float(line_array[2])
             Sn = float(line_array[3])
-            Range = float(line_array[4])*L_coeff[0]
-            long_straggle = float(line_array[6])*L_coeff[1]
-            lat_straggle = float(line_array[8])*L_coeff[2]
+            Range = float(line_array[4]) * L_coeff[0]
+            long_straggle = float(line_array[6]) * L_coeff[1]
+            lat_straggle = float(line_array[8]) * L_coeff[2]
 
-            [output_array[i].append(d) for i, d in zip(range(6), [energy, Se, Sn, Range, long_straggle, lat_straggle])]
+            [
+                output_array[i].append(d)
+                for i, d in zip(
+                    range(6), [energy, Se, Sn, Range, long_straggle, lat_straggle]
+                )
+            ]
 
         return np.array(output_array)
 
@@ -833,14 +882,14 @@ class SRResults(object):
     @property
     def data(self):
         """
-         [
-           <energy in keV>,
-           <electronic stopping in <units> >,
-           <nuclear stopping in <units> >,
-           <projected range in um>,
-           <longitudinal straggling in um>,
-           <lateral straggling in um>
-         ]
+        [
+          <energy in keV>,
+          <electronic stopping in <units> >,
+          <nuclear stopping in <units> >,
+          <projected range in um>,
+          <longitudinal straggling in um>,
+          <lateral straggling in um>
+        ]
         """
         return self._data
 

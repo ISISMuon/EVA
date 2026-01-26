@@ -33,7 +33,10 @@ class Ui_Energycorrections(object):
         self.gridLayout.addWidget(self.correction_table, 1, 0, 1, 2)
         self.buttonBox = QtWidgets.QDialogButtonBox(parent=Energycorrections)
         self.buttonBox.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Apply|QtWidgets.QDialogButtonBox.StandardButton.Cancel)
+        self.buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.StandardButton.Apply
+            | QtWidgets.QDialogButtonBox.StandardButton.Cancel
+        )
         self.buttonBox.setObjectName("buttonBox")
         self.gridLayout.addWidget(self.buttonBox, 3, 0, 1, 2)
         self.label_2 = QtWidgets.QLabel(parent=Energycorrections)
@@ -41,14 +44,16 @@ class Ui_Energycorrections(object):
         self.gridLayout.addWidget(self.label_2, 0, 0, 1, 1)
 
         self.retranslateUi(Energycorrections)
-        self.buttonBox.accepted.connect(Energycorrections.accept) # type: ignore
-        self.buttonBox.rejected.connect(Energycorrections.reject) # type: ignore
+        self.buttonBox.accepted.connect(Energycorrections.accept)  # type: ignore
+        self.buttonBox.rejected.connect(Energycorrections.reject)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Energycorrections)
 
     def retranslateUi(self, Energycorrections):
         _translate = QtCore.QCoreApplication.translate
         Energycorrections.setWindowTitle(_translate("Energycorrections", "Dialog"))
-        self.label.setText(_translate("Energycorrections", "Correction function: y = Ax + B"))
+        self.label.setText(
+            _translate("Energycorrections", "Correction function: y = Ax + B")
+        )
         item = self.correction_table.horizontalHeaderItem(0)
         item.setText(_translate("Energycorrections", "Detector"))
         item = self.correction_table.horizontalHeaderItem(1)
@@ -58,11 +63,14 @@ class Ui_Energycorrections(object):
         item = self.correction_table.horizontalHeaderItem(3)
         item.setText(_translate("Energycorrections", "Use correction"))
         self.label_2.setText(_translate("Energycorrections", "Set energy corrections"))
+
+
 from EVA.gui.base.base_table import BaseTable
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     Energycorrections = QtWidgets.QDialog()
     ui = Ui_Energycorrections()

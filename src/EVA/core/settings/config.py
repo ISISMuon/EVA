@@ -12,12 +12,14 @@ logger = logging.getLogger(__name__)
 default_config_path = get_path("src/EVA/core/settings/defaults.json")
 config_path = get_path("src/EVA/core/settings/config.json")
 
+
 class Config(QObject):
     config_modified_s = pyqtSignal(dict)
 
     """
     The config class manages reading and writing all settings to file.
     """
+
     def __init__(self):
         super().__init__()
         with open(default_config_path, "r") as default_file:
@@ -44,16 +46,15 @@ class Config(QObject):
             if run_num in saved_corrections[working_dir].keys():
                 return self._data["saved_corrections"][working_dir][run_num]
             else:
-                self._data["saved_corrections"][working_dir][run_num] = default_corrections
+                self._data["saved_corrections"][working_dir][run_num] = (
+                    default_corrections
+                )
         else:
             self._data["saved_corrections"][working_dir] = {
-               run_num: default_corrections
+                run_num: default_corrections
             }
 
         return self._data["saved_corrections"][working_dir][run_num]
-
-
-
 
     def save_config(self):
         """
@@ -72,7 +73,6 @@ class Config(QObject):
 
         logger.info("Configuration has been reset to defaults.")
 
-
     def is_changed(self) -> bool:
         """
         Returns:
@@ -83,4 +83,3 @@ class Config(QObject):
             config_in_file = json.load(file)
 
         return not (config_in_file == self._data)
-

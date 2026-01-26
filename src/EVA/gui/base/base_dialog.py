@@ -1,4 +1,3 @@
-
 class BaseDialog(object):
     def __init__(self, view, model, presenter, **kwargs):
         self.view = view
@@ -18,4 +17,3 @@ class BaseDialog(object):
 
     def layout(self):
         return self.view.layout()
-

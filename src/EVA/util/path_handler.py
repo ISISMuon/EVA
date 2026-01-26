@@ -15,5 +15,5 @@ def get_path(path: AnyStr) -> AnyStr:
     (Because the paths will not work as normal when running from executable)
     """
     # check if running from the executable or not
-    bundle_dir = getattr(sys, '_MEIPASS', "")
+    bundle_dir = getattr(sys, "_MEIPASS", "")
     return os.path.abspath(os.path.join(bundle_dir, path))

@@ -14,7 +14,6 @@ def sort_match(results: list[dict]) -> dict:
 
     # sorts all transitions by peaks and keeps track of which elements are found for each peak
     for line in results:
-
         # create dictionary key if energy has not been seen previously
         if not line["peak_centre"] in peaks.keys():
             peaks[line["peak_centre"]] = []
@@ -29,7 +28,7 @@ def sort_match(results: list[dict]) -> dict:
             counts[line["element"]] += 1
 
     # Sort counts starting with highest count
-    counts = {k: v for k, v in sorted(counts.items(), key = lambda x: x[1], reverse=True)}
+    counts = {k: v for k, v in sorted(counts.items(), key=lambda x: x[1], reverse=True)}
 
     # Return top 8 results
     return dict(list(counts.items())[0:7])
