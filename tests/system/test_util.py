@@ -1,12 +1,12 @@
-
 import json
+
 
 def load_gamma_test_db():
     pass
 
-def load_mudirac_test_db():
-    with open('test_data/test_databases/mudirac_test_data.json', 'r') as read_file:
 
+def load_mudirac_test_db():
+    with open("test_data/test_databases/mudirac_test_data.json", "r") as read_file:
         data = json.load(read_file)
 
         primary_energies_all_isotopes = {}
@@ -36,13 +36,17 @@ def load_mudirac_test_db():
                 # Insert isotope data into dictionaries
                 primary_energies_all_isotopes[isotope] = primary_energy
                 secondary_energies_all_isotopes[isotope] = secondary_energy
-                all_energies_all_isotopes[isotope] = dict(**primary_energy, **secondary_energy)
+                all_energies_all_isotopes[isotope] = dict(
+                    **primary_energy, **secondary_energy
+                )
 
                 # If isotope is the default isotope into a separate set of dictionaries
                 if isotope == default_isotope:
                     primary_energies_default_isotope[element] = primary_energy
                     secondary_energies_default_isotope[element] = secondary_energy
-                    all_energies_default_isotope[element] = dict(**primary_energy, **secondary_energy)
+                    all_energies_default_isotope[element] = dict(
+                        **primary_energy, **secondary_energy
+                    )
 
         # Default to using only most abundant isotope
         peak_data = {
@@ -55,16 +59,17 @@ def load_mudirac_test_db():
             "All isotopes": {
                 "Primary energies": primary_energies_all_isotopes,
                 "Secondary energies": secondary_energies_all_isotopes,
-                "All energies": all_energies_all_isotopes
-            }
+                "All energies": all_energies_all_isotopes,
+            },
         }
 
     read_file.close()
 
     return peak_data
 
+
 def load_legacy_test_db():
-    with open('test_data/test_databases/legacy_test_data.json', 'r') as read_file:
+    with open("test_data/test_databases/legacy_test_data.json", "r") as read_file:
         data = json.load(read_file)
 
         all_energies = {}
@@ -80,21 +85,23 @@ def load_legacy_test_db():
             for transition, transition_data in element_data["Primary"].items():
                 primary_energies[element][transition] = {
                     "E": float(transition_data),
-                    "I": 1
+                    "I": 1,
                 }
 
             for transition, transition_data in element_data["Secondary"].items():
                 secondary_energies[element][transition] = {
                     "E": float(transition_data),
-                    "I": 1
+                    "I": 1,
                 }
 
-            all_energies[element] = dict(primary_energies[element], **secondary_energies[element])
+            all_energies[element] = dict(
+                primary_energies[element], **secondary_energies[element]
+            )
 
         peak_data = {
             "Primary energies": primary_energies,
             "Secondary energies": secondary_energies,
-            "All energies": all_energies
+            "All energies": all_energies,
         }
 
     read_file.close()

@@ -3,6 +3,7 @@ from PyQt6.QtCore import Qt, pyqtSignal
 
 from EVA.core.app import get_app
 
+
 class BaseTable(QTableWidget):
     contents_updated_s = pyqtSignal()
     user_edited_cell_s = pyqtSignal(int, int)
@@ -18,15 +19,16 @@ class BaseTable(QTableWidget):
         if not self.block_updates:
             self.user_edited_cell_s.emit(row, col)
 
-    def stretch_horizontal_header(self, skip:list=None):
+    def stretch_horizontal_header(self, skip: list = None):
         n_cols = self.columnCount()
         for i in range(n_cols):
             if skip is None or i not in skip:
-                self.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
-
+                self.horizontalHeader().setSectionResizeMode(
+                    i, QHeaderView.ResizeMode.Stretch
+                )
 
     def update_contents(self, data, resize_rows=True, resize_columns=False, round_to=2):
-        self.block_updates = True # temporarily block updates
+        self.block_updates = True  # temporarily block updates
         input_n_rows = len(data)
 
         if input_n_rows != 0:
@@ -101,7 +103,7 @@ class BaseTable(QTableWidget):
     def copy_selection(self):
         copied_cells = sorted(self.selectedIndexes())
 
-        copy_text = ''
+        copy_text = ""
         max_column = copied_cells[-1].column()
         for c in copied_cells:
             cell_item = self.item(c.row(), c.column())
@@ -112,9 +114,9 @@ class BaseTable(QTableWidget):
                 copy_text += cell_item.text()
 
             if c.column() == max_column:
-                copy_text += '\n'
+                copy_text += "\n"
             else:
-                copy_text += '\t'
+                copy_text += "\t"
 
         get_app().clipboard().setText(copy_text)
 
@@ -133,19 +135,25 @@ class BaseTable(QTableWidget):
         if rows[-1] == "":
             rows.pop(-1)
 
-        if len(rows) + first_row > self.rowCount():  # add rows to table if pasted selection will "spill"
+        if (
+            len(rows) + first_row > self.rowCount()
+        ):  # add rows to table if pasted selection will "spill"
             self.setRowCount(first_row + len(rows))
 
         for row_ix, row in enumerate(rows):
-            rowdata = row.split('\t')
+            rowdata = row.split("\t")
             if rowdata == "":
                 continue
 
-            if len(rowdata) + first_column > self.columnCount():  # add columns if needed
+            if (
+                len(rowdata) + first_column > self.columnCount()
+            ):  # add columns if needed
                 self.setColumnCount(first_column + len(rowdata))
 
             for col_ix, text in enumerate(rowdata):
-                self.setItem(row_ix + first_row, col_ix + first_column, QTableWidgetItem(text))
+                self.setItem(
+                    row_ix + first_row, col_ix + first_column, QTableWidgetItem(text)
+                )
 
     def delete_selection(self):
         copied_cells = sorted(self.selectedIndexes())
@@ -153,20 +161,25 @@ class BaseTable(QTableWidget):
             # set all cells to be a blank QTableWidgetItem
             self.setItem(cell.row(), cell.column(), QTableWidgetItem())
 
-
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
 
         # Copying
-        if event.key() == Qt.Key.Key_C and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
+        if event.key() == Qt.Key.Key_C and (
+            event.modifiers() & Qt.KeyboardModifier.ControlModifier
+        ):
             self.copy_selection()
 
         # Pasting
-        if event.key() == Qt.Key.Key_V and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
+        if event.key() == Qt.Key.Key_V and (
+            event.modifiers() & Qt.KeyboardModifier.ControlModifier
+        ):
             self.paste_selection()
 
         # Cutting
-        if event.key() == Qt.Key.Key_X and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
+        if event.key() == Qt.Key.Key_X and (
+            event.modifiers() & Qt.KeyboardModifier.ControlModifier
+        ):
             self.copy_selection()
             self.delete_selection()
 
@@ -177,5 +190,6 @@ class BaseTable(QTableWidget):
     def stretch_horizontal_headers(self):
         n_cols = self.columnCount()
         for i in range(n_cols):
-            self.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
-
+            self.horizontalHeader().setSectionResizeMode(
+                i, QHeaderView.ResizeMode.Stretch
+            )

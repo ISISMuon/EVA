@@ -1,9 +1,7 @@
 import logging
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import (
-    QVBoxLayout, QTableWidgetItem, QTreeWidgetItem, QTableWidget
-)
+from PyQt6.QtWidgets import QVBoxLayout, QTableWidgetItem, QTreeWidgetItem, QTableWidget
 
 from EVA.gui.base.base_view import BaseView
 from EVA.gui.ui_files.elemental_analysis_gui import Ui_elemental_analysis
@@ -13,7 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class ElementalAnalysisView(BaseView, Ui_elemental_analysis):
-    """ View to provide the user interface of the elemental analysis window. """
+    """View to provide the user interface of the elemental analysis window."""
+
     def __init__(self):
         """
         Initialises the gui components
@@ -42,12 +41,14 @@ class ElementalAnalysisView(BaseView, Ui_elemental_analysis):
         self.plot = PlotWidget()
         plot_layout = QVBoxLayout()
         plot_layout.addWidget(self.plot)
-        plot_layout.setContentsMargins(0,0,0,0)
+        plot_layout.setContentsMargins(0, 0, 0, 0)
         self.plot_widget_container.setLayout(plot_layout)
 
         # configure peakfind results tree
         self.peakfind_results_tree.setColumnCount(5)
-        self.peakfind_results_tree.setHeaderLabels(["Detector", "Peak detected", "Element", "Transition", "Error"])
+        self.peakfind_results_tree.setHeaderLabels(
+            ["Detector", "Peak detected", "Element", "Transition", "Error"]
+        )
         self.peakfind_results_tree.resizeColumnToContents(0)
         self.peakfind_results_tree.resizeColumnToContents(1)
         self.peakfind_results_tree.resizeColumnToContents(2)
@@ -61,10 +62,10 @@ class ElementalAnalysisView(BaseView, Ui_elemental_analysis):
             table: table to display in.
         """
         table.setRowCount(1)
-        table.setItem(0,0, QTableWidgetItem("No matches found."))
+        table.setItem(0, 0, QTableWidgetItem("No matches found."))
 
-        for col in range(table.columnCount()-1):
-            table.setItem(0, col+1, QTableWidgetItem())
+        for col in range(table.columnCount() - 1):
+            table.setItem(0, col + 1, QTableWidgetItem())
 
     @staticmethod
     def update_plotted_lines_table(table: QTableWidget, items: list[str]):
@@ -87,7 +88,9 @@ class ElementalAnalysisView(BaseView, Ui_elemental_analysis):
         Args:
             check_state: checkstate from checkbox
         """
-        self.custom_settings_container.setVisible(not (check_state == Qt.CheckState.Checked))
+        self.custom_settings_container.setVisible(
+            not (check_state == Qt.CheckState.Checked)
+        )
 
     def update_peakfind_tree(self, result: dict):
         """

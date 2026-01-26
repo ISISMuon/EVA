@@ -7,14 +7,22 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QLabel,
-    QComboBox, QLineEdit, QHBoxLayout, QCheckBox,
-    QMessageBox, QScrollArea
+    QComboBox,
+    QLineEdit,
+    QHBoxLayout,
+    QCheckBox,
+    QMessageBox,
+    QScrollArea,
 )
 
 from EVA.gui.base.base_view import BaseView
-from EVA.gui.windows.muonic_xray_simulation.element_selector_widget import ElementSelectorWidget
+from EVA.gui.windows.muonic_xray_simulation.element_selector_widget import (
+    ElementSelectorWidget,
+)
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
-from EVA.gui.windows.muonic_xray_simulation.model_spectra_presenter import ModelSpectraPresenter
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_presenter import (
+    ModelSpectraPresenter,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +87,9 @@ class ModelSpectraView(BaseView):
 
         self.select_notation_label = QLabel("Select notation")
         self.select_notation = QComboBox()
-        self.select_notation.addItems(["Siegbahn (only major lines)", "Spectroscopic", "IUPAC"])
+        self.select_notation.addItems(
+            ["Siegbahn (only major lines)", "Spectroscopic", "IUPAC"]
+        )
 
         self.select_notation_label.hide()
         self.select_notation.hide()
@@ -92,7 +102,12 @@ class ModelSpectraView(BaseView):
         self.plot_settings_layout.addWidget(self.select_notation_label, 4, 0, 1, -1)
 
         self.plot_settings_layout.addWidget(self.select_notation, 5, 0, 1, -1)
-        self.detectors = [QCheckBox("GE1"), QCheckBox("GE2"), QCheckBox("GE3"), QCheckBox("GE4")]
+        self.detectors = [
+            QCheckBox("GE1"),
+            QCheckBox("GE2"),
+            QCheckBox("GE3"),
+            QCheckBox("GE4"),
+        ]
         self.detector_names = ["GE1", "GE2", "GE3", "GE4"]
         self.plot_settings_layout.addWidget(QLabel("Select detectors"), 6, 0, 1, -1)
         self.detectors[0].setChecked(True)
@@ -119,7 +134,9 @@ class ModelSpectraView(BaseView):
         self.side_panel_layout.addWidget(self.plot_settings)
         self.side_panel_layout.addSpacing(50)
 
-        self.side_panel_layout.addWidget(self.start_button, alignment=Qt.AlignmentFlag.AlignBottom)
+        self.side_panel_layout.addWidget(
+            self.start_button, alignment=Qt.AlignmentFlag.AlignBottom
+        )
 
         self.plot = PlotWidget()
 
@@ -146,7 +163,11 @@ class ModelSpectraView(BaseView):
     def get_form_data(self):
         try:
             detector_buttons_checked = [button.isChecked() for button in self.detectors]
-            detectors = [detector for i, detector in enumerate(self.detector_names) if detector_buttons_checked[i]]
+            detectors = [
+                detector
+                for i, detector in enumerate(self.detector_names)
+                if detector_buttons_checked[i]
+            ]
 
             data = {
                 "elements": self.element_selector.get_elements(),
@@ -155,27 +176,39 @@ class ModelSpectraView(BaseView):
                 "show_components": self.show_components_box.isChecked(),
                 "dx": float(self.step_line_edit.text()),
                 "show_primary": self.show_primary.isChecked(),
-                "show_secondary": self.show_secondary.isChecked()
+                "show_secondary": self.show_secondary.isChecked(),
             }
 
-            if not self.show_primary.isChecked() and not self.show_secondary.isChecked():
-                _ = QMessageBox.critical(self, "Error",
-                                         "No transitions selected. Please select at least one transition type "
-                                         "to simulate.")
+            if (
+                not self.show_primary.isChecked()
+                and not self.show_secondary.isChecked()
+            ):
+                _ = QMessageBox.critical(
+                    self,
+                    "Error",
+                    "No transitions selected. Please select at least one transition type "
+                    "to simulate.",
+                )
                 logger.error("No transitions selected - simulation aborted.")
                 return
 
             if len(data["elements"]) == 0:
-                _ = QMessageBox.critical(self, "Error",
-                                         "No elements added. Please add at least one element "
-                                         "to simulate for.")
+                _ = QMessageBox.critical(
+                    self,
+                    "Error",
+                    "No elements added. Please add at least one element "
+                    "to simulate for.",
+                )
                 logger.error("No elements selected - simulation aborted.")
                 return
 
             if len(data["detectors"]) == 0:
-                _ = QMessageBox.critical(self, "Error",
-                                         "No detectors selected. Please select at least one detector "
-                                         "to simulate for.")
+                _ = QMessageBox.critical(
+                    self,
+                    "Error",
+                    "No detectors selected. Please select at least one detector "
+                    "to simulate for.",
+                )
                 logger.error("No detectors selected - simulation aborted.")
                 return
 
@@ -186,23 +219,33 @@ class ModelSpectraView(BaseView):
                 data["e_range"] = [float(self.e_min.text()), float(self.e_max.text())]
 
                 # Avoid having to run more than 1M points
-                if data["e_range"][1] * data["dx"] - data["e_range"][0] * data["dx"] > 1e6:
-                    _ = QMessageBox.critical(self, "Error",
-                                             "Please select a larger step size or a narrower energy range.")
+                if (
+                    data["e_range"][1] * data["dx"] - data["e_range"][0] * data["dx"]
+                    > 1e6
+                ):
+                    _ = QMessageBox.critical(
+                        self,
+                        "Error",
+                        "Please select a larger step size or a narrower energy range.",
+                    )
                     logger.error("No transitions selected - simulation aborted.")
                     return
             else:
                 # Don't allow auto range with step size of less than 0.01
                 if data["dx"] < 0.01:
-                    _ = QMessageBox.critical(self, "Error",
-                                             "Please select a larger step size or a narrower energy range.")
-                    logger.error("Step size to small for auto range - simulation aborted.")
+                    _ = QMessageBox.critical(
+                        self,
+                        "Error",
+                        "Please select a larger step size or a narrower energy range.",
+                    )
+                    logger.error(
+                        "Step size to small for auto range - simulation aborted."
+                    )
                     return
             return data
 
         except ValueError:
-            _ = QMessageBox.critical(self, "Error",
-                                     "Invalid form data.")
+            _ = QMessageBox.critical(self, "Error", "Invalid form data.")
             logger.error("Invalid for data - simulation aborted.")
 
     def set_form_data(self, data):
@@ -213,8 +256,12 @@ class ModelSpectraView(BaseView):
         for i, element in enumerate(data["elements"]):
             element_selector.add_element()
 
-            element_cbox = element_selector.element_selector_items[-1].element_selection_cbox
-            ratio_line_edit = element_selector.element_selector_items[-1].ratio_line_edit
+            element_cbox = element_selector.element_selector_items[
+                -1
+            ].element_selection_cbox
+            ratio_line_edit = element_selector.element_selector_items[
+                -1
+            ].ratio_line_edit
 
             element_cbox.setCurrentText(element)
             ratio_line_edit.setText(str(data["proportions"][i]))

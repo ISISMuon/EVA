@@ -8,15 +8,11 @@ from pytestqt.plugin import qtbot
 from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.core.app import get_config, get_app
 
-channels = {
-    "GE1": "2099",
-    "GE2": "3099",
-    "GE3": "4099",
-    "GE4": "5099"
-}
+channels = {"GE1": "2099", "GE2": "3099", "GE3": "4099", "GE4": "5099"}
 
 
 TIME_DELAY = 1000
+
 
 class TestMultiPlotWindow:
     # this will run once before all other tests in the class
@@ -56,21 +52,25 @@ class TestMultiPlotWindow:
         qtbot.wait(TIME_DELAY)
 
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
         self.view.det2_checkbox.setChecked(False)
         self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
         # load data manually and assert that plotted data matches the expected
         run_list = ["3063"]
         target_data = self.get_data(run_list, ["GE1", "GE3"])
 
         get_app().reset()
         for i in range(len(run_list)):
-            assert all(self.view.plot.canvas.axs[0].lines[i].get_ydata() == target_data[i][0][:, 1]), \
-                "incorrect data was loaded"
-            assert all(self.view.plot.canvas.axs[1].lines[i].get_ydata() == target_data[i][1][:, 1]), \
-                "incorrect data was loaded"
+            assert all(
+                self.view.plot.canvas.axs[0].lines[i].get_ydata()
+                == target_data[i][0][:, 1]
+            ), "incorrect data was loaded"
+            assert all(
+                self.view.plot.canvas.axs[1].lines[i].get_ydata()
+                == target_data[i][1][:, 1]
+            ), "incorrect data was loaded"
 
     def test_multiplot_multiple_runs(self, qtbot):
         # test plotting two non-consecutive runs
@@ -79,14 +79,18 @@ class TestMultiPlotWindow:
         qtbot.wait(TIME_DELAY)
 
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
         self.view.det2_checkbox.setChecked(False)
         self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
 
-        assert len(self.view.plot.canvas.axs[0].lines) == 2, "incorrect number of runs were plotted"
-        assert len(self.view.plot.canvas.axs[1].lines) == 2, "incorrect number of runs were plotted"
+        assert len(self.view.plot.canvas.axs[0].lines) == 2, (
+            "incorrect number of runs were plotted"
+        )
+        assert len(self.view.plot.canvas.axs[1].lines) == 2, (
+            "incorrect number of runs were plotted"
+        )
 
         # load data manually and assert that plotted data matches the expected
         run_list = ["3063", "3050"]
@@ -95,11 +99,14 @@ class TestMultiPlotWindow:
 
         get_app().reset()
         for i in range(len(run_list)):
-            assert all(self.view.plot.canvas.axs[0].lines[i].get_ydata() == target_data[i][0][:, 1]), \
-                "incorrect data was loaded"
-            assert all(self.view.plot.canvas.axs[1].lines[i].get_ydata() == target_data[i][1][:, 1]), \
-                "incorrect data was loaded"
-
+            assert all(
+                self.view.plot.canvas.axs[0].lines[i].get_ydata()
+                == target_data[i][0][:, 1]
+            ), "incorrect data was loaded"
+            assert all(
+                self.view.plot.canvas.axs[1].lines[i].get_ydata()
+                == target_data[i][1][:, 1]
+            ), "incorrect data was loaded"
 
     def test_multiplot_with_simple_step(self, qtbot):
         self.view.RunListTable.setItem(0, 0, QTableWidgetItem("3063"))  # start
@@ -113,31 +120,47 @@ class TestMultiPlotWindow:
 
         # click button to load multi run
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
         self.view.det2_checkbox.setChecked(False)
         self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
 
         ax0_lines = self.view.plot.canvas.axs[0].lines
         ax1_lines = self.view.plot.canvas.axs[1].lines
 
         # check that both subplots contain 11 lines: 3063-3074 excluding 3069 because it is missing from testdata
-        assert len(self.view.plot.canvas.axs[0].lines) == 11, \
+        assert len(self.view.plot.canvas.axs[0].lines) == 11, (
             "incorrect number of runs were plotted"
-        assert len(self.view.plot.canvas.axs[1].lines) == 11, \
+        )
+        assert len(self.view.plot.canvas.axs[1].lines) == 11, (
             "incorrect number of runs were plotted"
+        )
 
         # load data manually and assert that plotted data matches the expected
-        run_list = ["3063", "3064", "3065", "3066", "3067", "3068", "3070", "3071", "3072", "3073", "3074"]
+        run_list = [
+            "3063",
+            "3064",
+            "3065",
+            "3066",
+            "3067",
+            "3068",
+            "3070",
+            "3071",
+            "3072",
+            "3073",
+            "3074",
+        ]
 
         target_data = self.get_data(run_list, ["GE1", "GE3"])
 
         for i in range(len(run_list)):
-            assert all(ax0_lines[i].get_ydata() == target_data[i][0][:, 1]), \
+            assert all(ax0_lines[i].get_ydata() == target_data[i][0][:, 1]), (
                 "incorrect data was loaded"
-            assert all(ax1_lines[i].get_ydata() == target_data[i][1][:, 1]), \
+            )
+            assert all(ax1_lines[i].get_ydata() == target_data[i][1][:, 1]), (
                 "incorrect data was loaded"
+            )
 
     def test_multiplot_with_step_overflow(self, qtbot):
         self.view.RunListTable.setItem(0, 0, QTableWidgetItem("3063"))  # start
@@ -147,17 +170,19 @@ class TestMultiPlotWindow:
 
         # click button to load multi run
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
         self.view.det2_checkbox.setChecked(False)
         self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
 
         # check that both axes contain 3 lines (3063, 3065, 3067)
-        assert len(self.view.plot.canvas.axs[0].lines) == 3, \
+        assert len(self.view.plot.canvas.axs[0].lines) == 3, (
             "incorrect number of runs were plotted"
-        assert len(self.view.plot.canvas.axs[1].lines) == 3, \
+        )
+        assert len(self.view.plot.canvas.axs[1].lines) == 3, (
             "incorrect number of runs were plotted"
+        )
 
         # load data manually and assert that plotted data matches the expected
         run_list = ["3063", "3065", "3067"]
@@ -165,38 +190,45 @@ class TestMultiPlotWindow:
         target_data = self.get_data(run_list, ["GE1", "GE3"])
 
         for i in range(len(run_list)):
-            assert all(self.view.plot.canvas.axs[0].lines[i].get_ydata() == target_data[i][0][:, 1]), \
-                "incorrect data was loaded"
-            assert all(self.view.plot.canvas.axs[1].lines[i].get_ydata() == target_data[i][1][:, 1]), \
-                "incorrect data was loaded"
-
+            assert all(
+                self.view.plot.canvas.axs[0].lines[i].get_ydata()
+                == target_data[i][0][:, 1]
+            ), "incorrect data was loaded"
+            assert all(
+                self.view.plot.canvas.axs[1].lines[i].get_ydata()
+                == target_data[i][1][:, 1]
+            ), "incorrect data was loaded"
 
     def test_multiplot_no_runs_entered(self, qtbot, mocker):
         # mock answer from user to avoid dialog box (magic)
-        mocker.patch.object(QMessageBox, 'critical', return_value=QMessageBox.StandardButton.Ok)
+        mocker.patch.object(
+            QMessageBox, "critical", return_value=QMessageBox.StandardButton.Ok
+        )
 
         # click load without any data
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
         self.view.det2_checkbox.setChecked(False)
         self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
 
         assert self.view.plot.canvas.axs is None, "incorrect number of runs were loaded"
 
     def test_multiplot_invalid_run_entered(self, qtbot, mocker):
         # mock answer from user to avoid dialog box (magic)
-        mocker.patch.object(QMessageBox, 'critical', return_value=QMessageBox.StandardButton.Ok)
+        mocker.patch.object(
+            QMessageBox, "critical", return_value=QMessageBox.StandardButton.Ok
+        )
 
         # try to load invalid run number 'A'
         self.view.RunListTable.setItem(0, 0, QTableWidgetItem("A"))
         qtbot.wait(TIME_DELAY)
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
         self.view.det2_checkbox.setChecked(False)
         self.view.det4_checkbox.setChecked(False)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY*1.5))
+        qtbot.wait(int(TIME_DELAY * 1.5))
 
         assert self.view.plot.canvas.axs is None, "incorrect number of runs were loaded"

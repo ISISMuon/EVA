@@ -1,10 +1,12 @@
 """
 This code has been adapted from https://www.pythonguis.com/tutorials/multithreading-pyqt6-applications-qthreadpool/
 """
+
 import sys
 import time
 import traceback
 from PyQt6.QtCore import QRunnable, pyqtSlot, QObject, pyqtSignal
+
 
 class WorkerSignals(QObject):
     """Signals from a running worker thread.
@@ -24,6 +26,7 @@ class WorkerSignals(QObject):
     error = pyqtSignal(tuple)
     result = pyqtSignal(object)
     progress = pyqtSignal(dict)
+
 
 class Worker(QRunnable):
     """Worker thread.

@@ -17,6 +17,7 @@ from EVA.core.plot import plotting
 
 logger = logging.getLogger(__name__)
 
+
 class ModelFitModel(QObject):
     def __init__(self, run, detector, parent=None):
         super().__init__()
@@ -29,18 +30,9 @@ class ModelFitModel(QObject):
         # Set up containers to store initial and fitted parameters
         self.initial_bg_params = {
             "background": {
-                "a": {
-                    "value": 0,
-                    "vary": True
-                },
-                "b": {
-                    "value": 0,
-                    "vary": True
-                },
-                "c": {
-                    "value": 0,
-                    "vary": True
-                }
+                "a": {"value": 0, "vary": True},
+                "b": {"value": 0, "vary": True},
+                "c": {"value": 0, "vary": True},
             }
         }
 
@@ -58,35 +50,51 @@ class ModelFitModel(QObject):
         self.proportions_constraint = None
 
         plot_settings = {"colour": get_config()["plot"]["fill_colour"]}
-        self.fig, self.axs = plotting.plot_spectrum_residual(self.spectrum, self.run.normalisation, **plot_settings)
+        self.fig, self.axs = plotting.plot_spectrum_residual(
+            self.spectrum, self.run.normalisation, **plot_settings
+        )
         self.main_axs = self.axs[0]
         self.residual_axs = self.axs[1]
 
     def next_id(self, name):
-        filtered_name = name.replace("_", "")  # if there is an underscore in the file name things will break
+        filtered_name = name.replace(
+            "_", ""
+        )  # if there is an underscore in the file name things will break
 
         if filtered_name not in self.initial_model_params.keys():
             return filtered_name
 
-        i=0
+        i = 0
         while f"{filtered_name}{i}" in self.initial_model_params.keys():
-            i+=1
+            i += 1
         return f"{filtered_name}{i}"
 
     def fit_model(self):
         # clear fit parameters in between fits
         self.fitted_model_params = {}
 
-        logger.debug("Fitting range E = (%s, %s).", round(self.x_range[0], 2), round(self.x_range[1], 2))
+        logger.debug(
+            "Fitting range E = (%s, %s).",
+            round(self.x_range[0], 2),
+            round(self.x_range[1], 2),
+        )
         logger.debug("Initial peak parameters %s", self.initial_peak_params)
         logger.debug("Initial background parameters %s", self.initial_bg_params)
-        x_data, y_data = Trimdata(self.spectrum.x, self.spectrum.y, self.x_range[0], self.x_range[1])
+        x_data, y_data = Trimdata(
+            self.spectrum.x, self.spectrum.y, self.x_range[0], self.x_range[1]
+        )
 
         t0 = time.time_ns()
-        self.fit_result = fit_data.fit_model_lmfit(x_data, y_data, self.initial_peak_params, self.initial_bg_params,
-                                                  self.initial_model_params, constrain_scale=self.proportions_constraint)
+        self.fit_result = fit_data.fit_model_lmfit(
+            x_data,
+            y_data,
+            self.initial_peak_params,
+            self.initial_bg_params,
+            self.initial_model_params,
+            constrain_scale=self.proportions_constraint,
+        )
         t1 = time.time_ns()
-        logger.info("Peak fitting finished in %ss.", round((t1-t0)/1e9, 3))
+        logger.info("Peak fitting finished in %ss.", round((t1 - t0) / 1e9, 3))
 
         self.fitted_bg_params = deepcopy(self.initial_bg_params)
         self.fitted_model_params = deepcopy(self.initial_model_params)
@@ -101,29 +109,34 @@ class ModelFitModel(QObject):
             if prefix == "background":
                 self.fitted_bg_params["background"][var_name] = {
                     "value": param.value,
-                    "stderr": stderr
+                    "stderr": stderr,
                 }
 
             elif prefix == "scale":
-                self.const = {
-                    "value": param.value,
-                    "stderr": stderr
-                }
+                self.const = {"value": param.value, "stderr": stderr}
 
             else:
                 self.fitted_model_params[prefix][var_name] = {
                     "value": param.value,
-                    "stderr": stderr
+                    "stderr": stderr,
                 }
 
         logger.debug("Fitted background parameters: %s", self.fitted_bg_params)
         logger.debug("Fitted peak parameters: %s", self.fitted_model_params)
 
     def replot_spectrum(self):
-        replot_run(self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"])
+        replot_run(
+            self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"]
+        )
 
     def replot_spectrum_residual(self):
-            replot_run_residual(self.run, self.fig, self.axs, self.fit_result, colour=get_config()["plot"]["fill_colour"])
+        replot_run_residual(
+            self.run,
+            self.fig,
+            self.axs,
+            self.fit_result,
+            colour=get_config()["plot"]["fill_colour"],
+        )
 
     def load_and_add_model(self, path):
         with open(path, "r") as file:
@@ -131,13 +144,18 @@ class ModelFitModel(QObject):
             logger.debug("Loaded model from %s", path)
 
         file_name = path.replace("\\", "/").split("/")[-1]
-        name = file_name[:-5] # remove last 5 characters - ".json"
+        name = file_name[:-5]  # remove last 5 characters - ".json"
         model_id = self.next_id(name)
 
         # remove background
         self.initial_peak_params[model_id] = obj["peaks"]
-        self.initial_model_params[model_id] = {"x0": {"value": 0}, "scale": {"value": 1}}
-        logger.debug("Adding new model %s: %s.", model_id, self.initial_model_params[model_id])
+        self.initial_model_params[model_id] = {
+            "x0": {"value": 0},
+            "scale": {"value": 1},
+        }
+        logger.debug(
+            "Adding new model %s: %s.", model_id, self.initial_model_params[model_id]
+        )
 
     def remove_model(self, model_id):
         self.initial_model_params.pop(model_id)
@@ -164,11 +182,11 @@ class ModelFitModel(QObject):
         stop_peak = np.max(center)
         stop_sigma = sigma[center == stop_peak][0]
 
-        e_start = start_peak - 8*start_sigma
+        e_start = start_peak - 8 * start_sigma
         if e_start < 0:
             e_start = 0
 
-        e_stop = stop_peak + 8*stop_sigma
+        e_stop = stop_peak + 8 * stop_sigma
 
         self.x_range = (e_start, e_stop)
 
@@ -183,19 +201,28 @@ class ModelFitModel(QObject):
         x_data = self.fit_result.userkws["x"]
         if len(x_data) == len(self.fit_result.residual):
             residual_data = self.fit_result.residual
-            self.residual_axs.plot(x_data, self.fit_result.residual, label="Residuals (Data - Best Fit)")
-            self.residual_axs.set_ylim(-np.max(np.abs(residual_data)) * 1.2 , np.max(np.abs(residual_data)) * 1.2)
+            self.residual_axs.plot(
+                x_data, self.fit_result.residual, label="Residuals (Data - Best Fit)"
+            )
+            self.residual_axs.set_ylim(
+                -np.max(np.abs(residual_data)) * 1.2,
+                np.max(np.abs(residual_data)) * 1.2,
+            )
             self.residual_axs.set_xlim(self.x_range)
             self.residual_axs.grid(True)
             self.residual_axs.legend()
-            
+
     def plot_fit(self, overwrite_old=True):
         if self.fit_result is None:
             raise AttributeError("No fit result found in model!")
 
         # removes previous fit from figure is prompted
         if overwrite_old:
-            blacklisted_labels = ["Best fit", "Residuals (Data - Best Fit)", "Initial parameters"]
+            blacklisted_labels = [
+                "Best fit",
+                "Residuals (Data - Best Fit)",
+                "Initial parameters",
+            ]
             for ax in self.axs:
                 for line in ax.lines:
                     if line.get_label() in blacklisted_labels:
@@ -211,12 +238,11 @@ class ModelFitModel(QObject):
 
         self.plot_residual()
 
-
     def save_params(self, path, x_range):
         obj = {
             "background": self.initial_bg_params,
             "peaks": self.initial_peak_params,
-            "x_range": x_range
+            "x_range": x_range,
         }
 
         with open(path, "w") as file:
@@ -248,7 +274,7 @@ class ModelFitModel(QObject):
         obj = {
             "background": self.fitted_bg_params,
             "peaks": self.fitted_peak_params,
-            "x_range": self.x_range
+            "x_range": self.x_range,
         }
 
         with open(path, "w") as file:

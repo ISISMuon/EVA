@@ -7,7 +7,8 @@ from EVA.gui.windows.srim.trim_view import TrimView
 
 
 class TrimWindow(BaseWindow):
-    """ Coordinator class to string together the MVP components of the TRIM window """
+    """Coordinator class to string together the MVP components of the TRIM window"""
+
     def __init__(self, parent: QWidget | None = None):
         """
         Args:

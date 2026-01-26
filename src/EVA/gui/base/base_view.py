@@ -1,6 +1,12 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QCloseEvent
-from PyQt6.QtWidgets import QWidget, QHeaderView, QMessageBox, QTableWidgetItem, QErrorMessage
+from PyQt6.QtWidgets import (
+    QWidget,
+    QHeaderView,
+    QMessageBox,
+    QTableWidgetItem,
+    QErrorMessage,
+)
 from matplotlib import pyplot as plt
 
 
@@ -10,25 +16,31 @@ class BaseView(QWidget):
     avoid code-duplication.
 
     """
+
     window_closed_s = pyqtSignal(object)
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
-    def display_error_message(self, title="Error", message="", buttons=QMessageBox.StandardButton.Ok):
+    def display_error_message(
+        self, title="Error", message="", buttons=QMessageBox.StandardButton.Ok
+    ):
         _ = QMessageBox.critical(self, title, message, buttons)
 
-    def display_message(self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok):
+    def display_message(
+        self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok
+    ):
         _ = QMessageBox.information(self, title, message, buttons)
 
-    def display_question(self,
-                         title: str = "Question",
-                         message: str = "",
-                         buttons: QMessageBox.StandardButton = QMessageBox.StandardButton.Yes |
-                                    QMessageBox.StandardButton.No | QMessageBox.StandardButton.Cancel,
-                         default_button: QMessageBox.standardButton = QMessageBox.StandardButton.Yes) \
-            -> QMessageBox.StandardButton:
-
+    def display_question(
+        self,
+        title: str = "Question",
+        message: str = "",
+        buttons: QMessageBox.StandardButton = QMessageBox.StandardButton.Yes
+        | QMessageBox.StandardButton.No
+        | QMessageBox.StandardButton.Cancel,
+        default_button: QMessageBox.standardButton = QMessageBox.StandardButton.Yes,
+    ) -> QMessageBox.StandardButton:
         return QMessageBox.question(self, title, message, buttons, default_button)
 
     @staticmethod
@@ -62,7 +74,7 @@ class BaseView(QWidget):
                 table.setItem(row, col, QTableWidgetItem(table_item))
 
     def closeEvent(self, event: QCloseEvent):
-        """ Handles closing windows"""
+        """Handles closing windows"""
         self.window_closed_s.emit(event)
 
         event.accept()

@@ -5,6 +5,7 @@ from EVA.core.app import get_app
 from EVA.core.data_structures.run import Run
 from EVA.core.data_structures.spectrum import Spectrum
 
+
 def get_ylabel(normalisation: str) -> str:
     """
     Returns the appropriate ylabel for given normalisation
@@ -22,7 +23,10 @@ def get_ylabel(normalisation: str) -> str:
     else:
         return "Unnormalised Intensity"
 
-def Plot_Peak_Location(ax: plt.Axes, x: np.ndarray, y: np.ndarray, peak_indices: np.ndarray):
+
+def Plot_Peak_Location(
+    ax: plt.Axes, x: np.ndarray, y: np.ndarray, peak_indices: np.ndarray
+):
     """
     Plots the peak location for each peak specified in peak_indices on a specified Axes instance.
 
@@ -34,10 +38,12 @@ def Plot_Peak_Location(ax: plt.Axes, x: np.ndarray, y: np.ndarray, peak_indices:
     """
     peak_heights = y[peak_indices]
     peak_positions = x[peak_indices]
-    ax.scatter(peak_positions, peak_heights, color='r', s=20, marker='X', label='peaks')
+    ax.scatter(peak_positions, peak_heights, color="r", s=20, marker="X", label="peaks")
 
 
-def plot_spectrum(spectrum: Spectrum, normalisation: str, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
+def plot_spectrum(
+    spectrum: Spectrum, normalisation: str, **settings: dict
+) -> tuple[plt.Figure, plt.Axes]:
     """
     Plots a single spectrum (for a single detector).
 
@@ -51,7 +57,9 @@ def plot_spectrum(spectrum: Spectrum, normalisation: str, **settings: dict) -> t
     Returns:
         matplotlib Figure and Axes with plotted spectrum
     """
-    title = settings.get("title", f"Run Number: {spectrum.run_number} {spectrum.detector}")
+    title = settings.get(
+        "title", f"Run Number: {spectrum.run_number} {spectrum.detector}"
+    )
     colour = settings.get("colour", "yellow")
 
     fig, ax = plt.subplots(1)
@@ -61,15 +69,23 @@ def plot_spectrum(spectrum: Spectrum, normalisation: str, **settings: dict) -> t
     # sets the correct labels
     fig.supylabel(get_ylabel(normalisation))
 
-    ax.fill_between(spectrum.x, spectrum.y, step='mid', color=colour)
-    ax.step(spectrum.x, spectrum.y, where='mid', color='black', label=f"_{spectrum.detector}")
+    ax.fill_between(spectrum.x, spectrum.y, step="mid", color=colour)
+    ax.step(
+        spectrum.x,
+        spectrum.y,
+        where="mid",
+        color="black",
+        label=f"_{spectrum.detector}",
+    )
     ax.set_ylim(0.0)
     ax.set_xlim(0.0)
 
     return fig, ax
 
 
-def plot_spectrum_residual(spectrum: Spectrum, normalisation: str, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
+def plot_spectrum_residual(
+    spectrum: Spectrum, normalisation: str, **settings: dict
+) -> tuple[plt.Figure, plt.Axes]:
     """
     Plots a single spectrum (for a single detector) and creates an empty plot to be populated with fit residuals.
 
@@ -83,10 +99,12 @@ def plot_spectrum_residual(spectrum: Spectrum, normalisation: str, **settings: d
     Returns:
         matplotlib Figure and Axes with plotted spectrum and empty Axis for residuals
     """
-    title = settings.get("title", f"Run Number: {spectrum.run_number} {spectrum.detector}")
+    title = settings.get(
+        "title", f"Run Number: {spectrum.run_number} {spectrum.detector}"
+    )
     colour = settings.get("colour", "yellow")
 
-    fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [3, 1]})
+    fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={"height_ratios": [3, 1]})
     main_ax = ax[0]  # use the first Axes for the spectrum plot
     residual_ax = ax[1]  # use the second Axes for the residuals
 
@@ -100,13 +118,20 @@ def plot_spectrum_residual(spectrum: Spectrum, normalisation: str, **settings: d
     residual_ax.grid(True)
 
     # Plot the spectrum data in main_ax
-    main_ax.fill_between(spectrum.x, spectrum.y, step='mid', color=colour)
-    main_ax.step(spectrum.x, spectrum.y, where='mid', color='black', label=f"_{spectrum.detector}")
+    main_ax.fill_between(spectrum.x, spectrum.y, step="mid", color=colour)
+    main_ax.step(
+        spectrum.x,
+        spectrum.y,
+        where="mid",
+        color="black",
+        label=f"_{spectrum.detector}",
+    )
     main_ax.set_ylim(0.0)
     main_ax.set_xlim(0.0)
     main_ax.tick_params(labelbottom=True)
-    
+
     return fig, ax
+
 
 def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     """
@@ -135,13 +160,15 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
         "left": 0.095,
         "right": 0.99,
         "hspace": 0.53,
-        "wspace": 0.23
+        "wspace": 0.23,
     }
 
     show_detectors = settings.get("show_detectors", run.loaded_detectors)
     # Format title, if comment data exists include it
     try:
-        title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}\n{run.comment_data[0]}")
+        title = settings.get(
+            "title", f"Run Number: {run.run_num} {run.plot_mode}\n{run.comment_data[0]}"
+        )
     except AttributeError:
         title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}")
     ylabel = settings.get("ylabel", None)
@@ -173,11 +200,13 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     i = 0
     for detector, dataset in run.data.items():
         if detector in show_detectors:
-            axs[i].step(dataset.x, dataset.y, where="mid", color="black", label=f"_{detector}")
+            axs[i].step(
+                dataset.x, dataset.y, where="mid", color="black", label=f"_{detector}"
+            )
             axs[i].fill_between(dataset.x, dataset.y, step="mid", color=colour)
 
             axs[i].set_xlim(0.0)
-            axs[i].set_ylim((0, 1.2*np.max(dataset.y)))
+            axs[i].set_ylim((0, 1.2 * np.max(dataset.y)))
             axs[i].set_title(dataset.detector)
             i += 1
     # Adjustments
@@ -185,11 +214,14 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     return fig, axs
 
 
-def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict):
-
+def replot_run(
+    run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, **settings: dict
+):
     # Regenerate title in-case plot mode changed
     try:
-        title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}\n{run.comment_data[0]}")
+        title = settings.get(
+            "title", f"Run Number: {run.run_num} {run.plot_mode}\n{run.comment_data[0]}"
+        )
     except AttributeError:
         title = settings.get("title", f"Run Number: {run.run_num} {run.plot_mode}")
 
@@ -200,7 +232,7 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
         fig.supxlabel(" Time (ns)")
     else:
         fig.supxlabel("Energy (keV)")
-        
+
     if isinstance(axs, plt.Axes):
         axes = [axs]
     elif isinstance(axs, np.ndarray):
@@ -209,9 +241,15 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
         axes = axs
 
     for ax in axes:
-        candidates = [(line.get_label()[1:], line) for line in ax.lines if line.get_label()[1:] in run.loaded_detectors]
+        candidates = [
+            (line.get_label()[1:], line)
+            for line in ax.lines
+            if line.get_label()[1:] in run.loaded_detectors
+        ]
         if not candidates:
-            raise ValueError("No matching lines found in ax.lines with labels matching run.loaded_detectors")
+            raise ValueError(
+                "No matching lines found in ax.lines with labels matching run.loaded_detectors"
+            )
 
         detector, line = candidates[0]
 
@@ -221,8 +259,11 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
         line.set_xdata(xdata)
         line.set_ydata(ydata)
 
-        fill_obj = [child for child in ax.get_children() if
-                    isinstance(child, matplotlib.collections.FillBetweenPolyCollection)][0]
+        fill_obj = [
+            child
+            for child in ax.get_children()
+            if isinstance(child, matplotlib.collections.FillBetweenPolyCollection)
+        ][0]
 
         # lastly, re-fill the histogram
         fill_obj.set_data(xdata, 0, ydata)
@@ -232,8 +273,18 @@ def replot_run(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, 
 
         ax.set_ylim((0, 1.2 * np.max(ydata)))
 
-def replot_run_residual(run: Run, fig: plt.Figure, axs: np.ndarray[plt.Axes] | plt.Axes, fit_result, **settings: dict):
+
+def replot_run_residual(
+    run: Run,
+    fig: plt.Figure,
+    axs: np.ndarray[plt.Axes] | plt.Axes,
+    fit_result,
+    **settings: dict,
+):
     replot_run(run, fig, axs[0], **settings)
     if fit_result is not None:
-        axs[1].set_ylim(-np.max(np.abs(fit_result.residual)) * 1.2 , np.max(np.abs(fit_result.residual)) * 1.2)
+        axs[1].set_ylim(
+            -np.max(np.abs(fit_result.residual)) * 1.2,
+            np.max(np.abs(fit_result.residual)) * 1.2,
+        )
     fig.supylabel(get_ylabel(run.normalisation))

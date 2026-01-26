@@ -3,10 +3,7 @@ from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import (
-    QWidget,
-    QVBoxLayout
-)
+from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 from EVA.core.app import get_app
 
@@ -17,9 +14,11 @@ class FigureCanvas(FigureCanvasQTAgg):
     """
     This is the class that interacts with matplotlib and does all the plot rendering.
     """
+
     def __init__(self, fig=None, axs=None):
         super().__init__(fig)
         self.axs = axs
+
 
 class PlotWidget(QWidget):
     """
@@ -27,7 +26,10 @@ class PlotWidget(QWidget):
     link the two manually every time a PlotWidget is needed. It also takes care of figure resizing and linking the
     navbar and plot together.
     """
-    def __init__(self, fig=None, axs=None, parent=None, plot_name=None, plot_manager=None):
+
+    def __init__(
+        self, fig=None, axs=None, parent=None, plot_name=None, plot_manager=None
+    ):
         super().__init__()
         # create the figure canvas
         self.canvas = FigureCanvas(fig=fig, axs=axs)
@@ -46,13 +48,11 @@ class PlotWidget(QWidget):
         self.layout.addWidget(self.canvas)
         self.setLayout(self.layout)
 
-
     def trigger_update(self, plot_id):
         if self.plot_id == plot_id:
             self.update_plot()
 
-    def update_plot(self, fig=None,axs=None):
-
+    def update_plot(self, fig=None, axs=None):
         """
         For a simple axes update, it is enough to update the axs parameter of the canvas and redraw.
 
@@ -67,7 +67,7 @@ class PlotWidget(QWidget):
         if fig is not None:
             # close old figure to conserve memory
             plt.close(self.canvas.figure)
-            
+
             self.canvas.figure = fig
 
             # Since canvas is removed from widget and has no parent, 'deleteLater()' will delete it immediately.
@@ -92,4 +92,3 @@ class PlotWidget(QWidget):
         # Removes any current zoom or pan
         self.navbar.release_zoom(event)
         self.navbar.release_pan(event)
-

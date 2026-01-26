@@ -27,7 +27,7 @@ def search_gammas_single_transition(isotope: str, energy: str) -> list[dict]:
     gammas = list(get_app().gamma_database.values())
     all_matches = []
     i = 1
-    while i < len(gammas)-1:
+    while i < len(gammas) - 1:
         i += 1
         for j in range(len(gammas[i])):
             raw_data = gammas[i][j]
@@ -38,14 +38,15 @@ def search_gammas_single_transition(isotope: str, energy: str) -> list[dict]:
 
                 if raw_data_kev - sigma < float(energy) < raw_data_kev + sigma:
                     data = {
-                        'isotope': raw_data[0],
-                        'energy': raw_data_kev,
-                        'intensity': raw_data[2],
-                        'lifetime':  raw_data[3]
+                        "isotope": raw_data[0],
+                        "energy": raw_data_kev,
+                        "intensity": raw_data[2],
+                        "lifetime": raw_data[3],
                     }
 
                     all_matches.append(data)
     return all_matches
+
 
 def search_gammas_single_isotope(isotope: str) -> list[dict]:
     """
@@ -70,25 +71,28 @@ def search_gammas_single_isotope(isotope: str) -> list[dict]:
 
     all_matches = []
     i = 1
-    while i < len(gammas)-1:
+    while i < len(gammas) - 1:
         i += 1
         for j in range(len(gammas[i])):
             raw_data = gammas[i][j]
 
             if str(isotope) == raw_data[0].strip():
-                raw_data_kev=float(raw_data[1])
+                raw_data_kev = float(raw_data[1])
                 data = {
                     "isotope": raw_data[0],
                     "energy": raw_data_kev,
                     "intensity": raw_data[2],
-                    "lifetime": raw_data[3]
+                    "lifetime": raw_data[3],
                 }
 
                 all_matches.append(data)
 
     return all_matches
 
-def search_muxrays_single_transition(input_element: str, input_trans: str) -> list[dict]:
+
+def search_muxrays_single_transition(
+    input_element: str, input_trans: str
+) -> list[dict]:
     """
     Searches in muonic xray database for all peaks specified for a single transition. When using the Mudirac database,
     there will always be only one database entry per transition. However, the legacy database can sometimes contain
@@ -120,11 +124,12 @@ def search_muxrays_single_transition(input_element: str, input_trans: str) -> li
                     data = {
                         "element": element,
                         "energy": transition_data["E"],
-                        "transition": transition
+                        "transition": transition,
                     }
                     matches.append(data)
 
     return matches
+
 
 def search_muxrays_single_element(input_element: str) -> list[dict]:
     """
@@ -152,11 +157,12 @@ def search_muxrays_single_element(input_element: str) -> list[dict]:
                 data = {
                     "element": element,
                     "energy": transition_data["E"],
-                    "transition": transition
+                    "transition": transition,
                 }
                 matches.append(data)
 
     return matches
+
 
 def search_muxrays_single_element_all_isotopes(input_element: str) -> list[dict]:
     """
@@ -184,13 +190,16 @@ def search_muxrays_single_element_all_isotopes(input_element: str) -> list[dict]
                 data = {
                     "element": element,
                     "energy": transition_data["E"],
-                    "transition": transition
+                    "transition": transition,
                 }
                 matches.append(data)
 
     return matches
 
-def search_muxrays(input_peaks: list[list[float]]) -> tuple[list[dict], list[dict], list[dict]]:
+
+def search_muxrays(
+    input_peaks: list[list[float]],
+) -> tuple[list[dict], list[dict], list[dict]]:
     """
     Searches for possible muonic xray transitions in the database at multiple energies at once.
 
@@ -234,21 +243,21 @@ def search_muxrays(input_peaks: list[list[float]]) -> tuple[list[dict], list[dic
                 energy = transition_data["E"]
                 diff = abs(peak - energy)
 
-                if diff <= 3*sigma:
+                if diff <= 3 * sigma:
                     data = {
                         "element": element,
                         "energy": energy,
-                        "error": math.ceil(diff/sigma) * sigma,
+                        "error": math.ceil(diff / sigma) * sigma,
                         "peak_centre": peak,
                         "transition": transition,
-                        "diff": diff
+                        "diff": diff,
                     }
 
                     all_matches.append(data)
 
             prims = [peak[0] for peak in peak_data["Primary energies"][element].items()]
 
-    all_matches = sorted(all_matches, key=lambda o: o['diff'])
+    all_matches = sorted(all_matches, key=lambda o: o["diff"])
 
     for match in all_matches:
         if match["transition"] in prims:
@@ -261,7 +270,10 @@ def search_muxrays(input_peaks: list[list[float]]) -> tuple[list[dict], list[dic
 
     return all_matches, primary_matches, secondary_matches
 
-def search_muxrays_all_isotopes(input_peaks: list[list[float]]) -> tuple[list[dict], list[dict], list[dict]]:
+
+def search_muxrays_all_isotopes(
+    input_peaks: list[list[float]],
+) -> tuple[list[dict], list[dict], list[dict]]:
     """
     Searches for possible muonic xray transitions for all isotopes in the database at multiple energies at once.
 
@@ -305,21 +317,26 @@ def search_muxrays_all_isotopes(input_peaks: list[list[float]]) -> tuple[list[di
                 energy = transition_data["E"]
                 diff = abs(peak - energy)
 
-                if diff <= 3*sigma:
+                if diff <= 3 * sigma:
                     data = {
                         "element": element,
                         "energy": energy,
-                        "error": math.ceil(diff/sigma) * sigma,
+                        "error": math.ceil(diff / sigma) * sigma,
                         "peak_centre": peak,
                         "transition": transition,
-                        "diff": diff
+                        "diff": diff,
                     }
 
                     all_matches.append(data)
 
-            prims = [peak[0] for peak in peak_data["All isotopes"]["Primary energies"][element].items()]
+            prims = [
+                peak[0]
+                for peak in peak_data["All isotopes"]["Primary energies"][
+                    element
+                ].items()
+            ]
 
-    all_matches = sorted(all_matches, key=lambda o: o['diff'])
+    all_matches = sorted(all_matches, key=lambda o: o["diff"])
 
     for match in all_matches:
         if match["transition"] in prims:
@@ -331,6 +348,7 @@ def search_muxrays_all_isotopes(input_peaks: list[list[float]]) -> tuple[list[di
     logger.debug(f"Found matches in {(end_time - start_time) / 1e9} s.")
 
     return all_matches, primary_matches, secondary_matches
+
 
 def search_gammas(input_peaks: list[list[float]]) -> list[dict]:
     """
@@ -356,31 +374,31 @@ def search_gammas(input_peaks: list[list[float]]) -> list[dict]:
     gammas = list(get_app().gamma_database.values())
 
     i = 1
-    while i < len(gammas)-1:
+    while i < len(gammas) - 1:
         i += 1
-        #print('i=',i)
+        # print('i=',i)
         for j in range(len(gammas[i])):
-
             raw_data = gammas[i][j]
-            #print('raw_data', raw_data)
+            # print('raw_data', raw_data)
             for peak, sigma in input_peaks:
-                raw_data_kev=float(raw_data[1])
+                raw_data_kev = float(raw_data[1])
 
                 if (raw_data_kev - sigma) <= peak <= (raw_data_kev + sigma):
-                 #print('in print', peak, sigma, raw_data)
+                    # print('in print', peak, sigma, raw_data)
                     data = {
                         "isotope": raw_data[0],
                         "energy": raw_data_kev,
                         "diff": peak - float(raw_data_kev),
                         "intensity": float(raw_data[2]),
-                        "lifetime": raw_data[3]
+                        "lifetime": raw_data[3],
                     }
 
                     all_matches.append(data)
 
-    all_matches.sort(key = lambda x: abs(x['diff']))
+    all_matches.sort(key=lambda x: abs(x["diff"]))
 
     return all_matches
+
 
 def search_e_xrays(values: list[tuple[float, float]]) -> list[dict]:
     """
@@ -407,15 +425,15 @@ def search_e_xrays(values: list[tuple[float, float]]) -> list[dict]:
             energy = float(energy)
             for search_energy, search_width in values:
                 if (energy - search_width) <= search_energy <= (energy + search_width):
-                    results.append({
-                        "element": element,
-                        "transition": transition,
-                        "energy": energy,
-                        "diff": search_energy - energy
-                    })
+                    results.append(
+                        {
+                            "element": element,
+                            "transition": transition,
+                            "energy": energy,
+                            "diff": search_energy - energy,
+                        }
+                    )
 
-    results.sort(key=lambda x: abs(x['diff']))
+    results.sort(key=lambda x: abs(x["diff"]))
 
     return results
-
-

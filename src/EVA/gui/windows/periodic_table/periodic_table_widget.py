@@ -1,27 +1,192 @@
 # imports
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QMainWindow, QTreeWidgetItem, QTableWidgetItem, QMessageBox, QHeaderView
+from PyQt6.QtWidgets import (
+    QMainWindow,
+    QTreeWidgetItem,
+    QTableWidgetItem,
+    QMessageBox,
+    QHeaderView,
+)
 from EVA.util.qt6_widgets import NumericTableWidgetItem
 from functools import partial
 from EVA.core.app import get_app, get_config
-from EVA.core.data_searching.get_match import search_muxrays, search_muxrays_all_isotopes, search_gammas, search_e_xrays
+from EVA.core.data_searching.get_match import (
+    search_muxrays,
+    search_muxrays_all_isotopes,
+    search_gammas,
+    search_e_xrays,
+)
 from EVA.gui.ui_files.periodic_table import Ui_MainWindow
 from EVA.util.transition_utils import to_iupac
 from EVA.core.data_searching import get_match
 
 # lists
-elements = ["H", "He", 
-            "Li", "Be", "B", "C", "N", "O", "F", "Ne", 
-            "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", 
-            "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr",
-            "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe",
-            "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn",
-            "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og",
-            ]
+elements = [
+    "H",
+    "He",
+    "Li",
+    "Be",
+    "B",
+    "C",
+    "N",
+    "O",
+    "F",
+    "Ne",
+    "Na",
+    "Mg",
+    "Al",
+    "Si",
+    "P",
+    "S",
+    "Cl",
+    "Ar",
+    "K",
+    "Ca",
+    "Sc",
+    "Ti",
+    "V",
+    "Cr",
+    "Mn",
+    "Fe",
+    "Co",
+    "Ni",
+    "Cu",
+    "Zn",
+    "Ga",
+    "Ge",
+    "As",
+    "Se",
+    "Br",
+    "Kr",
+    "Rb",
+    "Sr",
+    "Y",
+    "Zr",
+    "Nb",
+    "Mo",
+    "Tc",
+    "Ru",
+    "Rh",
+    "Pd",
+    "Ag",
+    "Cd",
+    "In",
+    "Sn",
+    "Sb",
+    "Te",
+    "I",
+    "Xe",
+    "Cs",
+    "Ba",
+    "La",
+    "Ce",
+    "Pr",
+    "Nd",
+    "Pm",
+    "Sm",
+    "Eu",
+    "Gd",
+    "Tb",
+    "Dy",
+    "Ho",
+    "Er",
+    "Tm",
+    "Yb",
+    "Lu",
+    "Hf",
+    "Ta",
+    "W",
+    "Re",
+    "Os",
+    "Ir",
+    "Pt",
+    "Au",
+    "Hg",
+    "Tl",
+    "Pb",
+    "Bi",
+    "Po",
+    "At",
+    "Rn",
+    "Fr",
+    "Ra",
+    "Ac",
+    "Th",
+    "Pa",
+    "U",
+    "Np",
+    "Pu",
+    "Am",
+    "Cm",
+    "Bk",
+    "Cf",
+    "Es",
+    "Fm",
+    "Md",
+    "No",
+    "Lr",
+    "Rf",
+    "Db",
+    "Sg",
+    "Bh",
+    "Hs",
+    "Mt",
+    "Ds",
+    "Rg",
+    "Cn",
+    "Nh",
+    "Fl",
+    "Mc",
+    "Lv",
+    "Ts",
+    "Og",
+]
 
-elements_disable = ["H", "Kr", "Xe", "Tc", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", 
-                    "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og", "Pm", "Pa", "U", "Np", "Pu", "Am",
-                    "Cm", "Bk", "Cf", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"]
+elements_disable = [
+    "H",
+    "Kr",
+    "Xe",
+    "Tc",
+    "Po",
+    "At",
+    "Rn",
+    "Fr",
+    "Ra",
+    "Ac",
+    "Rf",
+    "Db",
+    "Sg",
+    "Bh",
+    "Hs",
+    "Mt",
+    "Ds",
+    "Mt",
+    "Ds",
+    "Rg",
+    "Cn",
+    "Nh",
+    "Fl",
+    "Mc",
+    "Lv",
+    "Ts",
+    "Og",
+    "Pm",
+    "Pa",
+    "U",
+    "Np",
+    "Pu",
+    "Am",
+    "Cm",
+    "Bk",
+    "Cf",
+    "Bk",
+    "Cf",
+    "Es",
+    "Fm",
+    "Md",
+    "No",
+    "Lr",
+]
 
 
 # class definitions
@@ -82,7 +247,12 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
             matches = get_match.search_muxrays_single_element_all_isotopes(isotope_name)
 
             # sort primary and secondary matches
-            prims = [key for key in mu_db["All isotopes"]["Primary energies"][isotope_name].keys()]
+            prims = [
+                key
+                for key in mu_db["All isotopes"]["Primary energies"][
+                    isotope_name
+                ].keys()
+            ]
 
             for match in matches:
                 match_item = QTreeWidgetItem()
@@ -136,23 +306,37 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
         self.element_info_electronic_xray_table.setRowCount(len(e_xray_data))
 
         for i, data in enumerate(e_xray_data.items()):
-            self.element_info_electronic_xray_table.setItem(i, 0, QTableWidgetItem(data[0]))
-            self.element_info_electronic_xray_table.setItem(i, 1, QTableWidgetItem(data[1][0]))
-            self.element_info_electronic_xray_table.setItem(i, 2, QTableWidgetItem(data[1][1]))
+            self.element_info_electronic_xray_table.setItem(
+                i, 0, QTableWidgetItem(data[0])
+            )
+            self.element_info_electronic_xray_table.setItem(
+                i, 1, QTableWidgetItem(data[1][0])
+            )
+            self.element_info_electronic_xray_table.setItem(
+                i, 2, QTableWidgetItem(data[1][1])
+            )
 
-
-        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-
+        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
+        self.element_info_electronic_xray_table.horizontalHeader().setSectionResizeMode(
+            2, QHeaderView.ResizeMode.Stretch
+        )
 
     def energy_search(self):
         try:
             energy = float(self.energy_input.text())
             error = float(self.uncertainty_input.text())
         except (AttributeError, ValueError):
-            _ = QMessageBox.critical(self, "Search error", "Invalid input in energy search.",
-                                       QMessageBox.StandardButton.Ok)
+            _ = QMessageBox.critical(
+                self,
+                "Search error",
+                "Invalid input in energy search.",
+                QMessageBox.StandardButton.Ok,
+            )
             return
 
         # display mu-xray results
@@ -167,7 +351,9 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
 
         if not len(filtered_muon_res):
             self.mu_xray_search_result_table.setRowCount(1)
-            self.mu_xray_search_result_table.setItem(0, 0, QTableWidgetItem("No matches."))
+            self.mu_xray_search_result_table.setItem(
+                0, 0, QTableWidgetItem("No matches.")
+            )
             self.mu_xray_search_result_table.setItem(0, 1, QTableWidgetItem())
             self.mu_xray_search_result_table.setItem(0, 2, QTableWidgetItem())
             self.mu_xray_search_result_table.setItem(0, 3, QTableWidgetItem())
@@ -176,26 +362,52 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
             self.mu_xray_search_result_table.setRowCount(len(filtered_muon_res))
 
             for i, r in enumerate(filtered_muon_res):
-                self.mu_xray_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["element"])))
-                self.mu_xray_search_result_table.setItem(i, 1, NumericTableWidgetItem(str(round(float(r["energy"]), 6))))
-                self.mu_xray_search_result_table.setItem(i, 2, QTableWidgetItem(str(r["transition"])))
-                self.mu_xray_search_result_table.setItem(i, 3, QTableWidgetItem(to_iupac(str(r["transition"]))))
-                self.mu_xray_search_result_table.setItem(i, 4, NumericTableWidgetItem(str(abs(round(r["diff"], 6)))))
+                self.mu_xray_search_result_table.setItem(
+                    i, 0, QTableWidgetItem(str(r["element"]))
+                )
+                self.mu_xray_search_result_table.setItem(
+                    i, 1, NumericTableWidgetItem(str(round(float(r["energy"]), 6)))
+                )
+                self.mu_xray_search_result_table.setItem(
+                    i, 2, QTableWidgetItem(str(r["transition"]))
+                )
+                self.mu_xray_search_result_table.setItem(
+                    i, 3, QTableWidgetItem(to_iupac(str(r["transition"])))
+                )
+                self.mu_xray_search_result_table.setItem(
+                    i, 4, NumericTableWidgetItem(str(abs(round(r["diff"], 6))))
+                )
 
-        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
-        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            2, QHeaderView.ResizeMode.Stretch
+        )
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            3, QHeaderView.ResizeMode.Stretch
+        )
+        self.mu_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            4, QHeaderView.ResizeMode.Stretch
+        )
 
         # display gamma results
         gamma_res = search_gammas([[energy, error]])
-        filtered_gammas = [res for res in gamma_res
-                           if res["intensity"] >= float(get_config()["database"]["gamma_intensity_threshold"])]
+        filtered_gammas = [
+            res
+            for res in gamma_res
+            if res["intensity"]
+            >= float(get_config()["database"]["gamma_intensity_threshold"])
+        ]
 
         if not len(filtered_gammas):
             self.gamma_search_result_table.setRowCount(1)
-            self.gamma_search_result_table.setItem(0, 0, QTableWidgetItem("No matches."))
+            self.gamma_search_result_table.setItem(
+                0, 0, QTableWidgetItem("No matches.")
+            )
             self.gamma_search_result_table.setItem(0, 1, QTableWidgetItem())
             self.gamma_search_result_table.setItem(0, 2, QTableWidgetItem())
             self.gamma_search_result_table.setItem(0, 3, QTableWidgetItem())
@@ -206,22 +418,40 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
                 if r["intensity"] < 20:
                     continue
 
-                self.gamma_search_result_table.setItem(i, 0, QTableWidgetItem(str(r["isotope"])))
-                self.gamma_search_result_table.setItem(i, 1, NumericTableWidgetItem(str(round(r["energy"], 6))))
-                self.gamma_search_result_table.setItem(i, 2, NumericTableWidgetItem(str(round((float(r["intensity"])), 6))))
-                self.gamma_search_result_table.setItem(i, 3, NumericTableWidgetItem(str(abs(round(r["diff"], 6)))))
+                self.gamma_search_result_table.setItem(
+                    i, 0, QTableWidgetItem(str(r["isotope"]))
+                )
+                self.gamma_search_result_table.setItem(
+                    i, 1, NumericTableWidgetItem(str(round(r["energy"], 6)))
+                )
+                self.gamma_search_result_table.setItem(
+                    i, 2, NumericTableWidgetItem(str(round((float(r["intensity"])), 6)))
+                )
+                self.gamma_search_result_table.setItem(
+                    i, 3, NumericTableWidgetItem(str(abs(round(r["diff"], 6))))
+                )
 
-        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
+        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(
+            2, QHeaderView.ResizeMode.Stretch
+        )
+        self.gamma_search_result_table.horizontalHeader().setSectionResizeMode(
+            3, QHeaderView.ResizeMode.Stretch
+        )
 
         # display e-xray results
         e_xray_res = search_e_xrays([(energy, error)])
 
         if not len(e_xray_res):
             self.e_xray_search_result_table.setRowCount(1)
-            self.e_xray_search_result_table.setItem(0, 0, QTableWidgetItem("No matches."))
+            self.e_xray_search_result_table.setItem(
+                0, 0, QTableWidgetItem("No matches.")
+            )
             self.e_xray_search_result_table.setItem(0, 1, QTableWidgetItem())
             self.e_xray_search_result_table.setItem(0, 2, QTableWidgetItem())
             self.e_xray_search_result_table.setItem(0, 3, QTableWidgetItem())
@@ -229,15 +459,31 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
             self.e_xray_search_result_table.setRowCount(len(e_xray_res))
 
             for i, r in enumerate(e_xray_res):
-                self.e_xray_search_result_table.setItem(i, 0, QTableWidgetItem(r["element"]))
-                self.e_xray_search_result_table.setItem(i, 1, NumericTableWidgetItem(str(round(r["energy"], 6))))
-                self.e_xray_search_result_table.setItem(i, 2, QTableWidgetItem(r["transition"]))
-                self.e_xray_search_result_table.setItem(i, 3, NumericTableWidgetItem(str(abs(round(r["diff"], 6)))))
+                self.e_xray_search_result_table.setItem(
+                    i, 0, QTableWidgetItem(r["element"])
+                )
+                self.e_xray_search_result_table.setItem(
+                    i, 1, NumericTableWidgetItem(str(round(r["energy"], 6)))
+                )
+                self.e_xray_search_result_table.setItem(
+                    i, 2, QTableWidgetItem(r["transition"])
+                )
+                self.e_xray_search_result_table.setItem(
+                    i, 3, NumericTableWidgetItem(str(abs(round(r["diff"], 6))))
+                )
 
-        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
+        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            2, QHeaderView.ResizeMode.Stretch
+        )
+        self.e_xray_search_result_table.horizontalHeader().setSectionResizeMode(
+            3, QHeaderView.ResizeMode.Stretch
+        )
 
         """ Previous method using the .dat files and custom search
         
