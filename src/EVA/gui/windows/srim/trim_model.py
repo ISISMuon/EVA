@@ -162,7 +162,7 @@ class TrimModel(QObject):
                 MomSigma = 0.01 * self.momentum_spread * mom
 
                 xres, yres = [], []
-
+                total_counter = 0
                 for i in range(self.sigma_step + 1):
                     t0 = time.time_ns()
 
@@ -171,12 +171,12 @@ class TrimModel(QObject):
                     )  # momentum for each iteration
 
                     # Number of simulated muons dependent on Gaussian distribution of muon momentum
-                    NE = int(
-                        self.stats
-                        * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma))
-                        * np.exp(-0.5 * (P - mom) ** 2 / (MomSigma**2))
-                    )
+                    deltaP = 0.5 * MomSigma
 
+                    pdf = (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) \
+                        * np.exp(-0.5 * (P - mom)**2 / MomSigma**2)
+
+                    NE = round(self.stats * pdf * deltaP)
                     # get muon information
                     muon_ion = self.get_muon(P)
 
@@ -195,7 +195,10 @@ class TrimModel(QObject):
                     else:
                         for index in range(0, len(y1)):
                             yres[index] = yres[index] + y1[index]
-
+                    total_counter += NE
+                    print("num_events in current slice: ", NE)
+                    print("total muons so far: ", total_counter)
+                    print("yres sum: ", np.sum(yres))
                     # insert results into results arrays
                     self.result_x[momentum_index, :] = xres
                     self.result_y[momentum_index, :] = yres
