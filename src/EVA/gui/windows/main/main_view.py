@@ -68,9 +68,10 @@ class MainView(QMainWindow):
         self.plotting_menu = self.bar.addMenu("Plotting")
         self.multiplot_action = self.plotting_menu.addAction("Multi-run Plot")
         self.fit_table_plot_action = self.plotting_menu.addAction("Fit-Table Plot")
-        self.tools_menu = self.bar.addMenu("Tools")
-        self.srim_sim_action = self.tools_menu.addAction("SRIM/TRIM Simulation")
-        self.periodic_table_action = self.tools_menu.addAction("Periodic Table")
+        self.tools_menu = self.bar.addMenu('Tools')
+        self.srim_sim_action = self.tools_menu.addAction('SRIM/TRIM Simulation')
+        self.g4bl_sim_action = self.tools_menu.addAction("G4BL Simulation")
+        self.periodic_table_action = self.tools_menu.addAction('Periodic Table')
         self.muxray_sim_action = self.tools_menu.addAction("Muonic X-ray Modelling")
 
         self.help_menu = self.bar.addMenu("Help")

@@ -8,10 +8,8 @@ from EVA.gui.windows.main.main_view import MainView
 from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.gui.windows.fit_table_plot.fit_table_plot_window import FitTablePlotWindow
-
-from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import (
-    ModelSpectraWindow,
-)
+from EVA.gui.windows.g4bl.g4bl_window import G4blWindow
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
 from EVA.gui.windows.workspace.workspace_window import WorkspaceWindow
@@ -42,6 +40,7 @@ class MainPresenter:
         self.view.multiplot_action.triggered.connect(self.open_multiplot)
 
         self.view.srim_sim_action.triggered.connect(self.open_trim)
+        self.view.g4bl_sim_action.triggered.connect(self.open_g4bl_sim)
         self.view.periodic_table_action.triggered.connect(self.open_periodic_table)
         self.view.muxray_sim_action.triggered.connect(self.open_model_muon_spectrum)
 
@@ -304,6 +303,23 @@ class MainPresenter:
         logger.info("Closed TRIM window.")
 
         self.view.srim_windows.remove(window)
+        window.widget().deleteLater()
+
+    def open_g4bl(self):
+        """ Opens a window for g4bl simulations. """
+        logger.info("Opening G4BL sim window.")
+
+        window = G4blWindow()
+        self.view.g4bl_windows.append(window)
+
+        window.showMaximized()
+        window.widget().window_closed_s.connect(lambda: self.close_g4bl(window))
+
+    def close_g4bl(self, window):
+        """ Remove reference to g4bl window when closed """
+        logger.info("Closed G4BL window.")
+
+        self.view.g4bl_windows.remove(window)
         window.widget().deleteLater()
 
     def open_model_muon_spectrum(self):
