@@ -305,7 +305,7 @@ class MainPresenter:
         self.view.srim_windows.remove(window)
         window.widget().deleteLater()
 
-    def open_g4bl(self):
+    def open_g4bl_sim(self):
         """ Opens a window for g4bl simulations. """
         logger.info("Opening G4BL sim window.")
 
@@ -313,9 +313,9 @@ class MainPresenter:
         self.view.g4bl_windows.append(window)
 
         window.showMaximized()
-        window.widget().window_closed_s.connect(lambda: self.close_g4bl(window))
+        window.widget().window_closed_s.connect(lambda: self.close_g4bl_sim(window))
 
-    def close_g4bl(self, window):
+    def close_g4bl_sim(self, window):
         """ Remove reference to g4bl window when closed """
         logger.info("Closed G4BL window.")
 

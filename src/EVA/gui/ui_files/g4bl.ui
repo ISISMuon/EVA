@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1063</width>
-    <height>850</height>
+    <height>1032</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -259,14 +259,14 @@
        <widget class="QWidget" name="widget_5" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_10">
          <item>
-          <widget class="QCheckBox" name="stack_checkbox">
+          <widget class="QRadioButton" name="stack_layer_radio">
            <property name="text">
             <string>Simple Stack</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="manual_placement_checkbox">
+          <widget class="QRadioButton" name="manual_placement_radio">
            <property name="text">
             <string>Custom Placement</string>
            </property>

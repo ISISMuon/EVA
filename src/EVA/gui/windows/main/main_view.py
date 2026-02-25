@@ -26,6 +26,7 @@ from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import (
 )
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
+from EVA.gui.windows.g4bl.g4bl_window import G4blWindow
 from EVA.gui.windows.workspace.workspace_window import WorkspaceWindow
 
 logger = logging.getLogger(__name__)
@@ -36,14 +37,15 @@ class MainView(QMainWindow):
 
     update_all_plots_s = pyqtSignal(NoneType, NoneType)
 
-    workspaces: list[WorkspaceWindow] = []
-    model_spectra_windows: list[ModelSpectraWindow] = []
-    manual_windows: list[ManualWindow] = []
-    fit_table_plot_windows: list[FitTablePlotWindow] = []
-    multiplot_windows: list[MultiPlotWindow] = []
-    srim_windows: list[TrimWindow] = []
-    periodic_table_windows: list[PeriodicTableWidget] = []
-    general_settings_dialogs: list[SettingsDialog] = []
+    workspaces : list[WorkspaceWindow] = []
+    model_spectra_windows : list[ModelSpectraWindow] = []
+    manual_windows : list[ManualWindow] = []
+    fit_table_plot_windows : list[FitTablePlotWindow] = []
+    multiplot_windows : list[MultiPlotWindow] = []
+    srim_windows : list[TrimWindow] = []
+    g4bl_windows : list[G4blWindow] = []
+    periodic_table_windows : list[PeriodicTableWidget] = []
+    general_settings_dialogs : list[SettingsDialog] = []
 
     def __init__(self):
         """Initialise gui components."""
