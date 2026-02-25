@@ -41,7 +41,7 @@ class G4blPresenter(QWidget):
         self.on_sim_type_changed(self.view.sim_type_combo.currentText())
         self.view.sim_type_combo.currentTextChanged.connect(self.on_sim_type_changed)
 
-        # Connect layer option checkboxes, set default layer method to simple stack and hide custom placement sample table
+        # Connect layer option checkboxes, set default layer method to simple stack and hide custom place_sample sample table
         self.view.mode_group.buttonToggled.connect(self.on_mode_changed)
         self.view.stack_layer_radio.setChecked(True)
 
@@ -51,9 +51,9 @@ class G4blPresenter(QWidget):
 
         self.view.stack_layer_setup_table.update_contents(self.format_model_layers(), round_to=4)
 
-        self.view.placement_implantation_collapse_checkbox.checkStateChanged.connect(self.view.collapse_expand_implantation)
+        self.view.place_sample_implantation_collapse_checkbox.checkStateChanged.connect(self.view.collapse_expand_implantation)
         self.view.stack_implantation_collapse_checkbox.checkStateChanged.connect(lambda state: self.collapse_expand_tree(self.view.stack_results_tree, state))
-        self.view.placement_implantation_collapse_checkbox.checkStateChanged.connect(lambda state: self.collapse_expand_tree(self.view.placement_results_tree, state))
+        self.view.place_sample_implantation_collapse_checkbox.checkStateChanged.connect(lambda state: self.collapse_expand_tree(self.view.place_sample_results_tree, state))
         self.view.run_sim_button.clicked.connect(self.start_sim)
         self.view.cancel_sim_button.clicked.connect(self.cancel_sim)
         self.view.stopping_shift_plot_origin_s.connect(self.stopping_shift_plot_origin)
@@ -120,7 +120,7 @@ class G4blPresenter(QWidget):
 
     def enable_stack_layer_table(self):
         if self.view.stack_checkbox.isChecked():
-            self.view.manual_placement_checkbox.setChecked(False)
+            self.view.manual_place_sample_checkbox.setChecked(False)
             self.view.stack_layer_setup_table.show()
             self.view.place_sample_setup_table.hide()
         else:
@@ -133,13 +133,13 @@ class G4blPresenter(QWidget):
             return
 
         if button is self.view.stack_layer_radio:
-            self.view.placement_tabWidget.hide()
+            self.view.place_sample_tabWidget.hide()
             self.view.stack_tabWidget.show()
             self.model.sim_method = "Stack"
 
-        elif button is self.view.manual_placement_radio:
+        elif button is self.view.manual_place_sample_radio:
             self.view.stack_tabWidget.hide()
-            self.view.placement_tabWidget.show()
+            self.view.place_sample_tabWidget.show()
             self.model.sim_method = "Manual Placement"
 
     def append_row_in_stack_layer_table_if_last_row_clicked(self, row):
@@ -159,6 +159,17 @@ class G4blPresenter(QWidget):
         return [[layer["name"], layer["thickness"], layer.get("density", " ")] for layer in layers]
 
     def start_sim(self):
+        if self.model.sim_method == "Stack":
+            self.start_stack_layer_sim()
+        elif self.model.sim_method == "Manual Placement":
+            self.start_place_sample_sim()
+        else:
+            logger.error(f"Invalid simulation method {self.model.sim_method}")
+
+    def start_stack_layer_sim(self):
+        pass
+
+    def start_place_sample_sim(self):
         pass
     def cancel_sim(self):
         pass
