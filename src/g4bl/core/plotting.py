@@ -6,6 +6,8 @@ def plot_per_shape(data):
 
     for i, (key, value) in enumerate(data.items()):
         x, y = value
+        print(key, "\n")
+        print(x,y)
         axes[i, 0].plot(x, y, marker='o')
         axes[i, 0].set_title(key)
         axes[i, 0].set_xlabel("x")

@@ -17,7 +17,7 @@ class InputWriter:
         # current default parameters for the port 4 beam, optionally can be overriden IF nceessary but other parameters are REQUIRED. 
         params = {
             "particle": "mu-",
-            "spot_size": 25.0,
+            "spot_size": 15.0,
             "splay": 0,
             "splayX": 0,
             "splayY": 0,
@@ -30,7 +30,10 @@ class InputWriter:
 
         beam_lines = [
             f"param -unset particles={params['particle']}",
-            "param -unset deltaIntersection=0.005",
+            "param deltaIntersection=0.005",
+            "param deltaChord=0.0005",
+            "param maxStep=0.1",
+            "param minStep=0.05"
             f"param -unset stats={params['muon_num']}",
             "param -unset firstEvent=1",
             f"param -unset P_inj={params['momentum']}",

@@ -28,11 +28,10 @@ class G4blPresenter(QWidget):
         self.view.min_momentum_linedit.setText(str(self.model.min_momentum))
         self.view.max_momentum_linedit.setText(str(self.model.max_momentum))
         self.view.momentum_step_linedit.setText(str(self.model.step_momentum))
-        self.view.g4bl_exe_dir_linedit.setText(str(self.model.g4bl_exe_dir))
-        self.view.g4bl_out_dir_linedit.setText(str(self.model.g4bl_out_dir))
+        # self.view.g4bl_exe_dir_linedit.setText(str(self.model.g4bl_exe_dir))
+        # self.view.g4bl_out_dir_linedit.setText(str(self.model.g4bl_out_dir))
         self.view.stats_linedit.setText(str(self.model.stats))
         self.view.visualisation_checkbox.setChecked(False)
-
         # set momentum scam params to only be visible if momentum scan is selected
         self.on_scan_type_changed(self.view.scan_momentum_combo.currentText())
         self.view.scan_momentum_combo.currentTextChanged.connect(self.on_scan_type_changed)

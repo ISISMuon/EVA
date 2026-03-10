@@ -278,7 +278,7 @@
       <item>
        <widget class="QTabWidget" name="placement_tabWidget">
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="placement_layers_tab">
          <attribute name="title">
@@ -361,7 +361,7 @@
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <item>
-           <widget class="QCheckBox" name="placement_implantation_collapse_checkbox">
+           <widget class="QCheckBox" name="place_sample_implantation_collapse_checkbox">
             <property name="text">
              <string> Expand all / Collapse</string>
             </property>

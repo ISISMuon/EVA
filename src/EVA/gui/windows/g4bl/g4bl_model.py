@@ -130,7 +130,7 @@ class G4blModel(QObject):
                     descriptions.append(desc_line)
         return descriptions[::2]
 
-    def fetch_sample_file_for_material(self, materials = list[Shape]):
+    def fetch_sample_file_for_material(self, materials: list[Shape]):
         #TODO: revert this to config after demo
         outdir = Path(r"C:\Users\chend\Desktop\Projects\g4beamline\demo_outputs")
         for material in materials:
@@ -151,7 +151,7 @@ class G4blModel(QObject):
 
             # Yield files one by one
             for sample_index, file_path in matching_files:
-                yield (material, sample_index, file_path)
+                yield file_path
 
     def process_sample_files(self, materials: list[Shape]):
         self.final_results = {}
@@ -159,22 +159,33 @@ class G4blModel(QObject):
         for material in materials:
             per_material_penetration_results = []
             per_material_absorption_results = []
-            # iterate all files for this material
-            for mat, sample_index, file_path in self.fetch_sample_file_for_material([material]):
-                with open(file_path, "r", encoding="utf-8") as f:
-                    # example: count number of lines in file
-                    line_count = sum(1 for _ in f) - 2
-                    try:
-                        per_material_absorption_results.append(previous_line_count - line_count)
-                    except UnboundLocalError:
-                        per_material_absorption_results.append(0)
-                    per_material_penetration_results.append(line_count)
-                    previous_line_count = line_count
+            # calculate number of muons in first sample outside of loop so that it can be referenced inside the loop to avoid if/else checking in each loop
+            #TODO make this cleaner if possible
+            file_iter = self.fetch_sample_file_for_material([material])
+            file_iter = iter(file_iter)
 
-            self.final_results[material.name] = [material.sample_positions, per_material_absorption_results]
-    
+            # Get first file
+            first_file = next(file_iter, None)
+
+            if first_file is None:
+                continue  # no files for this material safety check
+
+            with open(first_file, "r", encoding="utf-8") as f:
+                previous_line_count = sum(1 for _ in f) - 2
+                per_material_absorption_results.append(0)
+            # Process remaining files
+            for file_path in file_iter:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    line_count = sum(1 for _ in f) - 2
+
+                per_material_absorption_results.append(previous_line_count - line_count)
+                per_material_penetration_results.append(line_count)
+
+                previous_line_count = line_count
+
+            self.final_results[material.name] = [material.sample_positions, per_material_absorption_results,]
     def clear_output_directory(self):
         outdir = Path(r"C:\Users\chend\Desktop\Projects\g4beamline\demo_outputs")
         for file in outdir.iterdir():
-            if file.is_file():
+            if file.is_file() and file != "demo_input_file.g4bl":
                 file.unlink()
