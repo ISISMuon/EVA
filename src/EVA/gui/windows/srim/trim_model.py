@@ -1,4 +1,5 @@
 import os
+import io
 import time
 from zipfile import ZipFile
 
@@ -57,7 +58,7 @@ class TrimModel(QObject):
         self.counts_per_layer_err = None
         self.proportions_per_layer = None
         self.proportions_per_layer_err = None
-
+        self.figs = {}
         # for storing an x-axis shift for each momentum plot (one for each momentum)
         self.default_origin_position = 0
         self.stopping_plot_origin_shifts = []
@@ -136,7 +137,7 @@ class TrimModel(QObject):
                 # insert results into results arrays
                 self.result_x[momentum_index, :] = x
                 self.result_y[momentum_index, :] = y
-
+                self.result_y[momentum_index, :] = (self.result_y[momentum_index, :] / np.sum(self.result_y[momentum_index, :])) * self.stats
                 t1 = time.time_ns()
 
                 dt = (t1 - t0) / 1e9
@@ -199,6 +200,8 @@ class TrimModel(QObject):
                     print("num_events in current slice: ", NE)
                     print("total muons so far: ", total_counter)
                     print("yres sum: ", np.sum(yres))
+
+                    # normalise the y
                     # insert results into results arrays
                     self.result_x[momentum_index, :] = xres
                     self.result_y[momentum_index, :] = yres
@@ -211,12 +214,9 @@ class TrimModel(QObject):
 
                     # report progress to gui
                     progress_callback.emit(
-                        {
-                            "current": simulation_count,
-                            "total": total_sims,
-                            "sim_times": self.simulation_times,
-                        }
-                    )
+                        {"current": simulation_count, "total": total_sims, "sim_times": self.simulation_times})
+                self.result_y[momentum_index, :] = (self.result_y[momentum_index, :] / np.sum(self.result_y[momentum_index, :])) * self.stats
+                print("yres sum after normalising: ", np.sum(yres))
 
         else:
             raise ValueError("Invalid simulation type specified")
@@ -597,7 +597,7 @@ class TrimModel(QObject):
             )
 
         axx.legend()
-
+        self.figs[momentum_index] = axx
         return figt, axx
 
     def plot_depth_profile(self) -> tuple[plt.Figure, plt.Axes]:
@@ -682,6 +682,14 @@ class TrimModel(QObject):
             f"SRIM_{momentum}_MeVc.zip",
         )
 
+    def get_default_srim_plot_save_name(self, momentum: float | None = None) -> str:
+        if momentum is None:
+            return os.path.join(f"{get_config()['general']['working_directory']}", "SRIM_stopping_profile_plots.zip")
+        else:
+            momentum = f"{momentum:.5f}"
+        return os.path.join(f"{get_config()['general']['working_directory']}", f"SRIM_{momentum}_stopping_profile.png")
+
+
     def save_sim(self, path: str, rows: list | int | None = None):
         if isinstance(rows, int):
             rows = [rows]
@@ -728,22 +736,32 @@ class TrimModel(QObject):
 
                     zf.writestr(layer_filename, layer_curve_str)
 
-    def save_settings(
-        self,
-        sample_name,
-        stats,
-        srim_dir,
-        output_dir,
-        momentum,
-        momentum_spread,
-        sim_type,
-        min_momentum,
-        max_momentum,
-        step_momentum,
-        scan_type,
-        layers,
-        target_dir,
-    ):
+    def save_plot(self, path: str, rows: list | int | None = None):
+        if isinstance(rows, int):
+            fig = self.figs[rows].figure  # get the matplotlib Figure object from the Axes
+            fig.savefig(path, bbox_inches='tight')  # save the figure
+
+        if rows is None:
+            with ZipFile(path, 'w') as zipf:
+                for i, momentum_value in enumerate(self.momentum):
+                    if i not in self.figs:
+                        continue  # skip rows with no plot
+
+                    fig = self.figs[i].figure
+
+                    # Save figure to a bytes buffer
+                    buf = io.BytesIO()
+                    fig.savefig(buf, format='png', bbox_inches='tight')
+                    buf.seek(0)
+
+                    # Use a descriptive filename inside the zip
+                    filename = f"SRIM_plot_momentum_{momentum_value:.1f}.png"
+                    zipf.writestr(filename, buf.read())
+                    buf.close()
+
+    def save_settings(self, sample_name, stats, srim_dir, output_dir, momentum, momentum_spread, sim_type,
+                        min_momentum, max_momentum, step_momentum, scan_type, layers, target_dir):
+
         file2 = open(target_dir, "w")
         file2.writelines("Sample Name\n")
         out = sample_name + "\n"
