@@ -11,9 +11,9 @@ class SettingsModel:
     def apply_settings(self, settings: dict):
         config = get_config()
 
-        config["general"]["working_directory"] = settings["general"][
-            "working_directory"
-        ]
+        config["general"]["working_directory"] = settings["general"]["working_directory"]
+        config["general"]["encoding"] = settings["general"]["encoding"]
+
         config["plot"]["fill_colour"] = settings["plot"]["fill_colour"]
 
         config["SRIM"]["installation_directory"] = settings["SRIM"][

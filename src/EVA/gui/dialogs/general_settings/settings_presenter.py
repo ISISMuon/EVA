@@ -52,6 +52,7 @@ class SettingsPresenter:
             "srim_exe_dir": config["SRIM"]["installation_directory"],
             "srim_out_dir": config["SRIM"]["output_directory"],
             "fill_colour": config["plot"]["fill_colour"],
+            "encoding": config["general"]["encoding"]
         }
 
         self.view.set_settings(settings)
@@ -60,7 +61,10 @@ class SettingsPresenter:
         settings = self.view.get_settings()
 
         restructured_settings = {
-            "general": {"working_directory": settings["working_dir"]},
+            "general": {
+                "working_directory": settings["working_dir"],
+                "encoding": settings["encoding"]
+            },
             "SRIM": {
                 "installation_directory": settings["srim_exe_dir"],
                 "output_directory": settings["srim_out_dir"],
