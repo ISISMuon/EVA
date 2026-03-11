@@ -1,12 +1,12 @@
 from g4bl.core.shapes import Shape, Slab
 
 class InputWriter:
-    def __init__(self, targets: list[Shape], beam_off: bool, muon_num: int, momentum: float, mom_err: float, **kwargs):
+    def __init__(self, targets: list[Shape], beam_off: bool, muon_num: int, momentum: float, mom_err: float, optional_params: dict = None):
         self.targets = targets
         self.muon_num = muon_num
         self.momentum = momentum
         self.mom_err = mom_err
-        self.kwargs = kwargs
+        self.optional_params = optional_params
         self.input_string = ""
         self.sample_positions = []
         if not beam_off:
@@ -21,19 +21,23 @@ class InputWriter:
             "splay": 0,
             "splayX": 0,
             "splayY": 0,
+            "deltaIntersection": 0.1,
+            "deltaChord": 3,
+            "maxStep": 100,
+            "minStep": 0.01
         }
         # required parameters
         params["muon_num"] = self.muon_num
         params["momentum"] = self.momentum
         params["mom_err"] = self.mom_err
-        params.update(self.kwargs)
+        params.update(self.optional_params)
 
         beam_lines = [
             f"param -unset particles={params['particle']}",
-            "param deltaIntersection=0.005",
-            "param deltaChord=0.0005",
-            "param maxStep=0.1",
-            "param minStep=0.05"
+            f"param deltaIntersection={params['deltaIntersection']}",
+            f"param deltaChord={params['deltaChord']}",
+            f"param maxStep={params['maxStep']}",
+            f"param minStep={params['minStep']}",
             f"param -unset stats={params['muon_num']}",
             "param -unset firstEvent=1",
             f"param -unset P_inj={params['momentum']}",
@@ -42,7 +46,7 @@ class InputWriter:
             f"param -unset splayX={params['splayX']}",
             f"param -unset splayY={params['splayY']}",
             f"param -unset bite={params['mom_err']}",
-            "physics FTFP_BERT spinTracking=1",
+            "physics FTFP_BERT_EMZ spinTracking=1",
             (
                 "beam gaussian "
                 "particle=$particles "
