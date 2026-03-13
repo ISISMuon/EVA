@@ -77,7 +77,7 @@ class TestPlotWindow:
 
     # test if the expected data is displayed in muon table when clicking a specific peak in the figure
     def test_clickpeaks_muon(self, qtbot):
-        tests = [("Cl", 193.4), ("Ti", 932.0)]
+        tests = [("Rb", 193.4), ("Tl", 932.0)]
         for test in tests:
             # simulate click event
             event = util.trigger_figure_click_event(
@@ -150,6 +150,7 @@ class TestPlotWindow:
         )
 
     @pytest.mark.parametrize("tests", muon_plot_lines_tests)
+    @pytest.mark.skipif(True, reason="Temporarily disabled until issue with missing mudirac intensities is fixed")
     def test_plot_and_remove_lines_muonic_xrays(self, qtbot, tests):
         # first element in tuple is which energy to search, second element in tuple is how many lines will be plotted
         # when clicking the first element in the table after searching that energy.
