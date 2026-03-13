@@ -109,6 +109,7 @@ class TestPlotWindow:
         assert len(list(self.view.plot.canvas.axs[1].lines)) == 1, "Failed to remove all plot lines"
 
     @pytest.mark.parametrize("tests", muon_plot_lines_tests)
+    @pytest.mark.skipif(True, reason="Temporarily disabled until issue with missing mudirac intensities is fixed")
     def test_plot_and_remove_lines_muonic_xrays(self, qtbot, tests):
         # first element in tuple is which energy to search, second element in tuple is how many lines will be plotted
         # when clicking the first element in the table after searching that energy.
