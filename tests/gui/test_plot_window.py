@@ -60,7 +60,7 @@ class TestPlotWindow:
 
     # test if the expected data is displayed in muon table when clicking a specific peak in the figure
     def test_clickpeaks_muon(self, qtbot):
-        tests = [("Cl", 193.4), ("Ti", 932.0)]
+        tests = [("Rb", 193.4), ("Tl", 932.0)]
         for test in tests:
             # simulate click event
             event = util.trigger_figure_click_event(self.view.plot.canvas, xdata=test[1], ydata=0,
