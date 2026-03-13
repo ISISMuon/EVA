@@ -4,14 +4,17 @@ from PyQt6.QtCore import pyqtSignal
 
 from EVA.gui.windows.fit_table_plot.fit_table_plot_model import FitTablePlotModel
 from EVA.gui.windows.fit_table_plot.fit_table_plot_view import FitTablePlotView
-from EVA.gui.windows.fit_table_plot.fit_table_plot_presenter import FitTablePlotPresenter
-
+from EVA.gui.windows.fit_table_plot.fit_table_plot_presenter import (
+    FitTablePlotPresenter,
+)
 
 
 class FitTablePlotWindow(BaseWindow):
-    """ Coordinator class to string together the MVP components of the peak fit window """
+    """Coordinator class to string together the MVP components of the peak fit window"""
+
     window_closed_s = pyqtSignal(object)
-    def __init__(self, parent = None):
+
+    def __init__(self, parent=None):
         """
         Args:
 

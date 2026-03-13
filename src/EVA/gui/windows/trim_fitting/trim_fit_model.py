@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 
 from EVA.gui.windows.srim.trim_model import TrimModel
 
+
 class TrimFitModel(TrimModel):
     def __init__(self):
         super().__init__()
@@ -9,29 +10,11 @@ class TrimFitModel(TrimModel):
         self.fig, self.ax = self.plot_initial()
 
         self.input_layers = [
-            {
-                "name": "Beamline Window",
-                "thickness": 0.05
-            },
-            {
-                "name": "Air (compressed)",
-                "thickness": 0.067
-            },
-            {
-                "name": "AlN",
-                "thickness": 0.1,
-                "density": 2.70
-            },
-            {
-                "name": "SiO",
-                "thickness": 0.1,
-                "density": 1.4
-            },
-            {
-                "name": "Cu",
-                "thickness": 0.1,
-                "density": 8.96
-            }
+            {"name": "Beamline Window", "thickness": 0.05},
+            {"name": "Air (compressed)", "thickness": 0.067},
+            {"name": "AlN", "thickness": 0.1, "density": 2.70},
+            {"name": "SiO", "thickness": 0.1, "density": 1.4},
+            {"name": "Cu", "thickness": 0.1, "density": 8.96},
         ]
 
     def plot_initial(self):
@@ -52,5 +35,3 @@ class TrimFitModel(TrimModel):
         ax.legend()
 
         return fig, ax
-
-

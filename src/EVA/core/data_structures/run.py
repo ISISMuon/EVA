@@ -10,9 +10,12 @@ logger = logging.getLogger(__name__)
 
 normalisation_types = ("none", "counts", "events")
 
+
 class MetaQObjectABC(type(QObject), ABCMeta):
     """Metaclass combining QObject and ABC compatibility."""
+
     pass
+
 
 class Run(QObject, metaclass=MetaQObjectABC):
     """
@@ -22,7 +25,13 @@ class Run(QObject, metaclass=MetaQObjectABC):
 
     corrections_updated_s = pyqtSignal()
 
-    def __init__(self, raw: dict[Spectrum], loaded_detectors: list[str], run_num: str, momentum: float):
+    def __init__(
+        self,
+        raw: dict[Spectrum],
+        loaded_detectors: list[str],
+        run_num: str,
+        momentum: float,
+    ):
         super().__init__()
         self._raw = raw
         self.loaded_detectors = loaded_detectors
@@ -35,7 +44,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self.normalise_which = loaded_detectors
         self.bin_rate = 1
         self.default_bin = 8192  # subclasses may override
-        self.bin_method = "" # subclass must set
+        self.bin_method = ""  # subclass must set
 
     # =================================================================
     # ABSTRACT INTERFACE
@@ -50,7 +59,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
     def read_comment_data(self):
         """Return formatted metadata (comment, start time, end time, etc.)."""
         pass
-    
+
     @abstractmethod
     def _set_normalisation_events(self, normalise_which: list[str]):
         """Normalise by events (logic differs per run type)."""
@@ -61,7 +70,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         """Set data depending on plot mode (IBEX/Manual/etc.)."""
         pass
 
-# Shared functions
+    # Shared functions
     def _set_energy_correction(self, energy_corrections: dict):
         """Apply per-detector linear energy corrections."""
         if energy_corrections is None:
@@ -73,10 +82,14 @@ class Run(QObject, metaclass=MetaQObjectABC):
                     gradient, offset = energy_corrections[detector]["e_corr_coeffs"]
                     self.data[detector].x = self.data[detector].x * gradient + offset
             except KeyError:
-                logger.warning(f"No energy correction information found for detector {detector}. Automatically skipping correction.")
+                logger.warning(
+                    f"No energy correction information found for detector {detector}. Automatically skipping correction."
+                )
         self.energy_corrections = energy_corrections
 
-    def _set_normalisation(self, normalisation: str, normalise_which: list[str] | None = None):
+    def _set_normalisation(
+        self, normalisation: str, normalise_which: list[str] | None = None
+    ):
         """Dispatch to the correct normalisation method."""
         if normalise_which is None:
             normalise_which = self.normalise_which
@@ -110,7 +123,9 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self.normalisation = "counts"
         self.normalise_which = normalise_which
 
-    def _set_binning(self, binning_rate: float | None = None, default_bin: int | None = None):
+    def _set_binning(
+        self, binning_rate: float | None = None, default_bin: int | None = None
+    ):
         """Dispatch to the appropriate binning method."""
         if self.bin_method == "prebinned":
             self._set_binning_prebinned(binning_rate)
@@ -136,10 +151,15 @@ class Run(QObject, metaclass=MetaQObjectABC):
             if self.data[detector].x.size == 0:
                 continue
             self.data[detector].x, self.data[detector].y = rebin.numpy_rebin(
-                self.data[detector].x, self.data[detector].y, self.bin_rate, self._raw[detector].bin_range
+                self.data[detector].x,
+                self.data[detector].y,
+                self.bin_rate,
+                self._raw[detector].bin_range,
             )
 
-    def _set_binning_raw(self, binning_rate: float | None = None, default_bin: int | None = None):
+    def _set_binning_raw(
+        self, binning_rate: float | None = None, default_bin: int | None = None
+    ):
         """Rebin unbinned (event) data."""
         if binning_rate is None:
             binning_rate = self.bin_rate
@@ -161,7 +181,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
                 )
                 self.data[detector].x, self.data[detector].y = spectrum.x, spectrum.y
 
-# Utility methods
+    # Utility methods
     def is_empty(self) -> bool:
         """Return True if all detectors have no data."""
         return all([spectrum.x.size == 0 for spectrum in self._raw.values()])

@@ -6,6 +6,7 @@ from EVA.gui.windows.fit_table_plot.fit_table_plot_view import FitTablePlotView
 
 logger = logging.getLogger(__name__)
 
+
 class FitTablePlotPresenter(object):
     def __init__(self, view, model):
         self.view = view
@@ -20,7 +21,9 @@ class FitTablePlotPresenter(object):
 
     def browse_fit_table_file(self):
         def_dir = get_config()["general"]["working_directory"]
-        path = self.view.load_fit_table_file(default_dir=def_dir, file_filter="CSV files (*.csv)")
+        path = self.view.load_fit_table_file(
+            default_dir=def_dir, file_filter="CSV files (*.csv)"
+        )
         if path:
             self.fit_table_path = path
             get_config()["general"]["fit_table_plot_file"] = path
@@ -29,7 +32,7 @@ class FitTablePlotPresenter(object):
     def plot_fit_table_data(self):
         # Check if user has specified a fit table file path to read from
         # If yes, try to load the data
-        if hasattr(self, 'fit_table_path'):
+        if hasattr(self, "fit_table_path"):
             load_flag = self.model.load_fit_table_data(self.fit_table_path)
         else:
             logger.warning("No fit selected to load from.")
@@ -43,7 +46,7 @@ class FitTablePlotPresenter(object):
             logger.warning("")
             return
         # If valid data was loaded, filter using user inputs and plot
-        if hasattr(self.model, 'fit_table_data') and load_flag == 1:
+        if hasattr(self.model, "fit_table_data") and load_flag == 1:
             self.model.plot_fit_table_data(momentum_range, energy_range, plot_parameter)
             self.view.plot.update_plot(self.model.fig, self.model.axs)
             self.view.update_table(self.model)
@@ -58,6 +61,8 @@ class FitTablePlotPresenter(object):
         # If user specifies a valid .txt or .csv file path, save according the respective format
         filters = "Text Files (*.txt);;CSV Files (*.csv)"
         def_dir = get_config()["general"]["working_directory"]
-        path, file_extension = self.view.get_save_file_path(default_dir=def_dir, file_filter=filters)
+        path, file_extension = self.view.get_save_file_path(
+            default_dir=def_dir, file_filter=filters
+        )
         if path:
             self.model.save_plot_data(path, file_extension, self.plot_parameter)

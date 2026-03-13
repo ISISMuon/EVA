@@ -1,5 +1,13 @@
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QWidget, QComboBox, QGridLayout, QLabel, QHBoxLayout, QLineEdit, QPushButton
+from PyQt6.QtWidgets import (
+    QWidget,
+    QComboBox,
+    QGridLayout,
+    QLabel,
+    QHBoxLayout,
+    QLineEdit,
+    QPushButton,
+)
 
 
 class ElementSelectorItem(QWidget):
@@ -11,7 +19,7 @@ class ElementSelectorItem(QWidget):
         self.id = item_id
 
         self.layout = QHBoxLayout()
-        self.layout.setContentsMargins(0,0,0,0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
 
         self.element_selection_cbox = QComboBox()
@@ -47,7 +55,7 @@ class ElementSelectorWidget(QWidget):
         super().__init__()
         self.element_list = elements
         self.layout = QGridLayout()
-        self.layout.setContentsMargins(0,0,0,0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
 
         self.element_label = QLabel("Element")
@@ -60,7 +68,6 @@ class ElementSelectorWidget(QWidget):
 
         self.layout.addWidget(self.element_label, 0, 0)
         self.layout.addWidget(self.ratio_label, 0, 2)
-
 
     def add_element(self):
         item_id = self._ids
@@ -86,18 +93,18 @@ class ElementSelectorWidget(QWidget):
     def get_item(self, item_id):
         return [item for item in self.element_selector_items if item.id == item_id][0]
 
-
     def recalculate_layout(self):
         # add all element selector items to layout
         for i, item in enumerate(self.element_selector_items):
-            self.layout.addWidget(item, 1+i, 0, 1, -1)
+            self.layout.addWidget(item, 1 + i, 0, 1, -1)
 
         # add button to the end of layout
-        self.layout.addWidget(self.add_element_button, 2+len(self.element_selector_items), 0, 1, -1)
+        self.layout.addWidget(
+            self.add_element_button, 2 + len(self.element_selector_items), 0, 1, -1
+        )
 
     def get_elements(self):
         return [item.get_element() for item in self.element_selector_items]
 
     def get_ratios(self):
         return [item.get_ratio() for item in self.element_selector_items]
-

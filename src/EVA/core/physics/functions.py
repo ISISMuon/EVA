@@ -1,6 +1,13 @@
 import numpy as np
 
-def gaussian(x: np.ndarray, mean: float, sigma: float, intensity: float = 1., offset: float = 0.) -> np.ndarray:
+
+def gaussian(
+    x: np.ndarray,
+    mean: float,
+    sigma: float,
+    intensity: float = 1.0,
+    offset: float = 0.0,
+) -> np.ndarray:
     """
     Calculates a Gaussian function for given input array.
 
@@ -16,7 +23,11 @@ def gaussian(x: np.ndarray, mean: float, sigma: float, intensity: float = 1., of
     Returns:
         Array of points corresponding to the Gaussian function.
     """
-    return ((intensity / (sigma * np.sqrt(2 * np.pi))) * np.exp(-0.5 * (x - mean)**2 / sigma**2)) + offset
+    return (
+        (intensity / (sigma * np.sqrt(2 * np.pi)))
+        * np.exp(-0.5 * (x - mean) ** 2 / sigma**2)
+    ) + offset
+
 
 def line(x: np.ndarray, x0: float, x1: float) -> np.ndarray:
     """
@@ -33,6 +44,7 @@ def line(x: np.ndarray, x0: float, x1: float) -> np.ndarray:
         Array of points corresponding to line function.
     """
     return x0 + x1 * x
+
 
 def quadratic(x: np.ndarray, x0: float, x1: float, x2: float) -> np.ndarray:
     """

@@ -22,4 +22,3 @@ class BaseWindow(object):
 
     def layout(self):
         return self._view.layout()
-

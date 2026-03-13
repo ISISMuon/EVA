@@ -63,13 +63,16 @@ class Ui_settings(object):
         self.verticalLayout.addWidget(self.groupBox_2)
         self.buttonBox = QtWidgets.QDialogButtonBox(parent=settings)
         self.buttonBox.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Apply|QtWidgets.QDialogButtonBox.StandardButton.Cancel)
+        self.buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.StandardButton.Apply
+            | QtWidgets.QDialogButtonBox.StandardButton.Cancel
+        )
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(settings)
-        self.buttonBox.accepted.connect(settings.accept) # type: ignore
-        self.buttonBox.rejected.connect(settings.reject) # type: ignore
+        self.buttonBox.accepted.connect(settings.accept)  # type: ignore
+        self.buttonBox.rejected.connect(settings.reject)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(settings)
 
     def retranslateUi(self, settings):
@@ -92,6 +95,7 @@ class Ui_settings(object):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     settings = QtWidgets.QDialog()
     ui = Ui_settings()

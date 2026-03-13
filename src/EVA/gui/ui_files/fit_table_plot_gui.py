@@ -16,10 +16,15 @@ class Ui_fit_table_plot(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(fit_table_plot)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.plot_container_widget = QtWidgets.QStackedWidget(parent=fit_table_plot)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(2)
-        sizePolicy.setHeightForWidth(self.plot_container_widget.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.plot_container_widget.sizePolicy().hasHeightForWidth()
+        )
         self.plot_container_widget.setSizePolicy(sizePolicy)
         self.plot_container_widget.setStyleSheet("background: white")
         self.plot_container_widget.setObjectName("plot_container_widget")
@@ -31,10 +36,14 @@ class Ui_fit_table_plot(object):
         self.plot_container_widget.addWidget(self.model_plot)
         self.horizontalLayout.addWidget(self.plot_container_widget)
         self.side_panel_tabs = QtWidgets.QWidget(parent=fit_table_plot)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.side_panel_tabs.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.side_panel_tabs.sizePolicy().hasHeightForWidth()
+        )
         self.side_panel_tabs.setSizePolicy(sizePolicy)
         self.side_panel_tabs.setMaximumSize(QtCore.QSize(700, 16777215))
         self.side_panel_tabs.setObjectName("side_panel_tabs")
@@ -51,27 +60,39 @@ class Ui_fit_table_plot(object):
         self.gridLayout_3 = QtWidgets.QGridLayout(self.fit_settings_widget)
         self.gridLayout_3.setContentsMargins(0, -1, 0, -1)
         self.gridLayout_3.setObjectName("gridLayout_3")
-        self.mom_range_min_line_edit = QtWidgets.QLineEdit(parent=self.fit_settings_widget)
+        self.mom_range_min_line_edit = QtWidgets.QLineEdit(
+            parent=self.fit_settings_widget
+        )
         self.mom_range_min_line_edit.setObjectName("mom_range_min_line_edit")
         self.gridLayout_3.addWidget(self.mom_range_min_line_edit, 0, 1, 1, 1)
-        self.loaded_fit_table_label_2 = QtWidgets.QLabel(parent=self.fit_settings_widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        self.loaded_fit_table_label_2 = QtWidgets.QLabel(
+            parent=self.fit_settings_widget
+        )
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.loaded_fit_table_label_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.loaded_fit_table_label_2.sizePolicy().hasHeightForWidth()
+        )
         self.loaded_fit_table_label_2.setSizePolicy(sizePolicy)
         self.loaded_fit_table_label_2.setObjectName("loaded_fit_table_label_2")
         self.gridLayout_3.addWidget(self.loaded_fit_table_label_2, 2, 0, 1, 2)
         self.auto_e_range_label = QtWidgets.QLabel(parent=self.fit_settings_widget)
         self.auto_e_range_label.setObjectName("auto_e_range_label")
         self.gridLayout_3.addWidget(self.auto_e_range_label, 0, 0, 1, 1)
-        self.plot_parameter_comboBox = QtWidgets.QComboBox(parent=self.fit_settings_widget)
+        self.plot_parameter_comboBox = QtWidgets.QComboBox(
+            parent=self.fit_settings_widget
+        )
         self.plot_parameter_comboBox.setObjectName("plot_parameter_comboBox")
         self.plot_parameter_comboBox.addItem("")
         self.plot_parameter_comboBox.addItem("")
         self.plot_parameter_comboBox.addItem("")
         self.gridLayout_3.addWidget(self.plot_parameter_comboBox, 2, 2, 1, 1)
-        self.mom_range_max_line_edit = QtWidgets.QLineEdit(parent=self.fit_settings_widget)
+        self.mom_range_max_line_edit = QtWidgets.QLineEdit(
+            parent=self.fit_settings_widget
+        )
         self.mom_range_max_line_edit.setObjectName("mom_range_max_line_edit")
         self.gridLayout_3.addWidget(self.mom_range_max_line_edit, 0, 2, 1, 1)
         self.fit_settings_widget_2 = QtWidgets.QWidget(parent=self.fit_settings_widget)
@@ -83,15 +104,22 @@ class Ui_fit_table_plot(object):
         self.auto_e_range_label_2.setObjectName("auto_e_range_label_2")
         self.gridLayout_4.addWidget(self.auto_e_range_label_2, 0, 0, 1, 1)
         self.gridLayout_3.addWidget(self.fit_settings_widget_2, 1, 0, 1, 1)
-        self.e_range_max_line_edit = QtWidgets.QLineEdit(parent=self.fit_settings_widget)
+        self.e_range_max_line_edit = QtWidgets.QLineEdit(
+            parent=self.fit_settings_widget
+        )
         self.e_range_max_line_edit.setObjectName("e_range_max_line_edit")
         self.gridLayout_3.addWidget(self.e_range_max_line_edit, 1, 2, 1, 1)
-        self.e_range_min_line_edit = QtWidgets.QLineEdit(parent=self.fit_settings_widget)
+        self.e_range_min_line_edit = QtWidgets.QLineEdit(
+            parent=self.fit_settings_widget
+        )
         self.e_range_min_line_edit.setObjectName("e_range_min_line_edit")
         self.gridLayout_3.addWidget(self.e_range_min_line_edit, 1, 1, 1, 1)
         self.gridLayout_2.addWidget(self.fit_settings_widget, 5, 0, 1, 1)
         self.widget_2 = QtWidgets.QWidget(parent=self.side_panel_tabs)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.widget_2.sizePolicy().hasHeightForWidth())
@@ -101,18 +129,26 @@ class Ui_fit_table_plot(object):
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_2)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.loaded_fit_table_label = QtWidgets.QLabel(parent=self.widget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.loaded_fit_table_label.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.loaded_fit_table_label.sizePolicy().hasHeightForWidth()
+        )
         self.loaded_fit_table_label.setSizePolicy(sizePolicy)
         self.loaded_fit_table_label.setObjectName("loaded_fit_table_label")
         self.horizontalLayout_4.addWidget(self.loaded_fit_table_label)
         self.fit_table_select_button = QtWidgets.QPushButton(parent=self.widget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.fit_table_select_button.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.fit_table_select_button.sizePolicy().hasHeightForWidth()
+        )
         self.fit_table_select_button.setSizePolicy(sizePolicy)
         self.fit_table_select_button.setMaximumSize(QtCore.QSize(100, 16777215))
         self.fit_table_select_button.setObjectName("fit_table_select_button")
@@ -141,7 +177,12 @@ class Ui_fit_table_plot(object):
         self.widget = QtWidgets.QWidget(parent=self.side_panel_tabs)
         self.widget.setObjectName("widget")
         self.gridLayout_2.addWidget(self.widget, 12, 0, 1, 1)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(
+            20,
+            40,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         self.gridLayout_2.addItem(spacerItem, 10, 0, 1, 1)
         self.fit_table_data_table = QtWidgets.QTableWidget(parent=self.side_panel_tabs)
         self.fit_table_data_table.setObjectName("fit_table_data_table")
@@ -171,12 +212,24 @@ class Ui_fit_table_plot(object):
         _translate = QtCore.QCoreApplication.translate
         fit_table_plot.setWindowTitle(_translate("fit_table_plot", "Form"))
         self.peak_params_label.setText(_translate("fit_table_plot", "Plot Settings"))
-        self.loaded_fit_table_label_2.setText(_translate("fit_table_plot", "Plot Parameter"))
-        self.auto_e_range_label.setText(_translate("fit_table_plot", "Momentum Range (MeV)"))
-        self.plot_parameter_comboBox.setItemText(0, _translate("fit_table_plot", "Amplitude"))
-        self.plot_parameter_comboBox.setItemText(1, _translate("fit_table_plot", "Center"))
-        self.plot_parameter_comboBox.setItemText(2, _translate("fit_table_plot", "Sigma"))
-        self.auto_e_range_label_2.setText(_translate("fit_table_plot", "Energy range (KeV)"))
+        self.loaded_fit_table_label_2.setText(
+            _translate("fit_table_plot", "Plot Parameter")
+        )
+        self.auto_e_range_label.setText(
+            _translate("fit_table_plot", "Momentum Range (MeV)")
+        )
+        self.plot_parameter_comboBox.setItemText(
+            0, _translate("fit_table_plot", "Amplitude")
+        )
+        self.plot_parameter_comboBox.setItemText(
+            1, _translate("fit_table_plot", "Center")
+        )
+        self.plot_parameter_comboBox.setItemText(
+            2, _translate("fit_table_plot", "Sigma")
+        )
+        self.auto_e_range_label_2.setText(
+            _translate("fit_table_plot", "Energy range (KeV)")
+        )
         self.loaded_fit_table_label.setText(_translate("fit_table_plot", "TextLabel"))
         self.fit_table_select_button.setText(_translate("fit_table_plot", "Browse"))
         self.plot_data_button.setText(_translate("fit_table_plot", "Plot"))
@@ -191,11 +244,14 @@ class Ui_fit_table_plot(object):
         item = self.fit_table_data_table.horizontalHeaderItem(3)
         item.setText(_translate("fit_table_plot", "Uncertainty"))
         self.label_2.setText(_translate("fit_table_plot", "Output"))
+
+
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     fit_table_plot = QtWidgets.QWidget()
     ui = Ui_fit_table_plot()

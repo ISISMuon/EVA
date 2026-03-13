@@ -28,6 +28,7 @@ from EVA.core.data_structures.spectrum_nexus import SpectrumNexus
 #     cut_data: np.ndarray = None
 #     bin_range: list = None
 
+
 @dataclass
 class Spectrum:
     """
@@ -39,6 +40,7 @@ class Spectrum:
         x: numpy array, containing the x-data measured by the detector (histogram bins).
         y: numpy array, containing y-data measured by the detector (counts per bin).
     """
+
     detector: str = None
     run_number: str = None
     x: np.ndarray = None

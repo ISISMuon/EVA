@@ -8,7 +8,8 @@ from EVA.gui.windows.workspace.workspace_view import WorkspaceView
 
 
 class PeakFitWindow(BaseWindow):
-    """ Coordinator class to string together the MVP components of the peak fit window """
+    """Coordinator class to string together the MVP components of the peak fit window"""
+
     def __init__(self, run: Run, detector: str, parent: WorkspaceView | None = None):
         """
         Args:

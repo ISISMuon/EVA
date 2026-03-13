@@ -30,7 +30,11 @@ class TrimFitPresenter:
             self.view.display_error_message(message=f"SRIM error: {e}")
             raise e
 
-        self.view.trim_plot.update_plot(*self.model.plot_components(momentum_index=0, momentum=str(self.model.momentum)))
+        self.view.trim_plot.update_plot(
+            *self.model.plot_components(
+                momentum_index=0, momentum=str(self.model.momentum)
+            )
+        )
 
     def format_model_layers(self) -> list[list[str | float]]:
         """
@@ -39,7 +43,10 @@ class TrimFitPresenter:
         Returns:
             Formatted array containing the layer data in TrimFitModel.
         """
-        return [[layer["name"], layer["thickness"], layer.get("density", " ")] for layer in self.model.input_layers]
+        return [
+            [layer["name"], layer["thickness"], layer.get("density", " ")]
+            for layer in self.model.input_layers
+        ]
 
     def on_cell_clicked(self, row: int):
         """
@@ -49,7 +56,7 @@ class TrimFitPresenter:
             row: row number
         """
         table = self.view.layer_table
-        if row == table.rowCount() - 1: # if cell on last row is edited
+        if row == table.rowCount() - 1:  # if cell on last row is edited
             self.view.layer_table.append_row()
 
     def get_layers(self) -> list[dict] | None:
@@ -82,7 +89,9 @@ class TrimFitPresenter:
 
             except ValueError:
                 if not (name == "Beamline Window" or name == "Air (compressed)"):
-                    self.view.display_error_message(message=f"Invalid density for '{name}'.")
+                    self.view.display_error_message(
+                        message=f"Invalid density for '{name}'."
+                    )
                     return
 
             structured_layers.append(layer_dict)

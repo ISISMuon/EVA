@@ -3,7 +3,9 @@ from pytestqt.plugin import qtbot
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import Qt
 
-from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import (
+    ModelSpectraWindow,
+)
 
 base_test = {
     "elements": ["Ag", "Hg"],
@@ -12,8 +14,9 @@ base_test = {
     "show_primary": True,
     "show_secondary": True,
     "show_components": False,
-    "dx": 0.1
+    "dx": 0.1,
 }
+
 
 class TestModelSpectrumWindow:
     # this will run once before all other tests in the class
@@ -31,20 +34,36 @@ class TestModelSpectrumWindow:
         element_selector = self.window.widget().element_selector
         # add 8 element selectors to get a total of 9 (remember there already exists one element selector on start)
         for i in range(8):
-            qtbot.mouseClick(element_selector.add_element_button, Qt.MouseButton.LeftButton)
+            qtbot.mouseClick(
+                element_selector.add_element_button, Qt.MouseButton.LeftButton
+            )
 
         # remove items (remember that positions change every time an item is removed from the list)
-        qtbot.mouseClick(element_selector.element_selector_items[0].remove_button, Qt.MouseButton.LeftButton)
-        qtbot.mouseClick(element_selector.element_selector_items[3].remove_button, Qt.MouseButton.LeftButton)
-        qtbot.mouseClick(element_selector.element_selector_items[5].remove_button, Qt.MouseButton.LeftButton)
-        qtbot.mouseClick(element_selector.element_selector_items[0].remove_button, Qt.MouseButton.LeftButton)
+        qtbot.mouseClick(
+            element_selector.element_selector_items[0].remove_button,
+            Qt.MouseButton.LeftButton,
+        )
+        qtbot.mouseClick(
+            element_selector.element_selector_items[3].remove_button,
+            Qt.MouseButton.LeftButton,
+        )
+        qtbot.mouseClick(
+            element_selector.element_selector_items[5].remove_button,
+            Qt.MouseButton.LeftButton,
+        )
+        qtbot.mouseClick(
+            element_selector.element_selector_items[0].remove_button,
+            Qt.MouseButton.LeftButton,
+        )
 
         # add another item (at end)
         qtbot.mouseClick(element_selector.add_element_button, Qt.MouseButton.LeftButton)
 
     def test_add_and_remove_element_selection(self, qtbot, add_and_remove_elements):
-        order = [2,3,5,6,8,9] # expected order of items
-        actual_order = [item.id for item in self.view.element_selector.element_selector_items]
+        order = [2, 3, 5, 6, 8, 9]  # expected order of items
+        actual_order = [
+            item.id for item in self.view.element_selector.element_selector_items
+        ]
 
         # check that the element selector ids are in the expected order
         assert actual_order == order
@@ -62,6 +81,3 @@ class TestModelSpectrumWindow:
         form_data = self.view.get_form_data()
 
         assert form_data == base_test
-
-
-

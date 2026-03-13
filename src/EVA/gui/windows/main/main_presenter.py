@@ -9,7 +9,9 @@ from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.gui.windows.fit_table_plot.fit_table_plot_window import FitTablePlotWindow
 
-from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import (
+    ModelSpectraWindow,
+)
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
 from EVA.gui.windows.workspace.workspace_window import WorkspaceWindow
@@ -17,8 +19,10 @@ from EVA.util.path_handler import get_path
 
 logger = logging.getLogger(__name__)
 
+
 class MainPresenter:
-    """ Presenter for the main window. """
+    """Presenter for the main window."""
+
     def __init__(self, view: MainView, model: MainModel):
         """
         Args:
@@ -46,9 +50,13 @@ class MainPresenter:
         self.view.help_manual.triggered.connect(self.open_manual)
 
         self.view.get_next_run_button.clicked.connect(self.increment_run_num)
-        self.view.load_next_run_button.clicked.connect(lambda: self.increment_run_num(load=True))
+        self.view.load_next_run_button.clicked.connect(
+            lambda: self.increment_run_num(load=True)
+        )
         self.view.get_prev_run_button.clicked.connect(self.decrement_run_num)
-        self.view.load_prev_run_button.clicked.connect(lambda: self.decrement_run_num(load=True))
+        self.view.load_prev_run_button.clicked.connect(
+            lambda: self.decrement_run_num(load=True)
+        )
         self.view.load_button.clicked.connect(self.load_run_num)
 
     def save_settings(self):
@@ -60,9 +68,13 @@ class MainPresenter:
 
         if config.is_changed():
             config.save_config()
-            self.view.show_message_box(title="Save", msg="Current session has been saved.")
+            self.view.show_message_box(
+                title="Save", msg="Current session has been saved."
+            )
         else:
-            self.view.show_message_box(title="Save", msg="No changes have been made since last save.")
+            self.view.show_message_box(
+                title="Save", msg="No changes have been made since last save."
+            )
 
     def set_default_directory(self):
         """
@@ -76,7 +88,10 @@ class MainPresenter:
         Resets current config to defaults.
         """
         # confirm that user wants to reset
-        confirm = self.view.show_question_box(title="Confirm reset", message="Are you sure you want to reset all settings?")
+        confirm = self.view.show_question_box(
+            title="Confirm reset",
+            message="Are you sure you want to reset all settings?",
+        )
 
         if not confirm:
             return
@@ -93,7 +108,7 @@ class MainPresenter:
 
         self.view.show_message_box("Configurations have been restored to defaults.")
 
-    def increment_run_num(self, load: bool=False):
+    def increment_run_num(self, load: bool = False):
         """
         Increments the run number in the gui.
 
@@ -111,7 +126,7 @@ class MainPresenter:
             self.view.show_error_box("Invalid run number!")
             return
 
-    def decrement_run_num(self, load: bool=False):
+    def decrement_run_num(self, load: bool = False):
         """
         Decrements the run number in the gui.
 
@@ -141,25 +156,31 @@ class MainPresenter:
 
         flags, run = self.model.load_run(run_num)
 
-        if flags["no_files_found"]: #  no data was loaded - return now
+        if flags["no_files_found"]:  #  no data was loaded - return now
             # Update GUI
-            self.view.set_run_num_label(f"No files found for run {run_num} in {get_path(get_config()["general"]["working_directory"])}")
+            self.view.set_run_num_label(
+                f"No files found for run {run_num} in {get_path(get_config()['general']['working_directory'])}"
+            )
             self.view.set_comment_labels("Comment file not found.", "N/A", "N/A", "N/A")
             return
 
         self.view.set_run_num_label(run_num)
 
-        if flags["comment_not_found"]: # Comment file was not found
-            self.view.set_comment_labels(comment="Comment file not found", start="N/A", end="N/A", events="N/A")
+        if flags["comment_not_found"]:  # Comment file was not found
+            self.view.set_comment_labels(
+                comment="Comment file not found", start="N/A", end="N/A", events="N/A"
+            )
 
-        else: # write comment info to GUI
+        else:  # write comment info to GUI
             comment, start, end, events = self.model.run.read_comment_data()
             self.view.set_comment_labels(comment, start, end, events)
 
         if flags["norm_by_spills_error"]:  # normalisation by spills failed
             # display error message to let user know what happened
-            err_str = ("Cannot use normalisation by spills when comment file has not been loaded. Normalisation has been "
-                       "set to none.")
+            err_str = (
+                "Cannot use normalisation by spills when comment file has not been loaded. Normalisation has been "
+                "set to none."
+            )
 
             self.view.show_error_box(err_str, title="Normalisation error")
 
@@ -167,41 +188,45 @@ class MainPresenter:
         self.open_workspace(run)
 
     def open_workspace(self, run: Run):
-        """ Opens a new workspace for the loaded run. """
+        """Opens a new workspace for the loaded run."""
         logger.info("Opening workspace.")
 
         workspace = WorkspaceWindow(run)
         self.view.workspaces.append(workspace)
 
         workspace.widget().showMaximized()
-        workspace.widget().window_closed_s.connect(lambda: self.close_workspace(workspace))
+        workspace.widget().window_closed_s.connect(
+            lambda: self.close_workspace(workspace)
+        )
 
     def close_workspace(self, workspace: WorkspaceWindow):
-        """ Remove reference to workspace when closed """
+        """Remove reference to workspace when closed"""
         logger.info("Closed workspace.")
 
         self.view.workspaces.remove(workspace)
         workspace.widget().deleteLater()
 
     def open_general_settings_dialog(self):
-        """ Opens the general settings dialog. """
+        """Opens the general settings dialog."""
         logger.info("Opening settings dialog.")
 
         dialog = SettingsDialog()
         self.view.general_settings_dialogs.append(dialog)
 
         dialog.show()
-        dialog.view.dialog_closed_s.connect(lambda: self.close_general_settings_dialog(dialog))
+        dialog.view.dialog_closed_s.connect(
+            lambda: self.close_general_settings_dialog(dialog)
+        )
 
     def close_general_settings_dialog(self, dialog):
-        """ Closes settings dialog"""
+        """Closes settings dialog"""
         logger.info("Closed settings dialog.")
 
         self.view.general_settings_dialogs.remove(dialog)
         dialog.view.deleteLater()
 
     def open_multiplot(self):
-        """ Opens multiplot window """
+        """Opens multiplot window"""
         logger.info("Opening multiplot window.")
 
         window = MultiPlotWindow()
@@ -211,14 +236,14 @@ class MainPresenter:
         window.widget().window_closed_s.connect(lambda: self.close_multiplot(window))
 
     def close_multiplot(self, window):
-        """ Remove reference to multiplot window when closed """
+        """Remove reference to multiplot window when closed"""
         logger.info("Closing multiplot window.")
 
         self.view.multiplot_windows.remove(window)
         window.widget().deleteLater()
 
     def open_fit_table_plot(self):
-        """ Opens a tab for fit table plot. """
+        """Opens a tab for fit table plot."""
         logger.info("Opening fit table plot window.")
 
         window = FitTablePlotWindow(parent=self)
@@ -231,7 +256,7 @@ class MainPresenter:
         window.deleteLater()
 
     def open_manual(self):
-        """ Opens manual window. """
+        """Opens manual window."""
         logger.info("Opening manual window.")
 
         window = ManualWindow()
@@ -241,14 +266,14 @@ class MainPresenter:
         window.window_closed_s.connect(lambda: self.close_manual(window))
 
     def close_manual(self, window: ManualWindow):
-        """ Remove reference to manual window when closed """
+        """Remove reference to manual window when closed"""
         logger.info("Closing manual window.")
 
         self.view.manual_windows.remove(window)
         window.deleteLater()
 
     def open_periodic_table(self):
-        """ Opens periodic table window. """
+        """Opens periodic table window."""
         logger.info("Opening periodic table window.")
 
         window = PeriodicTableWidget()
@@ -258,14 +283,14 @@ class MainPresenter:
         window.window_closed_s.connect(lambda: self.close_periodic_table(window))
 
     def close_periodic_table(self, window):
-        """ Remove reference to periodic table window when closed """
+        """Remove reference to periodic table window when closed"""
         logger.info("Closed periodic table window.")
 
         self.view.periodic_table_windows.remove(window)
         window.deleteLater()
 
     def open_trim(self):
-        """ Opens a window for TRIM simulations. """
+        """Opens a window for TRIM simulations."""
         logger.info("Opening TRIM window.")
 
         window = TrimWindow()
@@ -275,26 +300,27 @@ class MainPresenter:
         window.widget().window_closed_s.connect(lambda: self.close_trim(window))
 
     def close_trim(self, window):
-        """ Remove reference to trim window when closed """
+        """Remove reference to trim window when closed"""
         logger.info("Closed TRIM window.")
 
         self.view.srim_windows.remove(window)
         window.widget().deleteLater()
 
     def open_model_muon_spectrum(self):
-        """ Opens a tab for muonic x-ray modelling. """
+        """Opens a tab for muonic x-ray modelling."""
         logger.info("Opening muonic x-ray modelling window.")
 
         window = ModelSpectraWindow()
         self.view.model_spectra_windows.append(window)
 
         window.showMaximized()
-        window.widget().window_closed_s.connect(lambda: self.close_model_muon_spectrum(window))
+        window.widget().window_closed_s.connect(
+            lambda: self.close_model_muon_spectrum(window)
+        )
 
     def close_model_muon_spectrum(self, window):
-        """ Remove reference to mu-xray modelling window when closed """
+        """Remove reference to mu-xray modelling window when closed"""
         logger.info("Closed muonic x-ray modelling window.")
 
         self.view.model_spectra_windows.remove(window)
         window.widget().deleteLater()
-

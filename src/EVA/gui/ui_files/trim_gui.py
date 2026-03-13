@@ -29,7 +29,10 @@ class Ui_trim(object):
         self.label_2.setObjectName("label_2")
         self.verticalLayout.addWidget(self.label_2)
         self.settings = QtWidgets.QFrame(parent=self.side_panel)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.settings.sizePolicy().hasHeightForWidth())
@@ -168,9 +171,13 @@ class Ui_trim(object):
         self.tab.setObjectName("tab")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.tab)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.collapse_expand_implantation_checkbox = QtWidgets.QCheckBox(parent=self.tab)
+        self.collapse_expand_implantation_checkbox = QtWidgets.QCheckBox(
+            parent=self.tab
+        )
         self.collapse_expand_implantation_checkbox.setChecked(True)
-        self.collapse_expand_implantation_checkbox.setObjectName("collapse_expand_implantation_checkbox")
+        self.collapse_expand_implantation_checkbox.setObjectName(
+            "collapse_expand_implantation_checkbox"
+        )
         self.verticalLayout_5.addWidget(self.collapse_expand_implantation_checkbox)
         self.results_tree = QtWidgets.QTreeWidget(parent=self.tab)
         self.results_tree.setMinimumSize(QtCore.QSize(0, 200))
@@ -189,13 +196,21 @@ class Ui_trim(object):
         self.simulation_progress_widget.setObjectName("simulation_progress_widget")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.simulation_progress_widget)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.simulation_progress_label = QtWidgets.QLabel(parent=self.simulation_progress_widget)
+        self.simulation_progress_label = QtWidgets.QLabel(
+            parent=self.simulation_progress_widget
+        )
         self.simulation_progress_label.setObjectName("simulation_progress_label")
         self.verticalLayout_6.addWidget(self.simulation_progress_label)
-        self.estimated_time_remaining_label = QtWidgets.QLabel(parent=self.simulation_progress_widget)
-        self.estimated_time_remaining_label.setObjectName("estimated_time_remaining_label")
+        self.estimated_time_remaining_label = QtWidgets.QLabel(
+            parent=self.simulation_progress_widget
+        )
+        self.estimated_time_remaining_label.setObjectName(
+            "estimated_time_remaining_label"
+        )
         self.verticalLayout_6.addWidget(self.estimated_time_remaining_label)
-        self.simulation_progress_bar = QtWidgets.QProgressBar(parent=self.simulation_progress_widget)
+        self.simulation_progress_bar = QtWidgets.QProgressBar(
+            parent=self.simulation_progress_widget
+        )
         self.simulation_progress_bar.setProperty("value", 24)
         self.simulation_progress_bar.setObjectName("simulation_progress_bar")
         self.verticalLayout_6.addWidget(self.simulation_progress_bar)
@@ -238,8 +253,10 @@ class Ui_trim(object):
         self.label_3.setObjectName("label_3")
         self.horizontalLayout_3.addWidget(self.label_3)
         self.momentum_slider = QtWidgets.QSlider(parent=self.slider_container)
-        self.momentum_slider.setStyleSheet("QSlider::groove:horizontal {height: 10px; margin: 0 0;}\n"
-"QSlider::ticks {color: grey}")
+        self.momentum_slider.setStyleSheet(
+            "QSlider::groove:horizontal {height: 10px; margin: 0 0;}\n"
+            "QSlider::ticks {color: grey}"
+        )
         self.momentum_slider.setTracking(True)
         self.momentum_slider.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.momentum_slider.setInvertedAppearance(False)
@@ -247,7 +264,9 @@ class Ui_trim(object):
         self.momentum_slider.setObjectName("momentum_slider")
         self.horizontalLayout_3.addWidget(self.momentum_slider)
         self.verticalLayout_3.addWidget(self.slider_container)
-        self.stopping_profiles_tab_widget = QtWidgets.QTabWidget(parent=self.stopping_profiles_tab)
+        self.stopping_profiles_tab_widget = QtWidgets.QTabWidget(
+            parent=self.stopping_profiles_tab
+        )
         self.stopping_profiles_tab_widget.setObjectName("stopping_profiles_tab_widget")
         self.verticalLayout_3.addWidget(self.stopping_profiles_tab_widget)
         self.results_tabs.addTab(self.stopping_profiles_tab, "")
@@ -256,7 +275,11 @@ class Ui_trim(object):
         self.depth_profile_layout = QtWidgets.QVBoxLayout(self.depth_profile_tab)
         self.depth_profile_layout.setObjectName("depth_profile_layout")
         self.not_enough_momentum_label = QtWidgets.QLabel(parent=self.depth_profile_tab)
-        self.not_enough_momentum_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
+        self.not_enough_momentum_label.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignLeading
+            | QtCore.Qt.AlignmentFlag.AlignLeft
+            | QtCore.Qt.AlignmentFlag.AlignTop
+        )
         self.not_enough_momentum_label.setObjectName("not_enough_momentum_label")
         self.depth_profile_layout.addWidget(self.not_enough_momentum_label)
         self.depth_profile_plot = PlotWidget(parent=self.depth_profile_tab)
@@ -303,34 +326,66 @@ class Ui_trim(object):
         item.setText(_translate("trim", "Thickness (mm)"))
         item = self.layer_setup_table.horizontalHeaderItem(2)
         item.setText(_translate("trim", "Density (g/cm^3)"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.layers_tab), _translate("trim", "Layers"))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.layers_tab), _translate("trim", "Layers")
+        )
         item = self.results_table.horizontalHeaderItem(0)
         item.setText(_translate("trim", "Momentum (MeV/c)"))
         item = self.results_table.horizontalHeaderItem(1)
         item.setText(_translate("trim", "Options"))
         self.save_all_sims_button.setText(_translate("trim", "Save all"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.results_tab), _translate("trim", "Results"))
-        self.collapse_expand_implantation_checkbox.setText(_translate("trim", " Expand all / Collapse"))
-        self.results_tree.headerItem().setText(0, _translate("trim", "Momentum (MeV/c)"))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.results_tab), _translate("trim", "Results")
+        )
+        self.collapse_expand_implantation_checkbox.setText(
+            _translate("trim", " Expand all / Collapse")
+        )
+        self.results_tree.headerItem().setText(
+            0, _translate("trim", "Momentum (MeV/c)")
+        )
         self.results_tree.headerItem().setText(1, _translate("trim", "Layers"))
-        self.results_tree.headerItem().setText(2, _translate("trim", "% of muons in layer"))
-        self.results_tree.headerItem().setText(3, _translate("trim", "# of muons in layer"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("trim", "Implantation"))
-        self.simulation_progress_label.setText(_translate("trim", "Simulation in progress..."))
-        self.estimated_time_remaining_label.setText(_translate("trim", "Estimated time remaining: "))
+        self.results_tree.headerItem().setText(
+            2, _translate("trim", "% of muons in layer")
+        )
+        self.results_tree.headerItem().setText(
+            3, _translate("trim", "# of muons in layer")
+        )
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab), _translate("trim", "Implantation")
+        )
+        self.simulation_progress_label.setText(
+            _translate("trim", "Simulation in progress...")
+        )
+        self.estimated_time_remaining_label.setText(
+            _translate("trim", "Estimated time remaining: ")
+        )
         self.run_sim_button.setText(_translate("trim", "Run Simulations"))
         self.cancel_sim_button.setText(_translate("trim", "Cancel"))
         self.results_label.setText(_translate("trim", "Results"))
         self.label_3.setText(_translate("trim", "Slide to increase momentum:"))
-        self.results_tabs.setTabText(self.results_tabs.indexOf(self.stopping_profiles_tab), _translate("trim", "Stopping profiles"))
-        self.not_enough_momentum_label.setText(_translate("trim", "A momentum scan with at least 2 momenta is required to generate a depth profile plot."))
-        self.results_tabs.setTabText(self.results_tabs.indexOf(self.depth_profile_tab), _translate("trim", "Depth profile"))
+        self.results_tabs.setTabText(
+            self.results_tabs.indexOf(self.stopping_profiles_tab),
+            _translate("trim", "Stopping profiles"),
+        )
+        self.not_enough_momentum_label.setText(
+            _translate(
+                "trim",
+                "A momentum scan with at least 2 momenta is required to generate a depth profile plot.",
+            )
+        )
+        self.results_tabs.setTabText(
+            self.results_tabs.indexOf(self.depth_profile_tab),
+            _translate("trim", "Depth profile"),
+        )
+
+
 from EVA.gui.base.base_table import BaseTable
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     trim = QtWidgets.QWidget()
     ui = Ui_trim()

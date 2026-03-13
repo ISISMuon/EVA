@@ -18,10 +18,15 @@ class Ui_elemental_analysis(object):
         self.gridLayout_2 = QtWidgets.QGridLayout(elemental_analysis)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.plot_widget_container = QtWidgets.QWidget(parent=elemental_analysis)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.plot_widget_container.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.plot_widget_container.sizePolicy().hasHeightForWidth()
+        )
         self.plot_widget_container.setSizePolicy(sizePolicy)
         self.plot_widget_container.setMinimumSize(QtCore.QSize(399, 0))
         self.plot_widget_container.setStyleSheet("background: white")
@@ -43,7 +48,12 @@ class Ui_elemental_analysis(object):
         self.det4_checkbox = QtWidgets.QCheckBox(parent=self.widget)
         self.det4_checkbox.setObjectName("det4_checkbox")
         self.horizontalLayout_3.addWidget(self.det4_checkbox)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(
+            40,
+            20,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+        )
         self.horizontalLayout_3.addItem(spacerItem)
         self.gridLayout_2.addWidget(self.widget, 1, 1, 1, 1)
         self.tab_menu = QtWidgets.QTabWidget(parent=elemental_analysis)
@@ -61,15 +71,21 @@ class Ui_elemental_analysis(object):
         self.instruction_label = QtWidgets.QLabel(parent=self.click_search_container)
         self.instruction_label.setObjectName("instruction_label")
         self.verticalLayout.addWidget(self.instruction_label)
-        self.muonic_xray_table_label = QtWidgets.QLabel(parent=self.click_search_container)
+        self.muonic_xray_table_label = QtWidgets.QLabel(
+            parent=self.click_search_container
+        )
         font = QtGui.QFont()
         font.setPointSize(12)
         self.muonic_xray_table_label.setFont(font)
         self.muonic_xray_table_label.setObjectName("muonic_xray_table_label")
         self.verticalLayout.addWidget(self.muonic_xray_table_label)
-        self.muonic_xrays_tab_menu = QtWidgets.QTabWidget(parent=self.click_search_container)
+        self.muonic_xrays_tab_menu = QtWidgets.QTabWidget(
+            parent=self.click_search_container
+        )
         self.muonic_xrays_tab_menu.setEnabled(True)
-        self.muonic_xrays_tab_menu.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
+        self.muonic_xrays_tab_menu.setLayoutDirection(
+            QtCore.Qt.LayoutDirection.LeftToRight
+        )
         self.muonic_xrays_tab_menu.setAutoFillBackground(False)
         self.muonic_xrays_tab_menu.setStyleSheet("")
         self.muonic_xrays_tab_menu.setTabShape(QtWidgets.QTabWidget.TabShape.Rounded)
@@ -89,15 +105,22 @@ class Ui_elemental_analysis(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.muonic_xray_table_all = BaseTable(parent=self.all_tab_2)
         self.muonic_xray_table_all.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(3)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.muonic_xray_table_all.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.muonic_xray_table_all.sizePolicy().hasHeightForWidth()
+        )
         self.muonic_xray_table_all.setSizePolicy(sizePolicy)
         self.muonic_xray_table_all.setAutoFillBackground(False)
         self.muonic_xray_table_all.setStyleSheet("")
         self.muonic_xray_table_all.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.muonic_xray_table_all.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.muonic_xray_table_all.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.muonic_xray_table_all.setAlternatingRowColors(False)
         self.muonic_xray_table_all.setShowGrid(True)
         self.muonic_xray_table_all.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
@@ -131,15 +154,22 @@ class Ui_elemental_analysis(object):
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.muonic_xray_table_prim = BaseTable(parent=self.prim_tab)
         self.muonic_xray_table_prim.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(3)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.muonic_xray_table_prim.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.muonic_xray_table_prim.sizePolicy().hasHeightForWidth()
+        )
         self.muonic_xray_table_prim.setSizePolicy(sizePolicy)
         self.muonic_xray_table_prim.setAutoFillBackground(False)
         self.muonic_xray_table_prim.setStyleSheet("")
         self.muonic_xray_table_prim.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.muonic_xray_table_prim.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.muonic_xray_table_prim.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.muonic_xray_table_prim.setAlternatingRowColors(False)
         self.muonic_xray_table_prim.setShowGrid(True)
         self.muonic_xray_table_prim.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
@@ -172,15 +202,22 @@ class Ui_elemental_analysis(object):
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.muonic_xray_table_sec = BaseTable(parent=self.sec_tab)
         self.muonic_xray_table_sec.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(3)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.muonic_xray_table_sec.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.muonic_xray_table_sec.sizePolicy().hasHeightForWidth()
+        )
         self.muonic_xray_table_sec.setSizePolicy(sizePolicy)
         self.muonic_xray_table_sec.setAutoFillBackground(False)
         self.muonic_xray_table_sec.setStyleSheet("")
         self.muonic_xray_table_sec.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.muonic_xray_table_sec.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.muonic_xray_table_sec.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.muonic_xray_table_sec.setAlternatingRowColors(False)
         self.muonic_xray_table_sec.setShowGrid(True)
         self.muonic_xray_table_sec.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
@@ -228,13 +265,19 @@ class Ui_elemental_analysis(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.muon_search_widget)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.muon_search_label = QtWidgets.QLabel(parent=self.muon_search_widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Preferred
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.muon_search_label.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.muon_search_label.sizePolicy().hasHeightForWidth()
+        )
         self.muon_search_label.setSizePolicy(sizePolicy)
         self.muon_search_label.setObjectName("muon_search_label")
-        self.horizontalLayout.addWidget(self.muon_search_label, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+        self.horizontalLayout.addWidget(
+            self.muon_search_label, 0, QtCore.Qt.AlignmentFlag.AlignLeft
+        )
         self.muon_search_line_edit = QtWidgets.QLineEdit(parent=self.muon_search_widget)
         self.muon_search_line_edit.setObjectName("muon_search_line_edit")
         self.horizontalLayout.addWidget(self.muon_search_line_edit)
@@ -256,7 +299,10 @@ class Ui_elemental_analysis(object):
         self.verticalLayout_3.setContentsMargins(5, 10, 5, 5)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.gamma_table = BaseTable(parent=self.all_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.gamma_table.sizePolicy().hasHeightForWidth())
@@ -266,7 +312,9 @@ class Ui_elemental_analysis(object):
         self.gamma_table.setStyleSheet("")
         self.gamma_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.gamma_table.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.gamma_table.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.gamma_table.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.gamma_table.setAlternatingRowColors(False)
         self.gamma_table.setShowGrid(True)
         self.gamma_table.setGridStyle(QtCore.Qt.PenStyle.SolidLine)
@@ -311,17 +359,25 @@ class Ui_elemental_analysis(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.gamma_search_widget)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.gamma_search_label = QtWidgets.QLabel(parent=self.gamma_search_widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Preferred
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.gamma_search_label.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.gamma_search_label.sizePolicy().hasHeightForWidth()
+        )
         self.gamma_search_label.setSizePolicy(sizePolicy)
         self.gamma_search_label.setObjectName("gamma_search_label")
         self.horizontalLayout_2.addWidget(self.gamma_search_label)
-        self.gamma_search_line_edit = QtWidgets.QLineEdit(parent=self.gamma_search_widget)
+        self.gamma_search_line_edit = QtWidgets.QLineEdit(
+            parent=self.gamma_search_widget
+        )
         self.gamma_search_line_edit.setObjectName("gamma_search_line_edit")
         self.horizontalLayout_2.addWidget(self.gamma_search_line_edit)
-        self.gamma_search_button = QtWidgets.QPushButton(parent=self.gamma_search_widget)
+        self.gamma_search_button = QtWidgets.QPushButton(
+            parent=self.gamma_search_widget
+        )
         self.gamma_search_button.setObjectName("gamma_search_button")
         self.horizontalLayout_2.addWidget(self.gamma_search_button)
         self.verticalLayout.addWidget(self.gamma_search_widget)
@@ -330,13 +386,19 @@ class Ui_elemental_analysis(object):
         self.options_container.setObjectName("options_container")
         self.gridLayout = QtWidgets.QGridLayout(self.options_container)
         self.gridLayout.setObjectName("gridLayout")
-        self.mu_xray_search_width_line_edit = QtWidgets.QLineEdit(parent=self.options_container)
+        self.mu_xray_search_width_line_edit = QtWidgets.QLineEdit(
+            parent=self.options_container
+        )
         self.mu_xray_search_width_line_edit.setMinimumSize(QtCore.QSize(0, 0))
         self.mu_xray_search_width_line_edit.setMaximumSize(QtCore.QSize(50, 16777215))
         self.mu_xray_search_width_line_edit.setText("")
-        self.mu_xray_search_width_line_edit.setObjectName("mu_xray_search_width_line_edit")
+        self.mu_xray_search_width_line_edit.setObjectName(
+            "mu_xray_search_width_line_edit"
+        )
         self.gridLayout.addWidget(self.mu_xray_search_width_line_edit, 3, 2, 1, 1)
-        self.mu_xray_search_width_label = QtWidgets.QLabel(parent=self.options_container)
+        self.mu_xray_search_width_label = QtWidgets.QLabel(
+            parent=self.options_container
+        )
         self.mu_xray_search_width_label.setMaximumSize(QtCore.QSize(150, 16777215))
         font = QtGui.QFont()
         font.setPointSize(8)
@@ -349,7 +411,12 @@ class Ui_elemental_analysis(object):
         self.options_label.setFont(font)
         self.options_label.setObjectName("options_label")
         self.gridLayout.addWidget(self.options_label, 0, 0, 1, 1)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            20,
+            40,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         self.gridLayout.addItem(spacerItem1, 3, 4, 1, 1)
         self.kev_label = QtWidgets.QLabel(parent=self.options_container)
         font = QtGui.QFont()
@@ -364,7 +431,9 @@ class Ui_elemental_analysis(object):
         self.gamma_search_width_label.setFont(font)
         self.gamma_search_width_label.setObjectName("gamma_search_width_label")
         self.gridLayout.addWidget(self.gamma_search_width_label, 3, 5, 1, 1)
-        self.gamma_search_width_line_edit = QtWidgets.QLineEdit(parent=self.options_container)
+        self.gamma_search_width_line_edit = QtWidgets.QLineEdit(
+            parent=self.options_container
+        )
         self.gamma_search_width_line_edit.setMinimumSize(QtCore.QSize(0, 0))
         self.gamma_search_width_line_edit.setMaximumSize(QtCore.QSize(50, 16777215))
         self.gamma_search_width_line_edit.setText("")
@@ -376,7 +445,9 @@ class Ui_elemental_analysis(object):
         self.kev_label_2.setFont(font)
         self.kev_label_2.setObjectName("kev_label_2")
         self.gridLayout.addWidget(self.kev_label_2, 3, 7, 1, 1)
-        self.verticalLayout.addWidget(self.options_container, 0, QtCore.Qt.AlignmentFlag.AlignBottom)
+        self.verticalLayout.addWidget(
+            self.options_container, 0, QtCore.Qt.AlignmentFlag.AlignBottom
+        )
         self.tab_menu.addTab(self.click_search_container, "")
         self.peak_find_container = QtWidgets.QWidget()
         self.peak_find_container.setObjectName("peak_find_container")
@@ -389,10 +460,15 @@ class Ui_elemental_analysis(object):
         self.label_3.setObjectName("label_3")
         self.verticalLayout_8.addWidget(self.label_3)
         self.settings_container = QtWidgets.QWidget(parent=self.peak_find_container)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.settings_container.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.settings_container.sizePolicy().hasHeightForWidth()
+        )
         self.settings_container.setSizePolicy(sizePolicy)
         self.settings_container.setObjectName("settings_container")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.settings_container)
@@ -400,7 +476,9 @@ class Ui_elemental_analysis(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.routine_select_label = QtWidgets.QLabel(parent=self.settings_container)
         self.routine_select_label.setObjectName("routine_select_label")
-        self.gridLayout_3.addWidget(self.routine_select_label, 1, 1, 1, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
+        self.gridLayout_3.addWidget(
+            self.routine_select_label, 1, 1, 1, 1, QtCore.Qt.AlignmentFlag.AlignLeft
+        )
         self.use_default_checkbox = QtWidgets.QCheckBox(parent=self.settings_container)
         self.use_default_checkbox.setChecked(True)
         self.use_default_checkbox.setObjectName("use_default_checkbox")
@@ -409,7 +487,9 @@ class Ui_elemental_analysis(object):
         self.routine_select_combo.setObjectName("routine_select_combo")
         self.gridLayout_3.addWidget(self.routine_select_combo, 1, 2, 1, 1)
         self.verticalLayout_8.addWidget(self.settings_container)
-        self.custom_settings_container = QtWidgets.QWidget(parent=self.peak_find_container)
+        self.custom_settings_container = QtWidgets.QWidget(
+            parent=self.peak_find_container
+        )
         self.custom_settings_container.setEnabled(True)
         self.custom_settings_container.setObjectName("custom_settings_container")
         self.formLayout = QtWidgets.QFormLayout(self.custom_settings_container)
@@ -418,23 +498,43 @@ class Ui_elemental_analysis(object):
         self.formLayout.setObjectName("formLayout")
         self.height_label = QtWidgets.QLabel(parent=self.custom_settings_container)
         self.height_label.setObjectName("height_label")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.height_label)
-        self.height_line_edit = QtWidgets.QLineEdit(parent=self.custom_settings_container)
+        self.formLayout.setWidget(
+            0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.height_label
+        )
+        self.height_line_edit = QtWidgets.QLineEdit(
+            parent=self.custom_settings_container
+        )
         self.height_line_edit.setObjectName("height_line_edit")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.height_line_edit)
+        self.formLayout.setWidget(
+            0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.height_line_edit
+        )
         self.threshold_label = QtWidgets.QLabel(parent=self.custom_settings_container)
         self.threshold_label.setObjectName("threshold_label")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.LabelRole, self.threshold_label)
-        self.threshold_line_edit = QtWidgets.QLineEdit(parent=self.custom_settings_container)
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.ItemRole.LabelRole, self.threshold_label
+        )
+        self.threshold_line_edit = QtWidgets.QLineEdit(
+            parent=self.custom_settings_container
+        )
         self.threshold_line_edit.setObjectName("threshold_line_edit")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.threshold_line_edit)
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.threshold_line_edit
+        )
         self.distance_label = QtWidgets.QLabel(parent=self.custom_settings_container)
         self.distance_label.setObjectName("distance_label")
-        self.formLayout.setWidget(4, QtWidgets.QFormLayout.ItemRole.LabelRole, self.distance_label)
-        self.distance_line_edit = QtWidgets.QLineEdit(parent=self.custom_settings_container)
+        self.formLayout.setWidget(
+            4, QtWidgets.QFormLayout.ItemRole.LabelRole, self.distance_label
+        )
+        self.distance_line_edit = QtWidgets.QLineEdit(
+            parent=self.custom_settings_container
+        )
         self.distance_line_edit.setObjectName("distance_line_edit")
-        self.formLayout.setWidget(4, QtWidgets.QFormLayout.ItemRole.FieldRole, self.distance_line_edit)
-        self.verticalLayout_8.addWidget(self.custom_settings_container, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+        self.formLayout.setWidget(
+            4, QtWidgets.QFormLayout.ItemRole.FieldRole, self.distance_line_edit
+        )
+        self.verticalLayout_8.addWidget(
+            self.custom_settings_container, 0, QtCore.Qt.AlignmentFlag.AlignTop
+        )
         self.find_peaks_button = QtWidgets.QPushButton(parent=self.peak_find_container)
         self.find_peaks_button.setObjectName("find_peaks_button")
         self.verticalLayout_8.addWidget(self.find_peaks_button)
@@ -461,13 +561,17 @@ class Ui_elemental_analysis(object):
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         self.verticalLayout_8.addWidget(self.label_2)
-        self.peakfind_results_tree = QtWidgets.QTreeWidget(parent=self.peak_find_container)
+        self.peakfind_results_tree = QtWidgets.QTreeWidget(
+            parent=self.peak_find_container
+        )
         self.peakfind_results_tree.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.peakfind_results_tree.setObjectName("peakfind_results_tree")
         self.verticalLayout_8.addWidget(self.peakfind_results_tree)
         self.reset_button = QtWidgets.QPushButton(parent=self.peak_find_container)
         self.reset_button.setObjectName("reset_button")
-        self.verticalLayout_8.addWidget(self.reset_button, 0, QtCore.Qt.AlignmentFlag.AlignTop)
+        self.verticalLayout_8.addWidget(
+            self.reset_button, 0, QtCore.Qt.AlignmentFlag.AlignTop
+        )
         self.tab_menu.addTab(self.peak_find_container, "")
         self.gridLayout_2.addWidget(self.tab_menu, 0, 2, 2, 1)
 
@@ -484,8 +588,15 @@ class Ui_elemental_analysis(object):
         self.det2_checkbox.setText(_translate("elemental_analysis", "3099 (GE2)"))
         self.det3_checkbox.setText(_translate("elemental_analysis", "4099 (GE3)"))
         self.det4_checkbox.setText(_translate("elemental_analysis", "5099 (GE4)"))
-        self.instruction_label.setText(_translate("elemental_analysis", "Left-click on figure to search muonic X-ray transitions, right-click to search gammas."))
-        self.muonic_xray_table_label.setText(_translate("elemental_analysis", "Possible Muonic X-ray Transitions"))
+        self.instruction_label.setText(
+            _translate(
+                "elemental_analysis",
+                "Left-click on figure to search muonic X-ray transitions, right-click to search gammas.",
+            )
+        )
+        self.muonic_xray_table_label.setText(
+            _translate("elemental_analysis", "Possible Muonic X-ray Transitions")
+        )
         self.muonic_xray_table_all.setSortingEnabled(True)
         item = self.muonic_xray_table_all.horizontalHeaderItem(0)
         item.setText(_translate("elemental_analysis", "Element"))
@@ -495,7 +606,10 @@ class Ui_elemental_analysis(object):
         item.setText(_translate("elemental_analysis", "Transition"))
         item = self.muonic_xray_table_all.horizontalHeaderItem(3)
         item.setText(_translate("elemental_analysis", "Error"))
-        self.muonic_xrays_tab_menu.setTabText(self.muonic_xrays_tab_menu.indexOf(self.all_tab_2), _translate("elemental_analysis", "All Transitions"))
+        self.muonic_xrays_tab_menu.setTabText(
+            self.muonic_xrays_tab_menu.indexOf(self.all_tab_2),
+            _translate("elemental_analysis", "All Transitions"),
+        )
         self.muonic_xray_table_prim.setSortingEnabled(True)
         item = self.muonic_xray_table_prim.horizontalHeaderItem(0)
         item.setText(_translate("elemental_analysis", "Element"))
@@ -505,7 +619,10 @@ class Ui_elemental_analysis(object):
         item.setText(_translate("elemental_analysis", "Transition"))
         item = self.muonic_xray_table_prim.horizontalHeaderItem(3)
         item.setText(_translate("elemental_analysis", "Error"))
-        self.muonic_xrays_tab_menu.setTabText(self.muonic_xrays_tab_menu.indexOf(self.prim_tab), _translate("elemental_analysis", "Primary"))
+        self.muonic_xrays_tab_menu.setTabText(
+            self.muonic_xrays_tab_menu.indexOf(self.prim_tab),
+            _translate("elemental_analysis", "Primary"),
+        )
         self.muonic_xray_table_sec.setSortingEnabled(True)
         item = self.muonic_xray_table_sec.horizontalHeaderItem(0)
         item.setText(_translate("elemental_analysis", "Element"))
@@ -515,13 +632,23 @@ class Ui_elemental_analysis(object):
         item.setText(_translate("elemental_analysis", "Transition"))
         item = self.muonic_xray_table_sec.horizontalHeaderItem(3)
         item.setText(_translate("elemental_analysis", "Error"))
-        self.muonic_xrays_tab_menu.setTabText(self.muonic_xrays_tab_menu.indexOf(self.sec_tab), _translate("elemental_analysis", "Secondary"))
+        self.muonic_xrays_tab_menu.setTabText(
+            self.muonic_xrays_tab_menu.indexOf(self.sec_tab),
+            _translate("elemental_analysis", "Secondary"),
+        )
         item = self.plotted_mu_xrays_table.horizontalHeaderItem(0)
         item.setText(_translate("elemental_analysis", "Click to remove line."))
-        self.muonic_xrays_tab_menu.setTabText(self.muonic_xrays_tab_menu.indexOf(self.remove_tab_2), _translate("elemental_analysis", "Remove lines"))
-        self.muon_search_label.setText(_translate("elemental_analysis", "Search by element"))
+        self.muonic_xrays_tab_menu.setTabText(
+            self.muonic_xrays_tab_menu.indexOf(self.remove_tab_2),
+            _translate("elemental_analysis", "Remove lines"),
+        )
+        self.muon_search_label.setText(
+            _translate("elemental_analysis", "Search by element")
+        )
         self.muon_search_button.setText(_translate("elemental_analysis", "Search"))
-        self.gamma_table_label.setText(_translate("elemental_analysis", "Possible Gamma Transitions"))
+        self.gamma_table_label.setText(
+            _translate("elemental_analysis", "Possible Gamma Transitions")
+        )
         self.gamma_table.setSortingEnabled(True)
         item = self.gamma_table.horizontalHeaderItem(0)
         item.setText(_translate("elemental_analysis", "Element"))
@@ -533,41 +660,82 @@ class Ui_elemental_analysis(object):
         item.setText(_translate("elemental_analysis", "Intensity"))
         item = self.gamma_table.horizontalHeaderItem(4)
         item.setText(_translate("elemental_analysis", "Lifetime"))
-        self.gamma_tab_menu.setTabText(self.gamma_tab_menu.indexOf(self.all_tab), _translate("elemental_analysis", "All Transitions"))
+        self.gamma_tab_menu.setTabText(
+            self.gamma_tab_menu.indexOf(self.all_tab),
+            _translate("elemental_analysis", "All Transitions"),
+        )
         item = self.plotted_gammas_table.horizontalHeaderItem(0)
         item.setText(_translate("elemental_analysis", "Click to remove line."))
-        self.gamma_tab_menu.setTabText(self.gamma_tab_menu.indexOf(self.remove_tab), _translate("elemental_analysis", "Remove lines"))
-        self.gamma_search_label.setText(_translate("elemental_analysis", "Search by isotope"))
+        self.gamma_tab_menu.setTabText(
+            self.gamma_tab_menu.indexOf(self.remove_tab),
+            _translate("elemental_analysis", "Remove lines"),
+        )
+        self.gamma_search_label.setText(
+            _translate("elemental_analysis", "Search by isotope")
+        )
         self.gamma_search_button.setText(_translate("elemental_analysis", "Search"))
-        self.mu_xray_search_width_label.setText(_translate("elemental_analysis", "Muonic X-ray search width:"))
+        self.mu_xray_search_width_label.setText(
+            _translate("elemental_analysis", "Muonic X-ray search width:")
+        )
         self.options_label.setText(_translate("elemental_analysis", "Search Options"))
         self.kev_label.setText(_translate("elemental_analysis", "keV"))
-        self.gamma_search_width_label.setText(_translate("elemental_analysis", "Gamma search width:"))
+        self.gamma_search_width_label.setText(
+            _translate("elemental_analysis", "Gamma search width:")
+        )
         self.kev_label_2.setText(_translate("elemental_analysis", "keV"))
-        self.tab_menu.setTabText(self.tab_menu.indexOf(self.click_search_container), _translate("elemental_analysis", "Peak Identification"))
-        self.label_3.setText(_translate("elemental_analysis", "Detect peaks and search muonic X-ray database"))
-        self.routine_select_label.setText(_translate("elemental_analysis", "Select peak finding routine"))
-        self.use_default_checkbox.setText(_translate("elemental_analysis", "Use default settings?"))
-        self.height_label.setText(_translate("elemental_analysis", "Minimum Peak Height"))
+        self.tab_menu.setTabText(
+            self.tab_menu.indexOf(self.click_search_container),
+            _translate("elemental_analysis", "Peak Identification"),
+        )
+        self.label_3.setText(
+            _translate(
+                "elemental_analysis", "Detect peaks and search muonic X-ray database"
+            )
+        )
+        self.routine_select_label.setText(
+            _translate("elemental_analysis", "Select peak finding routine")
+        )
+        self.use_default_checkbox.setText(
+            _translate("elemental_analysis", "Use default settings?")
+        )
+        self.height_label.setText(
+            _translate("elemental_analysis", "Minimum Peak Height")
+        )
         self.threshold_label.setText(_translate("elemental_analysis", "Threshold"))
-        self.distance_label.setText(_translate("elemental_analysis", "Maximum Peak Distance"))
+        self.distance_label.setText(
+            _translate("elemental_analysis", "Maximum Peak Distance")
+        )
         self.find_peaks_button.setText(_translate("elemental_analysis", "Find Peaks"))
         self.label.setText(_translate("elemental_analysis", "Results"))
         item = self.peakfind_results_table.horizontalHeaderItem(0)
         item.setText(_translate("elemental_analysis", "Detector"))
         item = self.peakfind_results_table.horizontalHeaderItem(1)
-        item.setText(_translate("elemental_analysis", "Most frequently detected elements"))
+        item.setText(
+            _translate("elemental_analysis", "Most frequently detected elements")
+        )
         self.label_2.setText(_translate("elemental_analysis", "Detailed report"))
-        self.peakfind_results_tree.headerItem().setText(0, _translate("elemental_analysis", "Detector"))
-        self.peakfind_results_tree.headerItem().setText(1, _translate("elemental_analysis", "Peak detected"))
-        self.peakfind_results_tree.headerItem().setText(2, _translate("elemental_analysis", "Possible Elements"))
+        self.peakfind_results_tree.headerItem().setText(
+            0, _translate("elemental_analysis", "Detector")
+        )
+        self.peakfind_results_tree.headerItem().setText(
+            1, _translate("elemental_analysis", "Peak detected")
+        )
+        self.peakfind_results_tree.headerItem().setText(
+            2, _translate("elemental_analysis", "Possible Elements")
+        )
         self.reset_button.setText(_translate("elemental_analysis", "Reset"))
-        self.tab_menu.setTabText(self.tab_menu.indexOf(self.peak_find_container), _translate("elemental_analysis", "Peak Detection"))
+        self.tab_menu.setTabText(
+            self.tab_menu.indexOf(self.peak_find_container),
+            _translate("elemental_analysis", "Peak Detection"),
+        )
+
+
 from EVA.gui.base.base_table import BaseTable
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     elemental_analysis = QtWidgets.QWidget()
     ui = Ui_elemental_analysis()

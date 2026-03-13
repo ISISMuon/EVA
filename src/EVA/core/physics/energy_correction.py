@@ -1,5 +1,5 @@
 import numpy as np
-#from EVA.app import get_config
+# from EVA.app import get_config
 
 """
 def Energy_Corrections(data):
@@ -15,5 +15,6 @@ def Energy_Corrections(data):
     return data
 """
 
+
 def lincorr(x, m, c):
-    return x*float(m)+float(c)
+    return x * float(m) + float(c)

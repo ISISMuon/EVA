@@ -5,7 +5,9 @@ from EVA.util.path_handler import get_path
 # load iupac to spec notation conversion table
 with open(get_path("src/EVA/databases/names/iupac_table_sorted.json"), "r") as file:
     IUPAC_TABLE = json.load(file)
-with open(get_path("src/EVA/databases/names/IUPAC_to_spec_shell_table.json"), "r") as file:
+with open(
+    get_path("src/EVA/databases/names/IUPAC_to_spec_shell_table.json"), "r"
+) as file:
     shell_name_to_num = json.load(file)
 with open(get_path("src/EVA/databases/names/fine_splitting_table.json"), "r") as file:
     fine_splitting_naming = json.load(file)
@@ -14,6 +16,7 @@ with open(get_path("src/EVA/databases/names/fine_splitting_table.json"), "r") as
 SPEC_TABLE = {v: k for k, v in IUPAC_TABLE.items()}
 num_to_shell_name = {v: k for k, v in shell_name_to_num.items()}
 num_to_fine_splitting = {v: k for k, v in fine_splitting_naming.items()}
+
 
 def to_spec(iupac_name: str) -> str:
     """
@@ -25,16 +28,18 @@ def to_spec(iupac_name: str) -> str:
     """
     return SPEC_TABLE[iupac_name]
 
+
 def spec_single_to_IUPAC(shell: str):
     # Regex to split "4f5/2" into n="4", l="f", j="5/2" for example
     match = re.match(r"(\d+)([spdfghijk])(\d+/\d+)", shell)
     if not match:
         raise ValueError(f"Invalid spectroscopic string: {shell}")
-    n, l, j = match.groups()  
+    n, l, j = match.groups()
     # Map back to IUPAC
     iupac_letter = num_to_shell_name[int(n)]
-    iupac_number = num_to_fine_splitting[str(l)+str(j)]
+    iupac_number = num_to_fine_splitting[str(l) + str(j)]
     return f"{iupac_letter}{iupac_number}"
+
 
 def to_iupac(transition: str) -> str:
     shell1, shell2 = transition.split("-")
@@ -42,7 +47,8 @@ def to_iupac(transition: str) -> str:
     shell2_iupac = spec_single_to_IUPAC(shell2)
     return f"{shell2_iupac}-{shell1_iupac}"
 
-def is_primary(transition: str, notation:str = "spec") -> bool:
+
+def is_primary(transition: str, notation: str = "spec") -> bool:
     """
     Args:
         transition: transition name
@@ -63,7 +69,7 @@ def is_primary(transition: str, notation:str = "spec") -> bool:
     therefore transition is primary
     """
     if notation != "iupac":
-        transition = to_iupac(transition) # this is easier to do on iupac notation
+        transition = to_iupac(transition)  # this is easier to do on iupac notation
 
     e1, e2 = transition.split("-")  # split transition name
     return ord(e2[0]) - ord(e1[0]) == 1  # convert letter to integer and subtract

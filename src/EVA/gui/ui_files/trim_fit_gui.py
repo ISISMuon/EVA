@@ -30,16 +30,24 @@ class Ui_trim_fit(object):
         self.formLayout.setObjectName("formLayout")
         self.momentum_label = QtWidgets.QLabel(parent=self.widget)
         self.momentum_label.setObjectName("momentum_label")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.momentum_label)
+        self.formLayout.setWidget(
+            0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.momentum_label
+        )
         self.momentum_line_edit = QtWidgets.QLineEdit(parent=self.widget)
         self.momentum_line_edit.setObjectName("momentum_line_edit")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.momentum_line_edit)
+        self.formLayout.setWidget(
+            0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.momentum_line_edit
+        )
         self.fit_button = QtWidgets.QPushButton(parent=self.widget)
         self.fit_button.setObjectName("fit_button")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.ItemRole.SpanningRole, self.fit_button)
+        self.formLayout.setWidget(
+            1, QtWidgets.QFormLayout.ItemRole.SpanningRole, self.fit_button
+        )
         self.widget_2 = QtWidgets.QWidget(parent=self.widget)
         self.widget_2.setObjectName("widget_2")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.LabelRole, self.widget_2)
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.ItemRole.LabelRole, self.widget_2
+        )
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
         self.layer_table = BaseTable(parent=self.side_panel)
         self.layer_table.setObjectName("layer_table")
@@ -81,12 +89,15 @@ class Ui_trim_fit(object):
         item.setText(_translate("trim_fit", "Thickness"))
         item = self.layer_table.horizontalHeaderItem(2)
         item.setText(_translate("trim_fit", "Density"))
+
+
 from EVA.gui.base.base_table import BaseTable
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     trim_fit = QtWidgets.QWidget()
     ui = Ui_trim_fit()

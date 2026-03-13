@@ -3,7 +3,9 @@ from PyQt6.QtWidgets import QVBoxLayout, QTableWidgetItem
 from PyQt6.QtCore import Qt
 
 from EVA.gui.base.base_view import BaseView
-from EVA.gui.ui_files.multiplot_gui import Ui_MultiPlotView  # this is the generated .py from .ui
+from EVA.gui.ui_files.multiplot_gui import (
+    Ui_MultiPlotView,
+)  # this is the generated .py from .ui
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
 
 logger = logging.getLogger(__name__)
@@ -14,6 +16,7 @@ class MultiPlotView(BaseView, Ui_MultiPlotView):
     GUI for the Multi-Run Plot window.
     Loads widgets from multi_plot_view.ui and sets up dynamic elements.
     """
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
@@ -39,7 +42,7 @@ class MultiPlotView(BaseView, Ui_MultiPlotView):
         # --- Initialize RunListTable ---
         self.RunListTable.setRowCount(50)
         self.RunListTable.setColumnCount(3)
-        self.RunListTable.setHorizontalHeaderLabels(['Start', 'End', 'Step'])
+        self.RunListTable.setHorizontalHeaderLabels(["Start", "End", "Step"])
         self.RunListTable.stretch_horizontal_header()
 
         # Initialize cells as empty

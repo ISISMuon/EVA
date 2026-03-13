@@ -12,6 +12,7 @@ class TestManual:
         window = ManualWindow(widget)
         qtbot.addWidget(window)
 
-        assert os.path.isfile(window.path),  "invalid HTML manual file path"
-        assert len(window.page.toHtml()) > 2000, \
+        assert os.path.isfile(window.path), "invalid HTML manual file path"
+        assert len(window.page.toHtml()) > 2000, (
             "HTML loaded incorrectly; less than 2000 characters were loaded"
+        )

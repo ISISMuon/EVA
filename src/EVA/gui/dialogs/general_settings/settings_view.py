@@ -1,9 +1,18 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QCloseEvent, QColor
-from PyQt6.QtWidgets import QDialog, QMessageBox, QLineEdit, QCheckBox, QLabel, QDialogButtonBox, QColorDialog, \
-    QFileDialog
+from PyQt6.QtWidgets import (
+    QDialog,
+    QMessageBox,
+    QLineEdit,
+    QCheckBox,
+    QLabel,
+    QDialogButtonBox,
+    QColorDialog,
+    QFileDialog,
+)
 
 from EVA.gui.ui_files.settings_widget_gui import Ui_settings
+
 
 class SettingsView(QDialog, Ui_settings):
     settings_applied_s = pyqtSignal(dict)
@@ -34,15 +43,19 @@ class SettingsView(QDialog, Ui_settings):
             "srim_exe_dir": self.srim_exe_dir_label.text(),
             "srim_out_dir": self.srim_out_dir_label.text(),
             "fill_colour": self.colour_dialog.currentColor().name(),
-            "working_dir": self.working_dir_label.text()
+            "working_dir": self.working_dir_label.text(),
         }
 
         return settings
 
-    def display_error_message(self, title="Error", message="", buttons=QMessageBox.StandardButton.Ok):
+    def display_error_message(
+        self, title="Error", message="", buttons=QMessageBox.StandardButton.Ok
+    ):
         _ = QMessageBox.critical(self, title, message, buttons)
 
-    def display_message(self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok):
+    def display_message(
+        self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok
+    ):
         _ = QMessageBox.information(self, title, message, buttons)
 
     def get_directory(self):

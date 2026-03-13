@@ -38,25 +38,34 @@ class Ui_workspace(object):
         self.verticalLayout_5.setContentsMargins(9, 0, 3, 9)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.groupBox = QtWidgets.QGroupBox(parent=self.frame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
         self.groupBox.setSizePolicy(sizePolicy)
-        self.groupBox.setStyleSheet("QGroupBox {\n"
-"    border-radius: 6px;\n"
-"    margin-top: 6px;\n"
-"    background-color: white;\n"
-"}\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    left: 7px;\n"
-"    padding: 2px 5px 2px 5px;\n"
-"    background-color: white;\n"
-"    border: 1px solid #E8E8E8;\n"
-"    border-radius: 2px\n"
-"}")
-        self.groupBox.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
+        self.groupBox.setStyleSheet(
+            "QGroupBox {\n"
+            "    border-radius: 6px;\n"
+            "    margin-top: 6px;\n"
+            "    background-color: white;\n"
+            "}\n"
+            "QGroupBox::title {\n"
+            "    subcontrol-origin: margin;\n"
+            "    left: 7px;\n"
+            "    padding: 2px 5px 2px 5px;\n"
+            "    background-color: white;\n"
+            "    border: 1px solid #E8E8E8;\n"
+            "    border-radius: 2px\n"
+            "}"
+        )
+        self.groupBox.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignLeading
+            | QtCore.Qt.AlignmentFlag.AlignLeft
+            | QtCore.Qt.AlignmentFlag.AlignTop
+        )
         self.groupBox.setFlat(False)
         self.groupBox.setCheckable(False)
         self.groupBox.setObjectName("groupBox")
@@ -65,7 +74,10 @@ class Ui_workspace(object):
         self.verticalLayout_4.setSpacing(6)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.comment_text = QtWidgets.QTextBrowser(parent=self.groupBox)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.comment_text.sizePolicy().hasHeightForWidth())
@@ -74,24 +86,29 @@ class Ui_workspace(object):
         self.verticalLayout_4.addWidget(self.comment_text)
         self.verticalLayout_5.addWidget(self.groupBox)
         self.groupBox_2 = QtWidgets.QGroupBox(parent=self.frame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(2)
         sizePolicy.setHeightForWidth(self.groupBox_2.sizePolicy().hasHeightForWidth())
         self.groupBox_2.setSizePolicy(sizePolicy)
-        self.groupBox_2.setStyleSheet("QGroupBox {\n"
-"    border-radius: 6px;\n"
-"    margin-top: 6px;\n"
-"    background-color: white;\n"
-"}\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    left: 7px;\n"
-"    padding: 2px 5px 2px 5px;\n"
-"    background-color: white;\n"
-"    border: 1px solid #E8E8E8;\n"
-"    border-radius: 2px\n"
-"}")
+        self.groupBox_2.setStyleSheet(
+            "QGroupBox {\n"
+            "    border-radius: 6px;\n"
+            "    margin-top: 6px;\n"
+            "    background-color: white;\n"
+            "}\n"
+            "QGroupBox::title {\n"
+            "    subcontrol-origin: margin;\n"
+            "    left: 7px;\n"
+            "    padding: 2px 5px 2px 5px;\n"
+            "    background-color: white;\n"
+            "    border: 1px solid #E8E8E8;\n"
+            "    border-radius: 2px\n"
+            "}"
+        )
         self.groupBox_2.setFlat(False)
         self.groupBox_2.setObjectName("groupBox_2")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.groupBox_2)
@@ -110,7 +127,12 @@ class Ui_workspace(object):
         self.normalisation_type_combo_box.addItem("")
         self.normalisation_type_combo_box.addItem("")
         self.gridLayout_3.addWidget(self.normalisation_type_combo_box, 1, 0, 1, 2)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(
+            20,
+            40,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         self.gridLayout_3.addItem(spacerItem, 9, 0, 1, 2)
         self.label_3 = QtWidgets.QLabel(parent=self.groupBox_2)
         self.label_3.setObjectName("label_3")
@@ -124,25 +146,32 @@ class Ui_workspace(object):
         self.gridLayout_3.addWidget(self.binning_spin_box, 6, 0, 1, 2)
         self.verticalLayout_5.addWidget(self.groupBox_2)
         self.logbook_group_box = QtWidgets.QGroupBox(parent=self.frame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.logbook_group_box.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.logbook_group_box.sizePolicy().hasHeightForWidth()
+        )
         self.logbook_group_box.setSizePolicy(sizePolicy)
-        self.logbook_group_box.setStyleSheet("QGroupBox {\n"
-"    border-radius: 6px;\n"
-"    margin-top: 6px;\n"
-"    background-color: white;\n"
-"}\n"
-"\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    left: 7px;\n"
-"    padding: 2px 5px 2px 5px;\n"
-"    background-color: white;\n"
-"    border: 1px solid #E8E8E8;\n"
-"    border-radius: 2px\n"
-"}")
+        self.logbook_group_box.setStyleSheet(
+            "QGroupBox {\n"
+            "    border-radius: 6px;\n"
+            "    margin-top: 6px;\n"
+            "    background-color: white;\n"
+            "}\n"
+            "\n"
+            "QGroupBox::title {\n"
+            "    subcontrol-origin: margin;\n"
+            "    left: 7px;\n"
+            "    padding: 2px 5px 2px 5px;\n"
+            "    background-color: white;\n"
+            "    border: 1px solid #E8E8E8;\n"
+            "    border-radius: 2px\n"
+            "}"
+        )
         self.logbook_group_box.setFlat(False)
         self.logbook_group_box.setObjectName("logbook_group_box")
         self.gridLayout = QtWidgets.QGridLayout(self.logbook_group_box)
@@ -178,9 +207,9 @@ class Ui_workspace(object):
         workspace.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=workspace)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 969, 22))
-        self.menubar.setStyleSheet("border-bottom: 1px solid lightgrey;\n"
-"margin: 0px;\n"
-"padding: 0;")
+        self.menubar.setStyleSheet(
+            "border-bottom: 1px solid lightgrey;\nmargin: 0px;\npadding: 0;"
+        )
         self.menubar.setDefaultUp(False)
         self.menubar.setObjectName("menubar")
         self.plot_menu = QtWidgets.QMenu(parent=self.menubar)
@@ -245,20 +274,31 @@ class Ui_workspace(object):
         self.groupBox_2.setTitle(_translate("workspace", "Run Settings"))
         self.label_2.setText(_translate("workspace", "Normalisation type"))
         self.apply_run_settings_button.setText(_translate("workspace", "Apply"))
-        self.normalisation_type_combo_box.setItemText(0, _translate("workspace", "None"))
-        self.normalisation_type_combo_box.setItemText(1, _translate("workspace", "Normalisation by counts"))
-        self.normalisation_type_combo_box.setItemText(2, _translate("workspace", "Normalisation by events"))
+        self.normalisation_type_combo_box.setItemText(
+            0, _translate("workspace", "None")
+        )
+        self.normalisation_type_combo_box.setItemText(
+            1, _translate("workspace", "Normalisation by counts")
+        )
+        self.normalisation_type_combo_box.setItemText(
+            2, _translate("workspace", "Normalisation by events")
+        )
         self.label_3.setText(_translate("workspace", "Binning"))
         self.logbook_group_box.setTitle(_translate("workspace", "Logbook history"))
-        self.textBrowser.setHtml(_translate("workspace", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">[10/4/25 14:48] Added 2 figures to logbook.</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p></body></html>"))
+        self.textBrowser.setHtml(
+            _translate(
+                "workspace",
+                '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">\n'
+                '<html><head><meta name="qrichtext" content="1" /><meta charset="utf-8" /><style type="text/css">\n'
+                "p, li { white-space: pre-wrap; }\n"
+                "hr { height: 1px; border-width: 0; }\n"
+                'li.unchecked::marker { content: "\\2610"; }\n'
+                'li.checked::marker { content: "\\2612"; }\n'
+                "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+                '<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:8pt;">[10/4/25 14:48] Added 2 figures to logbook.</span></p>\n'
+                '<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;"><br /></p></body></html>',
+            )
+        )
         self.pushButton.setText(_translate("workspace", "Create new logbook"))
         self.label.setText(_translate("workspace", "Select logbook"))
         self.plot_menu.setTitle(_translate("workspace", "Plotting"))
@@ -268,21 +308,28 @@ class Ui_workspace(object):
         self.tools_menu.setTitle(_translate("workspace", "Tools"))
         self.help_menu.setTitle(_translate("workspace", "Help"))
         self.trim_simulation.setText(_translate("workspace", "SRIM/TRIM simulation"))
-        self.model_muon_spectrum.setText(_translate("workspace", "Simulate Muonic X-ray Spectra"))
+        self.model_muon_spectrum.setText(
+            _translate("workspace", "Simulate Muonic X-ray Spectra")
+        )
         self.periodic_table.setText(_translate("workspace", "Periodic Table"))
         self.help_manual.setText(_translate("workspace", "Manual"))
         self.energy_corrections.setText(_translate("workspace", "Energy corrections"))
         self.plot_multiplot.setText(_translate("workspace", "Multi-run Plot"))
         self.actiontest.setText(_translate("workspace", "test"))
         self.file_load_default.setText(_translate("workspace", "Load default settings"))
-        self.file_browse_dir.setText(_translate("workspace", "Browse to data directory"))
+        self.file_browse_dir.setText(
+            _translate("workspace", "Browse to data directory")
+        )
         self.file_reset.setText(_translate("workspace", "Reset all settings"))
         self.general_settings.setText(_translate("workspace", "General settings"))
-        self.energy_correction_settings.setText(_translate("workspace", "Energy corrections"))
+        self.energy_correction_settings.setText(
+            _translate("workspace", "Energy corrections")
+        )
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     workspace = QtWidgets.QMainWindow()
     ui = Ui_workspace()

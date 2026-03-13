@@ -7,7 +7,8 @@ from EVA.core.settings.config import Config
 
 
 class WorkspaceModel:
-    """ Model for handling workspace logic """
+    """Model for handling workspace logic"""
+
     def __init__(self, run):
         """
         Initialise model.
@@ -30,11 +31,18 @@ class WorkspaceModel:
 
         """
         self.binning = settings.get("binning", self.binning)
-        self.normalisation = normalisation_types[settings.get("normalisation", self.normalisation)]
+        self.normalisation = normalisation_types[
+            settings.get("normalisation", self.normalisation)
+        ]
         self.plot_mode = settings.get("plot_mode", self.plot_mode)
         self.prompt_limit = settings.get("prompt_limit", self.prompt_limit)
-        
-        self.run.set_corrections(normalisation=self.normalisation, bin_rate=self.binning, plot_mode=self.plot_mode, prompt_limit=self.prompt_limit)
+
+        self.run.set_corrections(
+            normalisation=self.normalisation,
+            bin_rate=self.binning,
+            plot_mode=self.plot_mode,
+            prompt_limit=self.prompt_limit,
+        )
 
     def on_config_changed(self, fields):
         config = get_config()
@@ -63,7 +71,7 @@ class WorkspaceModel:
             "detector_specific": self.run.energy_corrections,
             "plot_mode": self.run.plot_mode,
             "prompt_limit": self.run.prompt_limit,
-            "show_plot": {det: True for det in self.run.loaded_detectors}
+            "show_plot": {det: True for det in self.run.loaded_detectors},
         }
 
         config["saved_corrections"][working_dir][run_num] = corrections

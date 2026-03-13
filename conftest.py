@@ -10,15 +10,20 @@ this.qapplication = None
     of QApplication, but we need the custom App class instead. 
 """
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope="session")
 def qapp():
-    if (this.qapplication is None):
-        this.qapplication = App(sys.argv) # instantiate custom App instead of QApplication
+    if this.qapplication is None:
+        this.qapplication = App(
+            sys.argv
+        )  # instantiate custom App instead of QApplication
     yield this.qapplication
+
 
 @pytest.fixture(scope="session")
 def qapp_cls():
     return App
+
 
 # ensure that tests will look for files in the test_data directory
 @pytest.fixture(autouse=True)

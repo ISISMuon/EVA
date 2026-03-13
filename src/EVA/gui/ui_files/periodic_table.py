@@ -13,7 +13,10 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1836, 948)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -22,10 +25,15 @@ class Ui_MainWindow(object):
         font.setPointSize(9)
         MainWindow.setFont(font)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.centralwidget.sizePolicy().hasHeightForWidth()
+        )
         self.centralwidget.setSizePolicy(sizePolicy)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -53,7 +61,9 @@ class Ui_MainWindow(object):
         self.mu_xray_search_tab.setObjectName("mu_xray_search_tab")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.mu_xray_search_tab)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.mu_xray_search_result_table = QtWidgets.QTableWidget(parent=self.mu_xray_search_tab)
+        self.mu_xray_search_result_table = QtWidgets.QTableWidget(
+            parent=self.mu_xray_search_tab
+        )
         self.mu_xray_search_result_table.setObjectName("mu_xray_search_result_table")
         self.mu_xray_search_result_table.setColumnCount(5)
         self.mu_xray_search_result_table.setRowCount(0)
@@ -73,7 +83,9 @@ class Ui_MainWindow(object):
         self.gamma_search_tab.setObjectName("gamma_search_tab")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.gamma_search_tab)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.gamma_search_result_table = QtWidgets.QTableWidget(parent=self.gamma_search_tab)
+        self.gamma_search_result_table = QtWidgets.QTableWidget(
+            parent=self.gamma_search_tab
+        )
         self.gamma_search_result_table.setObjectName("gamma_search_result_table")
         self.gamma_search_result_table.setColumnCount(4)
         self.gamma_search_result_table.setRowCount(0)
@@ -91,7 +103,9 @@ class Ui_MainWindow(object):
         self.e_xray_search_tab.setObjectName("e_xray_search_tab")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.e_xray_search_tab)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.e_xray_search_result_table = QtWidgets.QTableWidget(parent=self.e_xray_search_tab)
+        self.e_xray_search_result_table = QtWidgets.QTableWidget(
+            parent=self.e_xray_search_tab
+        )
         self.e_xray_search_result_table.setObjectName("e_xray_search_result_table")
         self.e_xray_search_result_table.setColumnCount(4)
         self.e_xray_search_result_table.setRowCount(0)
@@ -120,7 +134,10 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.search_isotopes_checkbox, 0, 0, 1, 2)
         self.gridLayout.addWidget(self.groupBox_2, 2, 0, 1, 1)
         self.widget = QtWidgets.QWidget(parent=self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Ignored, QtWidgets.QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Ignored,
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
@@ -129,10 +146,18 @@ class Ui_MainWindow(object):
         self.gridLayout_2 = QtWidgets.QGridLayout(self.widget)
         self.gridLayout_2.setSpacing(0)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        spacerItem = QtWidgets.QSpacerItem(
+            20,
+            20,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Fixed,
+        )
         self.gridLayout_2.addItem(spacerItem, 7, 10, 1, 1)
         self.Al_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Al_button.sizePolicy().hasHeightForWidth())
@@ -144,7 +169,10 @@ class Ui_MainWindow(object):
         self.Al_button.setObjectName("Al_button")
         self.gridLayout_2.addWidget(self.Al_button, 2, 13, 1, 1)
         self.Ts_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ts_button.sizePolicy().hasHeightForWidth())
@@ -156,7 +184,10 @@ class Ui_MainWindow(object):
         self.Ts_button.setObjectName("Ts_button")
         self.gridLayout_2.addWidget(self.Ts_button, 6, 17, 1, 1)
         self.Pt_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Pt_button.sizePolicy().hasHeightForWidth())
@@ -168,7 +199,10 @@ class Ui_MainWindow(object):
         self.Pt_button.setObjectName("Pt_button")
         self.gridLayout_2.addWidget(self.Pt_button, 5, 10, 1, 1)
         self.Md_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Md_button.sizePolicy().hasHeightForWidth())
@@ -180,7 +214,10 @@ class Ui_MainWindow(object):
         self.Md_button.setObjectName("Md_button")
         self.gridLayout_2.addWidget(self.Md_button, 9, 15, 1, 1)
         self.K_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.K_button.sizePolicy().hasHeightForWidth())
@@ -192,7 +229,10 @@ class Ui_MainWindow(object):
         self.K_button.setObjectName("K_button")
         self.gridLayout_2.addWidget(self.K_button, 3, 0, 1, 1)
         self.Ac_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ac_button.sizePolicy().hasHeightForWidth())
@@ -204,7 +244,10 @@ class Ui_MainWindow(object):
         self.Ac_button.setObjectName("Ac_button")
         self.gridLayout_2.addWidget(self.Ac_button, 6, 2, 1, 1)
         self.Co_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Co_button.sizePolicy().hasHeightForWidth())
@@ -216,7 +259,10 @@ class Ui_MainWindow(object):
         self.Co_button.setObjectName("Co_button")
         self.gridLayout_2.addWidget(self.Co_button, 3, 9, 1, 1)
         self.Hf_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Hf_button.sizePolicy().hasHeightForWidth())
@@ -228,7 +274,10 @@ class Ui_MainWindow(object):
         self.Hf_button.setObjectName("Hf_button")
         self.gridLayout_2.addWidget(self.Hf_button, 5, 4, 1, 1)
         self.Pd_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Pd_button.sizePolicy().hasHeightForWidth())
@@ -240,7 +289,10 @@ class Ui_MainWindow(object):
         self.Pd_button.setObjectName("Pd_button")
         self.gridLayout_2.addWidget(self.Pd_button, 4, 10, 1, 1)
         self.Be_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Be_button.sizePolicy().hasHeightForWidth())
@@ -252,7 +304,10 @@ class Ui_MainWindow(object):
         self.Be_button.setObjectName("Be_button")
         self.gridLayout_2.addWidget(self.Be_button, 1, 1, 1, 1)
         self.Pa_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Pa_button.sizePolicy().hasHeightForWidth())
@@ -264,7 +319,10 @@ class Ui_MainWindow(object):
         self.Pa_button.setObjectName("Pa_button")
         self.gridLayout_2.addWidget(self.Pa_button, 9, 5, 1, 1)
         self.Ar_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ar_button.sizePolicy().hasHeightForWidth())
@@ -275,10 +333,18 @@ class Ui_MainWindow(object):
         self.Ar_button.setStyleSheet("background-color: rgb(255, 228, 235);")
         self.Ar_button.setObjectName("Ar_button")
         self.gridLayout_2.addWidget(self.Ar_button, 2, 19, 1, 1)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            20,
+            20,
+            QtWidgets.QSizePolicy.Policy.Fixed,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+        )
         self.gridLayout_2.addItem(spacerItem1, 4, 3, 1, 1)
         self.Yb_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Yb_button.sizePolicy().hasHeightForWidth())
@@ -290,7 +356,10 @@ class Ui_MainWindow(object):
         self.Yb_button.setObjectName("Yb_button")
         self.gridLayout_2.addWidget(self.Yb_button, 8, 16, 1, 1)
         self.Tm_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Tm_button.sizePolicy().hasHeightForWidth())
@@ -302,7 +371,10 @@ class Ui_MainWindow(object):
         self.Tm_button.setObjectName("Tm_button")
         self.gridLayout_2.addWidget(self.Tm_button, 8, 15, 1, 1)
         self.La_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.La_button.sizePolicy().hasHeightForWidth())
@@ -314,7 +386,10 @@ class Ui_MainWindow(object):
         self.La_button.setObjectName("La_button")
         self.gridLayout_2.addWidget(self.La_button, 5, 2, 1, 1)
         self.Rn_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Rn_button.sizePolicy().hasHeightForWidth())
@@ -326,7 +401,10 @@ class Ui_MainWindow(object):
         self.Rn_button.setObjectName("Rn_button")
         self.gridLayout_2.addWidget(self.Rn_button, 5, 19, 1, 1)
         self.O_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.O_button.sizePolicy().hasHeightForWidth())
@@ -338,7 +416,10 @@ class Ui_MainWindow(object):
         self.O_button.setObjectName("O_button")
         self.gridLayout_2.addWidget(self.O_button, 1, 16, 1, 1)
         self.Rb_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Rb_button.sizePolicy().hasHeightForWidth())
@@ -350,7 +431,10 @@ class Ui_MainWindow(object):
         self.Rb_button.setObjectName("Rb_button")
         self.gridLayout_2.addWidget(self.Rb_button, 4, 0, 1, 1)
         self.Xe_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Xe_button.sizePolicy().hasHeightForWidth())
@@ -362,7 +446,10 @@ class Ui_MainWindow(object):
         self.Xe_button.setObjectName("Xe_button")
         self.gridLayout_2.addWidget(self.Xe_button, 4, 19, 1, 1)
         self.Bi_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Bi_button.sizePolicy().hasHeightForWidth())
@@ -374,7 +461,10 @@ class Ui_MainWindow(object):
         self.Bi_button.setObjectName("Bi_button")
         self.gridLayout_2.addWidget(self.Bi_button, 5, 15, 1, 1)
         self.Kr_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Kr_button.sizePolicy().hasHeightForWidth())
@@ -386,7 +476,10 @@ class Ui_MainWindow(object):
         self.Kr_button.setObjectName("Kr_button")
         self.gridLayout_2.addWidget(self.Kr_button, 3, 19, 1, 1)
         self.Li_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Li_button.sizePolicy().hasHeightForWidth())
@@ -398,7 +491,10 @@ class Ui_MainWindow(object):
         self.Li_button.setObjectName("Li_button")
         self.gridLayout_2.addWidget(self.Li_button, 1, 0, 1, 1)
         self.Er_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Er_button.sizePolicy().hasHeightForWidth())
@@ -410,7 +506,10 @@ class Ui_MainWindow(object):
         self.Er_button.setObjectName("Er_button")
         self.gridLayout_2.addWidget(self.Er_button, 8, 14, 1, 1)
         self.F_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.F_button.sizePolicy().hasHeightForWidth())
@@ -422,7 +521,10 @@ class Ui_MainWindow(object):
         self.F_button.setObjectName("F_button")
         self.gridLayout_2.addWidget(self.F_button, 1, 17, 1, 1)
         self.P_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.P_button.sizePolicy().hasHeightForWidth())
@@ -434,7 +536,10 @@ class Ui_MainWindow(object):
         self.P_button.setObjectName("P_button")
         self.gridLayout_2.addWidget(self.P_button, 2, 15, 1, 1)
         self.Hg_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Hg_button.sizePolicy().hasHeightForWidth())
@@ -446,7 +551,10 @@ class Ui_MainWindow(object):
         self.Hg_button.setObjectName("Hg_button")
         self.gridLayout_2.addWidget(self.Hg_button, 5, 12, 1, 1)
         self.Ag_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ag_button.sizePolicy().hasHeightForWidth())
@@ -458,7 +566,10 @@ class Ui_MainWindow(object):
         self.Ag_button.setObjectName("Ag_button")
         self.gridLayout_2.addWidget(self.Ag_button, 4, 11, 1, 1)
         self.Rh_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Rh_button.sizePolicy().hasHeightForWidth())
@@ -470,7 +581,10 @@ class Ui_MainWindow(object):
         self.Rh_button.setObjectName("Rh_button")
         self.gridLayout_2.addWidget(self.Rh_button, 4, 9, 1, 1)
         self.Es_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Es_button.sizePolicy().hasHeightForWidth())
@@ -482,7 +596,10 @@ class Ui_MainWindow(object):
         self.Es_button.setObjectName("Es_button")
         self.gridLayout_2.addWidget(self.Es_button, 9, 13, 1, 1)
         self.Pr_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Pr_button.sizePolicy().hasHeightForWidth())
@@ -494,7 +611,10 @@ class Ui_MainWindow(object):
         self.Pr_button.setObjectName("Pr_button")
         self.gridLayout_2.addWidget(self.Pr_button, 8, 5, 1, 1)
         self.Ds_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ds_button.sizePolicy().hasHeightForWidth())
@@ -506,7 +626,10 @@ class Ui_MainWindow(object):
         self.Ds_button.setObjectName("Ds_button")
         self.gridLayout_2.addWidget(self.Ds_button, 6, 10, 1, 1)
         self.In_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.In_button.sizePolicy().hasHeightForWidth())
@@ -518,7 +641,10 @@ class Ui_MainWindow(object):
         self.In_button.setObjectName("In_button")
         self.gridLayout_2.addWidget(self.In_button, 4, 13, 1, 1)
         self.W_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.W_button.sizePolicy().hasHeightForWidth())
@@ -530,7 +656,10 @@ class Ui_MainWindow(object):
         self.W_button.setObjectName("W_button")
         self.gridLayout_2.addWidget(self.W_button, 5, 6, 1, 1)
         self.Pb_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Pb_button.sizePolicy().hasHeightForWidth())
@@ -542,7 +671,10 @@ class Ui_MainWindow(object):
         self.Pb_button.setObjectName("Pb_button")
         self.gridLayout_2.addWidget(self.Pb_button, 5, 14, 1, 1)
         self.N_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.N_button.sizePolicy().hasHeightForWidth())
@@ -554,7 +686,10 @@ class Ui_MainWindow(object):
         self.N_button.setObjectName("N_button")
         self.gridLayout_2.addWidget(self.N_button, 1, 15, 1, 1)
         self.Pu_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Pu_button.sizePolicy().hasHeightForWidth())
@@ -566,7 +701,10 @@ class Ui_MainWindow(object):
         self.Pu_button.setObjectName("Pu_button")
         self.gridLayout_2.addWidget(self.Pu_button, 9, 8, 1, 1)
         self.Og_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Og_button.sizePolicy().hasHeightForWidth())
@@ -578,7 +716,10 @@ class Ui_MainWindow(object):
         self.Og_button.setObjectName("Og_button")
         self.gridLayout_2.addWidget(self.Og_button, 6, 19, 1, 1)
         self.H_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.H_button.sizePolicy().hasHeightForWidth())
@@ -590,7 +731,10 @@ class Ui_MainWindow(object):
         self.H_button.setObjectName("H_button")
         self.gridLayout_2.addWidget(self.H_button, 0, 0, 1, 1)
         self.B_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.B_button.sizePolicy().hasHeightForWidth())
@@ -602,7 +746,10 @@ class Ui_MainWindow(object):
         self.B_button.setObjectName("B_button")
         self.gridLayout_2.addWidget(self.B_button, 1, 13, 1, 1)
         self.Nd_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Nd_button.sizePolicy().hasHeightForWidth())
@@ -614,7 +761,10 @@ class Ui_MainWindow(object):
         self.Nd_button.setObjectName("Nd_button")
         self.gridLayout_2.addWidget(self.Nd_button, 8, 6, 1, 1)
         self.Po_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Po_button.sizePolicy().hasHeightForWidth())
@@ -626,7 +776,10 @@ class Ui_MainWindow(object):
         self.Po_button.setObjectName("Po_button")
         self.gridLayout_2.addWidget(self.Po_button, 5, 16, 1, 1)
         self.Ce_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ce_button.sizePolicy().hasHeightForWidth())
@@ -638,7 +791,10 @@ class Ui_MainWindow(object):
         self.Ce_button.setObjectName("Ce_button")
         self.gridLayout_2.addWidget(self.Ce_button, 8, 4, 1, 1)
         self.Cr_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Cr_button.sizePolicy().hasHeightForWidth())
@@ -650,7 +806,10 @@ class Ui_MainWindow(object):
         self.Cr_button.setObjectName("Cr_button")
         self.gridLayout_2.addWidget(self.Cr_button, 3, 6, 1, 1)
         self.Mc_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Mc_button.sizePolicy().hasHeightForWidth())
@@ -662,7 +821,10 @@ class Ui_MainWindow(object):
         self.Mc_button.setObjectName("Mc_button")
         self.gridLayout_2.addWidget(self.Mc_button, 6, 15, 1, 1)
         self.Rf_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Rf_button.sizePolicy().hasHeightForWidth())
@@ -674,7 +836,10 @@ class Ui_MainWindow(object):
         self.Rf_button.setObjectName("Rf_button")
         self.gridLayout_2.addWidget(self.Rf_button, 6, 4, 1, 1)
         self.Lu_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Lu_button.sizePolicy().hasHeightForWidth())
@@ -686,7 +851,10 @@ class Ui_MainWindow(object):
         self.Lu_button.setObjectName("Lu_button")
         self.gridLayout_2.addWidget(self.Lu_button, 8, 17, 1, 1)
         self.Ne_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ne_button.sizePolicy().hasHeightForWidth())
@@ -698,7 +866,10 @@ class Ui_MainWindow(object):
         self.Ne_button.setObjectName("Ne_button")
         self.gridLayout_2.addWidget(self.Ne_button, 1, 19, 1, 1)
         self.Nb_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Nb_button.sizePolicy().hasHeightForWidth())
@@ -710,7 +881,10 @@ class Ui_MainWindow(object):
         self.Nb_button.setObjectName("Nb_button")
         self.gridLayout_2.addWidget(self.Nb_button, 4, 5, 1, 1)
         self.Am_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Am_button.sizePolicy().hasHeightForWidth())
@@ -722,7 +896,10 @@ class Ui_MainWindow(object):
         self.Am_button.setObjectName("Am_button")
         self.gridLayout_2.addWidget(self.Am_button, 9, 9, 1, 1)
         self.Ru_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ru_button.sizePolicy().hasHeightForWidth())
@@ -734,7 +911,10 @@ class Ui_MainWindow(object):
         self.Ru_button.setObjectName("Ru_button")
         self.gridLayout_2.addWidget(self.Ru_button, 4, 8, 1, 1)
         self.Cf_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Cf_button.sizePolicy().hasHeightForWidth())
@@ -746,7 +926,10 @@ class Ui_MainWindow(object):
         self.Cf_button.setObjectName("Cf_button")
         self.gridLayout_2.addWidget(self.Cf_button, 9, 12, 1, 1)
         self.Si_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Si_button.sizePolicy().hasHeightForWidth())
@@ -758,7 +941,10 @@ class Ui_MainWindow(object):
         self.Si_button.setObjectName("Si_button")
         self.gridLayout_2.addWidget(self.Si_button, 2, 14, 1, 1)
         self.Gd_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Gd_button.sizePolicy().hasHeightForWidth())
@@ -770,7 +956,10 @@ class Ui_MainWindow(object):
         self.Gd_button.setObjectName("Gd_button")
         self.gridLayout_2.addWidget(self.Gd_button, 8, 10, 1, 1)
         self.Ho_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ho_button.sizePolicy().hasHeightForWidth())
@@ -782,7 +971,10 @@ class Ui_MainWindow(object):
         self.Ho_button.setObjectName("Ho_button")
         self.gridLayout_2.addWidget(self.Ho_button, 8, 13, 1, 1)
         self.Tc_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Tc_button.sizePolicy().hasHeightForWidth())
@@ -794,7 +986,10 @@ class Ui_MainWindow(object):
         self.Tc_button.setObjectName("Tc_button")
         self.gridLayout_2.addWidget(self.Tc_button, 4, 7, 1, 1)
         self.Db_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Db_button.sizePolicy().hasHeightForWidth())
@@ -806,7 +1001,10 @@ class Ui_MainWindow(object):
         self.Db_button.setObjectName("Db_button")
         self.gridLayout_2.addWidget(self.Db_button, 6, 5, 1, 1)
         self.Mo_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Mo_button.sizePolicy().hasHeightForWidth())
@@ -818,7 +1016,10 @@ class Ui_MainWindow(object):
         self.Mo_button.setObjectName("Mo_button")
         self.gridLayout_2.addWidget(self.Mo_button, 4, 6, 1, 1)
         self.Cd_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Cd_button.sizePolicy().hasHeightForWidth())
@@ -830,7 +1031,10 @@ class Ui_MainWindow(object):
         self.Cd_button.setObjectName("Cd_button")
         self.gridLayout_2.addWidget(self.Cd_button, 4, 12, 1, 1)
         self.Ra_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ra_button.sizePolicy().hasHeightForWidth())
@@ -842,7 +1046,10 @@ class Ui_MainWindow(object):
         self.Ra_button.setObjectName("Ra_button")
         self.gridLayout_2.addWidget(self.Ra_button, 6, 1, 1, 1)
         self.Ba_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ba_button.sizePolicy().hasHeightForWidth())
@@ -854,7 +1061,10 @@ class Ui_MainWindow(object):
         self.Ba_button.setObjectName("Ba_button")
         self.gridLayout_2.addWidget(self.Ba_button, 5, 1, 1, 1)
         self.C_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.C_button.sizePolicy().hasHeightForWidth())
@@ -866,7 +1076,10 @@ class Ui_MainWindow(object):
         self.C_button.setObjectName("C_button")
         self.gridLayout_2.addWidget(self.C_button, 1, 14, 1, 1)
         self.Te_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Te_button.sizePolicy().hasHeightForWidth())
@@ -878,7 +1091,10 @@ class Ui_MainWindow(object):
         self.Te_button.setObjectName("Te_button")
         self.gridLayout_2.addWidget(self.Te_button, 4, 16, 1, 1)
         self.Cm_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Cm_button.sizePolicy().hasHeightForWidth())
@@ -890,7 +1106,10 @@ class Ui_MainWindow(object):
         self.Cm_button.setObjectName("Cm_button")
         self.gridLayout_2.addWidget(self.Cm_button, 9, 10, 1, 1)
         self.Zr_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Zr_button.sizePolicy().hasHeightForWidth())
@@ -902,7 +1121,10 @@ class Ui_MainWindow(object):
         self.Zr_button.setObjectName("Zr_button")
         self.gridLayout_2.addWidget(self.Zr_button, 4, 4, 1, 1)
         self.Sg_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Sg_button.sizePolicy().hasHeightForWidth())
@@ -914,7 +1136,10 @@ class Ui_MainWindow(object):
         self.Sg_button.setObjectName("Sg_button")
         self.gridLayout_2.addWidget(self.Sg_button, 6, 6, 1, 1)
         self.Na_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Na_button.sizePolicy().hasHeightForWidth())
@@ -926,7 +1151,10 @@ class Ui_MainWindow(object):
         self.Na_button.setObjectName("Na_button")
         self.gridLayout_2.addWidget(self.Na_button, 2, 0, 1, 1)
         self.Sc_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Sc_button.sizePolicy().hasHeightForWidth())
@@ -938,7 +1166,10 @@ class Ui_MainWindow(object):
         self.Sc_button.setObjectName("Sc_button")
         self.gridLayout_2.addWidget(self.Sc_button, 3, 2, 1, 1)
         self.Zn_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Zn_button.sizePolicy().hasHeightForWidth())
@@ -950,7 +1181,10 @@ class Ui_MainWindow(object):
         self.Zn_button.setObjectName("Zn_button")
         self.gridLayout_2.addWidget(self.Zn_button, 3, 12, 1, 1)
         self.Th_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Th_button.sizePolicy().hasHeightForWidth())
@@ -962,7 +1196,10 @@ class Ui_MainWindow(object):
         self.Th_button.setObjectName("Th_button")
         self.gridLayout_2.addWidget(self.Th_button, 9, 4, 1, 1)
         self.Nh_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Nh_button.sizePolicy().hasHeightForWidth())
@@ -974,7 +1211,10 @@ class Ui_MainWindow(object):
         self.Nh_button.setObjectName("Nh_button")
         self.gridLayout_2.addWidget(self.Nh_button, 6, 13, 1, 1)
         self.Re_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Re_button.sizePolicy().hasHeightForWidth())
@@ -986,7 +1226,10 @@ class Ui_MainWindow(object):
         self.Re_button.setObjectName("Re_button")
         self.gridLayout_2.addWidget(self.Re_button, 5, 7, 1, 1)
         self.Sr_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Sr_button.sizePolicy().hasHeightForWidth())
@@ -998,7 +1241,10 @@ class Ui_MainWindow(object):
         self.Sr_button.setObjectName("Sr_button")
         self.gridLayout_2.addWidget(self.Sr_button, 4, 1, 1, 1)
         self.Sn_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Sn_button.sizePolicy().hasHeightForWidth())
@@ -1010,7 +1256,10 @@ class Ui_MainWindow(object):
         self.Sn_button.setObjectName("Sn_button")
         self.gridLayout_2.addWidget(self.Sn_button, 4, 14, 1, 1)
         self.Ta_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ta_button.sizePolicy().hasHeightForWidth())
@@ -1022,7 +1271,10 @@ class Ui_MainWindow(object):
         self.Ta_button.setObjectName("Ta_button")
         self.gridLayout_2.addWidget(self.Ta_button, 5, 5, 1, 1)
         self.No_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.No_button.sizePolicy().hasHeightForWidth())
@@ -1034,7 +1286,10 @@ class Ui_MainWindow(object):
         self.No_button.setObjectName("No_button")
         self.gridLayout_2.addWidget(self.No_button, 9, 16, 1, 1)
         self.Au_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Au_button.sizePolicy().hasHeightForWidth())
@@ -1046,7 +1301,10 @@ class Ui_MainWindow(object):
         self.Au_button.setObjectName("Au_button")
         self.gridLayout_2.addWidget(self.Au_button, 5, 11, 1, 1)
         self.S_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.S_button.sizePolicy().hasHeightForWidth())
@@ -1058,7 +1316,10 @@ class Ui_MainWindow(object):
         self.S_button.setObjectName("S_button")
         self.gridLayout_2.addWidget(self.S_button, 2, 16, 1, 1)
         self.Ti_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ti_button.sizePolicy().hasHeightForWidth())
@@ -1070,7 +1331,10 @@ class Ui_MainWindow(object):
         self.Ti_button.setObjectName("Ti_button")
         self.gridLayout_2.addWidget(self.Ti_button, 3, 4, 1, 1)
         self.Hs_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Hs_button.sizePolicy().hasHeightForWidth())
@@ -1082,7 +1346,10 @@ class Ui_MainWindow(object):
         self.Hs_button.setObjectName("Hs_button")
         self.gridLayout_2.addWidget(self.Hs_button, 6, 8, 1, 1)
         self.Sm_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Sm_button.sizePolicy().hasHeightForWidth())
@@ -1094,7 +1361,10 @@ class Ui_MainWindow(object):
         self.Sm_button.setObjectName("Sm_button")
         self.gridLayout_2.addWidget(self.Sm_button, 8, 8, 1, 1)
         self.Tl_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Tl_button.sizePolicy().hasHeightForWidth())
@@ -1106,7 +1376,10 @@ class Ui_MainWindow(object):
         self.Tl_button.setObjectName("Tl_button")
         self.gridLayout_2.addWidget(self.Tl_button, 5, 13, 1, 1)
         self.Ni_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ni_button.sizePolicy().hasHeightForWidth())
@@ -1118,7 +1391,10 @@ class Ui_MainWindow(object):
         self.Ni_button.setObjectName("Ni_button")
         self.gridLayout_2.addWidget(self.Ni_button, 3, 10, 1, 1)
         self.Mg_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Mg_button.sizePolicy().hasHeightForWidth())
@@ -1130,7 +1406,10 @@ class Ui_MainWindow(object):
         self.Mg_button.setObjectName("Mg_button")
         self.gridLayout_2.addWidget(self.Mg_button, 2, 1, 1, 1)
         self.V_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.V_button.sizePolicy().hasHeightForWidth())
@@ -1142,7 +1421,10 @@ class Ui_MainWindow(object):
         self.V_button.setObjectName("V_button")
         self.gridLayout_2.addWidget(self.V_button, 3, 5, 1, 1)
         self.Pm_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Pm_button.sizePolicy().hasHeightForWidth())
@@ -1154,7 +1436,10 @@ class Ui_MainWindow(object):
         self.Pm_button.setObjectName("Pm_button")
         self.gridLayout_2.addWidget(self.Pm_button, 8, 7, 1, 1)
         self.Eu_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Eu_button.sizePolicy().hasHeightForWidth())
@@ -1166,7 +1451,10 @@ class Ui_MainWindow(object):
         self.Eu_button.setObjectName("Eu_button")
         self.gridLayout_2.addWidget(self.Eu_button, 8, 9, 1, 1)
         self.Mn_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Mn_button.sizePolicy().hasHeightForWidth())
@@ -1179,7 +1467,10 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.Mn_button, 3, 7, 1, 1)
         self.Lr_button = QtWidgets.QPushButton(parent=self.widget)
         self.Lr_button.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Lr_button.sizePolicy().hasHeightForWidth())
@@ -1191,7 +1482,10 @@ class Ui_MainWindow(object):
         self.Lr_button.setObjectName("Lr_button")
         self.gridLayout_2.addWidget(self.Lr_button, 9, 17, 1, 1)
         self.I_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.I_button.sizePolicy().hasHeightForWidth())
@@ -1203,7 +1497,10 @@ class Ui_MainWindow(object):
         self.I_button.setObjectName("I_button")
         self.gridLayout_2.addWidget(self.I_button, 4, 17, 1, 1)
         self.Fe_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Fe_button.sizePolicy().hasHeightForWidth())
@@ -1215,7 +1512,10 @@ class Ui_MainWindow(object):
         self.Fe_button.setObjectName("Fe_button")
         self.gridLayout_2.addWidget(self.Fe_button, 3, 8, 1, 1)
         self.Se_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Se_button.sizePolicy().hasHeightForWidth())
@@ -1227,7 +1527,10 @@ class Ui_MainWindow(object):
         self.Se_button.setObjectName("Se_button")
         self.gridLayout_2.addWidget(self.Se_button, 3, 16, 1, 1)
         self.Cn_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Cn_button.sizePolicy().hasHeightForWidth())
@@ -1239,7 +1542,10 @@ class Ui_MainWindow(object):
         self.Cn_button.setObjectName("Cn_button")
         self.gridLayout_2.addWidget(self.Cn_button, 6, 12, 1, 1)
         self.Lv_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Lv_button.sizePolicy().hasHeightForWidth())
@@ -1251,7 +1557,10 @@ class Ui_MainWindow(object):
         self.Lv_button.setObjectName("Lv_button")
         self.gridLayout_2.addWidget(self.Lv_button, 6, 16, 1, 1)
         self.Ir_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ir_button.sizePolicy().hasHeightForWidth())
@@ -1263,7 +1572,10 @@ class Ui_MainWindow(object):
         self.Ir_button.setObjectName("Ir_button")
         self.gridLayout_2.addWidget(self.Ir_button, 5, 9, 1, 1)
         self.Dy_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Dy_button.sizePolicy().hasHeightForWidth())
@@ -1275,7 +1587,10 @@ class Ui_MainWindow(object):
         self.Dy_button.setObjectName("Dy_button")
         self.gridLayout_2.addWidget(self.Dy_button, 8, 12, 1, 1)
         self.U_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.U_button.sizePolicy().hasHeightForWidth())
@@ -1287,7 +1602,10 @@ class Ui_MainWindow(object):
         self.U_button.setObjectName("U_button")
         self.gridLayout_2.addWidget(self.U_button, 9, 6, 1, 1)
         self.Br_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Br_button.sizePolicy().hasHeightForWidth())
@@ -1299,7 +1617,10 @@ class Ui_MainWindow(object):
         self.Br_button.setObjectName("Br_button")
         self.gridLayout_2.addWidget(self.Br_button, 3, 17, 1, 1)
         self.Bk_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Bk_button.sizePolicy().hasHeightForWidth())
@@ -1311,7 +1632,10 @@ class Ui_MainWindow(object):
         self.Bk_button.setObjectName("Bk_button")
         self.gridLayout_2.addWidget(self.Bk_button, 9, 11, 1, 1)
         self.Bh_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Bh_button.sizePolicy().hasHeightForWidth())
@@ -1323,7 +1647,10 @@ class Ui_MainWindow(object):
         self.Bh_button.setObjectName("Bh_button")
         self.gridLayout_2.addWidget(self.Bh_button, 6, 7, 1, 1)
         self.As_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.As_button.sizePolicy().hasHeightForWidth())
@@ -1335,7 +1662,10 @@ class Ui_MainWindow(object):
         self.As_button.setObjectName("As_button")
         self.gridLayout_2.addWidget(self.As_button, 3, 15, 1, 1)
         self.Ge_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ge_button.sizePolicy().hasHeightForWidth())
@@ -1347,7 +1677,10 @@ class Ui_MainWindow(object):
         self.Ge_button.setObjectName("Ge_button")
         self.gridLayout_2.addWidget(self.Ge_button, 3, 14, 1, 1)
         self.Ga_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ga_button.sizePolicy().hasHeightForWidth())
@@ -1359,7 +1692,10 @@ class Ui_MainWindow(object):
         self.Ga_button.setObjectName("Ga_button")
         self.gridLayout_2.addWidget(self.Ga_button, 3, 13, 1, 1)
         self.Y_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Y_button.sizePolicy().hasHeightForWidth())
@@ -1371,7 +1707,10 @@ class Ui_MainWindow(object):
         self.Y_button.setObjectName("Y_button")
         self.gridLayout_2.addWidget(self.Y_button, 4, 2, 1, 1)
         self.Tb_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Tb_button.sizePolicy().hasHeightForWidth())
@@ -1383,7 +1722,10 @@ class Ui_MainWindow(object):
         self.Tb_button.setObjectName("Tb_button")
         self.gridLayout_2.addWidget(self.Tb_button, 8, 11, 1, 1)
         self.Cl_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Cl_button.sizePolicy().hasHeightForWidth())
@@ -1395,7 +1737,10 @@ class Ui_MainWindow(object):
         self.Cl_button.setObjectName("Cl_button")
         self.gridLayout_2.addWidget(self.Cl_button, 2, 17, 1, 1)
         self.At_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.At_button.sizePolicy().hasHeightForWidth())
@@ -1407,7 +1752,10 @@ class Ui_MainWindow(object):
         self.At_button.setObjectName("At_button")
         self.gridLayout_2.addWidget(self.At_button, 5, 17, 1, 1)
         self.Mt_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Mt_button.sizePolicy().hasHeightForWidth())
@@ -1419,7 +1767,10 @@ class Ui_MainWindow(object):
         self.Mt_button.setObjectName("Mt_button")
         self.gridLayout_2.addWidget(self.Mt_button, 6, 9, 1, 1)
         self.Sb_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Sb_button.sizePolicy().hasHeightForWidth())
@@ -1431,7 +1782,10 @@ class Ui_MainWindow(object):
         self.Sb_button.setObjectName("Sb_button")
         self.gridLayout_2.addWidget(self.Sb_button, 4, 15, 1, 1)
         self.Os_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Os_button.sizePolicy().hasHeightForWidth())
@@ -1443,7 +1797,10 @@ class Ui_MainWindow(object):
         self.Os_button.setObjectName("Os_button")
         self.gridLayout_2.addWidget(self.Os_button, 5, 8, 1, 1)
         self.He_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.He_button.sizePolicy().hasHeightForWidth())
@@ -1455,7 +1812,10 @@ class Ui_MainWindow(object):
         self.He_button.setObjectName("He_button")
         self.gridLayout_2.addWidget(self.He_button, 0, 19, 1, 1)
         self.Np_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Np_button.sizePolicy().hasHeightForWidth())
@@ -1467,7 +1827,10 @@ class Ui_MainWindow(object):
         self.Np_button.setObjectName("Np_button")
         self.gridLayout_2.addWidget(self.Np_button, 9, 7, 1, 1)
         self.Fl_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Fl_button.sizePolicy().hasHeightForWidth())
@@ -1479,7 +1842,10 @@ class Ui_MainWindow(object):
         self.Fl_button.setObjectName("Fl_button")
         self.gridLayout_2.addWidget(self.Fl_button, 6, 14, 1, 1)
         self.Cs_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Cs_button.sizePolicy().hasHeightForWidth())
@@ -1491,7 +1857,10 @@ class Ui_MainWindow(object):
         self.Cs_button.setObjectName("Cs_button")
         self.gridLayout_2.addWidget(self.Cs_button, 5, 0, 1, 1)
         self.Fr_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Fr_button.sizePolicy().hasHeightForWidth())
@@ -1503,7 +1872,10 @@ class Ui_MainWindow(object):
         self.Fr_button.setObjectName("Fr_button")
         self.gridLayout_2.addWidget(self.Fr_button, 6, 0, 1, 1)
         self.Fm_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Fm_button.sizePolicy().hasHeightForWidth())
@@ -1515,7 +1887,10 @@ class Ui_MainWindow(object):
         self.Fm_button.setObjectName("Fm_button")
         self.gridLayout_2.addWidget(self.Fm_button, 9, 14, 1, 1)
         self.Rg_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Rg_button.sizePolicy().hasHeightForWidth())
@@ -1527,7 +1902,10 @@ class Ui_MainWindow(object):
         self.Rg_button.setObjectName("Rg_button")
         self.gridLayout_2.addWidget(self.Rg_button, 6, 11, 1, 1)
         self.Ca_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Ca_button.sizePolicy().hasHeightForWidth())
@@ -1539,7 +1917,10 @@ class Ui_MainWindow(object):
         self.Ca_button.setObjectName("Ca_button")
         self.gridLayout_2.addWidget(self.Ca_button, 3, 1, 1, 1)
         self.Cu_button = QtWidgets.QPushButton(parent=self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Ignored)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Ignored,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Cu_button.sizePolicy().hasHeightForWidth())
@@ -1552,7 +1933,10 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.Cu_button, 3, 11, 1, 1)
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
         self.groupBox = QtWidgets.QGroupBox(parent=self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
@@ -1566,10 +1950,14 @@ class Ui_MainWindow(object):
         self.gridLayout_3 = QtWidgets.QGridLayout(self.groupBox)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.element_info_text = QtWidgets.QPlainTextEdit(parent=self.groupBox)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.element_info_text.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.element_info_text.sizePolicy().hasHeightForWidth()
+        )
         self.element_info_text.setSizePolicy(sizePolicy)
         self.element_info_text.setObjectName("element_info_text")
         self.gridLayout_3.addWidget(self.element_info_text, 0, 0, 1, 1)
@@ -1580,7 +1968,9 @@ class Ui_MainWindow(object):
         self.gridLayout_5 = QtWidgets.QGridLayout(self.tab)
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.element_info_muonic_xray_tree = QtWidgets.QTreeWidget(parent=self.tab)
-        self.element_info_muonic_xray_tree.setObjectName("element_info_muonic_xray_tree")
+        self.element_info_muonic_xray_tree.setObjectName(
+            "element_info_muonic_xray_tree"
+        )
         font = QtGui.QFont()
         font.setPointSize(10)
         self.element_info_muonic_xray_tree.headerItem().setFont(0, font)
@@ -1621,10 +2011,14 @@ class Ui_MainWindow(object):
         self.tab_3.setObjectName("tab_3")
         self.gridLayout_7 = QtWidgets.QGridLayout(self.tab_3)
         self.gridLayout_7.setObjectName("gridLayout_7")
-        self.element_info_electronic_xray_table = QtWidgets.QTableWidget(parent=self.tab_3)
+        self.element_info_electronic_xray_table = QtWidgets.QTableWidget(
+            parent=self.tab_3
+        )
         self.element_info_electronic_xray_table.setMinimumSize(QtCore.QSize(862, 0))
         self.element_info_electronic_xray_table.setAlternatingRowColors(False)
-        self.element_info_electronic_xray_table.setObjectName("element_info_electronic_xray_table")
+        self.element_info_electronic_xray_table.setObjectName(
+            "element_info_electronic_xray_table"
+        )
         self.element_info_electronic_xray_table.setColumnCount(3)
         self.element_info_electronic_xray_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
@@ -1675,7 +2069,10 @@ class Ui_MainWindow(object):
         item = self.mu_xray_search_result_table.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Error"))
         self.mu_xray_search_result_table.setSortingEnabled(True)
-        self.search_result_tab.setTabText(self.search_result_tab.indexOf(self.mu_xray_search_tab), _translate("MainWindow", "Muonic X-ray results"))
+        self.search_result_tab.setTabText(
+            self.search_result_tab.indexOf(self.mu_xray_search_tab),
+            _translate("MainWindow", "Muonic X-ray results"),
+        )
 
         item = self.gamma_search_result_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Source"))
@@ -1686,7 +2083,10 @@ class Ui_MainWindow(object):
         item = self.gamma_search_result_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Error"))
         self.gamma_search_result_table.setSortingEnabled(True)
-        self.search_result_tab.setTabText(self.search_result_tab.indexOf(self.gamma_search_tab), _translate("MainWindow", "Gamma results"))
+        self.search_result_tab.setTabText(
+            self.search_result_tab.indexOf(self.gamma_search_tab),
+            _translate("MainWindow", "Gamma results"),
+        )
 
         item = self.e_xray_search_result_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Source"))
@@ -1697,261 +2097,880 @@ class Ui_MainWindow(object):
         item = self.e_xray_search_result_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Error"))
         self.e_xray_search_result_table.setSortingEnabled(True)
-        self.search_result_tab.setTabText(self.search_result_tab.indexOf(self.e_xray_search_tab), _translate("MainWindow", "Electronic X-ray results"))
-        
+        self.search_result_tab.setTabText(
+            self.search_result_tab.indexOf(self.e_xray_search_tab),
+            _translate("MainWindow", "Electronic X-ray results"),
+        )
+
         self.print_button.setText(_translate("MainWindow", "Find"))
         self.energy_label.setText(_translate("MainWindow", "Energy (keV)"))
-        self.search_isotopes_checkbox.setText(_translate("MainWindow", "Search isotope-specific muonic X-rays"))
-        self.Al_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Aluminium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 13</span></p></body></html"))
+        self.search_isotopes_checkbox.setText(
+            _translate("MainWindow", "Search isotope-specific muonic X-rays")
+        )
+        self.Al_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Aluminium</span></p><p align="center"><span style=" font-size:14pt;">Z = 13</span></p></body></html',
+            )
+        )
         self.Al_button.setText(_translate("MainWindow", "Al"))
-        self.Ts_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Tennessine</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 117</span></p></body></html"))
+        self.Ts_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Tennessine</span></p><p align="center"><span style=" font-size:14pt;">Z = 117</span></p></body></html',
+            )
+        )
         self.Ts_button.setText(_translate("MainWindow", "Ts"))
-        self.Pt_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Platinum</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 78</span></p></body></html"))
+        self.Pt_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Platinum</span></p><p align="center"><span style=" font-size:14pt;">Z = 78</span></p></body></html',
+            )
+        )
         self.Pt_button.setText(_translate("MainWindow", "Pt"))
-        self.Md_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Mendelevium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 101</span></p></body></html"))
+        self.Md_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Mendelevium</span></p><p align="center"><span style=" font-size:14pt;">Z = 101</span></p></body></html',
+            )
+        )
         self.Md_button.setText(_translate("MainWindow", "Md"))
-        self.K_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Potassium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 19</span></p></body></html"))
+        self.K_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Potassium</span></p><p align="center"><span style=" font-size:14pt;">Z = 19</span></p></body></html',
+            )
+        )
         self.K_button.setText(_translate("MainWindow", "K"))
-        self.Ac_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Actinium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 89</span></p></body></html"))
+        self.Ac_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Actinium</span></p><p align="center"><span style=" font-size:14pt;">Z = 89</span></p></body></html',
+            )
+        )
         self.Ac_button.setText(_translate("MainWindow", "Ac"))
-        self.Co_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Cobalt</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 27</span></p></body></html"))
+        self.Co_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Cobalt</span></p><p align="center"><span style=" font-size:14pt;">Z = 27</span></p></body></html',
+            )
+        )
         self.Co_button.setText(_translate("MainWindow", "Co"))
-        self.Hf_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Hafnium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 72</span></p></body></html"))
+        self.Hf_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Hafnium</span></p><p align="center"><span style=" font-size:14pt;">Z = 72</span></p></body></html',
+            )
+        )
         self.Hf_button.setText(_translate("MainWindow", "Hf"))
-        self.Pd_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Palladium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 46</span></p></body></html"))
+        self.Pd_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Palladium</span></p><p align="center"><span style=" font-size:14pt;">Z = 46</span></p></body></html',
+            )
+        )
         self.Pd_button.setText(_translate("MainWindow", "Pd"))
-        self.Be_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Beryllium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 4</span></p></body></html"))
+        self.Be_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Beryllium</span></p><p align="center"><span style=" font-size:14pt;">Z = 4</span></p></body></html',
+            )
+        )
         self.Be_button.setText(_translate("MainWindow", "Be"))
-        self.Pa_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Protactinium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 91</span></p></body></html"))
+        self.Pa_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Protactinium</span></p><p align="center"><span style=" font-size:14pt;">Z = 91</span></p></body></html',
+            )
+        )
         self.Pa_button.setText(_translate("MainWindow", "Pa"))
-        self.Ar_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Argon</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 18</span></p></body></html"))
+        self.Ar_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Argon</span></p><p align="center"><span style=" font-size:14pt;">Z = 18</span></p></body></html',
+            )
+        )
         self.Ar_button.setText(_translate("MainWindow", "Ar"))
-        self.Yb_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Ytterbium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 70</span></p></body></html"))
+        self.Yb_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Ytterbium</span></p><p align="center"><span style=" font-size:14pt;">Z = 70</span></p></body></html',
+            )
+        )
         self.Yb_button.setText(_translate("MainWindow", "Yb"))
-        self.Tm_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Thullium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 69</span></p></body></html"))
+        self.Tm_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Thullium</span></p><p align="center"><span style=" font-size:14pt;">Z = 69</span></p></body></html',
+            )
+        )
         self.Tm_button.setText(_translate("MainWindow", "Tm"))
-        self.La_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Lanthanum</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 57</span></p></body></html"))
+        self.La_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Lanthanum</span></p><p align="center"><span style=" font-size:14pt;">Z = 57</span></p></body></html',
+            )
+        )
         self.La_button.setText(_translate("MainWindow", "La"))
-        self.Rn_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Radon</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 86</span></p></body></html"))
+        self.Rn_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Radon</span></p><p align="center"><span style=" font-size:14pt;">Z = 86</span></p></body></html',
+            )
+        )
         self.Rn_button.setText(_translate("MainWindow", "Rn"))
-        self.O_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Oxygen</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 8</span></p></body></html"))
+        self.O_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Oxygen</span></p><p align="center"><span style=" font-size:14pt;">Z = 8</span></p></body></html',
+            )
+        )
         self.O_button.setText(_translate("MainWindow", "O"))
-        self.Rb_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Rubidium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 37</span></p></body></html"))
+        self.Rb_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Rubidium</span></p><p align="center"><span style=" font-size:14pt;">Z = 37</span></p></body></html',
+            )
+        )
         self.Rb_button.setText(_translate("MainWindow", "Rb"))
-        self.Xe_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Xenon</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 54</span></p></body></html"))
+        self.Xe_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Xenon</span></p><p align="center"><span style=" font-size:14pt;">Z = 54</span></p></body></html',
+            )
+        )
         self.Xe_button.setText(_translate("MainWindow", "Xe"))
-        self.Bi_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Bismuth</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 83</span></p></body></html"))
+        self.Bi_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Bismuth</span></p><p align="center"><span style=" font-size:14pt;">Z = 83</span></p></body></html',
+            )
+        )
         self.Bi_button.setText(_translate("MainWindow", "Bi"))
-        self.Kr_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Krypton</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 36</span></p></body></html"))
+        self.Kr_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Krypton</span></p><p align="center"><span style=" font-size:14pt;">Z = 36</span></p></body></html',
+            )
+        )
         self.Kr_button.setText(_translate("MainWindow", "Kr"))
-        self.Li_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Lithium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 3</span></p></body></html"))
+        self.Li_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Lithium</span></p><p align="center"><span style=" font-size:14pt;">Z = 3</span></p></body></html',
+            )
+        )
         self.Li_button.setText(_translate("MainWindow", "Li"))
-        self.Er_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Erbium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 68</span></p></body></html"))
+        self.Er_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Erbium</span></p><p align="center"><span style=" font-size:14pt;">Z = 68</span></p></body></html',
+            )
+        )
         self.Er_button.setText(_translate("MainWindow", "Er"))
-        self.F_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Fluorine</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 9</span></p></body></html"))
+        self.F_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Fluorine</span></p><p align="center"><span style=" font-size:14pt;">Z = 9</span></p></body></html',
+            )
+        )
         self.F_button.setText(_translate("MainWindow", "F"))
-        self.P_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Phosphorus</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 15</span></p></body></html"))
+        self.P_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Phosphorus</span></p><p align="center"><span style=" font-size:14pt;">Z = 15</span></p></body></html',
+            )
+        )
         self.P_button.setText(_translate("MainWindow", "P"))
-        self.Hg_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Mercury</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 80</span></p></body></html"))
+        self.Hg_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Mercury</span></p><p align="center"><span style=" font-size:14pt;">Z = 80</span></p></body></html',
+            )
+        )
         self.Hg_button.setText(_translate("MainWindow", "Hg"))
-        self.Ag_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Silver</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 47</span></p></body></html"))
+        self.Ag_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Silver</span></p><p align="center"><span style=" font-size:14pt;">Z = 47</span></p></body></html',
+            )
+        )
         self.Ag_button.setText(_translate("MainWindow", "Ag"))
-        self.Rh_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Rhodium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 45</span></p></body></html"))
+        self.Rh_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Rhodium</span></p><p align="center"><span style=" font-size:14pt;">Z = 45</span></p></body></html',
+            )
+        )
         self.Rh_button.setText(_translate("MainWindow", "Rh"))
-        self.Es_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Einsteinium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 99</span></p></body></html"))
+        self.Es_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Einsteinium</span></p><p align="center"><span style=" font-size:14pt;">Z = 99</span></p></body></html',
+            )
+        )
         self.Es_button.setText(_translate("MainWindow", "Es"))
-        self.Pr_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Praseodymium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 59</span></p></body></html"))
+        self.Pr_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Praseodymium</span></p><p align="center"><span style=" font-size:14pt;">Z = 59</span></p></body></html',
+            )
+        )
         self.Pr_button.setText(_translate("MainWindow", "Pr"))
-        self.Ds_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Darmstadtium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 110</span></p></body></html"))
+        self.Ds_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Darmstadtium</span></p><p align="center"><span style=" font-size:14pt;">Z = 110</span></p></body></html',
+            )
+        )
         self.Ds_button.setText(_translate("MainWindow", "Ds"))
-        self.In_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Indium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 49</span></p></body></html"))
+        self.In_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Indium</span></p><p align="center"><span style=" font-size:14pt;">Z = 49</span></p></body></html',
+            )
+        )
         self.In_button.setText(_translate("MainWindow", "In"))
-        self.W_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Tungsten</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 74</span></p></body></html"))
+        self.W_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Tungsten</span></p><p align="center"><span style=" font-size:14pt;">Z = 74</span></p></body></html',
+            )
+        )
         self.W_button.setText(_translate("MainWindow", "W"))
-        self.Pb_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Lead</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 82</span></p></body></html"))
+        self.Pb_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Lead</span></p><p align="center"><span style=" font-size:14pt;">Z = 82</span></p></body></html',
+            )
+        )
         self.Pb_button.setText(_translate("MainWindow", "Pb"))
-        self.N_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Nitrogen</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 7</span></p></body></html"))
+        self.N_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Nitrogen</span></p><p align="center"><span style=" font-size:14pt;">Z = 7</span></p></body></html',
+            )
+        )
         self.N_button.setText(_translate("MainWindow", "N"))
-        self.Pu_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Plutonium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 94</span></p></body></html"))
+        self.Pu_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Plutonium</span></p><p align="center"><span style=" font-size:14pt;">Z = 94</span></p></body></html',
+            )
+        )
         self.Pu_button.setText(_translate("MainWindow", "Pu"))
-        self.Og_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Oganesson</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 118</span></p></body></html"))
+        self.Og_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Oganesson</span></p><p align="center"><span style=" font-size:14pt;">Z = 118</span></p></body></html',
+            )
+        )
         self.Og_button.setText(_translate("MainWindow", "Og"))
-        self.H_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Hydrogen</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 1</span></p></body></html"))
+        self.H_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Hydrogen</span></p><p align="center"><span style=" font-size:14pt;">Z = 1</span></p></body></html',
+            )
+        )
         self.H_button.setText(_translate("MainWindow", "H"))
-        self.B_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Boron</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 5</span></p></body></html"))
+        self.B_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Boron</span></p><p align="center"><span style=" font-size:14pt;">Z = 5</span></p></body></html',
+            )
+        )
         self.B_button.setText(_translate("MainWindow", "B"))
-        self.Nd_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Neodymium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 60</span></p></body></html"))
+        self.Nd_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Neodymium</span></p><p align="center"><span style=" font-size:14pt;">Z = 60</span></p></body></html',
+            )
+        )
         self.Nd_button.setText(_translate("MainWindow", "Nd"))
-        self.Po_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Polonium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 84</span></p></body></html"))
+        self.Po_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Polonium</span></p><p align="center"><span style=" font-size:14pt;">Z = 84</span></p></body></html',
+            )
+        )
         self.Po_button.setText(_translate("MainWindow", "Po"))
-        self.Ce_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Cerium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 58</span></p></body></html"))
+        self.Ce_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Cerium</span></p><p align="center"><span style=" font-size:14pt;">Z = 58</span></p></body></html',
+            )
+        )
         self.Ce_button.setText(_translate("MainWindow", "Ce"))
-        self.Cr_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Chromium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 24</span></p></body></html"))
+        self.Cr_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Chromium</span></p><p align="center"><span style=" font-size:14pt;">Z = 24</span></p></body></html',
+            )
+        )
         self.Cr_button.setText(_translate("MainWindow", "Cr"))
-        self.Mc_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Moscovium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 115</span></p></body></html"))
+        self.Mc_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Moscovium</span></p><p align="center"><span style=" font-size:14pt;">Z = 115</span></p></body></html',
+            )
+        )
         self.Mc_button.setText(_translate("MainWindow", "Mc"))
-        self.Rf_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Rutherfordium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 104</span></p></body></html"))
+        self.Rf_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Rutherfordium</span></p><p align="center"><span style=" font-size:14pt;">Z = 104</span></p></body></html',
+            )
+        )
         self.Rf_button.setText(_translate("MainWindow", "Rf"))
-        self.Lu_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Lutetium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 71</span></p></body></html"))
+        self.Lu_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Lutetium</span></p><p align="center"><span style=" font-size:14pt;">Z = 71</span></p></body></html',
+            )
+        )
         self.Lu_button.setText(_translate("MainWindow", "Lu"))
-        self.Ne_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Neon</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 10</span></p></body></html"))
+        self.Ne_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Neon</span></p><p align="center"><span style=" font-size:14pt;">Z = 10</span></p></body></html',
+            )
+        )
         self.Ne_button.setText(_translate("MainWindow", "Ne"))
-        self.Nb_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Niobium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 41</span></p></body></html"))
+        self.Nb_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Niobium</span></p><p align="center"><span style=" font-size:14pt;">Z = 41</span></p></body></html',
+            )
+        )
         self.Nb_button.setText(_translate("MainWindow", "Nb"))
-        self.Am_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Americium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 95</span></p></body></html"))
+        self.Am_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Americium</span></p><p align="center"><span style=" font-size:14pt;">Z = 95</span></p></body></html',
+            )
+        )
         self.Am_button.setText(_translate("MainWindow", "Am"))
-        self.Ru_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Ruthenium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 44</span></p></body></html"))
+        self.Ru_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Ruthenium</span></p><p align="center"><span style=" font-size:14pt;">Z = 44</span></p></body></html',
+            )
+        )
         self.Ru_button.setText(_translate("MainWindow", "Ru"))
-        self.Cf_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Californium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 98</span></p></body></html"))
+        self.Cf_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Californium</span></p><p align="center"><span style=" font-size:14pt;">Z = 98</span></p></body></html',
+            )
+        )
         self.Cf_button.setText(_translate("MainWindow", "Cf"))
-        self.Si_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Silicon</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 14</span></p></body></html"))
+        self.Si_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Silicon</span></p><p align="center"><span style=" font-size:14pt;">Z = 14</span></p></body></html',
+            )
+        )
         self.Si_button.setText(_translate("MainWindow", "Si"))
-        self.Gd_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Gadolinium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 64</span></p></body></html"))
+        self.Gd_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Gadolinium</span></p><p align="center"><span style=" font-size:14pt;">Z = 64</span></p></body></html',
+            )
+        )
         self.Gd_button.setText(_translate("MainWindow", "Gd"))
-        self.Ho_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Holmium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 67</span></p></body></html"))
+        self.Ho_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Holmium</span></p><p align="center"><span style=" font-size:14pt;">Z = 67</span></p></body></html',
+            )
+        )
         self.Ho_button.setText(_translate("MainWindow", "Ho"))
-        self.Tc_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Technetium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 43</span></p></body></html"))
+        self.Tc_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Technetium</span></p><p align="center"><span style=" font-size:14pt;">Z = 43</span></p></body></html',
+            )
+        )
         self.Tc_button.setText(_translate("MainWindow", "Tc"))
-        self.Db_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Dubnium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 105</span></p></body></html"))
+        self.Db_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Dubnium</span></p><p align="center"><span style=" font-size:14pt;">Z = 105</span></p></body></html',
+            )
+        )
         self.Db_button.setText(_translate("MainWindow", "Db"))
-        self.Mo_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Molybdenum</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 42</span></p></body></html"))
+        self.Mo_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Molybdenum</span></p><p align="center"><span style=" font-size:14pt;">Z = 42</span></p></body></html',
+            )
+        )
         self.Mo_button.setText(_translate("MainWindow", "Mo"))
-        self.Cd_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Cadmium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 48</span></p></body></html"))
+        self.Cd_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Cadmium</span></p><p align="center"><span style=" font-size:14pt;">Z = 48</span></p></body></html',
+            )
+        )
         self.Cd_button.setText(_translate("MainWindow", "Cd"))
-        self.Ra_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Radium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 88</span></p></body></html"))
+        self.Ra_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Radium</span></p><p align="center"><span style=" font-size:14pt;">Z = 88</span></p></body></html',
+            )
+        )
         self.Ra_button.setText(_translate("MainWindow", "Ra"))
-        self.Ba_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Barium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 56</span></p></body></html"))
+        self.Ba_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Barium</span></p><p align="center"><span style=" font-size:14pt;">Z = 56</span></p></body></html',
+            )
+        )
         self.Ba_button.setText(_translate("MainWindow", "Ba"))
-        self.C_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Carbon</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 6</span></p></body></html"))
+        self.C_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Carbon</span></p><p align="center"><span style=" font-size:14pt;">Z = 6</span></p></body></html',
+            )
+        )
         self.C_button.setText(_translate("MainWindow", "C"))
-        self.Te_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Tellurium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 52</span></p></body></html"))
+        self.Te_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Tellurium</span></p><p align="center"><span style=" font-size:14pt;">Z = 52</span></p></body></html',
+            )
+        )
         self.Te_button.setText(_translate("MainWindow", "Te"))
-        self.Cm_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Curium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 96</span></p></body></html"))
+        self.Cm_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Curium</span></p><p align="center"><span style=" font-size:14pt;">Z = 96</span></p></body></html',
+            )
+        )
         self.Cm_button.setText(_translate("MainWindow", "Cm"))
-        self.Zr_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Zirconium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 40</span></p></body></html"))
+        self.Zr_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Zirconium</span></p><p align="center"><span style=" font-size:14pt;">Z = 40</span></p></body></html',
+            )
+        )
         self.Zr_button.setText(_translate("MainWindow", "Zr"))
-        self.Sg_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Seaborgium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 106</span></p></body></html"))
+        self.Sg_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Seaborgium</span></p><p align="center"><span style=" font-size:14pt;">Z = 106</span></p></body></html',
+            )
+        )
         self.Sg_button.setText(_translate("MainWindow", "Sg"))
-        self.Na_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Sodium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 11</span></p></body></html"))
+        self.Na_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Sodium</span></p><p align="center"><span style=" font-size:14pt;">Z = 11</span></p></body></html',
+            )
+        )
         self.Na_button.setText(_translate("MainWindow", "Na"))
-        self.Sc_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Scandium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 21</span></p></body></html"))
+        self.Sc_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Scandium</span></p><p align="center"><span style=" font-size:14pt;">Z = 21</span></p></body></html',
+            )
+        )
         self.Sc_button.setText(_translate("MainWindow", "Sc"))
-        self.Zn_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Zinc</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 30</span></p></body></html"))
+        self.Zn_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Zinc</span></p><p align="center"><span style=" font-size:14pt;">Z = 30</span></p></body></html',
+            )
+        )
         self.Zn_button.setText(_translate("MainWindow", "Zn"))
-        self.Th_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Thorium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 90</span></p></body></html"))
+        self.Th_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Thorium</span></p><p align="center"><span style=" font-size:14pt;">Z = 90</span></p></body></html',
+            )
+        )
         self.Th_button.setText(_translate("MainWindow", "Th"))
-        self.Nh_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Nihonium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 113</span></p></body></html"))
+        self.Nh_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Nihonium</span></p><p align="center"><span style=" font-size:14pt;">Z = 113</span></p></body></html',
+            )
+        )
         self.Nh_button.setText(_translate("MainWindow", "Nh"))
-        self.Re_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Rhenium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 75</span></p></body></html"))
+        self.Re_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Rhenium</span></p><p align="center"><span style=" font-size:14pt;">Z = 75</span></p></body></html',
+            )
+        )
         self.Re_button.setText(_translate("MainWindow", "Re"))
-        self.Sr_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Strontium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 38</span></p></body></html"))
+        self.Sr_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Strontium</span></p><p align="center"><span style=" font-size:14pt;">Z = 38</span></p></body></html',
+            )
+        )
         self.Sr_button.setText(_translate("MainWindow", "Sr"))
-        self.Sn_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Tin</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 50</span></p></body></html"))
+        self.Sn_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Tin</span></p><p align="center"><span style=" font-size:14pt;">Z = 50</span></p></body></html',
+            )
+        )
         self.Sn_button.setText(_translate("MainWindow", "Sn"))
-        self.Ta_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Tantalum</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 73</span></p></body></html"))
+        self.Ta_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Tantalum</span></p><p align="center"><span style=" font-size:14pt;">Z = 73</span></p></body></html',
+            )
+        )
         self.Ta_button.setText(_translate("MainWindow", "Ta"))
-        self.No_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Nobelium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 102</span></p></body></html"))
+        self.No_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Nobelium</span></p><p align="center"><span style=" font-size:14pt;">Z = 102</span></p></body></html',
+            )
+        )
         self.No_button.setText(_translate("MainWindow", "No"))
-        self.Au_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Gold</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 79</span></p></body></html"))
+        self.Au_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Gold</span></p><p align="center"><span style=" font-size:14pt;">Z = 79</span></p></body></html',
+            )
+        )
         self.Au_button.setText(_translate("MainWindow", "Au"))
-        self.S_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Sulfur</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 16</span></p></body></html"))
+        self.S_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Sulfur</span></p><p align="center"><span style=" font-size:14pt;">Z = 16</span></p></body></html',
+            )
+        )
         self.S_button.setText(_translate("MainWindow", "S"))
-        self.Ti_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Titanium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 22</span></p></body></html"))
+        self.Ti_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Titanium</span></p><p align="center"><span style=" font-size:14pt;">Z = 22</span></p></body></html',
+            )
+        )
         self.Ti_button.setText(_translate("MainWindow", "Ti"))
-        self.Hs_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Hassium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 108</span></p></body></html"))
+        self.Hs_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Hassium</span></p><p align="center"><span style=" font-size:14pt;">Z = 108</span></p></body></html',
+            )
+        )
         self.Hs_button.setText(_translate("MainWindow", "Hs"))
-        self.Sm_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Samarium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 62</span></p></body></html"))
+        self.Sm_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Samarium</span></p><p align="center"><span style=" font-size:14pt;">Z = 62</span></p></body></html',
+            )
+        )
         self.Sm_button.setText(_translate("MainWindow", "Sm"))
-        self.Tl_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Thallium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 81</span></p></body></html"))
+        self.Tl_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Thallium</span></p><p align="center"><span style=" font-size:14pt;">Z = 81</span></p></body></html',
+            )
+        )
         self.Tl_button.setText(_translate("MainWindow", "Tl"))
-        self.Ni_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Nickel</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 28</span></p></body></html"))
+        self.Ni_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Nickel</span></p><p align="center"><span style=" font-size:14pt;">Z = 28</span></p></body></html',
+            )
+        )
         self.Ni_button.setText(_translate("MainWindow", "Ni"))
-        self.Mg_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Magnesium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 12</span></p></body></html"))
+        self.Mg_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Magnesium</span></p><p align="center"><span style=" font-size:14pt;">Z = 12</span></p></body></html',
+            )
+        )
         self.Mg_button.setText(_translate("MainWindow", "Mg"))
-        self.V_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Vanadium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 23</span></p></body></html"))
+        self.V_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Vanadium</span></p><p align="center"><span style=" font-size:14pt;">Z = 23</span></p></body></html',
+            )
+        )
         self.V_button.setText(_translate("MainWindow", "V"))
-        self.Pm_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Promethium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 61</span></p></body></html"))
+        self.Pm_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Promethium</span></p><p align="center"><span style=" font-size:14pt;">Z = 61</span></p></body></html',
+            )
+        )
         self.Pm_button.setText(_translate("MainWindow", "Pm"))
-        self.Eu_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Europium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 63</span></p></body></html"))
+        self.Eu_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Europium</span></p><p align="center"><span style=" font-size:14pt;">Z = 63</span></p></body></html',
+            )
+        )
         self.Eu_button.setText(_translate("MainWindow", "Eu"))
-        self.Mn_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Manganese</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 25</span></p></body></html"))
+        self.Mn_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Manganese</span></p><p align="center"><span style=" font-size:14pt;">Z = 25</span></p></body></html',
+            )
+        )
         self.Mn_button.setText(_translate("MainWindow", "Mn"))
-        self.Lr_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Lawrencium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 103</span></p></body></html"))
+        self.Lr_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Lawrencium</span></p><p align="center"><span style=" font-size:14pt;">Z = 103</span></p></body></html',
+            )
+        )
         self.Lr_button.setText(_translate("MainWindow", "Lr"))
-        self.I_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Iodine</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 53</span></p></body></html"))
+        self.I_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Iodine</span></p><p align="center"><span style=" font-size:14pt;">Z = 53</span></p></body></html',
+            )
+        )
         self.I_button.setText(_translate("MainWindow", "I"))
-        self.Fe_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Iron</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 26</span></p></body></html"))
+        self.Fe_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Iron</span></p><p align="center"><span style=" font-size:14pt;">Z = 26</span></p></body></html',
+            )
+        )
         self.Fe_button.setText(_translate("MainWindow", "Fe"))
-        self.Se_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Selenium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 34</span></p></body></html"))
+        self.Se_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Selenium</span></p><p align="center"><span style=" font-size:14pt;">Z = 34</span></p></body></html',
+            )
+        )
         self.Se_button.setText(_translate("MainWindow", "Se"))
-        self.Cn_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Copernicium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 112</span></p></body></html"))
+        self.Cn_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Copernicium</span></p><p align="center"><span style=" font-size:14pt;">Z = 112</span></p></body></html',
+            )
+        )
         self.Cn_button.setText(_translate("MainWindow", "Cn"))
-        self.Lv_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Livermorium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 116</span></p></body></html"))
+        self.Lv_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Livermorium</span></p><p align="center"><span style=" font-size:14pt;">Z = 116</span></p></body></html',
+            )
+        )
         self.Lv_button.setText(_translate("MainWindow", "Lv"))
-        self.Ir_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Iridium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 77</span></p></body></html"))
+        self.Ir_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Iridium</span></p><p align="center"><span style=" font-size:14pt;">Z = 77</span></p></body></html',
+            )
+        )
         self.Ir_button.setText(_translate("MainWindow", "Ir"))
-        self.Dy_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Dysprosium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 66</span></p></body></html"))
+        self.Dy_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Dysprosium</span></p><p align="center"><span style=" font-size:14pt;">Z = 66</span></p></body></html',
+            )
+        )
         self.Dy_button.setText(_translate("MainWindow", "Dy"))
-        self.U_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Uranium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 92</span></p></body></html"))
+        self.U_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Uranium</span></p><p align="center"><span style=" font-size:14pt;">Z = 92</span></p></body></html',
+            )
+        )
         self.U_button.setText(_translate("MainWindow", "U"))
-        self.Br_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Bromine</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 35</span></p></body></html"))
+        self.Br_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Bromine</span></p><p align="center"><span style=" font-size:14pt;">Z = 35</span></p></body></html',
+            )
+        )
         self.Br_button.setText(_translate("MainWindow", "Br"))
-        self.Bk_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Berkelium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 97</span></p></body></html"))
+        self.Bk_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Berkelium</span></p><p align="center"><span style=" font-size:14pt;">Z = 97</span></p></body></html',
+            )
+        )
         self.Bk_button.setText(_translate("MainWindow", "Bk"))
-        self.Bh_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Bohrium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 107</span></p></body></html"))
+        self.Bh_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Bohrium</span></p><p align="center"><span style=" font-size:14pt;">Z = 107</span></p></body></html',
+            )
+        )
         self.Bh_button.setText(_translate("MainWindow", "Bh"))
-        self.As_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Arsenic</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 33</span></p></body></html"))
+        self.As_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Arsenic</span></p><p align="center"><span style=" font-size:14pt;">Z = 33</span></p></body></html',
+            )
+        )
         self.As_button.setText(_translate("MainWindow", "As"))
-        self.Ge_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Germanium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 32</span></p></body></html"))
+        self.Ge_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Germanium</span></p><p align="center"><span style=" font-size:14pt;">Z = 32</span></p></body></html',
+            )
+        )
         self.Ge_button.setText(_translate("MainWindow", "Ge"))
-        self.Ga_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Gallium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 31</span></p></body></html"))
+        self.Ga_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Gallium</span></p><p align="center"><span style=" font-size:14pt;">Z = 31</span></p></body></html',
+            )
+        )
         self.Ga_button.setText(_translate("MainWindow", "Ga"))
-        self.Y_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Yttrium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 39</span></p></body></html"))
+        self.Y_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Yttrium</span></p><p align="center"><span style=" font-size:14pt;">Z = 39</span></p></body></html',
+            )
+        )
         self.Y_button.setText(_translate("MainWindow", "Y"))
-        self.Tb_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Terbium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 65</span></p></body></html"))
+        self.Tb_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Terbium</span></p><p align="center"><span style=" font-size:14pt;">Z = 65</span></p></body></html',
+            )
+        )
         self.Tb_button.setText(_translate("MainWindow", "Tb"))
-        self.Cl_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Chlorine</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 17</span></p></body></html"))
+        self.Cl_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Chlorine</span></p><p align="center"><span style=" font-size:14pt;">Z = 17</span></p></body></html',
+            )
+        )
         self.Cl_button.setText(_translate("MainWindow", "Cl"))
-        self.At_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Astatine</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 85</span></p></body></html"))
+        self.At_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Astatine</span></p><p align="center"><span style=" font-size:14pt;">Z = 85</span></p></body></html',
+            )
+        )
         self.At_button.setText(_translate("MainWindow", "At"))
-        self.Mt_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Meitnerium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 109</span></p></body></html"))
+        self.Mt_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Meitnerium</span></p><p align="center"><span style=" font-size:14pt;">Z = 109</span></p></body></html',
+            )
+        )
         self.Mt_button.setText(_translate("MainWindow", "Mt"))
-        self.Sb_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Antimony</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 51</span></p></body></html"))
+        self.Sb_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Antimony</span></p><p align="center"><span style=" font-size:14pt;">Z = 51</span></p></body></html',
+            )
+        )
         self.Sb_button.setText(_translate("MainWindow", "Sb"))
-        self.Os_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Osmium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 76</span></p></body></html"))
+        self.Os_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Osmium</span></p><p align="center"><span style=" font-size:14pt;">Z = 76</span></p></body></html',
+            )
+        )
         self.Os_button.setText(_translate("MainWindow", "Os"))
-        self.He_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Helium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 2</span></p></body></html"))
+        self.He_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Helium</span></p><p align="center"><span style=" font-size:14pt;">Z = 2</span></p></body></html',
+            )
+        )
         self.He_button.setText(_translate("MainWindow", "He"))
-        self.Np_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Neptunium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 93</span></p></body></html"))
+        self.Np_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Neptunium</span></p><p align="center"><span style=" font-size:14pt;">Z = 93</span></p></body></html',
+            )
+        )
         self.Np_button.setText(_translate("MainWindow", "Np"))
-        self.Fl_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Flerovium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 114</span></p></body></html"))
+        self.Fl_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Flerovium</span></p><p align="center"><span style=" font-size:14pt;">Z = 114</span></p></body></html',
+            )
+        )
         self.Fl_button.setText(_translate("MainWindow", "Fl"))
-        self.Cs_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Caesium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 55</span></p></body></html"))
+        self.Cs_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Caesium</span></p><p align="center"><span style=" font-size:14pt;">Z = 55</span></p></body></html',
+            )
+        )
         self.Cs_button.setText(_translate("MainWindow", "Cs"))
-        self.Fr_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Francium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 87</span></p></body></html"))
+        self.Fr_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Francium</span></p><p align="center"><span style=" font-size:14pt;">Z = 87</span></p></body></html',
+            )
+        )
         self.Fr_button.setText(_translate("MainWindow", "Fr"))
-        self.Fm_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Fermium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 100</span></p></body></html"))
+        self.Fm_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Fermium</span></p><p align="center"><span style=" font-size:14pt;">Z = 100</span></p></body></html',
+            )
+        )
         self.Fm_button.setText(_translate("MainWindow", "Fm"))
-        self.Rg_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Roentgenium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 111</span></p></body></html"))
+        self.Rg_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Roentgenium</span></p><p align="center"><span style=" font-size:14pt;">Z = 111</span></p></body></html',
+            )
+        )
         self.Rg_button.setText(_translate("MainWindow", "Rg"))
-        self.Ca_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Calcium</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 20</span></p></body></html"))
+        self.Ca_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Calcium</span></p><p align="center"><span style=" font-size:14pt;">Z = 20</span></p></body></html',
+            )
+        )
         self.Ca_button.setText(_translate("MainWindow", "Ca"))
-        self.Cu_button.setToolTip(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Copper</span></p><p align=\"center\"><span style=\" font-size:14pt;\">Z = 29</span></p></body></html"))
+        self.Cu_button.setToolTip(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:14pt;">Copper</span></p><p align="center"><span style=" font-size:14pt;">Z = 29</span></p></body></html',
+            )
+        )
         self.Cu_button.setText(_translate("MainWindow", "Cu"))
-        self.groupBox.setTitle(_translate("MainWindow", "Muonic X-ray Info (click any button on the periodic table)"))
-        self.element_info_muonic_xray_tree.headerItem().setText(0, _translate("MainWindow", "Isotope"))
-        self.element_info_muonic_xray_tree.headerItem().setText(1, _translate("MainWindow", "Transition"))
-        self.element_info_muonic_xray_tree.headerItem().setText(2, _translate("MainWindow", "Energy (keV)"))
-        self.element_info_muonic_xray_tree.headerItem().setText(3, _translate("MainWindow", "IUPAC name"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Muonic X-rays"))
-        self.treeWidget_2.headerItem().setText(1, _translate("MainWindow", "Energy (keV)"))
-        self.treeWidget_2.headerItem().setText(2, _translate("MainWindow", "Intensity (%)"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Gamma rays"))
+        self.groupBox.setTitle(
+            _translate(
+                "MainWindow",
+                "Muonic X-ray Info (click any button on the periodic table)",
+            )
+        )
+        self.element_info_muonic_xray_tree.headerItem().setText(
+            0, _translate("MainWindow", "Isotope")
+        )
+        self.element_info_muonic_xray_tree.headerItem().setText(
+            1, _translate("MainWindow", "Transition")
+        )
+        self.element_info_muonic_xray_tree.headerItem().setText(
+            2, _translate("MainWindow", "Energy (keV)")
+        )
+        self.element_info_muonic_xray_tree.headerItem().setText(
+            3, _translate("MainWindow", "IUPAC name")
+        )
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Muonic X-rays")
+        )
+        self.treeWidget_2.headerItem().setText(
+            1, _translate("MainWindow", "Energy (keV)")
+        )
+        self.treeWidget_2.headerItem().setText(
+            2, _translate("MainWindow", "Intensity (%)")
+        )
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Gamma rays")
+        )
         item = self.element_info_electronic_xray_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Transition"))
         item = self.element_info_electronic_xray_table.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Energy (keV)"))
         item = self.element_info_electronic_xray_table.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Relative Intensity"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Electronic X-rays"))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab_3),
+            _translate("MainWindow", "Electronic X-rays"),
+        )
         self.actionManual.setText(_translate("MainWindow", "Manual"))

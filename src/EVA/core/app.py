@@ -39,6 +39,7 @@ class App(QApplication):
     which can be accessed anywhere using QApplication.instance(). The instance can easily be returned using the
     shorthand function get_app().
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.main_window = None
@@ -54,10 +55,12 @@ class App(QApplication):
         self.mudirac_muon_database = load_mu_xray_db.load_extended_mudirac_data()
         self.legacy_muon_database = load_mu_xray_db.load_legacy_data()
 
-        with open(get_path("src/EVA/databases/electronic_xrays/xray_booklet_data.json")) as e_xray_file:
+        with open(
+            get_path("src/EVA/databases/electronic_xrays/xray_booklet_data.json")
+        ) as e_xray_file:
             self.e_xray_database = json.load(e_xray_file)
 
-        logger.debug("Loaded all databases in %ss.", (time.time_ns()-t0)/1e9)
+        logger.debug("Loaded all databases in %ss.", (time.time_ns() - t0) / 1e9)
 
         # Check config and set default "muon database" accordingly
         if self.config["database"]["mu_xray_db"] == "legacy":
@@ -67,10 +70,13 @@ class App(QApplication):
             logger.info("Using mudirac muon database.")
             self.muon_database = self.mudirac_muon_database
         else:
-            raise KeyError # Invalid muon database in config
+            raise KeyError  # Invalid muon database in config
 
         self.threadpool = QThreadPool()
-        logger.debug("Created thread pool. Maximum thread count: %s", self.threadpool.maxThreadCount())
+        logger.debug(
+            "Created thread pool. Maximum thread count: %s",
+            self.threadpool.maxThreadCount(),
+        )
 
     def use_mudirac_muon_db(self):
         """
@@ -98,7 +104,9 @@ class App(QApplication):
             KeyError: If current muon database in config is invalid.
         """
         self.config.restore_defaults()
-        self.main_window = None # "delete" main window - garbage collection will take care of it
+        self.main_window = (
+            None  # "delete" main window - garbage collection will take care of it
+        )
 
         # Check config and set default "muon database" accordingly
         if self.config["database"]["mu_xray_db"] == "legacy":

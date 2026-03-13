@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox, QCheckBox, QDialogButtonBox
 
 from EVA.gui.ui_files.energy_correction_window_gui import Ui_Energycorrections
 
+
 class EnergyCorrectionsView(QDialog, Ui_Energycorrections):
     energy_corrections_applied_s = pyqtSignal(dict)
     dialog_closed_s = pyqtSignal(object)
@@ -39,17 +40,21 @@ class EnergyCorrectionsView(QDialog, Ui_Energycorrections):
             offset = float(self.correction_table.item(row, 2).text())
             apply = self.checkboxes[row].isChecked()
 
-            result[detector] =  {
+            result[detector] = {
                 "e_corr_coeffs": (gradient, offset),
-                "use_e_corr": apply
+                "use_e_corr": apply,
             }
 
         return result
 
-    def display_error_message(self, title="Error", message="", buttons=QMessageBox.StandardButton.Ok):
+    def display_error_message(
+        self, title="Error", message="", buttons=QMessageBox.StandardButton.Ok
+    ):
         _ = QMessageBox.critical(self, title, message, buttons)
 
-    def display_message(self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok):
+    def display_message(
+        self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok
+    ):
         _ = QMessageBox.information(self, title, message, buttons)
 
     def closeEvent(self, event: QCloseEvent):

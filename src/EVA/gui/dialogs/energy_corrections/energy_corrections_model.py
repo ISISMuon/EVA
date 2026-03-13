@@ -1,5 +1,6 @@
 from EVA.core.data_structures.run import Run
 
+
 class EnergyCorrectionsModel:
     def __init__(self, run: Run):
         self.run = run
