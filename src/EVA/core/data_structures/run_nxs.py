@@ -119,12 +119,18 @@ class RunNexus(Run):
                 self.bin_method = "raw"
 
             elif plot_mode == "Efficiency Spectrum":
-                time_data = self._raw[detector].time[:]
-                energy_data = self._raw[detector].energy[:]
-                mask = time_data > 0
-                self._raw[detector].cut_data = energy_data[mask]
+                if self._raw[detector].efficiency_hist_counts and self._raw[detector].efficiency_hist_energy:
+                    self.data[detector].x = self._raw[detector].efficiency_hist_energy[:]
+                    self.data[detector].y = self._raw[detector].efficiency_hist_counts[:]
+                    self.bin_method = "prebinned"
+                else:
+                    time_data = self._raw[detector].time[:]
+                    energy_data = self._raw[detector].energy[:]
+                    mask = time_data > 0
+                    self._raw[detector].cut_data = energy_data[mask]
+                    self.bin_method = "raw"
+
                 self.data[detector].bin_range = self._raw[detector].bin_range
-                self.bin_method = "raw"
 
             elif plot_mode == "Time Plot":
                 time_data = self._raw[detector].time[:]
