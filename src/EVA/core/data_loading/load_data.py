@@ -18,6 +18,7 @@ def load_run(
     binning: int,
     plot_mode: str,
     prompt_limit: int,
+    delayed_limit: int,
 ) -> tuple[Run, dict]:
     """
     Attempts to load specified run as both Biriani and Nexus run files and returns whichever is found. Throws error if neither/both found."""
@@ -32,6 +33,7 @@ def load_run(
         binning,
         plot_mode,
         prompt_limit,
+        delayed_limit,
     )
     if brni_flags["no_files_found"] == 1 and nxs_flags["no_files_found"] == 1:
         return brni_run, {
@@ -307,6 +309,7 @@ def load_run_nxs(
     binning: int,
     plot_mode: str,
     prompt_limit: int,
+    delayed_limit: int,
 ) -> tuple[Run, dict]:
     """Loads nexus run file from given run number, collects data from each channel into dictionary of SpectrumNexus objects, stores in RunNexus object
     along with run metadata, and apply any detected corrections from saved settings in config."""
@@ -324,6 +327,7 @@ def load_run_nxs(
             comment_data=comment_data,
             plot_mode=plot_mode,
             prompt_limit=prompt_limit,
+            delayed_limit=delayed_limit,
             momentum=momentum,
         )
         try:
@@ -335,6 +339,7 @@ def load_run_nxs(
                 bin_rate=binning,
                 plot_mode=plot_mode,
                 prompt_limit=prompt_limit,
+                delayed_limit=delayed_limit,
             )
             norm_flag = 0
 

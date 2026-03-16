@@ -23,6 +23,7 @@ class MainModel(QObject):
         binning = corrections["binning"]
         plot_mode = corrections["plot_mode"]
         prompt_limit = corrections["prompt_limit"]
+        delayed_limit = corrections["delayed_limit"]
 
         run, flags = load_data.load_run(
             run_num,
@@ -32,6 +33,7 @@ class MainModel(QObject):
             binning,
             plot_mode,
             prompt_limit,
+            delayed_limit,
         )
 
         all_detectors = config["general"]["enabled_detectors"]

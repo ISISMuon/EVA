@@ -41,6 +41,8 @@ class TestLoadRun:
         binning = get_config()["default_corrections"]["binning"]
         plot_mode = get_config()["default_corrections"]["plot_mode"]
         prompt_limit = get_config()["default_corrections"]["prompt_limit"]
+        delayed_limit = get_config()["default_corrections"]["delayed_limit"]
+
         run, _ = load_data.load_run(
             run_num,
             wdir,
@@ -49,6 +51,7 @@ class TestLoadRun:
             binning,
             plot_mode,
             prompt_limit,
+            delayed_limit,
         )
 
         # Check that run is 0 if no detector data was loaded (invalid run number)

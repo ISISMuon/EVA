@@ -47,6 +47,7 @@
     "normalisation": "none",
     "binning": 1,
     "prompt_limit": 2000,
+    "delayed_limit": 20000000,
     "plot_mode": "IBEX Prompt Spectrum",
     "show_plot": {
         "GE1": true,

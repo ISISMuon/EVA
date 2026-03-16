@@ -15,6 +15,7 @@ class RunNexus(Run):
         run_num,
         plot_mode,
         prompt_limit,
+        delayed_limit,
         comment_data,
         momentum,
     ):
@@ -23,6 +24,7 @@ class RunNexus(Run):
         self.comment_data = comment_data
         self.plot_mode = plot_mode
         self.prompt_limit = prompt_limit
+        self.delayed_limit = delayed_limit
         self.bin_method = self._bin_method_from_plotmode(plot_mode)
         self.data = {
             key: SpectrumNexus(
@@ -40,6 +42,8 @@ class RunNexus(Run):
         default_bin=None,
         plot_mode=None,
         prompt_limit=None,
+        delayed_limit=None,
+
     ):
         self.data = {
             key: SpectrumNexus(
@@ -47,7 +51,7 @@ class RunNexus(Run):
             )
             for key, nexus_obj in self._raw.items()
         }
-        self._set_mode(plot_mode, prompt_limit)
+        self._set_mode(plot_mode, prompt_limit, delayed_limit)
         self._set_energy_correction(energy_corrections)
         self._set_binning(bin_rate, default_bin)
         self._set_normalisation(normalisation, normalise_which)
@@ -73,7 +77,7 @@ class RunNexus(Run):
             self._set_normalisation_none()
             raise ValueError("Normalisation by events failed.")
 
-    def _set_mode(self, plot_mode: str | None = None, prompt_limit: str | None = None):
+    def _set_mode(self, plot_mode: str | None = None, prompt_limit: str | None = None, delayed_limit: str | None = None):
         """Set up detector data depending on the chosen plot mode."""
         if plot_mode is None:
             plot_mode = self.plot_mode
@@ -84,6 +88,12 @@ class RunNexus(Run):
             prompt_limit = self.prompt_limit
         else:
             self.prompt_limit = int(prompt_limit)
+
+        if delayed_limit is None:
+            delayed_limit = self.delayed_limit
+        else:
+            self.delayed_limit = int(delayed_limit)
+
         for detector, spectrum in self._raw.items():
             if plot_mode == "IBEX Prompt Spectrum":
                 spectrum.x = self._raw[detector].prompt_energy[:]
@@ -105,7 +115,7 @@ class RunNexus(Run):
             elif plot_mode == "Manual Delayed Spectrum":
                 time_data = self._raw[detector].time[:]
                 energy_data = self._raw[detector].energy[:]
-                mask = (time_data > self.prompt_limit) & (time_data < 20000000)
+                mask = (time_data > self.prompt_limit) & (time_data < self.delayed_limit)
                 self._raw[detector].cut_data = energy_data[mask]
                 self.data[detector].bin_range = self._raw[detector].bin_range
                 self.bin_method = "raw"
@@ -197,5 +207,6 @@ class RunNexus(Run):
             loaded_detectors=[],
             plot_mode="IBEX Prompt Spectrum",
             prompt_limit=0,
+            delayed_limit=20000000,
             comment_data=[""] * 7,
         )

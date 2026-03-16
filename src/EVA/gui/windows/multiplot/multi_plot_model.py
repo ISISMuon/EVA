@@ -105,6 +105,8 @@ class MultiPlotModel:
         binning = corrections["binning"]
         plot_mode = corrections["plot_mode"]
         prompt_limit = corrections["prompt_limit"]
+        delayed_limit = corrections["delayed_limit"]
+
         result = [
             load_data.load_run(
                 run_num,
@@ -114,6 +116,7 @@ class MultiPlotModel:
                 binning,
                 plot_mode,
                 prompt_limit,
+                delayed_limit,
             )
             for run_num in run_list
         ]
@@ -166,6 +169,7 @@ class MultiPlotModel:
         norm_type = normalisation_types[normalisation_index]
         plot_type = workspace_view.nexus_plot_display_combo_box.currentText()
         prompt_limit = workspace_view.prompt_limit_textbox.text()
+        delayed_limit = workspace_view.delayed_limit_textbox.text()
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
             [
@@ -174,6 +178,7 @@ class MultiPlotModel:
                     bin_rate=binning,
                     plot_mode=plot_type,
                     prompt_limit=prompt_limit,
+                    delayed_limit=delayed_limit
                 )
                 for run in self.model.loaded_runs
             ]

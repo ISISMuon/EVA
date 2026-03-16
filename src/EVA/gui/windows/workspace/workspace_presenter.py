@@ -94,6 +94,7 @@ class WorkspacePresenter:
         )
         self.view.nexus_plot_display_combo_box.setCurrentText(self.model.plot_mode)
         self.view.prompt_limit_textbox.setText(str(self.model.prompt_limit))
+        self.view.delayed_limit_textbox.setText(str(self.model.delayed_limit))
 
     def on_apply_settings(self):
         """
@@ -105,6 +106,7 @@ class WorkspacePresenter:
         norm_type = normalisation_types[normalisation_index]
         plot_type = self.view.nexus_plot_display_combo_box.currentText()
         prompt_limit = self.view.prompt_limit_textbox.text()
+        delayed_limit = self.view.delayed_limit_textbox.text()
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
             kwargs = dict(
@@ -112,6 +114,7 @@ class WorkspacePresenter:
                 bin_rate=binning,
                 plot_mode=plot_type,
                 prompt_limit=int(prompt_limit),
+                delayed_limit=int(delayed_limit)
             )
             # dynamically filter only supported arguments for loaded run type
             sig = inspect.signature(self.model.run.set_corrections)

@@ -12,40 +12,73 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MultiPlotView(object):
     def setupUi(self, MultiPlotView):
         MultiPlotView.setObjectName("MultiPlotView")
-        MultiPlotView.resize(900, 700)
+        MultiPlotView.resize(1203, 638)
         self.gridLayout = QtWidgets.QGridLayout(MultiPlotView)
         self.gridLayout.setObjectName("gridLayout")
         self.groupBox_2 = QtWidgets.QGroupBox(parent=MultiPlotView)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(2)
         sizePolicy.setHeightForWidth(self.groupBox_2.sizePolicy().hasHeightForWidth())
         self.groupBox_2.setSizePolicy(sizePolicy)
-        self.groupBox_2.setStyleSheet(
-            "QGroupBox {\n"
-            "    border-radius: 6px;\n"
-            "    margin-top: 6px;\n"
-            "    background-color: white;\n"
-            "}\n"
-            "QGroupBox::title {\n"
-            "    subcontrol-origin: margin;\n"
-            "    left: 7px;\n"
-            "    padding: 2px 5px 2px 5px;\n"
-            "    background-color: white;\n"
-            "    border: 1px solid #E8E8E8;\n"
-            "    border-radius: 2px\n"
-            "}"
-        )
+        self.groupBox_2.setStyleSheet("QGroupBox {\n"
+"    border-radius: 6px;\n"
+"    margin-top: 6px;\n"
+"    background-color: white;\n"
+"}\n"
+"QGroupBox::title {\n"
+"    subcontrol-origin: margin;\n"
+"    left: 7px;\n"
+"    padding: 2px 5px 2px 5px;\n"
+"    background-color: white;\n"
+"    border: 1px solid #E8E8E8;\n"
+"    border-radius: 2px\n"
+"}")
         self.groupBox_2.setFlat(False)
         self.groupBox_2.setObjectName("groupBox_2")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.groupBox_2)
         self.gridLayout_3.setContentsMargins(9, 20, 9, 9)
         self.gridLayout_3.setObjectName("gridLayout_3")
+        self.normalisation_type_combo_box = QtWidgets.QComboBox(parent=self.groupBox_2)
+        self.normalisation_type_combo_box.setObjectName("normalisation_type_combo_box")
+        self.normalisation_type_combo_box.addItem("")
+        self.normalisation_type_combo_box.addItem("")
+        self.normalisation_type_combo_box.addItem("")
+        self.gridLayout_3.addWidget(self.normalisation_type_combo_box, 7, 2, 1, 3)
+        self.label_2 = QtWidgets.QLabel(parent=self.groupBox_2)
+        self.label_2.setStyleSheet("")
+        self.label_2.setObjectName("label_2")
+        self.gridLayout_3.addWidget(self.label_2, 6, 2, 1, 1)
+        self.delayed_limit_textbox = QtWidgets.QLineEdit(parent=self.groupBox_2)
+        self.delayed_limit_textbox.setObjectName("delayed_limit_textbox")
+        self.gridLayout_3.addWidget(self.delayed_limit_textbox, 13, 2, 1, 1)
+        self.label_6 = QtWidgets.QLabel(parent=self.groupBox_2)
+        self.label_6.setObjectName("label_6")
+        self.gridLayout_3.addWidget(self.label_6, 11, 3, 1, 1)
+        self.binning_spin_box = QtWidgets.QDoubleSpinBox(parent=self.groupBox_2)
+        self.binning_spin_box.setSuffix("")
+        self.binning_spin_box.setMinimum(0.1)
+        self.binning_spin_box.setSingleStep(1.0)
+        self.binning_spin_box.setProperty("value", 1.0)
+        self.binning_spin_box.setObjectName("binning_spin_box")
+        self.gridLayout_3.addWidget(self.binning_spin_box, 9, 2, 1, 3)
+        self.label_3 = QtWidgets.QLabel(parent=self.groupBox_2)
+        self.label_3.setObjectName("label_3")
+        self.gridLayout_3.addWidget(self.label_3, 8, 2, 1, 1)
         self.label_4 = QtWidgets.QLabel(parent=self.groupBox_2)
         self.label_4.setObjectName("label_4")
         self.gridLayout_3.addWidget(self.label_4, 3, 2, 1, 1)
+        self.prompt_limit_textbox = QtWidgets.QLineEdit(parent=self.groupBox_2)
+        self.prompt_limit_textbox.setObjectName("prompt_limit_textbox")
+        self.gridLayout_3.addWidget(self.prompt_limit_textbox, 11, 2, 1, 1)
+        self.apply_run_settings_button = QtWidgets.QPushButton(parent=self.groupBox_2)
+        self.apply_run_settings_button.setObjectName("apply_run_settings_button")
+        self.gridLayout_3.addWidget(self.apply_run_settings_button, 19, 2, 1, 3)
+        self.label_5 = QtWidgets.QLabel(parent=self.groupBox_2)
+        self.label_5.setObjectName("label_5")
+        self.gridLayout_3.addWidget(self.label_5, 10, 2, 1, 1)
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.gridLayout_3.addItem(spacerItem, 16, 3, 1, 1)
         self.nexus_plot_display_combo_box = QtWidgets.QComboBox(parent=self.groupBox_2)
         self.nexus_plot_display_combo_box.setObjectName("nexus_plot_display_combo_box")
         self.nexus_plot_display_combo_box.addItem("")
@@ -55,104 +88,51 @@ class Ui_MultiPlotView(object):
         self.nexus_plot_display_combo_box.addItem("")
         self.nexus_plot_display_combo_box.addItem("")
         self.gridLayout_3.addWidget(self.nexus_plot_display_combo_box, 4, 2, 1, 3)
-        self.label_2 = QtWidgets.QLabel(parent=self.groupBox_2)
-        self.label_2.setStyleSheet("")
-        self.label_2.setObjectName("label_2")
-        self.gridLayout_3.addWidget(self.label_2, 6, 2, 1, 1)
-        self.binning_spin_box = QtWidgets.QDoubleSpinBox(parent=self.groupBox_2)
-        self.binning_spin_box.setSuffix("")
-        self.binning_spin_box.setMinimum(0.1)
-        self.binning_spin_box.setSingleStep(1.0)
-        self.binning_spin_box.setProperty("value", 1.0)
-        self.binning_spin_box.setObjectName("binning_spin_box")
-        self.gridLayout_3.addWidget(self.binning_spin_box, 9, 2, 1, 3)
-        self.normalisation_type_combo_box = QtWidgets.QComboBox(parent=self.groupBox_2)
-        self.normalisation_type_combo_box.setObjectName("normalisation_type_combo_box")
-        self.normalisation_type_combo_box.addItem("")
-        self.normalisation_type_combo_box.addItem("")
-        self.normalisation_type_combo_box.addItem("")
-        self.gridLayout_3.addWidget(self.normalisation_type_combo_box, 7, 2, 1, 3)
-        self.label_6 = QtWidgets.QLabel(parent=self.groupBox_2)
-        self.label_6.setObjectName("label_6")
-        self.gridLayout_3.addWidget(self.label_6, 11, 3, 1, 1)
-        self.label_5 = QtWidgets.QLabel(parent=self.groupBox_2)
-        self.label_5.setObjectName("label_5")
-        self.gridLayout_3.addWidget(self.label_5, 10, 2, 1, 1)
-        self.prompt_limit_textbox = QtWidgets.QLineEdit(parent=self.groupBox_2)
-        self.prompt_limit_textbox.setObjectName("prompt_limit_textbox")
-        self.gridLayout_3.addWidget(self.prompt_limit_textbox, 11, 2, 1, 1)
-        spacerItem = QtWidgets.QSpacerItem(
-            20,
-            40,
-            QtWidgets.QSizePolicy.Policy.Minimum,
-            QtWidgets.QSizePolicy.Policy.Expanding,
-        )
-        self.gridLayout_3.addItem(spacerItem, 12, 3, 1, 1)
-        self.label_3 = QtWidgets.QLabel(parent=self.groupBox_2)
-        self.label_3.setObjectName("label_3")
-        self.gridLayout_3.addWidget(self.label_3, 8, 2, 1, 1)
-        self.apply_run_settings_button = QtWidgets.QPushButton(parent=self.groupBox_2)
-        self.apply_run_settings_button.setObjectName("apply_run_settings_button")
-        self.gridLayout_3.addWidget(self.apply_run_settings_button, 15, 2, 1, 3)
+        self.label_7 = QtWidgets.QLabel(parent=self.groupBox_2)
+        self.label_7.setObjectName("label_7")
+        self.gridLayout_3.addWidget(self.label_7, 12, 2, 1, 1)
+        self.label_8 = QtWidgets.QLabel(parent=self.groupBox_2)
+        self.label_8.setObjectName("label_8")
+        self.gridLayout_3.addWidget(self.label_8, 13, 3, 1, 1)
         self.gridLayout.addWidget(self.groupBox_2, 0, 0, 1, 1)
         self.side_panel_layout = QtWidgets.QVBoxLayout()
         self.side_panel_layout.setObjectName("side_panel_layout")
         self.settings_form_layout = QtWidgets.QFormLayout()
         self.settings_form_layout.setObjectName("settings_form_layout")
         self.lab_multi_offset = QtWidgets.QLabel(parent=MultiPlotView)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Preferred
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.lab_multi_offset.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.lab_multi_offset.sizePolicy().hasHeightForWidth())
         self.lab_multi_offset.setSizePolicy(sizePolicy)
         self.lab_multi_offset.setObjectName("lab_multi_offset")
-        self.settings_form_layout.setWidget(
-            0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.lab_multi_offset
-        )
+        self.settings_form_layout.setWidget(0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.lab_multi_offset)
         self.val_multi_offset = QtWidgets.QLineEdit(parent=MultiPlotView)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.val_multi_offset.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.val_multi_offset.sizePolicy().hasHeightForWidth())
         self.val_multi_offset.setSizePolicy(sizePolicy)
         self.val_multi_offset.setObjectName("val_multi_offset")
-        self.settings_form_layout.setWidget(
-            0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.val_multi_offset
-        )
+        self.settings_form_layout.setWidget(0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.val_multi_offset)
         self.load_multi = QtWidgets.QPushButton(parent=MultiPlotView)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.load_multi.sizePolicy().hasHeightForWidth())
         self.load_multi.setSizePolicy(sizePolicy)
         self.load_multi.setMinimumSize(QtCore.QSize(100, 0))
         self.load_multi.setObjectName("load_multi")
-        self.settings_form_layout.setWidget(
-            1, QtWidgets.QFormLayout.ItemRole.SpanningRole, self.load_multi
-        )
+        self.settings_form_layout.setWidget(1, QtWidgets.QFormLayout.ItemRole.SpanningRole, self.load_multi)
         self.plot_multi = QtWidgets.QPushButton(parent=MultiPlotView)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.plot_multi.sizePolicy().hasHeightForWidth())
         self.plot_multi.setSizePolicy(sizePolicy)
         self.plot_multi.setMinimumSize(QtCore.QSize(100, 0))
         self.plot_multi.setObjectName("plot_multi")
-        self.settings_form_layout.setWidget(
-            2, QtWidgets.QFormLayout.ItemRole.SpanningRole, self.plot_multi
-        )
+        self.settings_form_layout.setWidget(2, QtWidgets.QFormLayout.ItemRole.SpanningRole, self.plot_multi)
         self.side_panel_layout.addLayout(self.settings_form_layout)
         self.detector_select_layout = QtWidgets.QHBoxLayout()
         self.detector_select_layout.setObjectName("detector_select_layout")
@@ -170,9 +150,7 @@ class Ui_MultiPlotView(object):
         self.detector_select_layout.addWidget(self.det4_checkbox)
         self.side_panel_layout.addLayout(self.detector_select_layout)
         self.RunListTable = BaseTable(parent=MultiPlotView)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.RunListTable.sizePolicy().hasHeightForWidth())
@@ -191,15 +169,10 @@ class Ui_MultiPlotView(object):
         self.side_panel_layout.addWidget(self.RunListTable)
         self.gridLayout.addLayout(self.side_panel_layout, 0, 1, 1, 1)
         self.plot_container = QtWidgets.QWidget(parent=MultiPlotView)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Expanding,
-            QtWidgets.QSizePolicy.Policy.Preferred,
-        )
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.plot_container.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.plot_container.sizePolicy().hasHeightForWidth())
         self.plot_container.setSizePolicy(sizePolicy)
         self.plot_container.setMinimumSize(QtCore.QSize(0, 0))
         self.plot_container.setObjectName("plot_container")
@@ -210,43 +183,25 @@ class Ui_MultiPlotView(object):
 
     def retranslateUi(self, MultiPlotView):
         _translate = QtCore.QCoreApplication.translate
-        MultiPlotView.setWindowTitle(
-            _translate("MultiPlotView", "Multi-Run Plot - EVA")
-        )
+        MultiPlotView.setWindowTitle(_translate("MultiPlotView", "Multi-Run Plot - EVA"))
         self.groupBox_2.setTitle(_translate("MultiPlotView", "Run Settings"))
-        self.label_4.setText(_translate("MultiPlotView", "Display Plot"))
-        self.nexus_plot_display_combo_box.setItemText(
-            0, _translate("MultiPlotView", "IBEX Prompt Spectrum")
-        )
-        self.nexus_plot_display_combo_box.setItemText(
-            1, _translate("MultiPlotView", "IBEX Delayed Spectrum")
-        )
-        self.nexus_plot_display_combo_box.setItemText(
-            2, _translate("MultiPlotView", "Manual Prompt Spectrum")
-        )
-        self.nexus_plot_display_combo_box.setItemText(
-            3, _translate("MultiPlotView", "Manual Delayed Spectrum")
-        )
-        self.nexus_plot_display_combo_box.setItemText(
-            4, _translate("MultiPlotView", "Time Plot")
-        )
-        self.nexus_plot_display_combo_box.setItemText(
-            5, _translate("MultiPlotView", "Efficiency Spectrum")
-        )
+        self.normalisation_type_combo_box.setItemText(0, _translate("MultiPlotView", "None"))
+        self.normalisation_type_combo_box.setItemText(1, _translate("MultiPlotView", "Normalisation by counts"))
+        self.normalisation_type_combo_box.setItemText(2, _translate("MultiPlotView", "Normalisation by events"))
         self.label_2.setText(_translate("MultiPlotView", "Normalisation type"))
-        self.normalisation_type_combo_box.setItemText(
-            0, _translate("MultiPlotView", "None")
-        )
-        self.normalisation_type_combo_box.setItemText(
-            1, _translate("MultiPlotView", "Normalisation by counts")
-        )
-        self.normalisation_type_combo_box.setItemText(
-            2, _translate("MultiPlotView", "Normalisation by events")
-        )
         self.label_6.setText(_translate("MultiPlotView", "ns"))
-        self.label_5.setText(_translate("MultiPlotView", "Prompt Limit"))
         self.label_3.setText(_translate("MultiPlotView", "Binning"))
+        self.label_4.setText(_translate("MultiPlotView", "Display Plot"))
         self.apply_run_settings_button.setText(_translate("MultiPlotView", "Apply"))
+        self.label_5.setText(_translate("MultiPlotView", "Prompt Limit"))
+        self.nexus_plot_display_combo_box.setItemText(0, _translate("MultiPlotView", "IBEX Prompt Spectrum"))
+        self.nexus_plot_display_combo_box.setItemText(1, _translate("MultiPlotView", "IBEX Delayed Spectrum"))
+        self.nexus_plot_display_combo_box.setItemText(2, _translate("MultiPlotView", "Manual Prompt Spectrum"))
+        self.nexus_plot_display_combo_box.setItemText(3, _translate("MultiPlotView", "Manual Delayed Spectrum"))
+        self.nexus_plot_display_combo_box.setItemText(4, _translate("MultiPlotView", "Time Plot"))
+        self.nexus_plot_display_combo_box.setItemText(5, _translate("MultiPlotView", "Efficiency Spectrum"))
+        self.label_7.setText(_translate("MultiPlotView", "Delayed Limit"))
+        self.label_8.setText(_translate("MultiPlotView", "ns"))
         self.lab_multi_offset.setText(_translate("MultiPlotView", "Offset"))
         self.val_multi_offset.setText(_translate("MultiPlotView", "0.0"))
         self.load_multi.setText(_translate("MultiPlotView", "Load Multi Spectra"))
@@ -257,14 +212,11 @@ class Ui_MultiPlotView(object):
         item.setText(_translate("MultiPlotView", "End"))
         item = self.RunListTable.horizontalHeaderItem(2)
         item.setText(_translate("MultiPlotView", "Step"))
-
-
 from EVA.gui.base.base_table import BaseTable
 
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MultiPlotView = QtWidgets.QWidget()
     ui = Ui_MultiPlotView()
