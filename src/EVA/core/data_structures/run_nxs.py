@@ -51,10 +51,26 @@ class RunNexus(Run):
             )
             for key, nexus_obj in self._raw.items()
         }
-        self._set_mode(plot_mode, prompt_limit, delayed_limit)
-        self._set_energy_correction(energy_corrections)
-        self._set_binning(bin_rate, default_bin)
-        self._set_normalisation(normalisation, normalise_which)
+
+        try:
+            self._set_mode(plot_mode, prompt_limit, delayed_limit)
+        except Exception as e:
+            raise ValueError(f"_set_mode failed: {e}") from e
+
+        try:
+            self._set_energy_correction(energy_corrections)
+        except Exception as e:
+            raise ValueError(f"_set_energy_correction failed: {e}") from e
+
+        try:
+            self._set_binning(bin_rate, default_bin)
+        except Exception as e:
+            raise ValueError(f"_set_binning failed: {e}") from e
+
+        try:
+            self._set_normalisation(normalisation, normalise_which)
+        except Exception as e:
+            raise ValueError(f"_set_normalisation failed: {e}") from e
 
         self.corrections_updated_s.emit()
 

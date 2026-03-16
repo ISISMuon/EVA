@@ -150,13 +150,12 @@ class MultiPlotPresenter:
             ]
 
             self.start_multiplot()
-        except ValueError:
+        except ValueError as e:
             self.view.display_error_message(
-                title="Normalisation error",
-                message="Cannot normalise by events when comment file is not loaded. Please ensure that the comment.dat file is in your loaded directory.",
+                title="Run correction error",
+                message=str(e),
             )
-
-            self.populate_settings_panel()
+            # self.populate_settings_panel()
 
     def populate_settings_panel(self):
         """

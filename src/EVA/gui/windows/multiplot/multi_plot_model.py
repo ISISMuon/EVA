@@ -158,35 +158,3 @@ class MultiPlotModel:
             if show and det in self.loaded_runs[0].loaded_detectors
         ]
         return plot_detectors
-
-    def multirun_corrections(self):
-        """
-        Apply run corrections to all loaded runs using settings from workspace view.
-        """
-        workspace_view = self.workspace.view
-        binning = workspace_view.binning_spin_box.value()
-        normalisation_index = workspace_view.normalisation_type_combo_box.currentIndex()
-        norm_type = normalisation_types[normalisation_index]
-        plot_type = workspace_view.nexus_plot_display_combo_box.currentText()
-        prompt_limit = workspace_view.prompt_limit_textbox.text()
-        delayed_limit = workspace_view.delayed_limit_textbox.text()
-        # normalisation can fail if user wants to normalise by events but no comment file have been loaded
-        try:
-            [
-                run.set_corrections(
-                    normalisation=norm_type,
-                    bin_rate=binning,
-                    plot_mode=plot_type,
-                    prompt_limit=prompt_limit,
-                    delayed_limit=delayed_limit
-                )
-                for run in self.model.loaded_runs
-            ]
-
-        except ValueError:
-            workspace_view.display_error_message(
-                title="Normalisation error",
-                message="Cannot normalise by events when comment file is not loaded. Please ensure that the comment.dat file is in your loaded directory.",
-            )
-
-            self.populate_settings_panel()
