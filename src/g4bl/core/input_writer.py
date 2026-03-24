@@ -1,4 +1,4 @@
-from g4bl.core.shapes import Shape, Slab
+from g4bl.core.shapes import Shape
 
 class InputWriter:
     def __init__(self, targets: list[Shape], beam_off: bool, muon_num: int, momentum: float, mom_err: float, optional_params: dict = None):
@@ -8,7 +8,6 @@ class InputWriter:
         self.mom_err = mom_err
         self.optional_params = optional_params
         self.input_string = ""
-        self.sample_positions = []
         if not beam_off:
             self.beam_block()
         self.material_block()
@@ -21,23 +20,16 @@ class InputWriter:
             "splay": 0,
             "splayX": 0,
             "splayY": 0,
-            "deltaIntersection": 0.1,
-            "deltaChord": 3,
-            "maxStep": 100,
-            "minStep": 0.01
         }
         # required parameters
         params["muon_num"] = self.muon_num
         params["momentum"] = self.momentum
         params["mom_err"] = self.mom_err
-        params.update(self.optional_params)
+        if self.optional_params is not None:
+            params.update(self.optional_params)
 
         beam_lines = [
             f"param -unset particles={params['particle']}",
-            f"param deltaIntersection={params['deltaIntersection']}",
-            f"param deltaChord={params['deltaChord']}",
-            f"param maxStep={params['maxStep']}",
-            f"param minStep={params['minStep']}",
             f"param -unset stats={params['muon_num']}",
             "param -unset firstEvent=1",
             f"param -unset P_inj={params['momentum']}",
@@ -46,7 +38,7 @@ class InputWriter:
             f"param -unset splayX={params['splayX']}",
             f"param -unset splayY={params['splayY']}",
             f"param -unset bite={params['mom_err']}",
-            "physics FTFP_BERT_EMZ spinTracking=1",
+            "physics FTFP_BERT spinTracking=1",
             (
                 "beam gaussian "
                 "particle=$particles "
@@ -59,7 +51,7 @@ class InputWriter:
                 "sigmaP=$bite*$P_inj"
             ),
             "particlecolor mu-='0,1,0' e-='1,0,0' gamma='0,0,1'",
-            "trackcuts keep=mu- \n",
+            "beamlossntuple test file=out_file require=PDGid==13 \n",
         ]
         self.input_string = "\n".join(beam_lines)
 
@@ -70,5 +62,4 @@ class InputWriter:
         for target in self.targets:
             # shapes only create their input strings at this point to conserve memory. place_shape also creates sample position member.
             material_lines.append(target.place_shape())
-            self.sample_positions.append(target.sample_positions)
         self.input_string += "\n".join(material_lines)
