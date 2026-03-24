@@ -28,9 +28,10 @@ class G4blPresenter(QWidget):
         self.view.min_momentum_linedit.setText(str(self.model.min_momentum))
         self.view.max_momentum_linedit.setText(str(self.model.max_momentum))
         self.view.momentum_step_linedit.setText(str(self.model.step_momentum))
-        # self.view.g4bl_exe_dir_linedit.setText(str(self.model.g4bl_exe_dir))
-        # self.view.g4bl_out_dir_linedit.setText(str(self.model.g4bl_out_dir))
+        self.view.g4bl_exe_dir_linedit.setText(str(self.model.g4bl_exe_dir))
+        self.view.g4bl_out_dir_linedit.setText(str(self.model.g4bl_out_dir))
         self.view.stats_linedit.setText(str(self.model.stats))
+        self.view.bin_number_linedit.setText(str(self.model.bin_resolution))
         self.view.visualisation_checkbox.setChecked(False)
         # set momentum scam params to only be visible if momentum scan is selected
         self.on_scan_type_changed(self.view.scan_momentum_combo.currentText())
@@ -117,61 +118,215 @@ class G4blPresenter(QWidget):
         if row == (self.view.stack_layer_setup_table.rowCount()-1):
             self.view.stack_layer_setup_table.append_row()
 
-    def enable_stack_layer_table(self):
-        if self.view.stack_checkbox.isChecked():
-            self.view.manual_place_sample_checkbox.setChecked(False)
-            self.view.stack_layer_setup_table.show()
-            self.view.place_sample_setup_table.hide()
-        else:
-            self.view.stack_checkbox.setChecked(False)
-            self.view.stack_layer_setup_table.hide()
-            self.view.place_sample_setup_table.show()
-
     def on_mode_changed(self, button, checked):
         if not checked:   # ignore the button that was turned off
             return
 
         if button is self.view.stack_layer_radio:
-            self.view.place_sample_tabWidget.hide()
+            self.view.placement_tabWidget.hide()
             self.view.stack_tabWidget.show()
             self.model.sim_method = "Stack"
+            self.current_table = self.view.stack_results_table
+            self.current_tree = self.view.stack_results_tree
 
-        elif button is self.view.manual_place_sample_radio:
+        elif button is self.view.manual_placement_radio:
             self.view.stack_tabWidget.hide()
-            self.view.place_sample_tabWidget.show()
+            self.view.placement_tabWidget.show()
             self.model.sim_method = "Manual Placement"
+            self.current_table = self.view.placement_results_table
+            self.current_tree = self.view.placement_results_tree
 
-    def append_row_in_stack_layer_table_if_last_row_clicked(self, row):
-        if row == (self.view.stack_layer_setup_table.rowCount()-1):
-            self.view.stack_layer_setup_table.append_row()
 
     def format_model_layers(self, layers: list | None = None) -> list[list[str | float]]:
         """
-        Formats the layers in TrimFitModel to a format compatible with the BaseTable's update_contents() method.
+        Formats the layers in G4blModel to a format compatible with the BaseTable's update_contents() method.
 
         Returns:
-            Formatted array containing the layer data in TrimFitModel.
+            Formatted array containing the layer data in G4blModel.
         """
         if layers is None:
-            layers = self.model.input_layers
+            layers = self.model.stack_input
 
         return [[layer["name"], layer["thickness"], layer.get("density", " ")] for layer in layers]
+    def get_layers_from_stack_table(self) -> list[dict] | None:
+        """
+        Gets layers from table and restructures them to fit the format required by TrimFitModel
+
+        Returns: Restructured layers
+        """
+        layers = self.view.stack_layer_setup_table.get_contents()
+        structured_layers = []
+
+        for layer in layers:
+            if layer[0] == "":
+                # skip rows where sample name is blank - assume the whole row is empty
+                continue
+
+            name = layer[0]
+            thickness = float(layer[1])
+
+            layer_dict = {"name": name, "thickness": thickness}
+
+            if layer_dict["thickness"] <= 0:
+                raise ValueError
+
+            # layer density is allowed to be empty for 'Beamline Window' and 'Air (compressed)'
+            #TODO have eva check if material exists in g4bl database, if yes then skip density requirement
+            # try:
+            #     layer_dict["density"] = float(layer[2])
+
+            #     if layer_dict["density"] <= 0:
+            #         raise ValueError
+
+            # except ValueError:
+            #     if not (name == "Beamline_window" or name == "Air_compressed"):
+            #         raise ValueError
+
+            structured_layers.append(layer_dict)
+        return structured_layers
 
     def start_sim(self):
-        if self.model.sim_method == "Stack":
-            self.start_stack_layer_sim()
-        elif self.model.sim_method == "Manual Placement":
-            self.start_place_sample_sim()
-        else:
-            logger.error(f"Invalid simulation method {self.model.sim_method}")
+        try:
+            # get form data from view
+            form_data = self.view.get_form_data()
+        except (ValueError, AttributeError) as e:
+            self.view.display_error_message(message="Invalid form input!")
+            return
 
-    def start_stack_layer_sim(self):
-        pass
+        # check that form contains valid g4bl settings
+        valid, error = self.validate_g4bl_settings(form_data)
 
-    def start_place_sample_sim(self):
-        pass
+        if not valid:
+            self.view.display_error_message(message=error)
+            return
+        try:
+            if self.model.sim_method=="Stack": 
+                self.model.stack_input = self.get_layers_from_stack_table()
+
+        except (ValueError, AttributeError, KeyError) as e:
+            self.view.display_error_message(message="Invalid layers specified. All layers must have a thickness, and all layers apart from "
+                                                    "Beamline window and Air must have a density specified. "
+                                                    "Ensure all values are greater than 0.")
+            raise e
+        # check if g4bl exe and output path is valid
+        g4bldir_valid = self.model.is_valid_path(form_data["g4bl_dir"])
+        outputdir_valid = self.model.is_valid_path(form_data["output_dir"])
+
+        if not g4bldir_valid or not outputdir_valid:
+            self.view.display_error_message(message="Could not find g4bl.exe at specified location. "
+                                     "Please ensure you have G4BL installed.")
+            return
+
+        if form_data["sim_type"] == "Momentum Spread" and form_data["stats"] < 500:
+            self.view.display_error_message(message="Momentum spread simulation requires a minimum of 500 muons.")
+            return
+        # if everything is ok, send data to model and simulate
+        try:
+            self.model.min_momentum = form_data["min_momentum"]
+            self.model.max_momentum = form_data["max_momentum"]
+            self.model.step_momentum = form_data["step_momentum"]
+            self.model.momentum_spread = form_data["momentum_spread"]
+            self.model.sample_name = form_data["sample_name"]
+            self.model.stats = form_data["stats"]
+            self.model.bin_resolution = form_data["bin_number"]
+            self.model.g4bl_exe_dir = form_data["g4bl_dir"]
+            self.model.g4bl_out_dir = form_data["output_dir"]
+            self.model.scan_type = form_data["scan_type"]
+            self.model.sim_type = form_data["sim_type"]
+
+            if not isinstance(form_data["momentum"], list):
+                self.model.momentum = [form_data["momentum"]]
+
+        except Exception as e:
+            self.view.display_error_message(message=f"An unexpected error has occurred! \n{e}")
+            logger.critical("Simulation failed! %s", e)
+            raise e
+
+        # show simulation progress widget and cancel button
+        self.view.simulation_progress_widget.show()
+        self.view.cancel_sim_button.show()
+
+        # get number of simulations and update progress bar
+        n_sim = len(self.model.momentum)
+        self.view.simulation_progress_bar.setMaximum(n_sim)
+        self.view.simulation_progress_bar.setValue(0)
+
+        self.view.estimated_time_remaining_label.setText(f"Estimated time left: calculating...")
+        self.view.simulation_progress_label.setText(f"Running simulation 1 / {n_sim}")
+
+        # start simulation on separate thread
+        self.simulation_worker = Worker(self.model.start_g4bl_simulation)
+        self.simulation_worker.signals.result.connect(self.on_simulation_finished)
+        self.simulation_worker.signals.progress.connect(self.progress_fn)
+
+        get_app().threadpool.start(self.simulation_worker)
+
     def cancel_sim(self):
-        pass
+        # if user has requested the simulation to be cancelled, set this flag to True to notify the model
+        self.model.cancel_sim = True
+        self.view.simulation_progress_label.setText("Stopping...")
+        self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: -")
+
+    def progress_fn(self, progress: dict):
+        """
+        Updates progress bar and progress text. Is called every time the simulation worker emits a progress signal.
+
+        Args:
+            progress: dict with keys 'current' - current simulation number, 'total' - number of simulations planned
+
+        """
+        n = progress["current"]
+        total = progress["total"]
+
+        if n == total:
+            return
+
+        time_str = self.model.estimate_time_left(n, total)
+        self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: {time_str}")
+
+        self.view.simulation_progress_bar.setMaximum(total)
+        self.view.simulation_progress_label.setText(f"Running simulation {n+1} / {total}")
+        self.view.simulation_progress_bar.setValue(n)
+
+    def on_simulation_finished(self, result):
+        self.model.cancel_sim = False
+
+        # hide progress bar and cancel button when done
+        self.view.simulation_progress_widget.hide()
+        self.view.cancel_sim_button.hide()
+
+        if result["status"] == "cancelled":
+            self.view.display_message(message="Simulation cancelled!")
+            return
+
+        self.reset_view()
+
+        # update table and implantation tree
+        self.view.setup_results_table(self.model.momentum, self.current_table)
+
+        self.view.update_results_tree(tree=self.current_tree,
+                                      momenta=self.model.momentum,
+                                      layer_names=[layer["name"] for layer in self.model.stack_input],
+                                      proportions=self.model.proportions_per_layer,
+                                      proportions_errs=self.model.proportions_per_layer_err,
+                                      counts=self.model.counts_per_layer,
+                                      counts_errs=self.model.counts_per_layer_err)
+
+        for i, momentum in enumerate(self.model.momentum):
+            fig_whole, ax_whole = self.model.plot_whole(i, momentum)
+            fig_comp, ax_comp = self.model.plot_components(i, momentum)
+
+            self.view.generate_plot_tab(momentum, i, fig_whole, ax_whole, fig_comp, ax_comp)
+
+        # Plot stopping profiles and depth profiles
+        if len(self.model.momentum) > 1:
+            self.view.enable_depth_profile_tab(*self.model.plot_depth_profile())
+
+            self.view.slider_container.show()
+            self.view.momentum_slider.setMinimum(0)
+            self.view.momentum_slider.setMaximum(len(self.model.momentum)-1)
+            self.view.momentum_slider.setSingleStep(1)
+
     def stopping_shift_plot_origin(self):
         pass
     def stopping_reset_plot_origin(self):
@@ -192,3 +347,50 @@ class G4blPresenter(QWidget):
         pass
     def save_settings(self):
         pass
+
+    def validate_g4bl_settings(self, form_data: dict) -> tuple[bool, str]:
+        """
+        Checks if form data contains valid g4bl settings
+
+        Args:
+            form_data: dict containing all g4bl setting loaded from form
+
+        Returns:
+            bool indicating whether form is valid, string containing additional information
+        """
+
+        form_data["min_momentum"] = form_data["min_momentum"]
+        form_data["max_momentum"] = form_data["max_momentum"]
+        self.model.step_momentum = form_data["step_momentum"]
+        self.model.momentum_spread = form_data["momentum_spread"]
+        self.model.sample_name = form_data["sample_name"]
+        self.model.stats = form_data["stats"]
+        self.model.g4bl_exe_dir = form_data["g4bl_dir"]
+        self.model.g4bl_out_dir = form_data["output_dir"]
+        self.model.scan_type = form_data["scan_type"]
+        self.model.sim_type = form_data["sim_type"]
+
+        if (form_data["max_momentum"] <= 0 or form_data["min_momentum"] <= 0 or
+                form_data["step_momentum"] <= 0 or form_data["momentum"] <= 0):
+            return False, "Momentum must be greater than 0."
+
+        if form_data["min_momentum"] >= form_data["max_momentum"]:
+            return False, "Min momentum must be less than max momentum."
+
+        if (form_data["max_momentum"] - form_data["min_momentum"]) < form_data["step_momentum"]:
+            return False, "Momentum step too high."
+
+        if form_data["stats"] <= 0:
+            return False, "Stats must be greater than 0."
+
+        if form_data["momentum_spread"] <= 0:
+            return False, "Momentum spread be greater than 0."
+
+        if ((form_data["max_momentum"] - form_data["min_momentum"]) / form_data["step_momentum"]) > 1e6:
+            return False, "Too many simulations! Please increase the momentum step."
+
+        return True, ""
+
+    def reset_view(self):
+        self.close_figures()
+        self.view.reset()

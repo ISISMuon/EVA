@@ -83,7 +83,7 @@ class G4blView(BaseView, Ui_g4bl):
         self.depth_profile_plot.hide()
 
     # display results to table and set up connections
-    def setup_results_table(self, table, momenta):
+    def setup_results_table(self, momenta, table):
         n_rows = len(momenta)
 
         table.setRowCount(n_rows)
@@ -156,8 +156,9 @@ class G4blView(BaseView, Ui_g4bl):
         form_data = {
             "sample_name": self.sample_name_linedit.text(),
             "stats": float(self.stats_linedit.text()),
-            "g4bl_dir": self.srim_exe_dir_linedit.text(),
-            "output_dir": self.trim_out_dir_linedit.text(),
+            "bin_number": int(self.bin_number_linedit.text()),
+            "g4bl_dir": self.g4bl_exe_dir_linedit.text(),
+            "output_dir": self.g4bl_out_dir_linedit.text(),
             "momentum": float(self.momentum_linedit.text()),
             "sim_type": self.sim_type_combo.currentText(),
             "momentum_spread": float(self.momentum_spread_linedit.text()),
