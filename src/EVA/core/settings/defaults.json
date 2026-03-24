@@ -28,6 +28,11 @@
     "output_directory": "C:/SRIM2013/SRIM Outputs/"
   },
 
+  "g4bl": {
+    "installation_directory": "C:/Program Files/Muons, Inc/G4beamline/bin",
+    "output_directory": "C:/Users/chend/Desktop/Projects/eva-clean/src/g4bl/output_data"
+  },
+
   "plot": {
     "fill_colour": "#d0f4ff",
     "show_plot": {
