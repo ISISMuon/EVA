@@ -1,0 +1,171 @@
+G4BL_DIR=C:\Program Files\Muons, Inc\G4beamline
+G4ABLADATA=C:\Geant4Data/G4ABLA3.1
+G4LEDATA=C:\Geant4Data/G4EMLOW8.0
+G4ENSDFSTATEDATA=C:\Geant4Data/G4ENSDFSTATE2.3
+G4INCLDATA=C:\Geant4Data/G4INCL1.0
+G4NEUTRONHPDATA=C:\Geant4Data/G4NDL4.6
+G4PARTICLEXSDATA=C:\Geant4Data/G4PARTICLEXS4.0
+G4PIIDATA=C:\Geant4Data/G4PII1.3
+G4LEVELGAMMADATA=C:\Geant4Data/PhotonEvaporation5.7
+G4RADIOACTIVEDATA=C:\Geant4Data/RadioactiveDecay5.6
+G4REALSURFACEDATA=C:\Geant4Data/RealSurface2.2
+G4SAIDXSDATA=C:\Geant4Data/G4SAIDDATA2.0
+G4TENDLDATA=C:\Geant4Data/G4TENDL1.4
+G4LENDDATA=C:\Geant4Data/LEND_GND1.3_ENDF.BVII.1
+G4beamline Process ID 15356
+
+*************************************************************
+ g4beamline version: 3.08                        (Oct  8 2022)
+                      Copyright : Tom Roberts, Muons, Inc.
+                        License : Gnu Public License
+                            WWW : http://g4beamline.muonsinc.com
+**************************************************************
+ Geant4 version Name: geant4-11-00-patch-03 [MT]   (16-September-2022)
+                       Copyright : Geant4 Collaboration
+                      References : NIM A 506 (2003), 250-303
+                                 : IEEE-TNS 53 (2006), 270-278
+                                 : NIM A 835 (2016), 186-225
+                             WWW : http://geant4.org/
+**************************************************************
+
+geometry                   nPoints=100 printGeometry=0 visual=0
+                           tolerance=0.002
+param        particles     mu-
+param        stats         15000.0
+param        firstEvent    1
+param        P_inj         27.0
+param        spot          15.0
+param        splay         0
+param        splayX        0
+param        splayY        0
+param        bite          0.04
+G4PhysListFactory::GetReferencePhysList <FTFP_BERT>  EMoption= 0
+<<< Geant4 Physics List simulation engine: FTFP_BERT
+
+
+physics      FTFP_BERT     disable= inactivate= deactivate= doStochastics=1
+                           fluct=1 minRangeCut=1 list=0 gammaToMuPair=0
+                           spinTracking=1 synchrotronRadiation=0
+                           synchrotronRadiationMuon=0 maxTime=1e+06
+beam    GAUSSIAN particle=mu- nEvents=15000 firstEvent=1 lastEvent=2147483647 beamX=0.0 beamY=0.0 beamZ=-10.0 maxR=1000000.0 
+		meanMomentum=27.0 weight=1.000000 
+		sigmaX=15.0 sigmaY=15.0 sigmaZ=0.0 sigmaXp=0.00000 sigmaYp=0.00000 
+		sigmaP=1.1 sigmaT=0.000 meanXp=0.00000 meanYp=0.00000 meanT=0.000 
+particlecolor              e-=1,0,0 gamma=0,0,1 mu-=0,1,0
+beamlossntuple test        format= filename=out_file file=out_file
+                           require=PDGid==13 coordinates=Centerline
+tubs         a             innerRadius=0 outerRadius=100 initialPhi=0
+                           finalPhi=360 length=0.05 maxStep=100 material=Be
+                           color=0,0,1 kill=0 radius=100
+place   a       copies=1 x=0.0 y=0.0 z=0.0 
+tubs         b             innerRadius=0 outerRadius=100 initialPhi=0
+                           finalPhi=360 length=0.067 maxStep=100 material=Air
+                           color=0,0,1 kill=0 radius=100
+place   b       copies=1 x=0.0 y=0.0 z=0.1 
+tubs         c             innerRadius=0 outerRadius=100 initialPhi=0
+                           finalPhi=360 length=0.05 maxStep=100 material=Al
+                           color=0,0,1 kill=0 radius=100
+place   c       copies=1 x=0.0 y=0.0 z=0.1 
+tubs         d             innerRadius=0 outerRadius=100 initialPhi=0
+                           finalPhi=360 length=0.5 maxStep=100 material=Cu
+                           color=0,0,1 kill=0 radius=100
+place   d       copies=1 x=0.0 y=0.0 z=0.4 
+
+World size (before incrementing by 201.357 mm): 200.0 H  200.0 W  40.0 L
+
+PARAMETERS:
+          P_inj=27.0
+            Zcl=0.667
+           bite=0.04
+     deltaChord=3.0
+deltaIntersection=0.1
+   deltaOneStep=0.01
+         epsMax=0.05
+         epsMin=2.5e-7
+ eventTimeLimit=30
+    fieldVoxels=200,200,200
+     firstEvent=1
+      histoFile=g4beamline
+    histoUpdate=0
+        maxStep=100.0
+        minStep=0.01
+      particles=mu-
+          splay=0
+         splayX=0
+         splayY=0
+           spot=15.0
+          stats=15000.0
+ steppingFormat=N GLOBAL CL KE STEP VOL PROCESS
+steppingVerbose=0
+         viewer=none
+ wallClockLimit=-1
+  worldMaterial=Vacuum
+     zTolerance=2.0
+Checking overlaps for volume a:0 (G4Tubs) ... OK! 
+BLCMDtubs::Construct a parent= relZ=0.0 globZ=0.0
+	zmin=0.0 zmax=0.1 kill=0
+Checking overlaps for volume b:0 (G4Tubs) ... OK! 
+BLCMDtubs::Construct b parent= relZ=0.1 globZ=0.1
+	zmin=0.1 zmax=0.1 kill=0
+Checking overlaps for volume c:0 (G4Tubs) ... OK! 
+BLCMDtubs::Construct c parent= relZ=0.1 globZ=0.1
+	zmin=0.1 zmax=0.2 kill=0
+Checking overlaps for volume d:0 (G4Tubs) ... OK! 
+BLCMDtubs::Construct d parent= relZ=0.4 globZ=0.4
+	zmin=0.2 zmax=0.7 kill=0
+### Adding tracking cuts for neutron  TimeCut(ns)= 10000  KinEnergyCut(MeV)= 0
+
+Geometry test nPoints=100 tolerance=0.002 mm:
+Testing geometry for children of group 'World':
+Total geometry errors = 0  0 seconds
+
+================== Prepare Tracking Beam ==================
+Stochastic processes are enabled.
+================== Begin Tracking Beam ===============
+Event 1 Completed  1 events  realTime=1 sec  1.0 ev/sec
+Event 2 Completed  2 events  realTime=1 sec  2.0 ev/sec
+Event 3 Completed  3 events  realTime=1 sec  3.0 ev/sec
+Event 4 Completed  4 events  realTime=1 sec  4.0 ev/sec
+Event 5 Completed  5 events  realTime=1 sec  5.0 ev/sec
+Event 6 Completed  6 events  realTime=1 sec  6.0 ev/sec
+Event 7 Completed  7 events  realTime=1 sec  7.0 ev/sec
+Event 8 Completed  8 events  realTime=1 sec  8.0 ev/sec
+Event 9 Completed  9 events  realTime=1 sec  9.0 ev/sec
+Event 10 Completed  10 events  realTime=1 sec  10.0 ev/sec
+Event 20 Completed  20 events  realTime=1 sec  20.0 ev/sec
+Event 30 Completed  30 events  realTime=1 sec  30.0 ev/sec
+Event 40 Completed  40 events  realTime=1 sec  40.0 ev/sec
+Event 50 Completed  50 events  realTime=1 sec  50.0 ev/sec
+Event 60 Completed  60 events  realTime=1 sec  60.0 ev/sec
+Event 70 Completed  70 events  realTime=1 sec  70.0 ev/sec
+Event 80 Completed  80 events  realTime=1 sec  80.0 ev/sec
+Event 90 Completed  90 events  realTime=1 sec  90.0 ev/sec
+Event 100 Completed  100 events  realTime=1 sec  100.0 ev/sec
+Event 200 Completed  200 events  realTime=1 sec  200.0 ev/sec
+Event 300 Completed  300 events  realTime=1 sec  300.0 ev/sec
+Event 400 Completed  400 events  realTime=1 sec  400.0 ev/sec
+Event 500 Completed  500 events  realTime=1 sec  500.0 ev/sec
+Event 600 Completed  600 events  realTime=1 sec  600.0 ev/sec
+Event 700 Completed  700 events  realTime=1 sec  700.0 ev/sec
+Event 800 Completed  800 events  realTime=1 sec  800.0 ev/sec
+Event 900 Completed  900 events  realTime=1 sec  900.0 ev/sec
+Event 1000 Completed  1000 events  realTime=1 sec  1000.0 ev/sec
+Event 2000 Completed  2000 events  realTime=1 sec  2000.0 ev/sec
+Event 3000 Completed  3000 events  realTime=1 sec  3000.0 ev/sec
+Event 4000 Completed  4000 events  realTime=2 sec  2000.0 ev/sec
+Event 5000 Completed  5000 events  realTime=2 sec  2500.0 ev/sec
+Event 6000 Completed  6000 events  realTime=3 sec  2000.0 ev/sec
+Event 7000 Completed  7000 events  realTime=4 sec  1750.0 ev/sec
+Event 8000 Completed  8000 events  realTime=4 sec  2000.0 ev/sec
+Event 9000 Completed  9000 events  realTime=5 sec  1800.0 ev/sec
+Event 10000 Completed  10000 events  realTime=5 sec  2000.0 ev/sec
+Event 11000 Completed  11000 events  realTime=6 sec  1833.3 ev/sec
+Event 12000 Completed  12000 events  realTime=6 sec  2000.0 ev/sec
+Event 13000 Completed  13000 events  realTime=7 sec  1857.1 ev/sec
+Event 14000 Completed  14000 events  realTime=7 sec  2000.0 ev/sec
+Event 15000 Completed  15000 events  realTime=8 sec  1875.0 ev/sec
+Run complete  15000 Events  8 seconds
+NTuple test               15000 entries
+
+Exceptions: 0 Fatal, 0 Events Aborted, 0 Stuck Tracks (stopped), 0 Warnings
+g4beamline: simulation complete

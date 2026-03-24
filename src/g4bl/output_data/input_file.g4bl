@@ -1,0 +1,24 @@
+param -unset particles=mu-
+param -unset stats=15000.0
+param -unset firstEvent=1
+param -unset P_inj=27.0
+param -unset spot=15.0
+param -unset splay=0
+param -unset splayX=0
+param -unset splayY=0
+param -unset bite=0.04
+physics FTFP_BERT spinTracking=1
+beam gaussian particle=$particles nEvents=$stats firstEvent=$firstEvent beamX=0 beamY=0 beamZ=-10.0 meanMomentum=$P_inj sigmaX=$spot sigmaY=$spot sigmaXp=$splay sigmaYp=$splay sigmaP=$bite*$P_inj
+particlecolor mu-='0,1,0' e-='1,0,0' gamma='0,0,1'
+beamlossntuple test file=out_file require=PDGid==13 
+cylinder a material=Be innerRadius=0 outerRadius=100 length=0.05 color=0,0,1 
+place a x=0 y=0 z=0.025 
+
+cylinder b material=Air innerRadius=0 outerRadius=100 length=0.067 color=0,0,1 
+place b x=0 y=0 z=0.0835 
+
+cylinder c material=Al innerRadius=0 outerRadius=100 length=0.05 color=0,0,1 
+place c x=0 y=0 z=0.14200000000000002 
+
+cylinder d material=Cu innerRadius=0 outerRadius=100 length=0.5 color=0,0,1 
+place d x=0 y=0 z=0.41700000000000004 

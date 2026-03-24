@@ -5,14 +5,13 @@ from g4bl.core.shapes import Sphere, Cylinder, Slab
 from EVA.gui.windows.g4bl.g4bl_model import G4blModel
 from g4bl.core.plotting import plot_per_shape, plot_combined
 import time
-from srim import plot
 file = r"C:\Users\chend\Desktop\Projects\g4beamline\demo_outputs\demo_input_file.g4bl"
 
 def main(model, shapes, vis_mode=False, beam_off=True, plot_individual=True):
     start_time = time.time()
     model.clear_output_directory()
     with open(file, "w") as f:
-        writer = InputWriter(shapes, beam_off, muon_num, momentum, mom_err, optional_params=optional_params)
+        writer = InputWriter(shapes, beam_off, muon_num, momentum, mom_err, )
         f.write(writer.input_string)
     print("Input file written")
     proc, log_path = model.run_g4bl(input_file=file, mypath=r"C:\Users\chend\Desktop\Projects\g4beamline\demo_outputs", vis_mode=vis_mode)
@@ -68,16 +67,9 @@ def case3(vis_mode, beam_off, plot_individual = True):
 muon_num = 10000
 momentum = 27
 mom_err = 0.04
-
 num1 = 50 # num samples for thin layers
 num2 = 100 # num samples for medium layers
 num3 = 150 # num samples for thick layers
-optional_params = {
-    "deltaChord": .001, # default = 3
-    "deltaIntersection": 0.001, # default = 0.1
-    "maxStep": 10, # default = 100
-    "minStep": 0.001 # default = 0.01
-    }
 # vis mode: if true, no data, only visual (g4bl limitation)
 # beam off: if true, no beam, intended for quick visualising
 # plot individual: plots implantation for each shape seperately
