@@ -20,13 +20,13 @@ class Shape:
 
     def placeholder_material_create(self):
         if self.material == "Compressed_Air":
-            self.new_material_string = f"material Compressed_Air Air,0.999 N,0.001 density={self.density} \n"
+            self.new_material_string = f"material Compressed_Air1 Air,0.99 N,0.01 density={self.density} \n"
         elif self.material == "Beamline_Window":
-            self.new_material_string = f"material Beamline_Window H,0.37 C,0.45 O,0.18 density={self.density} \n"
+            self.new_material_string = f"material Beamline_Window1 H,0.37 C,0.45 O,0.18 density={self.density} \n"
         elif self.density == "":
             self.new_material_string = ""
         else:
-            self.new_material_string = f"material {self.material} {self.material},0.999 H,0.001 density={self.density} \n"
+            self.new_material_string = f"material {self.material}1 {self.material},0.99 H,0.01 density={self.density} \n"
         return self.new_material_string
     @abstractmethod
     def place_shape(self):
@@ -88,9 +88,9 @@ class Slab(Shape):
         # self.check_and_create_new_material()
         # self.input_string = self.new_material_string
         self.input_string = ""
-        # self.input_string = self.placeholder_material_create()
+        self.input_string = self.placeholder_material_create()
         self.input_string += (
-            f"cylinder {self.name} material={self.material} "
+            f"cylinder {self.name} material={self.material}1 "
             f"innerRadius=0 "
             f"outerRadius={self.default_radius} "
             f"length={self.thickness} color={self.color} \n"

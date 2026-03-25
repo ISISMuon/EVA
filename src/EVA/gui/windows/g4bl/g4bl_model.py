@@ -19,12 +19,12 @@ class G4blModel(QObject):
 
         # Default layers to display in stack layer table
         self.stack_input = [{
-                "name": "MYLAR",
+                "name": "Beamline_Window",
                 "thickness": 0.05,
                 "density": 1.4,
             },
             {
-                "name": "BORON_OXIDE",
+                "name": "Compressed_Air",
                 "thickness": 0.067,
                 "density": round(1500 * 1.20479e-3, 4), # air layer compressed from 150mm to 0.1mm to optimise bins
             },
