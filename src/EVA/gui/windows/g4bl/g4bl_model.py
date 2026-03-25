@@ -19,12 +19,12 @@ class G4blModel(QObject):
 
         # Default layers to display in stack layer table
         self.stack_input = [{
-                "name": "MYLAR",
+                "name": "Beamline_Window",
                 "thickness": 0.05,
                 "density": 1.4,
             },
             {
-                "name": "BORON_OXIDE",
+                "name": "Compressed_Air",
                 "thickness": 0.067,
                 "density": round(1500 * 1.20479e-3, 4), # air layer compressed from 150mm to 0.1mm to optimise bins
             },
@@ -297,7 +297,7 @@ class G4blModel(QObject):
 
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title(f'G4BL Simulation of {int(self.stats)} muons at {momentum:4g} MeV/c')
+        axx.set_title(f'G4BL Simulation of {int(self.stats)} muons at {momentum:.2f} MeV/c')
 
         axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
 
@@ -330,7 +330,7 @@ class G4blModel(QObject):
         figt, axx = plt.subplots()
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title(f'G4BL Simulation of {int(self.stats)} muons at {momentum:4g} MeV/c')
+        axx.set_title(f'G4BL Simulation of {int(self.stats)} muons at {momentum:.2f} MeV/c')
 
         # plot overall profile
         axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])

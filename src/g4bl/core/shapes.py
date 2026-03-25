@@ -20,15 +20,23 @@ class Shape:
     #         self.new_material_string = f"material {self.material} density={self.density} \n"
 
     def placeholder_material_create(self):
-        if self.material == "MYLAR" or self.material == "BORON_OXIDE":
-            return ""
+        if self.material == "Compressed_Air":
+            new_material_string = f"material Compressed_Air{self.instance} C,0.012 O,.2318 N,0.7562 density={self.density} temperature=290 state=g \n"
+        elif self.material == "Beamline_Window":
+            new_material_string = f"material Beamline_Window{self.instance} H,0.37 C,0.45 O,0.18 density={self.density} state=s\n"
         else:
             new_material_string = f"material {self.material}{self.instance} {self.material},0.99 H,0.01 density={self.density} \n"
-            self.material += str(self.instance)
-
+        self.material += str(self.instance)
         return new_material_string
 
+    # def placeholder_material_create(self):
+    #     if self.material == "MYLAR" or self.material == "BORON_OXIDE":
+    #         return ""
+    #     else:
+    #         new_material_string = f"material {self.material}{self.instance} {self.material},0.99 H,0.01 density={self.density} \n"
+    #         self.material += str(self.instance)
 
+    #     return new_material_string
     @abstractmethod
     def place_shape(self):
         pass
@@ -88,7 +96,9 @@ class Slab(Shape):
         # self.check_and_create_new_material()
         # self.input_string = self.new_material_string
         self.input_string = ""
-        self.input_string += self.new_material_string
+        if self.density:
+            self.input_string += self.new_material_string
+
         self.input_string += (
             f"cylinder {self.name} material={self.material} "
             f"innerRadius=0 "
