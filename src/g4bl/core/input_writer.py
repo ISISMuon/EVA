@@ -44,7 +44,7 @@ class InputWriter:
                 "particle=$particles "
                 "nEvents=$stats "
                 "firstEvent=$firstEvent "
-                "beamX=0 beamY=0 beamZ=-10.0 "
+                "beamX=0 beamY=0 beamZ=-0.01 "
                 "meanMomentum=$P_inj "
                 "sigmaX=$spot sigmaY=$spot "
                 "sigmaXp=$splay sigmaYp=$splay "

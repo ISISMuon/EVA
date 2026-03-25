@@ -9,27 +9,31 @@ class Shape:
         self.y = position[1]
         self.z = position[2]
         self.color = color
-        self.input_string = ""
-        self.sample_positions = []
-        self.implantation_at_samples = []
-        self.check_and_create_new_material()
+        self.material_construction_flag = None
+        # self.check_and_create_new_material()
 
     def check_and_create_new_material(self):
-        if not self.density:
-            pass
+        if self.density == "":
+            self.new_material_string = ""
         else:
-            self.input_string += f"material {self.material} density={self.density} \n"
+            self.new_material_string = f"material {self.material} density={self.density} \n"
 
+    def placeholder_material_create(self):
+        if self.material == "Compressed_Air":
+            self.new_material_string = f"material Compressed_Air Air,0.999 N,0.001 density={self.density} \n"
+        elif self.material == "Beamline_Window":
+            self.new_material_string = f"material Beamline_Window H,0.37 C,0.45 O,0.18 density={self.density} \n"
+        elif self.density == "":
+            self.new_material_string = ""
+        else:
+            self.new_material_string = f"material {self.material} {self.material},0.999 H,0.001 density={self.density} \n"
+        return self.new_material_string
     @abstractmethod
     def place_shape(self):
         pass
 
-    @abstractmethod
-    def create_samples(self):
-        pass
-
     @staticmethod
-    def draw_shape(shape_type: str, **kwargs):
+    def create(shape_type: str, **kwargs):
         shape_map = {
             "slab": Slab,
             "cylinder": Cylinder,
@@ -81,6 +85,10 @@ class Slab(Shape):
         self.default_radius = 100
         
     def place_shape(self):
+        # self.check_and_create_new_material()
+        # self.input_string = self.new_material_string
+        self.input_string = ""
+        # self.input_string = self.placeholder_material_create()
         self.input_string += (
             f"cylinder {self.name} material={self.material} "
             f"innerRadius=0 "

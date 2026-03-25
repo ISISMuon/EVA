@@ -19,14 +19,14 @@ class G4blModel(QObject):
 
         # Default layers to display in stack layer table
         self.stack_input = [{
-                "name": "Beamline_window",
+                "name": "MYLAR",
                 "thickness": 0.05,
-                "material": "Be"
+                "density": 1.4,
             },
             {
-                "name": "Air_compressed",
+                "name": "BORON_OXIDE",
                 "thickness": 0.067,
-                "material": "Air"
+                "density": round(1500 * 1.20479e-3, 4), # air layer compressed from 150mm to 0.1mm to optimise bins
             },
             {
                 "name": "Al",
@@ -59,6 +59,7 @@ class G4blModel(QObject):
         self.step_momentum = 1.
         self.sim_method = "Stack"
         self.scan_type = "No"
+        self.g4bl_NIST_db = self.load_material_database()
         ####################
 
         # simulation results
@@ -79,28 +80,20 @@ class G4blModel(QObject):
         self.simulation_times = None # to store the time taken for each simulation
 
     def create_sample_shape_objects(self, layers: list[dict]):
-        shape_list = []
-        names = ["a", "b", "c", "d", "e", "f", "g"]
-        c = 0
+        self.sample_layers = []
+        self.sample_names = []
         if self.sim_method == "Stack":
-            for layer in layers:
+            for i, layer in enumerate(layers):
                 sample_name = layer.get("name")
-                if sample_name == "Beamline_window":
-                    mat = "Be"
-                elif sample_name == "Air_compressed":
-                    mat = "Air"
-                else:
-                    mat = sample_name
+                sample_name = sample_name.replace(" ", "_")
                 density = layer.get("density")
                 layer_thickness = layer.get("thickness")
-                self.sample_names.append(mat)
                 position = self.total_thickness + layer_thickness / 2
                 self.total_thickness += layer_thickness
-                this_slab = Shape.draw_shape(shape_type="slab", name=names[c], color="0,0,1", material=mat, thickness=layer_thickness, density=density)
+                this_slab = Shape.create(shape_type="slab", name = f"slab{i}", color="0,0,1", material=sample_name, thickness=layer_thickness, density=density)
                 this_slab.z = position
-                shape_list.append(this_slab)
-                c += 1
-            self.sample_layers = shape_list
+                self.sample_layers.append(this_slab)
+                self.sample_names.append(sample_name)
 
     def start_g4bl_simulation(self, progress_callback: pyqtSignal) -> dict:
         """
@@ -109,6 +102,7 @@ class G4blModel(QObject):
         # Calculate momentum array if momentum scan is wanted
         if self.scan_type == 'Yes':
             self.momentum = np.round(np.arange(start=self.min_momentum, stop=self.max_momentum, step=self.step_momentum), 5)
+
         if self.sim_type == "Mono":
             momentum_spread = 0
         else:
@@ -211,15 +205,16 @@ class G4blModel(QObject):
             return None, None, 1
         if self.sim_method == "Stack":
             verbosity = 1
-            g4bl_sim = G4BL(sim_type=self.sim_method, target=self.sample_layers, muon_num=self.stats, 
-                            momentum=momentum, mom_err=self.momentum_spread / 100, total_thickness=self.total_thickness,verbosity=verbosity)
+            g4bl_sim = G4BL(sim_type="Stack", target=self.sample_layers, muon_num=self.stats, 
+                            momentum=momentum, mom_err=momentum_spread / 100, total_thickness=self.total_thickness,verbosity=verbosity)
             muon_final_z_position = g4bl_sim.run(self.g4bl_exe_dir, self.g4bl_out_dir)
+            bin_center, counts = rebin.nxs_rebin(x_data=muon_final_z_position, bin_num=self.bin_resolution, bin_range=(0, self.total_thickness))
+            return bin_center, counts, 0
 
         elif self.sim_method == "Manual Placement":
             verbosity = 2
 
-        bin_center, counts = rebin.nxs_rebin(x_data=muon_final_z_position, bin_num=self.bin_resolution, bin_range=(0, self.total_thickness))
-        return bin_center, counts, 0
+
 
     def extract_geometry_error_descriptions(self, log_path):
         descriptions = []
@@ -302,7 +297,7 @@ class G4blModel(QObject):
 
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title('G4BL Simulation at ' + str(round(momentum, 4)) + ' MeV/c')
+        axx.set_title(f'G4BL Simulation of {int(self.stats)} at {momentum:.4f} MeV/c')
 
         axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
 
@@ -335,7 +330,7 @@ class G4blModel(QObject):
         figt, axx = plt.subplots()
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title('G4BL Simulation at ' + str(round(momentum, 4)) + ' MeV/c')
+        axx.set_title(f'G4BL Simulation of {int(self.stats)} at {momentum:.4f} MeV/c')
 
         # plot overall profile
         axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
@@ -412,6 +407,30 @@ class G4blModel(QObject):
 
         ax.legend()
         return fig, ax
+
+    def estimate_time_left(self, current: int, total: int) -> str:
+        """
+        Estimates the time remaining to finish the simulation
+
+        Args:
+            current: current simulation number
+            total: total number of simulations to be done
+
+        Returns:
+            Formatted time string H:M:S
+        """
+        seconds = (np.sum(self.simulation_times) / current) * (total - current)
+
+        if seconds > 86400:
+            return f"More than {int(seconds // 86400)} days. Please reconsider."
+
+        return time.strftime('%H:%M:%S', time.gmtime(seconds))
+
+    def load_material_database(self):
+        with open("src/g4bl/data/g4bl_nist_density_db.txt", "r") as f:
+            materials_from_file = [line.strip() for line in f if line.strip()]
+            materials_set = {m.capitalize() for m in materials_from_file}
+            return materials_set
 
     @staticmethod
     def is_valid_path(path):

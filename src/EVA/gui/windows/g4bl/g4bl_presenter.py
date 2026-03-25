@@ -5,7 +5,7 @@ from copy import copy
 from idlelib.configdialog import font_sample_text
 
 from PyQt6.QtCore import QThreadPool
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget, QTableWidgetItem
 from matplotlib import pyplot as plt
 
 from EVA.util.path_handler import get_path
@@ -48,6 +48,7 @@ class G4blPresenter(QWidget):
         # add an empty row to the end of the layer table after every time the contents are updated
         self.view.stack_layer_setup_table.contents_updated_s.connect(self.view.stack_layer_setup_table.append_row)
         self.view.stack_layer_setup_table.cellClicked.connect(self.append_row_in_stack_layer_table_if_last_row_clicked)
+        self.view.stack_layer_setup_table.user_edited_cell_s.connect(self.on_user_edited_cell)
 
         self.view.stack_layer_setup_table.update_contents(self.format_model_layers(), round_to=4)
 
@@ -148,6 +149,7 @@ class G4blPresenter(QWidget):
             layers = self.model.stack_input
 
         return [[layer["name"], layer["thickness"], layer.get("density", " ")] for layer in layers]
+
     def get_layers_from_stack_table(self) -> list[dict] | None:
         """
         Gets layers from table and restructures them to fit the format required by TrimFitModel
@@ -163,7 +165,10 @@ class G4blPresenter(QWidget):
                 continue
 
             name = layer[0]
-            thickness = float(layer[1])
+            try:
+                thickness = float(layer[1])
+            except ValueError:
+                raise ValueError
 
             layer_dict = {"name": name, "thickness": thickness}
 
@@ -172,16 +177,11 @@ class G4blPresenter(QWidget):
 
             # layer density is allowed to be empty for 'Beamline Window' and 'Air (compressed)'
             #TODO have eva check if material exists in g4bl database, if yes then skip density requirement
-            # try:
-            #     layer_dict["density"] = float(layer[2])
-
-            #     if layer_dict["density"] <= 0:
-            #         raise ValueError
-
-            # except ValueError:
-            #     if not (name == "Beamline_window" or name == "Air_compressed"):
-            #         raise ValueError
-
+            try:
+                layer_dict["density"] = float(layer[2])
+            except ValueError:
+                raise ValueError
+            
             structured_layers.append(layer_dict)
         return structured_layers
 
@@ -339,10 +339,36 @@ class G4blPresenter(QWidget):
         pass
     def on_save_all_sim_results(self):
         pass
-    def show_plot(self):
-        pass
-    def on_slider_moved(self):
-        pass    
+
+    def on_user_edited_cell(self, row, col):
+        # only care about material column
+        if col != 0:
+            return
+        table = self.view.stack_layer_setup_table
+        sample_name = table.item(row, 0)
+        if sample_name is None:
+            return
+        # check if the sample name is in database
+        sample_name = sample_name.replace(" ", "_")
+        if sample_name.text().capitalize() in self.model.g4bl_NIST_db:
+            return
+        # update density column WITHOUT triggering signals (otherwise it recursively calls function for some reason)
+        table.block_updates = True
+        table.setItem(row, 2, QTableWidgetItem("Density required"))
+        table.block_updates = False
+
+    def show_plot(self, index, momentumstr):
+        self.view.stopping_profiles_tab_widget.setCurrentIndex(index)
+
+    def on_slider_moved(self, val: int):
+        dt = time.time_ns() - self.time_last_swapped
+
+        if dt < 1e7:
+            return # limit swapping plots to once every 10ms
+
+        self.show_plot(val, self.model.momentum[val])
+        self.time_last_swapped = time.time_ns()
+
     def load_settings(self):
         pass
     def save_settings(self):

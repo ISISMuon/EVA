@@ -17,7 +17,7 @@ Momentum Step
 Stats
 100.0
 Sample
-Beamline Window,0.05,
-Air (compressed),0.067,
+Beamline Window,0.05, 1.4
+Air (compressed),0.067, 1500 * 1.20479e-3
 Al,0.05,2.7
 Cu,0.5,8.96

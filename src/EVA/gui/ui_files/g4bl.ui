@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1063</width>
-    <height>1032</height>
+    <height>1129</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@
       <item>
        <widget class="QFrame" name="settings">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -69,29 +69,6 @@
          <item row="0" column="1">
           <widget class="QLineEdit" name="sample_name_linedit"/>
          </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="momentum_linedit"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="momentum_label">
-           <property name="text">
-            <string>Momentum (MeV/c)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="momentum_spread_label">
-           <property name="text">
-            <string>Momentum Spread (%)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLineEdit" name="max_momentum_linedit"/>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLineEdit" name="momentum_step_linedit"/>
-         </item>
          <item row="4" column="0">
           <widget class="QLabel" name="scan_momentum_label">
            <property name="text">
@@ -101,16 +78,6 @@
          </item>
          <item row="10" column="1">
           <widget class="QLineEdit" name="stats_linedit"/>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="min_momentum_label">
-           <property name="text">
-            <string>Min Momentum (MeV/c)</string>
-           </property>
-           <property name="margin">
-            <number>0</number>
-           </property>
-          </widget>
          </item>
          <item row="2" column="1">
           <widget class="QComboBox" name="sim_type_combo">
@@ -126,12 +93,15 @@
            </item>
           </widget>
          </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="g4bl_exe_dir_label">
+         <item row="9" column="0">
+          <widget class="QLabel" name="g4bl_out_dir_label">
            <property name="text">
-            <string>G4BL.exe directory</string>
+            <string>G4BL output directory</string>
            </property>
           </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLineEdit" name="g4bl_exe_dir_linedit"/>
          </item>
          <item row="6" column="0">
           <widget class="QLabel" name="max_momentum_label">
@@ -140,16 +110,71 @@
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QLineEdit" name="min_momentum_linedit"/>
-         </item>
          <item row="3" column="1">
           <widget class="QLineEdit" name="momentum_spread_linedit"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="momentum_linedit"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="momentum_label">
+           <property name="text">
+            <string>Momentum (MeV/c)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="0">
+          <widget class="QLabel" name="visualisation_label">
+           <property name="text">
+            <string>Visualise Beam</string>
+           </property>
+          </widget>
          </item>
          <item row="10" column="0">
           <widget class="QLabel" name="stats_label">
            <property name="text">
             <string>Stats for optimal run</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="momentum_spread_label">
+           <property name="text">
+            <string>Momentum Spread (%)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="g4bl_exe_dir_label">
+           <property name="text">
+            <string>G4BL.exe directory</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="1">
+          <widget class="QCheckBox" name="visualisation_checkbox">
+           <property name="text">
+            <string>Disabled</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="sim_type_label">
+           <property name="text">
+            <string>Simulation type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="momentum_step_linedit"/>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="min_momentum_label">
+           <property name="text">
+            <string>Min Momentum (MeV/c)</string>
+           </property>
+           <property name="margin">
+            <number>0</number>
            </property>
           </widget>
          </item>
@@ -167,6 +192,9 @@
            </item>
           </widget>
          </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="min_momentum_linedit"/>
+         </item>
          <item row="7" column="0">
           <widget class="QLabel" name="momentum_step_label">
            <property name="text">
@@ -174,39 +202,21 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="sim_type_label">
-           <property name="text">
-            <string>Simulation type</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLineEdit" name="g4bl_exe_dir_linedit"/>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="max_momentum_linedit"/>
          </item>
          <item row="9" column="1">
           <widget class="QLineEdit" name="g4bl_out_dir_linedit"/>
          </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="g4bl_out_dir_label">
-           <property name="text">
-            <string>G4BL output directory</string>
-           </property>
-          </widget>
-         </item>
          <item row="11" column="0">
-          <widget class="QLabel" name="visualisation_label">
+          <widget class="QLabel" name="stats_label_2">
            <property name="text">
-            <string>Visualise Beam</string>
+            <string>Bin Number</string>
            </property>
           </widget>
          </item>
          <item row="11" column="1">
-          <widget class="QCheckBox" name="visualisation_checkbox">
-           <property name="text">
-            <string>Disabled</string>
-           </property>
-          </widget>
+          <widget class="QLineEdit" name="bin_number_linedit"/>
          </item>
         </layout>
        </widget>
@@ -278,7 +288,7 @@
       <item>
        <widget class="QTabWidget" name="placement_tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="placement_layers_tab">
          <attribute name="title">
