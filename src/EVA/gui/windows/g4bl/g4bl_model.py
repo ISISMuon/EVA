@@ -19,12 +19,12 @@ class G4blModel(QObject):
 
         # Default layers to display in stack layer table
         self.stack_input = [{
-                "name": "Beamline_Window",
+                "name": "MYLAR",
                 "thickness": 0.05,
                 "density": 1.4,
             },
             {
-                "name": "Compressed_Air",
+                "name": "BORON_OXIDE",
                 "thickness": 0.067,
                 "density": round(1500 * 1.20479e-3, 4), # air layer compressed from 150mm to 0.1mm to optimise bins
             },
@@ -90,7 +90,7 @@ class G4blModel(QObject):
                 layer_thickness = layer.get("thickness")
                 position = self.total_thickness + layer_thickness / 2
                 self.total_thickness += layer_thickness
-                this_slab = Shape.create(shape_type="slab", name = f"slab{i}", color="0,0,1", material=sample_name, thickness=layer_thickness, density=density)
+                this_slab = Shape.create(shape_type="slab", name = f"slab{i}", color="0,0,1", material=sample_name, thickness=layer_thickness, density=density, instance=i)
                 this_slab.z = position
                 self.sample_layers.append(this_slab)
                 self.sample_names.append(sample_name)
