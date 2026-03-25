@@ -48,8 +48,11 @@ class G4blPresenter(QWidget):
         # add an empty row to the end of the layer table after every time the contents are updated
         self.view.stack_layer_setup_table.contents_updated_s.connect(self.view.stack_layer_setup_table.append_row)
         self.view.stack_layer_setup_table.cellClicked.connect(self.append_row_in_stack_layer_table_if_last_row_clicked)
+        
+        # check if user added sample, verify is sample provided is in the NIST database, request density if not #TODO need to actually be able to use this density 
         self.view.stack_layer_setup_table.user_edited_cell_s.connect(self.on_user_edited_cell)
 
+        self.view.stack_layer_setup_table.set_column_completer(0, lambda: self.model.g4bl_NIST_db)
         self.view.stack_layer_setup_table.update_contents(self.format_model_layers(), round_to=4)
 
         self.view.place_sample_implantation_collapse_checkbox.checkStateChanged.connect(self.view.collapse_expand_implantation)
@@ -345,16 +348,17 @@ class G4blPresenter(QWidget):
         if col != 0:
             return
         table = self.view.stack_layer_setup_table
-        sample_name = table.item(row, 0)
-        if sample_name is None:
+        table_item = table.item(row, 0)
+        if table_item is None:
             return
         # check if the sample name is in database
+        sample_name = table_item.text()
         sample_name = sample_name.replace(" ", "_")
-        if sample_name.text().capitalize() in self.model.g4bl_NIST_db:
+        if sample_name in self.model.g4bl_NIST_db:
             return
         # update density column WITHOUT triggering signals (otherwise it recursively calls function for some reason)
         table.block_updates = True
-        table.setItem(row, 2, QTableWidgetItem("Density required"))
+        table.setItem(row, 2, QTableWidgetItem("Unknown-Density required"))
         table.block_updates = False
 
     def show_plot(self, index, momentumstr):

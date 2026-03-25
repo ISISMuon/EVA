@@ -297,7 +297,7 @@ class G4blModel(QObject):
 
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title(f'G4BL Simulation of {int(self.stats)} at {momentum:.4f} MeV/c')
+        axx.set_title(f'G4BL Simulation of {int(self.stats)} muons at {momentum:4g} MeV/c')
 
         axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
 
@@ -330,7 +330,7 @@ class G4blModel(QObject):
         figt, axx = plt.subplots()
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title(f'G4BL Simulation of {int(self.stats)} at {momentum:.4f} MeV/c')
+        axx.set_title(f'G4BL Simulation of {int(self.stats)} muons at {momentum:4g} MeV/c')
 
         # plot overall profile
         axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
@@ -386,6 +386,7 @@ class G4blModel(QObject):
             boundaries.append(float(boundary[1]))
             closest_momenta.append(float(closest_momentum))
 
+        # boundaries 
         # create twin axis to display depth
         ax2 = ax.twiny()
         ax2.set_xticks(closest_momenta)
@@ -429,8 +430,8 @@ class G4blModel(QObject):
     def load_material_database(self):
         with open("src/g4bl/data/g4bl_nist_density_db.txt", "r") as f:
             materials_from_file = [line.strip() for line in f if line.strip()]
-            materials_set = {m.capitalize() for m in materials_from_file}
-            return materials_set
+            materials_set = {m for m in materials_from_file}
+            return sorted(materials_set, key=lambda x: (len(x), x))
 
     @staticmethod
     def is_valid_path(path):
