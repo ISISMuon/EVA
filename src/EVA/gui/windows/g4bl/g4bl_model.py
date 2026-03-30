@@ -3,6 +3,7 @@ import time
 from zipfile import ZipFile
 import subprocess
 from pathlib import Path
+import io
 import numpy as np
 from PyQt6.QtCore import pyqtSignal, QObject
 from matplotlib import pyplot as plt
@@ -71,6 +72,7 @@ class G4blModel(QObject):
         self.counts_per_layer_err = None
         self.proportions_per_layer = None
         self.proportions_per_layer_err = None
+        self.figs = {}
 
         # for storing an x-axis shift for each momentum plot (one for each momentum)
         self.default_origin_position = 0
@@ -347,7 +349,7 @@ class G4blModel(QObject):
             axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='left', rotation='vertical')
 
         axx.legend()
-
+        self.figs[momentum_index] = axx
         return figt, axx
 
     def plot_depth_profile(self) -> tuple[plt.Figure, plt.Axes]:
@@ -432,7 +434,37 @@ class G4blModel(QObject):
             materials_from_file = [line.strip() for line in f if line.strip()]
             materials_set = {m for m in materials_from_file}
             return sorted(materials_set, key=lambda x: (len(x), x))
+        
+    def get_default_g4bl_plot_save_name(self, momentum: float | None = None) -> str:
+        if momentum is None:
+            return os.path.join(f"{get_config()['general']['working_directory']}", "G4BL_stopping_profile_plots.zip")
+        else:
+            momentum = f"{momentum:.1f}"
+        return os.path.join(f"{get_config()['general']['working_directory']}", f"G4BL_{momentum}_stopping_profile.png")
+    
+    def save_plot(self, path: str, rows: list | int | None = None):
+        if isinstance(rows, int):
+            fig = self.figs[rows].figure  # get the matplotlib Figure object from the Axes
+            fig.savefig(path, bbox_inches='tight')  # save the figure
 
+        if rows is None:
+            with ZipFile(path, 'w') as zipf:
+                for i, momentum_value in enumerate(self.momentum):
+                    if i not in self.figs:
+                        continue  # skip rows with no plot
+
+                    fig = self.figs[i].figure
+
+                    # Save figure to a bytes buffer
+                    buf = io.BytesIO()
+                    fig.savefig(buf, format='png', bbox_inches='tight')
+                    buf.seek(0)
+
+                    # Use a descriptive filename inside the zip
+                    filename = f"SRIM_plot_momentum_{momentum_value:.1f}.png"
+                    zipf.writestr(filename, buf.read())
+                    buf.close()
+                    
     @staticmethod
     def is_valid_path(path):
         return os.path.exists(path)

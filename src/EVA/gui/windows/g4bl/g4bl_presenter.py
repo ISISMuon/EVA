@@ -66,8 +66,8 @@ class G4blPresenter(QWidget):
         self.view.depth_shift_plot_origin_s.connect(self.depth_shift_plot_origin)
         self.view.depth_reset_plot_origin_s.connect(self.depth_reset_plot_origin)
 
-        self.view.save_s.connect(self.on_save_sim_result)
-        self.view.save_all_sims_button.clicked.connect(self.on_save_all_sim_results)
+        self.view.stack_save_all_sims_button.clicked.connect(self.on_save_sim_result)
+        self.view.stack_save_all_imgs_button.clicked.connect(self.on_save_all_sim_plot)
         self.view.show_plot_s.connect(self.show_plot)
         self.view.momentum_slider.valueChanged.connect(self.on_slider_moved)
 
@@ -342,6 +342,22 @@ class G4blPresenter(QWidget):
         pass
     def on_save_all_sim_results(self):
         pass
+
+    def on_save_all_sim_plot(self):
+        # check if the figure for this momentum exists
+        if not self.model.figs:
+            self.view.display_error_message(message="No plots available to save.")
+            return
+
+        # default filename
+        default_path = self.model.get_default_g4bl_plot_save_name()
+        filter_str = "Zip Archive (*.zip)"
+
+        # get path from user
+        path = self.view.get_save_file_path(default_path, filter_str)
+
+        if path:
+            self.model.save_plot(path)
 
     def on_user_edited_cell(self, row, col):
         # only care about material column

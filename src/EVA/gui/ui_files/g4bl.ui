@@ -342,6 +342,13 @@
           <string>Results</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_5">
+          <item row="4" column="0" colspan="2">
+           <widget class="QPushButton" name="placement_save_all_sim_results_button">
+            <property name="text">
+             <string>Save all</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0" colspan="2">
            <widget class="BaseTable" name="placement_results_table">
             <column>
@@ -357,9 +364,9 @@
            </widget>
           </item>
           <item row="3" column="0" colspan="2">
-           <widget class="QPushButton" name="placement_save_all_sim_results_button">
+           <widget class="QPushButton" name="placement_save_all_imgs_button">
             <property name="text">
-             <string>Save all</string>
+             <string>Save all plots</string>
             </property>
            </widget>
           </item>
@@ -456,8 +463,8 @@
           <string>Results</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="3" column="0" colspan="2">
-           <widget class="QPushButton" name="save_all_sims_button">
+          <item row="4" column="0" colspan="2">
+           <widget class="QPushButton" name="stack_save_all_sims_button">
             <property name="text">
              <string>Save all</string>
             </property>
@@ -475,6 +482,13 @@
               <string>Options</string>
              </property>
             </column>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QPushButton" name="stack_save_all_imgs_button">
+            <property name="text">
+             <string>Save all plots</string>
+            </property>
            </widget>
           </item>
          </layout>
