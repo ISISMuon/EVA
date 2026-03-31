@@ -52,7 +52,7 @@ class G4blPresenter(QWidget):
         # check if user added sample, verify is sample provided is in the NIST database, request density if not #TODO need to actually be able to use this density 
         self.view.stack_layer_setup_table.user_edited_cell_s.connect(self.on_user_edited_cell)
 
-        self.view.stack_layer_setup_table.set_column_completer(0, lambda: self.model.g4bl_NIST_db)
+        self.view.stack_layer_setup_table.set_column_completer(0, lambda: self.model.g4bl_materials)
         self.view.stack_layer_setup_table.update_contents(self.format_model_layers(), round_to=4)
 
         self.view.place_sample_implantation_collapse_checkbox.checkStateChanged.connect(self.view.collapse_expand_implantation)
@@ -163,7 +163,7 @@ class G4blPresenter(QWidget):
         structured_layers = []
 
         for layer in layers:
-            if layer[0] == "":
+            if layer[0] == "" or layer[1] == "":
                 # skip rows where sample name is blank - assume the whole row is empty
                 continue
 
@@ -181,7 +181,10 @@ class G4blPresenter(QWidget):
             # layer density is allowed to be empty for 'Beamline Window' and 'Air (compressed)'
             #TODO have eva check if material exists in g4bl database, if yes then skip density requirement
             try:
-                layer_dict["density"] = float(layer[2])
+                if layer[2] != "":
+                    layer_dict["density"] = float(layer[2])
+                else:
+                    layer_dict["density"] = 0.0
             except ValueError:
                 raise ValueError
             
@@ -207,8 +210,8 @@ class G4blPresenter(QWidget):
                 self.model.stack_input = self.get_layers_from_stack_table()
 
         except (ValueError, AttributeError, KeyError) as e:
-            self.view.display_error_message(message="Invalid layers specified. All layers must have a thickness, and all layers apart from "
-                                                    "Beamline window and Air must have a density specified. "
+            self.view.display_error_message(message="Invalid layers specified. All layers must have a thickness, and all undefined layers "
+                                                    "must have a density specified. "
                                                     "Ensure all values are greater than 0.")
             raise e
         # check if g4bl exe and output path is valid
@@ -370,7 +373,7 @@ class G4blPresenter(QWidget):
         # check if the sample name is in database
         sample_name = table_item.text()
         sample_name = sample_name.replace(" ", "_")
-        if sample_name in self.model.g4bl_NIST_db:
+        if sample_name in self.model.g4bl_materials:
             return
         # update density column WITHOUT triggering signals (otherwise it recursively calls function for some reason)
         table.block_updates = True
