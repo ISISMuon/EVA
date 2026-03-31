@@ -100,6 +100,7 @@ class G4blModel(QObject):
                         Material.flag = "compound"
                     else:
                         sample_material = Material.from_formula(mat_name=f"{sample_name}_{i}", chemical_formula=sample_name, density=density, phase=0)
+                        Material.flag = "undefined"
                         if sample_name in self.g4bl_elements:
                             Material.flag = "element"
 
@@ -109,7 +110,8 @@ class G4blModel(QObject):
                 this_slab = Shape.create(shape_type="slab", shape_name = f"slab{i}", color="0,0,1", material=sample_material, thickness=layer_thickness)
                 this_slab.z = position
                 self.sample_layers.append(this_slab)
-                self.sample_names.append(sample_name)
+                formatted_sample_name = sample_name.replace("_", " ").capitalize()
+                self.sample_names.append(formatted_sample_name)
 
     def start_g4bl_simulation(self, progress_callback: pyqtSignal) -> dict:
         """
@@ -183,7 +185,8 @@ class G4blModel(QObject):
             frac = counts_per_layer / total_count
 
             # error propagation
-            frac_err = np.sqrt((total_count_err / total_count) ** 2 + (layer_count_err / counts_per_layer) ** 2) * frac
+            with np.errstate(divide='ignore', invalid='ignore'):
+                frac_err = np.sqrt((total_count_err / total_count) ** 2 + (layer_count_err / counts_per_layer) ** 2) * frac
 
             # replace all nan values with 0
             frac_err_filtered = np.nan_to_num(frac_err, nan=0)
