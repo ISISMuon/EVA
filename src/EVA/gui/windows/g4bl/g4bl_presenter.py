@@ -32,7 +32,7 @@ class G4blPresenter(QWidget):
         self.view.g4bl_out_dir_linedit.setText(str(self.model.g4bl_out_dir))
         self.view.stats_linedit.setText(str(self.model.stats))
         self.view.bin_number_linedit.setText(str(self.model.bin_resolution))
-        self.view.visualisation_checkbox.hide() #disable for now.
+        # self.view.visualisation_checkbox.hide() #disable for now.
         # set momentum scam params to only be visible if momentum scan is selected
         self.on_scan_type_changed(self.view.scan_momentum_combo.currentText())
         self.view.scan_momentum_combo.currentTextChanged.connect(self.on_scan_type_changed)
