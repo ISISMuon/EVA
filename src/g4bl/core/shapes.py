@@ -21,12 +21,16 @@ class Shape:
 
     def placeholder_material_create(self):
         if self.material == "Compressed_Air":
-            new_material_string = f"material Compressed_Air{self.instance} C,0.012 O,.2318 N,0.7562 density={self.density} temperature=290 state=g \n"
+            new_material_string = f"material Compressed_Air{self.instance} Air,0.999 N,0.001 density={self.density} temperature=290 state=g \n"
+            self.material += str(self.instance)
         elif self.material == "Beamline_Window":
-            new_material_string = f"material Beamline_Window{self.instance} H,0.37 C,0.45 O,0.18 density={self.density} state=s\n"
-        else:
+            new_material_string = f"material Beamline_Window{self.instance} H,0.042 C,0.625 O,0.333 density={self.density} state=s\n"
+            self.material += str(self.instance)
+        elif self.density is not None:
             new_material_string = f"material {self.material}{self.instance} {self.material},0.99 H,0.01 density={self.density} \n"
-        self.material += str(self.instance)
+            self.material += str(self.instance)
+        else:
+            new_material_string = ""
         return new_material_string
 
     # def placeholder_material_create(self):
