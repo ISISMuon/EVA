@@ -9,7 +9,7 @@ from PyQt6.QtCore import pyqtSignal, QObject
 from matplotlib import pyplot as plt
 
 from EVA.core.app import get_config
-from g4bl import G4BL, Shape
+from g4bl import G4BL, Shape, Material
 from EVA.core.physics import rebin
 
 class G4blModel(QObject):
@@ -47,8 +47,8 @@ class G4blModel(QObject):
         self.layer_boundary_positions = []
 
         ### Default G4BL settings ###
-        self.stats = 1000
-        self.bin_resolution = 500
+        self.stats = 5000
+        self.bin_resolution = 200
         self.g4bl_exe_dir = get_config()["g4bl"]["installation_directory"]
         self.g4bl_out_dir = get_config()["g4bl"]["output_directory"]
         self.verbosity = 1
@@ -60,7 +60,7 @@ class G4blModel(QObject):
         self.step_momentum = 1.
         self.sim_method = "Stack"
         self.scan_type = "No"
-        self.g4bl_NIST_db = self.load_material_database()
+        self.g4bl_elements, self.g4bl_compounds, self.g4bl_materials = self.load_material_database()
         ####################
 
         # simulation results
@@ -87,12 +87,26 @@ class G4blModel(QObject):
         if self.sim_method == "Stack":
             for i, layer in enumerate(layers):
                 sample_name = layer.get("name")
-                sample_name = sample_name.replace(" ", "_")
                 density = layer.get("density")
+                if sample_name == "Compressed_Air":
+                    sample_material = Material(mat_name="Compressed_Air", elements={}, density=1500 * 1.20479e-3)
+                    layer['thickness'] = 0.067
+                elif sample_name == "Beamline_Window":
+                    sample_material = Material(mat_name="Beamline_Window", elements={}, density=1.4)
+                    layer['thickness'] = 0.05
+                else:
+                    if sample_name in self.g4bl_compounds:
+                        sample_material = Material(mat_name=f"{sample_name}_{i}", elements={}, density=density, phase=0)
+                        Material.flag = "compound"
+                    else:
+                        sample_material = Material.from_formula(mat_name=f"{sample_name}_{i}", chemical_formula=sample_name, density=density, phase=0)
+                        if sample_name in self.g4bl_elements:
+                            Material.flag = "element"
+
                 layer_thickness = layer.get("thickness")
                 position = self.total_thickness + layer_thickness / 2
                 self.total_thickness += layer_thickness
-                this_slab = Shape.create(shape_type="slab", name = f"slab{i}", color="0,0,1", material=sample_name, thickness=layer_thickness, density=density, instance=i)
+                this_slab = Shape.create(shape_type="slab", shape_name = f"slab{i}", color="0,0,1", material=sample_material, thickness=layer_thickness)
                 this_slab.z = position
                 self.sample_layers.append(this_slab)
                 self.sample_names.append(sample_name)
@@ -430,10 +444,18 @@ class G4blModel(QObject):
         return time.strftime('%H:%M:%S', time.gmtime(seconds))
 
     def load_material_database(self):
-        with open("src/g4bl/data/g4bl_nist_density_db.txt", "r") as f:
-            materials_from_file = [line.strip() for line in f if line.strip()]
-            materials_set = {m for m in materials_from_file}
-            return sorted(materials_set, key=lambda x: (len(x), x))
+        # Read elements
+        with open("src/g4bl/data/g4bl_predefined_elements.txt", "r") as f:
+            elements = [line.strip() for line in f if line.strip()]
+        
+        # Read compounds
+        with open("src/g4bl/data/g4bl_predefined_compounds.txt", "r") as f:
+            compounds = [line.strip() for line in f if line.strip()]
+        
+        # Combine both and sort by length then lexicographically
+        combined = sorted(elements + compounds, key=lambda x: (len(x), x))
+        
+        return elements, compounds, combined
         
     def get_default_g4bl_plot_save_name(self, momentum: float | None = None) -> str:
         if momentum is None:
