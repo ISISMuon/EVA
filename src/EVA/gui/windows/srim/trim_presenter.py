@@ -188,7 +188,7 @@ class TrimPresenter(QWidget):
 
     def depth_reset_plot_origin(self):
         try:
-            self.model.depth_plot_origin_shift = 0
+            self.model.depth_plot_origin_shift = self.model.default_origin_position
             self.view.depth_shift_origin_linedit.setText("0")
             fig, ax = self.model.plot_depth_profile()
 

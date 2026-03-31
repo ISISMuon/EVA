@@ -277,10 +277,8 @@ class TrimModel(QObject):
 
         # set all plot origins to be shifted by default so that 0 on the x-axis is located at end of aluminium layer
         self.default_origin_position = self.layer_boundary_positions[3]
-        self.stopping_plot_origin_shifts = np.full(
-            shape=len(self.momentum), fill_value=self.default_origin_position
-        )
-
+        self.stopping_plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
+        self.depth_plot_origin_shift = self.default_origin_position
         # after sucessful run, update srim installation directory in config
         get_config()["SRIM"]["installation_directory"] = self.srim_exe_dir
         get_config()["SRIM"]["output_directory"] = self.srim_out_dir
