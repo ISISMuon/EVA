@@ -166,7 +166,7 @@ class G4blView(BaseView, Ui_g4bl):
             "max_momentum": float(self.max_momentum_linedit.text()),
             "step_momentum": float(self.momentum_step_linedit.text()),
             "scan_type": self.scan_momentum_combo.currentText(),
-            "visualiser": self.visualisation_checkbox.isChecked()
+            # "visualiser": self.visualisation_checkbox.isChecked()
         }
 
         return form_data

@@ -4,7 +4,7 @@ import logging
 from copy import copy
 from idlelib.configdialog import font_sample_text
 
-from PyQt6.QtCore import QThreadPool
+from PyQt6.QtCore import QThreadPool, Qt
 from PyQt6.QtWidgets import QWidget, QTableWidgetItem
 from matplotlib import pyplot as plt
 
@@ -32,7 +32,7 @@ class G4blPresenter(QWidget):
         self.view.g4bl_out_dir_linedit.setText(str(self.model.g4bl_out_dir))
         self.view.stats_linedit.setText(str(self.model.stats))
         self.view.bin_number_linedit.setText(str(self.model.bin_resolution))
-        self.view.visualisation_checkbox.setChecked(False)
+        self.view.visualisation_checkbox.hide() #disable for now.
         # set momentum scam params to only be visible if momentum scan is selected
         self.on_scan_type_changed(self.view.scan_momentum_combo.currentText())
         self.view.scan_momentum_combo.currentTextChanged.connect(self.on_scan_type_changed)
@@ -373,9 +373,21 @@ class G4blPresenter(QWidget):
         # check if the sample name is in database
         sample_name = table_item.text()
         sample_name = sample_name.replace(" ", "_")
+        density_item = table.item(row, 2)
+        if density_item is None:
+            density_item = QTableWidgetItem("")
+            table.setItem(row, 2, density_item)
         if sample_name in self.model.g4bl_materials:
+            if sample_name in self.model.g4bl_compounds:
+                table.setItem(row, 2, QTableWidgetItem("placeholderdisabled"))
+                density_item.setFlags(density_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            else:
+                table.setItem(row, 2, QTableWidgetItem(""))
+                # make editable again
+                density_item.setFlags(density_item.flags() | Qt.ItemFlag.ItemIsEditable)
             return
-        # update density column WITHOUT triggering signals (otherwise it recursively calls function for some reason)
+        density_item.setFlags(density_item.flags() | Qt.ItemFlag.ItemIsEditable)
+        # update density column WITHOUT triggering signals (otherwise it recursively calls function when it updates value)
         table.block_updates = True
         table.setItem(row, 2, QTableWidgetItem("Unknown-Density required"))
         table.block_updates = False
