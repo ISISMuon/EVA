@@ -537,14 +537,8 @@ class TrimModel(QObject):
         for i in range(len(self.sample_layers)):
             pos = self.layer_boundary_positions[i + 1]
 
-            axx.axvline(x=pos - x_shift, color="k", linestyle="--")
-            axx.text(
-                pos - x_shift,
-                y_lim_upper * 0.02,
-                self.sample_names[i],
-                horizontalalignment="left",
-                rotation="vertical",
-            )
+            axx.axvline(x=pos - x_shift, color='k', linestyle='--')
+            axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='right', rotation='vertical')
 
         return figt, axx
 
@@ -585,14 +579,8 @@ class TrimModel(QObject):
 
             # display layer boundaries
             pos = self.layer_boundary_positions[i + 1]
-            axx.axvline(x=pos - x_shift, color="k", linestyle="--")
-            axx.text(
-                pos - x_shift,
-                y_lim_upper * 0.02,
-                self.sample_names[i],
-                horizontalalignment="left",
-                rotation="vertical",
-            )
+            axx.axvline(x=pos - x_shift, color='k', linestyle='--')
+            axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='right', rotation='vertical')
 
         axx.legend()
         self.figs[momentum_index] = axx
@@ -655,14 +643,8 @@ class TrimModel(QObject):
 
         for i, boundary in enumerate(boundaries):
             ix = np.where(self.layer_boundary_positions == boundary)[0][0]
-            name = self.sample_names[ix - 1]
-            ax.text(
-                x=closest_momenta[i],
-                y=0.04 * y_lim_upper,
-                s=name,
-                horizontalalignment="left",
-                rotation="vertical",
-            )
+            name = self.sample_names[ix-1]
+            ax.text(x=closest_momenta[i], y=0.04*y_lim_upper, s=name, horizontalalignment='right', rotation='vertical')
 
         ax.set_xlabel("Momentum (MeV/c)")
         ax.set_ylabel("Proportion")
