@@ -8,6 +8,7 @@ import numpy as np
 from PyQt6.QtCore import pyqtSignal, QObject
 from matplotlib import pyplot as plt
 
+from EVA.util.path_handler import get_path
 from EVA.core.app import get_config
 from g4bl import G4BL, Shape, Material
 from EVA.core.physics import rebin
@@ -202,7 +203,7 @@ class G4blModel(QObject):
         self.default_origin_position = self.layer_boundary_positions[3]
         self.stopping_plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
 
-        # after sucessful run, update srim installation directory in config
+        # after sucessful run, update g4bl installation directory in config
         get_config()["g4bl"]["installation_directory"] = self.g4bl_exe_dir
         get_config()["g4bl"]["output_directory"] = self.g4bl_out_dir
 
@@ -327,7 +328,7 @@ class G4blModel(QObject):
             pos = self.layer_boundary_positions[i + 1]
 
             axx.axvline(x=pos - x_shift, color='k', linestyle='--')
-            axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='left', rotation='vertical')
+            axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='right', rotation='vertical')
 
         return figt, axx
 
@@ -448,11 +449,11 @@ class G4blModel(QObject):
 
     def load_material_database(self):
         # Read elements
-        with open("src/g4bl/data/g4bl_predefined_elements.txt", "r") as f:
+        with open(get_path("src/EVA/databases/NIST_dataset/g4bl_predefined_elements.txt"), "r") as f:
             elements = [line.strip() for line in f if line.strip()]
         
         # Read compounds
-        with open("src/g4bl/data/g4bl_predefined_compounds.txt", "r") as f:
+        with open(get_path("src/EVA/databases/NIST_dataset/g4bl_predefined_compounds.txt"), "r") as f:
             compounds = [line.strip() for line in f if line.strip()]
         
         # Combine both and sort by length then lexicographically

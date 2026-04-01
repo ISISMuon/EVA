@@ -30,7 +30,7 @@
 
   "g4bl": {
     "installation_directory": "C:/Program Files/Muons, Inc/G4beamline/bin",
-    "output_directory": "C:/Users/chend/Desktop/Projects/eva-clean/src/g4bl/output_data"
+    "output_directory": ""
   },
 
   "plot": {

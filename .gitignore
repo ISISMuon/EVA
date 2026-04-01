@@ -7,3 +7,4 @@ src/EVA/core/settings/config.ini
 EVA.log
 src/EVA/core/settings/config.json
 .vscode/launch.json
+src/g4bl/output_data

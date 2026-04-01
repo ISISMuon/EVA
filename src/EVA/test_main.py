@@ -3,13 +3,13 @@ import sys
 import logging
 from pathlib import Path
 
-from EVA.gui.windows.main.main_window import MainWindow
+# from EVA.gui.windows.main.main_window import MainWindow
 from EVA.gui.windows.g4bl.g4bl_window import G4blWindow
 # Changes cwd to root so that paths can be specified relative to root level - MUST BE BEFORE ANY EVA IMPORTS
 ROOT = Path(__file__).resolve().parent.parent.parent # get root dir using pathlib
 os.chdir(ROOT) # change cwd to root
 
-from EVA.gui.windows.main.main_view import MainView
+# from EVA.gui.windows.main.main_view import MainView
 from EVA.core.app import App
 
 # set up logging and handling exceptions
