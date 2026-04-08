@@ -1,12 +1,13 @@
 from g4bl.core.shapes import Shape
 
 class InputWriter:
-    def __init__(self, targets: list[Shape], beam_off: bool, muon_num: int, momentum: float, mom_err: float, optional_params: dict = None):
+    def __init__(self, targets: list[Shape], beam_off: bool, muon_num: int, momentum: float, mom_err: float, optional_params: dict = None, instance: str = ""):
         self.targets = targets
         self.muon_num = muon_num
         self.momentum = momentum
         self.mom_err = mom_err
         self.optional_params = optional_params
+        self.instance = instance
         self.input_string = ""
         if not beam_off:
             self.beam_block()
@@ -51,7 +52,7 @@ class InputWriter:
                 "sigmaP=$bite*$P_inj"
             ),
             "particlecolor mu-='0,1,0' e-='1,0,0' gamma='0,0,1'",
-            "beamlossntuple test file=out_file require=PDGid==13 \n",
+            f"beamlossntuple test file=out_file{self.instance} require=PDGid==13 \n",
         ]
         self.input_string = "\n".join(beam_lines)
 

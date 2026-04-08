@@ -4,19 +4,20 @@ from pathlib import Path
 from g4bl.core.input_writer import InputWriter
 
 class G4BL(object):
-    def __init__(self, sim_type, target, muon_num, momentum, mom_err, total_thickness, verbosity):
+    def __init__(self, sim_type, target, muon_num, momentum, mom_err, total_thickness, verbosity, instance=""):
         self.sim_type = sim_type
         self.total_thickness = total_thickness
         self.verbosity = verbosity
-        self.writer = InputWriter(targets=target, muon_num=muon_num, momentum=momentum, mom_err=mom_err, beam_off=False)
+        self.instance = instance
+        self.writer = InputWriter(targets=target, muon_num=muon_num, momentum=momentum, mom_err=mom_err, beam_off=False, instance=instance)
 
     def run(self, g4bl_exe_dir, output_dir, vis_mode=False):
-        log_file = Path(output_dir) / "g4bl_terminal.txt"
-        input_file = Path(output_dir) / "input_file.g4bl"
+        log_file = Path(output_dir) / f"g4bl_terminal{self.instance}.txt"
+        input_file = Path(output_dir) / f"input_file{self.instance}.g4bl"
         with open(input_file, "w") as f:
             f.write(self.writer.input_string)
         exe_path = Path(g4bl_exe_dir) / "g4bl"
-        cmd = [str(exe_path), "input_file.g4bl"]
+        cmd = [str(exe_path), f"input_file{self.instance}.g4bl"]
         if vis_mode:
             cmd.append("viewer=best")
         
@@ -29,7 +30,7 @@ class G4BL(object):
             )
         process.wait()
         if self.sim_type == "Stack":
-            data = self.process_stack_data(file_path=Path(output_dir) / "out_file.txt")
+            data = self.process_stack_data(file_path=Path(output_dir) / f"out_file{self.instance}.txt")
         return data
 
     def filter_data_array(self, data):

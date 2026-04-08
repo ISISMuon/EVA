@@ -90,6 +90,7 @@ class G4blPresenter(QWidget):
     def on_scan_type_changed(self, scan_type: str):
         """
         Shows the min, max and momentum step part of the form if scan type is "Yes", hides if scan type is "No".
+        Does the opposite with the single momentum part.
         Is called every time scan type is updated
 
         Args:
@@ -104,6 +105,8 @@ class G4blPresenter(QWidget):
         self.view.max_momentum_label.setVisible(visibility)
         self.view.momentum_step_linedit.setVisible(visibility)
         self.view.momentum_step_label.setVisible(visibility)
+        self.view.momentum_linedit.setVisible(not visibility)
+        self.view.momentum_label.setVisible(not visibility)
 
     def on_sim_type_changed(self, sim_type: str):
         """
@@ -218,9 +221,12 @@ class G4blPresenter(QWidget):
         g4bldir_valid = self.model.is_valid_path(form_data["g4bl_dir"])
         outputdir_valid = self.model.is_valid_path(form_data["output_dir"])
 
-        if not g4bldir_valid or not outputdir_valid:
+        if not g4bldir_valid:
             self.view.display_error_message(message="Could not find g4bl.exe at specified location. "
                                      "Please ensure you have G4BL installed.")
+            return
+        if not outputdir_valid:
+            self.view.display_error_message(message="Invalid output directory. Please ensure directory exists and the path is valid")
             return
 
         if form_data["sim_type"] == "Momentum Spread" and form_data["stats"] < 500:
@@ -264,6 +270,7 @@ class G4blPresenter(QWidget):
         self.simulation_worker = Worker(self.model.start_g4bl_simulation)
         self.simulation_worker.signals.result.connect(self.on_simulation_finished)
         self.simulation_worker.signals.progress.connect(self.progress_fn)
+        # self.simulation_worker.signals.error.connect(self.on_simulation_error)
 
         get_app().threadpool.start(self.simulation_worker)
 
