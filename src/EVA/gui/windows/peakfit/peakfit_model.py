@@ -4,6 +4,7 @@ import logging
 import os
 import csv
 from copy import copy, deepcopy
+from zipfile import ZipFile
 
 import numpy as np
 from PyQt6.QtCore import QObject

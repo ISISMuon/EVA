@@ -466,12 +466,12 @@ class PeakFitPresenter(object):
             self.model.save_fit_report(path)
 
     def save_plot_points(self):
-        def_dir = get_config()["general"]["working_directory"]
         # get directory to save x and y points of detector data
-        data_path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Text files (*.txt)", caption="Select file for run data points")
-        fit_path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Text files (*.txt)", caption="Select file for fit data points")
-        if data_path and fit_path:
-            self.model.save_plot_points(data_path, fit_path)
+        def_dir = get_config()["general"]["working_directory"]
+        path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Zip Files (*.zip)")
+        if path:
+            self.model.save_plot_points(path)
+
     def save_fitted_model(self):
         path = get_config()["general"]["fit_table_save_file"]
         if not path:
