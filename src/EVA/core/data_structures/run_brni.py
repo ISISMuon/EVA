@@ -11,6 +11,8 @@ class RunBiriani(Run):
         self.data_type = "biriani"
         self.plot_mode = "Biriani Spectrum"
         self.bin_method = "prebinned"
+        self.prompt_limit = 0
+        self.delayed_limit = 0
         self.start_time = comment_data[0]
         self.end_time = comment_data[1]
         self.events_str = comment_data[2]
