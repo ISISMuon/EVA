@@ -81,7 +81,7 @@ class G4blView(BaseView, Ui_g4bl):
         self.cancel_sim_button.hide()
         self.slider_container.hide()
         self.depth_profile_plot.hide()
-
+        self.widget_5.hide()
     # display results to table and set up connections
     def setup_results_table(self, momenta, table):
         n_rows = len(momenta)

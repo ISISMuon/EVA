@@ -363,7 +363,7 @@ class Ui_g4bl(object):
 
         self.retranslateUi(g4bl)
         self.placement_tabWidget.setCurrentIndex(0)
-        self.stack_tabWidget.setCurrentIndex(1)
+        self.stack_tabWidget.setCurrentIndex(0)
         self.results_tabs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(g4bl)
 

@@ -419,7 +419,7 @@
       <item>
        <widget class="QTabWidget" name="stack_tabWidget">
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="stack_layers_tab">
          <attribute name="title">
