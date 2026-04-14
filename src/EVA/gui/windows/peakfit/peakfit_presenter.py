@@ -5,8 +5,6 @@ from matplotlib.backend_bases import MouseButton
 from PyQt6.QtCore import Qt
 from EVA.core.app import get_config
 from EVA.gui.windows.peakfit.constraints_window import ConstraintsWindow
-from EVA.gui.windows.peakfit.model_fit_model import ModelFitModel
-from EVA.gui.windows.peakfit.peakfit_model import PeakFitModel
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +22,8 @@ class PeakFitPresenter(object):
         )
         self.view.constraints_button.clicked.connect(self.launch_constraints_menu)
 
-        self.view.save_initial_params_button.clicked.connect(self.save_init_params)
-        self.view.load_initial_params_button.clicked.connect(self.load_init_params)
+        self.view.save_params_button.clicked.connect(self.save_params)
+        self.view.load_params_button.clicked.connect(self.load_params)
         self.view.save_fit_report_button.clicked.connect(self.save_fit_report)
         self.view.save_fitted_model_button.clicked.connect(self.save_fitted_model)
         self.view.fit_table_select_button.clicked.connect(self.browse_fit_table_file)
@@ -422,18 +420,26 @@ class PeakFitPresenter(object):
             get_config()["general"]["fit_table_save_file"] = path
             logger.info("Selected fit table file: %s", path)
 
-    def save_init_params(self):
-        x_range = (
-            None if self.view.auto_e_range_checkbox.isChecked() else self.get_e_range()
-        )
+    def save_params(self):
+        auto_e_range_checkbox_state = self.view.auto_e_range_checkbox.isChecked()
+        x_range = None if auto_e_range_checkbox_state else self.get_e_range()
+        param_type = "fitted"
+        if not self.model.fit_result:
+            condition = self.view.show_question_box(title="Warning",
+                            message="No fitted parameters found. Would you like to save initial parameters?")
+            if condition:
+                param_type = "initial"
+            else:
+                return
+                
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(
             default_dir=def_dir, file_filter="JSON files (*.json)"
         )
         if path:
-            self.model.save_params(path, x_range)
+            self.model.save_params(param_type, path, x_range, auto_e_range_checkbox_state)
 
-    def load_init_params(self):
+    def load_params(self):
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_load_file_path(
             default_dir=def_dir, file_filter="JSON files (*.json)"
@@ -442,20 +448,18 @@ class PeakFitPresenter(object):
         if not path:
             return
 
-        self.model.load_params(path)
-        self.view.initial_peak_params_table.update_contents(
-            self.format_params(self.model.initial_peak_params)
-        )
-        self.view.initial_bg_params_table.update_contents(
-            self.format_params(self.model.initial_bg_params)
-        )
+        param_type, auto_e_range_checkbox_state = self.model.load_params(path)
+        self.view.initial_peak_params_table.update_contents(self.format_params(self.model.initial_peak_params))
+        self.view.initial_bg_params_table.update_contents(self.format_params(self.model.initial_bg_params))
+        self.view.fitted_peak_params_table.update_contents(self.format_params(self.model.fitted_peak_params))
+        self.view.fitted_bg_params_table.update_contents(self.format_params(self.model.fitted_bg_params))
 
         if self.model.x_range is not None:
             self.view.update_e_range_form(self.model.x_range)
         else:
-            self.view.auto_e_range_checkbox.setChecked(True)
             self.view.e_range_max_line_edit.clear()
             self.view.e_range_min_line_edit.clear()
+        self.view.auto_e_range_checkbox.setChecked(auto_e_range_checkbox_state)
 
     def save_fit_report(self):
         def_dir = get_config()["general"]["working_directory"]
