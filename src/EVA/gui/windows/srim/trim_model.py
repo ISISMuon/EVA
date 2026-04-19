@@ -171,7 +171,8 @@ class TrimModel(QObject):
                         mom - 3 * MomSigma + i * 0.5 * MomSigma
                     )  # momentum for each iteration
 
-                    # Number of simulated muons dependent on Gaussian distribution of muon momentum
+                    # Calculate number of muons to simulate for current momentum using normal distribution
+                    # Normalise value at point  using probability density function.
                     deltaP = 0.5 * MomSigma
 
                     pdf = (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) \
@@ -197,9 +198,6 @@ class TrimModel(QObject):
                         for index in range(0, len(y1)):
                             yres[index] = yres[index] + y1[index]
                     total_counter += NE
-                    print("num_events in current slice: ", NE)
-                    print("total muons so far: ", total_counter)
-                    print("yres sum: ", np.sum(yres))
 
                     # normalise the y
                     # insert results into results arrays
