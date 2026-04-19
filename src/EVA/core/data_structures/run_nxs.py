@@ -79,12 +79,11 @@ class RunNexus(Run):
         try:
             if self.plot_mode in ["IBEX Prompt Spectrum", "Manual Prompt Spectrum"]:
                 spills = int(self.comment_data[1])
-            else:
+            elif self.plot_mode in ["IBEX Delayed Spectrum", "Manual Delayeed Spectrum"]:
                 spills = int(self.comment_data[2])
-
             for detector, spectrum in self._raw.items():
                 if detector in normalise_which:
-                    self.data[detector].y = normalise_events(spectrum.y, spills)
+                    self.data[detector].y = normalise_events(self.data[detector].y, spills)
 
             self.normalisation = "events"
             self.normalise_which = normalise_which

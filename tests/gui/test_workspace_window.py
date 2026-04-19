@@ -63,6 +63,7 @@ class TestLoadWorkspaceWindow:
             qtbot.addWidget(self.view)
             self.model = self.window._model
             self.window.show()
+            qtbot.wait(500)
             assert self.model.run.run_num == run_num
             if self.run_copy.data_type == "biriani":
                 assert self.run_copy.plot_mode == "Biriani Spectrum"
@@ -71,8 +72,8 @@ class TestLoadWorkspaceWindow:
                 self.view.normalisation_type_combo_box.setCurrentText(normalisation_to_ui_text[test_normalisation])
                 self.view.binning_spin_box.setValue(test_binning)
                 qtbot.mouseClick(self.view.apply_run_settings_button, Qt.MouseButton.LeftButton)
-                qtbot.wait(1000)
-                self.run_copy.set_corrections(plot_mode=test_plot_mode, normalisation=test_normalisation, bin_rate=test_binning, prompt_limit=2000, delayed_limit=20000000)
+                qtbot.wait(500)
+                self.run_copy.set_corrections(plot_mode=test_plot_mode, normalisation=test_normalisation, bin_rate=float(test_binning), prompt_limit=2000, delayed_limit=20000000)
                 for i, (run_spectrum, run_copy_spectrum) in enumerate(zip(self.model.run._raw.values(), self.run_copy._raw.values())):
                     assert np.array_equal(run_spectrum.x, run_copy_spectrum.x)
                     assert np.array_equal(run_spectrum.y, run_copy_spectrum.y)
