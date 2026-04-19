@@ -1,4 +1,5 @@
 
+import matplotlib
 import pytest
 import numpy as np
 import copy
@@ -11,12 +12,20 @@ from PyQt6.QtCore import Qt
 from pytestqt.plugin import qtbot
 from matplotlib.backend_bases import MouseButton
 run_list = ["780", "2630", "0"]
-plot_modes = ["IBEX Prompt Spectrum", "IBEX Delayed Spectrum", "Manual Prompt Spectrum", "Manual Delayed Spectrum"]
+plot_modes = ["IBEX Delayed Spectrum", "Manual Prompt Spectrum"]
 normalisation_methods = ["none", "counts", "events"]
+normalisation_to_ui_text = {
+    "none": "None",
+    "counts": "Normalisation by counts",
+    "events": "Normalisation by events",
+}
+bin_values = [0.5, 2]
 class TestLoadWorkspaceWindow:
-    @pytest.mark.parametrize(
-        "run_num", run_list)
-    def test_load_workspace(self, qtbot, run_num):
+    @pytest.mark.parametrize("run_num", run_list)
+    @pytest.mark.parametrize("test_normalisation", normalisation_methods)
+    @pytest.mark.parametrize("test_binning", bin_values)
+    @pytest.mark.parametrize("test_plot_mode", plot_modes)
+    def test_load_workspace(self, qtbot, run_num, test_normalisation, test_binning, test_plot_mode):
         wdir = get_config()["general"]["working_directory"]
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
@@ -55,32 +64,16 @@ class TestLoadWorkspaceWindow:
             self.model = self.window._model
             self.window.show()
             assert self.model.run.run_num == run_num
-            # self.check_plot_modes(qtbot)
-            self.check_normalisation(qtbot)
-
-    def check_plot_modes(self, qtbot):
             if self.run_copy.data_type == "biriani":
                 assert self.run_copy.plot_mode == "Biriani Spectrum"
             elif self.run_copy.data_type == "nexus":
-                for plot_mode in plot_modes:
-                    self.view.nexus_plot_display_combo_box.setCurrentText(plot_mode)
-                    qtbot.mouseClick(self.view.apply_run_settings_button, Qt.MouseButton.LeftButton)
-                    qtbot.wait(1000)
-                    self.run_copy.set_corrections(plot_mode=plot_mode, prompt_limit=2000, delayed_limit=20000000)
-                    for i, (run_spectrum, run_copy_spectrum) in enumerate(zip(self.model.run._raw.values(), self.run_copy._raw.values())):
-                        assert np.array_equal(run_spectrum.x, run_copy_spectrum.x)
-                        assert np.array_equal(run_spectrum.y, run_copy_spectrum.y)
-
-    def check_normalisation(self, qtbot):
-            if self.run_copy.data_type == "biriani":
-                assert self.run_copy.plot_mode == "Biriani Spectrum"
-            elif self.run_copy.data_type == "nexus":
-                for i, normalisation in enumerate(normalisation_methods):
-                    self.view.nexus_plot_display_combo_box.setCurrentText("IBEX Delayed Spectrum")
-                    self.view.normalisation_type_combo_box.setCurrentIndex(i)
-                    qtbot.mouseClick(self.view.apply_run_settings_button, Qt.MouseButton.LeftButton)
-                    qtbot.wait(1000)
-                    self.run_copy.set_corrections(plot_mode="IBEX Delayed Spectrum", normalisation=normalisation)
-                    for i, (run_spectrum, run_copy_spectrum) in enumerate(zip(self.model.run._raw.values(), self.run_copy._raw.values())):
-                        assert np.array_equal(run_spectrum.x, run_copy_spectrum.x)
-                        assert np.array_equal(run_spectrum.y, run_copy_spectrum.y)
+                self.view.nexus_plot_display_combo_box.setCurrentText(test_plot_mode)
+                self.view.normalisation_type_combo_box.setCurrentText(normalisation_to_ui_text[test_normalisation])
+                self.view.binning_spin_box.setValue(test_binning)
+                qtbot.mouseClick(self.view.apply_run_settings_button, Qt.MouseButton.LeftButton)
+                qtbot.wait(1000)
+                self.run_copy.set_corrections(plot_mode=test_plot_mode, normalisation=test_normalisation, bin_rate=test_binning, prompt_limit=2000, delayed_limit=20000000)
+                for i, (run_spectrum, run_copy_spectrum) in enumerate(zip(self.model.run._raw.values(), self.run_copy._raw.values())):
+                    assert np.array_equal(run_spectrum.x, run_copy_spectrum.x)
+                    assert np.array_equal(run_spectrum.y, run_copy_spectrum.y)
+            matplotlib.pyplot.close()
