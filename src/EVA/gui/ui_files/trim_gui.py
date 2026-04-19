@@ -289,7 +289,12 @@ class Ui_trim(object):
         self.depth_profile_plot.setEnabled(True)
         self.depth_profile_plot.setObjectName("depth_profile_plot")
         self.depth_profile_layout.addWidget(self.depth_profile_plot)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(
+            20,
+            40,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         self.depth_profile_layout.addItem(spacerItem)
         self.depth_settings_widget = QtWidgets.QWidget(parent=self.depth_profile_tab)
         self.depth_settings_widget.setObjectName("depth_settings_widget")
@@ -340,9 +345,15 @@ class Ui_trim(object):
         item.setText(_translate("trim", "Options"))
         self.save_all_sims_button.setText(_translate("trim", "Save all results"))
         self.save_all_imgs_button.setText(_translate("trim", "Save all plots"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.results_tab), _translate("trim", "Results"))
-        self.collapse_expand_implantation_checkbox.setText(_translate("trim", " Expand all / Collapse"))
-        self.results_tree.headerItem().setText(0, _translate("trim", "Momentum (MeV/c)"))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.results_tab), _translate("trim", "Results")
+        )
+        self.collapse_expand_implantation_checkbox.setText(
+            _translate("trim", " Expand all / Collapse")
+        )
+        self.results_tree.headerItem().setText(
+            0, _translate("trim", "Momentum (MeV/c)")
+        )
         self.results_tree.headerItem().setText(1, _translate("trim", "Layers"))
         self.results_tree.headerItem().setText(
             2, _translate("trim", "% of muons in layer")

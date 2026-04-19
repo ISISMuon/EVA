@@ -137,7 +137,10 @@ class TrimModel(QObject):
                 # insert results into results arrays
                 self.result_x[momentum_index, :] = x
                 self.result_y[momentum_index, :] = y
-                self.result_y[momentum_index, :] = (self.result_y[momentum_index, :] / np.sum(self.result_y[momentum_index, :])) * self.stats
+                self.result_y[momentum_index, :] = (
+                    self.result_y[momentum_index, :]
+                    / np.sum(self.result_y[momentum_index, :])
+                ) * self.stats
                 t1 = time.time_ns()
 
                 dt = (t1 - t0) / 1e9
@@ -175,8 +178,9 @@ class TrimModel(QObject):
                     # Normalise value at point  using probability density function.
                     deltaP = 0.5 * MomSigma
 
-                    pdf = (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) \
-                        * np.exp(-0.5 * (P - mom)**2 / MomSigma**2)
+                    pdf = (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) * np.exp(
+                        -0.5 * (P - mom) ** 2 / MomSigma**2
+                    )
 
                     NE = round(self.stats * pdf * deltaP)
                     # get muon information
@@ -212,8 +216,16 @@ class TrimModel(QObject):
 
                     # report progress to gui
                     progress_callback.emit(
-                        {"current": simulation_count, "total": total_sims, "sim_times": self.simulation_times})
-                self.result_y[momentum_index, :] = (self.result_y[momentum_index, :] / np.sum(self.result_y[momentum_index, :])) * self.stats
+                        {
+                            "current": simulation_count,
+                            "total": total_sims,
+                            "sim_times": self.simulation_times,
+                        }
+                    )
+                self.result_y[momentum_index, :] = (
+                    self.result_y[momentum_index, :]
+                    / np.sum(self.result_y[momentum_index, :])
+                ) * self.stats
                 print("yres sum after normalising: ", np.sum(yres))
 
         else:
@@ -275,7 +287,9 @@ class TrimModel(QObject):
 
         # set all plot origins to be shifted by default so that 0 on the x-axis is located at end of aluminium layer
         self.default_origin_position = self.layer_boundary_positions[3]
-        self.stopping_plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
+        self.stopping_plot_origin_shifts = np.full(
+            shape=len(self.momentum), fill_value=self.default_origin_position
+        )
         self.depth_plot_origin_shift = self.default_origin_position
         # after sucessful run, update srim installation directory in config
         get_config()["SRIM"]["installation_directory"] = self.srim_exe_dir
@@ -535,8 +549,14 @@ class TrimModel(QObject):
         for i in range(len(self.sample_layers)):
             pos = self.layer_boundary_positions[i + 1]
 
-            axx.axvline(x=pos - x_shift, color='k', linestyle='--')
-            axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='right', rotation='vertical')
+            axx.axvline(x=pos - x_shift, color="k", linestyle="--")
+            axx.text(
+                pos - x_shift,
+                y_lim_upper * 0.02,
+                self.sample_names[i],
+                horizontalalignment="right",
+                rotation="vertical",
+            )
 
         return figt, axx
 
@@ -577,8 +597,14 @@ class TrimModel(QObject):
 
             # display layer boundaries
             pos = self.layer_boundary_positions[i + 1]
-            axx.axvline(x=pos - x_shift, color='k', linestyle='--')
-            axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='right', rotation='vertical')
+            axx.axvline(x=pos - x_shift, color="k", linestyle="--")
+            axx.text(
+                pos - x_shift,
+                y_lim_upper * 0.02,
+                self.sample_names[i],
+                horizontalalignment="right",
+                rotation="vertical",
+            )
 
         axx.legend()
         self.figs[momentum_index] = axx
@@ -641,8 +667,14 @@ class TrimModel(QObject):
 
         for i, boundary in enumerate(boundaries):
             ix = np.where(self.layer_boundary_positions == boundary)[0][0]
-            name = self.sample_names[ix-1]
-            ax.text(x=closest_momenta[i], y=0.04*y_lim_upper, s=name, horizontalalignment='right', rotation='vertical')
+            name = self.sample_names[ix - 1]
+            ax.text(
+                x=closest_momenta[i],
+                y=0.04 * y_lim_upper,
+                s=name,
+                horizontalalignment="right",
+                rotation="vertical",
+            )
 
         ax.set_xlabel("Momentum (MeV/c)")
         ax.set_ylabel("Proportion")
@@ -662,11 +694,16 @@ class TrimModel(QObject):
 
     def get_default_srim_plot_save_name(self, momentum: float | None = None) -> str:
         if momentum is None:
-            return os.path.join(f"{get_config()['general']['working_directory']}", "SRIM_stopping_profile_plots.zip")
+            return os.path.join(
+                f"{get_config()['general']['working_directory']}",
+                "SRIM_stopping_profile_plots.zip",
+            )
         else:
             momentum = f"{momentum:.5f}"
-        return os.path.join(f"{get_config()['general']['working_directory']}", f"SRIM_{momentum}_stopping_profile.png")
-
+        return os.path.join(
+            f"{get_config()['general']['working_directory']}",
+            f"SRIM_{momentum}_stopping_profile.png",
+        )
 
     def save_sim(self, path: str, rows: list | int | None = None):
         if isinstance(rows, int):
@@ -716,11 +753,13 @@ class TrimModel(QObject):
 
     def save_plot(self, path: str, rows: list | int | None = None):
         if isinstance(rows, int):
-            fig = self.figs[rows].figure  # get the matplotlib Figure object from the Axes
-            fig.savefig(path, bbox_inches='tight')  # save the figure
+            fig = self.figs[
+                rows
+            ].figure  # get the matplotlib Figure object from the Axes
+            fig.savefig(path, bbox_inches="tight")  # save the figure
 
         if rows is None:
-            with ZipFile(path, 'w') as zipf:
+            with ZipFile(path, "w") as zipf:
                 for i, momentum_value in enumerate(self.momentum):
                     if i not in self.figs:
                         continue  # skip rows with no plot
@@ -729,7 +768,7 @@ class TrimModel(QObject):
 
                     # Save figure to a bytes buffer
                     buf = io.BytesIO()
-                    fig.savefig(buf, format='png', bbox_inches='tight')
+                    fig.savefig(buf, format="png", bbox_inches="tight")
                     buf.seek(0)
 
                     # Use a descriptive filename inside the zip
@@ -737,9 +776,22 @@ class TrimModel(QObject):
                     zipf.writestr(filename, buf.read())
                     buf.close()
 
-    def save_settings(self, sample_name, stats, srim_dir, output_dir, momentum, momentum_spread, sim_type,
-                        min_momentum, max_momentum, step_momentum, scan_type, layers, target_dir):
-
+    def save_settings(
+        self,
+        sample_name,
+        stats,
+        srim_dir,
+        output_dir,
+        momentum,
+        momentum_spread,
+        sim_type,
+        min_momentum,
+        max_momentum,
+        step_momentum,
+        scan_type,
+        layers,
+        target_dir,
+    ):
         file2 = open(target_dir, "w")
         file2.writelines("Sample Name\n")
         out = sample_name + "\n"

@@ -441,7 +441,7 @@ class TrimPresenter(QWidget):
             self.model.save_sim(path, row)
 
     def on_save_all_sim_results(self):
-        if not self.model.result_x: # if no simulations have been run
+        if not self.model.result_x:  # if no simulations have been run
             self.view.display_error_message(message="No simulations to save.")
             return
 
@@ -460,7 +460,9 @@ class TrimPresenter(QWidget):
             return
 
         # default filename
-        default_path = self.model.get_default_srim_plot_save_name(self.model.momentum[row])
+        default_path = self.model.get_default_srim_plot_save_name(
+            self.model.momentum[row]
+        )
         filter_str = "PNG Image (*.png);;PDF File (*.pdf);;All Files (*)"
 
         # get path from user
@@ -484,6 +486,7 @@ class TrimPresenter(QWidget):
 
         if path:
             self.model.save_plot(path)
+
     def save_settings(self):
         try:
             form_data = self.view.get_form_data()
