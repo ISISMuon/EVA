@@ -249,7 +249,10 @@ def generate_spectrum_nxs(run_number, data_file):
         check_loaded_cond_1 = f"raw_data_1/detector_{i}_energyA/counts"
         check_loaded_cond_2 = f"raw_data_1/detector_{i}_energyHist/energy"
         try:
-            if data_file[check_loaded_cond_1][()].any() or data_file[check_loaded_cond_2][()].any():
+            if (
+                data_file[check_loaded_cond_1][()].any()
+                or data_file[check_loaded_cond_2][()].any()
+            ):
                 detector_name = data_file[f"raw_data_1/instrument/detector_{i}/name"][
                     ()
                 ].decode("utf-8")
@@ -264,8 +267,12 @@ def generate_spectrum_nxs(run_number, data_file):
                 time = data_file[f"raw_data_1/detector_{i}_events/event_time_offset"]
 
                 try:
-                    efficiency_hist_energy = data_file[f"raw_data_1/detector_{i}_energyHist/energy"]
-                    efficiency_hist_counts = data_file[f"raw_data_1/detector_{i}_energyHist/counts"]
+                    efficiency_hist_energy = data_file[
+                        f"raw_data_1/detector_{i}_energyHist/energy"
+                    ]
+                    efficiency_hist_counts = data_file[
+                        f"raw_data_1/detector_{i}_energyHist/counts"
+                    ]
                 except KeyError:
                     efficiency_hist_energy = None
                     efficiency_hist_counts = None

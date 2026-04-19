@@ -144,7 +144,7 @@ class MultiPlotPresenter:
                     bin_rate=binning,
                     plot_mode=plot_type,
                     prompt_limit=prompt_limit,
-                    delayed_limit=delayed_limit
+                    delayed_limit=delayed_limit,
                 )
                 for run in self.model.loaded_runs
             ]
@@ -167,7 +167,7 @@ class MultiPlotPresenter:
         self.plot_mode = config["default_corrections"]["plot_mode"]
         self.prompt_limit = config["default_corrections"]["prompt_limit"]
         self.delayed_limit = config["default_corrections"]["delayed_limit"]
-        
+
         self.view.binning_spin_box.setValue(self.binning)
         self.view.normalisation_type_combo_box.setCurrentIndex(
             normalisation_types.index(self.normalisation)

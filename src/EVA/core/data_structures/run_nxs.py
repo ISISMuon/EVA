@@ -43,7 +43,6 @@ class RunNexus(Run):
         plot_mode=None,
         prompt_limit=None,
         delayed_limit=None,
-
     ):
         self.data = {
             key: SpectrumNexus(
@@ -79,11 +78,16 @@ class RunNexus(Run):
         try:
             if self.plot_mode in ["IBEX Prompt Spectrum", "Manual Prompt Spectrum"]:
                 spills = int(self.comment_data[1])
-            elif self.plot_mode in ["IBEX Delayed Spectrum", "Manual Delayeed Spectrum"]:
+            elif self.plot_mode in [
+                "IBEX Delayed Spectrum",
+                "Manual Delayeed Spectrum",
+            ]:
                 spills = int(self.comment_data[2])
             for detector, spectrum in self._raw.items():
                 if detector in normalise_which:
-                    self.data[detector].y = normalise_events(self.data[detector].y, spills)
+                    self.data[detector].y = normalise_events(
+                        self.data[detector].y, spills
+                    )
 
             self.normalisation = "events"
             self.normalise_which = normalise_which
@@ -92,7 +96,12 @@ class RunNexus(Run):
             self._set_normalisation_none()
             raise ValueError("Normalisation by events failed.")
 
-    def _set_mode(self, plot_mode: str | None = None, prompt_limit: str | None = None, delayed_limit: str | None = None):
+    def _set_mode(
+        self,
+        plot_mode: str | None = None,
+        prompt_limit: str | None = None,
+        delayed_limit: str | None = None,
+    ):
         """Set up detector data depending on the chosen plot mode."""
         if plot_mode is None:
             plot_mode = self.plot_mode
@@ -130,7 +139,9 @@ class RunNexus(Run):
             elif plot_mode == "Manual Delayed Spectrum":
                 time_data = self._raw[detector].time[:]
                 energy_data = self._raw[detector].energy[:]
-                mask = (time_data > self.prompt_limit) & (time_data < self.delayed_limit)
+                mask = (time_data > self.prompt_limit) & (
+                    time_data < self.delayed_limit
+                )
                 self._raw[detector].cut_data = energy_data[mask]
                 self.data[detector].bin_range = self._raw[detector].bin_range
                 self.bin_method = "raw"
@@ -144,9 +155,16 @@ class RunNexus(Run):
                 self.bin_method = "raw"
 
             elif plot_mode == "Efficiency Spectrum":
-                if self._raw[detector].efficiency_hist_counts and self._raw[detector].efficiency_hist_energy:
-                    self.data[detector].x = self._raw[detector].efficiency_hist_energy[:]
-                    self.data[detector].y = self._raw[detector].efficiency_hist_counts[:]
+                if (
+                    self._raw[detector].efficiency_hist_counts
+                    and self._raw[detector].efficiency_hist_energy
+                ):
+                    self.data[detector].x = self._raw[detector].efficiency_hist_energy[
+                        :
+                    ]
+                    self.data[detector].y = self._raw[detector].efficiency_hist_counts[
+                        :
+                    ]
                     self.bin_method = "prebinned"
                 else:
                     time_data = self._raw[detector].time[:]

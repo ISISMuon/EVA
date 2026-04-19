@@ -23,6 +23,7 @@ nxs_run_num_list = ["780", "0"]
 nxs_filenames_list = ["MUX00000780.nxs", ""]
 expected_detectors_list = [["GE6", "GE5", "GE8", "GE7"], []]
 
+
 class TestLoadRun:
     def manual_load_brni_run(self, filename):
         config = get_config()
@@ -47,8 +48,15 @@ class TestLoadRun:
             check_loaded_cond_1 = f"raw_data_1/detector_{i}_energyA/counts"
             check_loaded_cond_2 = f"raw_data_1/detector_{i}_energyHist/energy"
 
-            if data_file[check_loaded_cond_1][()].any() or data_file[check_loaded_cond_2][()].any():
-                detector_names.append(data_file[f"raw_data_1/instrument/detector_{i}/name"][()].decode("utf-8"))
+            if (
+                data_file[check_loaded_cond_1][()].any()
+                or data_file[check_loaded_cond_2][()].any()
+            ):
+                detector_names.append(
+                    data_file[f"raw_data_1/instrument/detector_{i}/name"][()].decode(
+                        "utf-8"
+                    )
+                )
 
                 prompt_energy = data_file[f"raw_data_1/detector_{i}_energyA/energy"]
                 prompt_count = data_file[f"raw_data_1/detector_{i}_energyA/counts"]
@@ -94,9 +102,9 @@ class TestLoadRun:
                 assert np.array_equal(dataset.x, xdata)
                 assert np.array_equal(dataset.y, ydata)
 
-
     @pytest.mark.parametrize(
-        "run_num, filename, expected_detectors", list(zip(nxs_run_num_list, nxs_filenames_list, expected_detectors_list))
+        "run_num, filename, expected_detectors",
+        list(zip(nxs_run_num_list, nxs_filenames_list, expected_detectors_list)),
     )
     def test_nxs_load_run(self, qapp, run_num, filename, expected_detectors):
         wdir = get_config()["general"]["working_directory"]
@@ -123,7 +131,9 @@ class TestLoadRun:
             assert flags["no_files_found"] == 1
         else:
             assert run.loaded_detectors == expected_detectors
-            detector_names, prompt_data, delayed_data = self.manual_load_nxs_run(filename)
+            detector_names, prompt_data, delayed_data = self.manual_load_nxs_run(
+                filename
+            )
             run.set_corrections(plot_mode="IBEX Prompt Spectrum")
             for i, (detector, spectrum) in enumerate(run._raw.items()):
                 assert np.array_equal(spectrum.x, prompt_data[i][0])

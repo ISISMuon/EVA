@@ -114,7 +114,7 @@ class WorkspacePresenter:
                 bin_rate=binning,
                 plot_mode=plot_type,
                 prompt_limit=int(prompt_limit),
-                delayed_limit=int(delayed_limit)
+                delayed_limit=int(delayed_limit),
             )
             # dynamically filter only supported arguments for loaded run type
             sig = inspect.signature(self.model.run.set_corrections)
