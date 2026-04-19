@@ -1,4 +1,5 @@
 import os
+import io
 import time
 from zipfile import ZipFile
 
@@ -57,7 +58,7 @@ class TrimModel(QObject):
         self.counts_per_layer_err = None
         self.proportions_per_layer = None
         self.proportions_per_layer_err = None
-
+        self.figs = {}
         # for storing an x-axis shift for each momentum plot (one for each momentum)
         self.default_origin_position = 0
         self.stopping_plot_origin_shifts = []
@@ -136,7 +137,10 @@ class TrimModel(QObject):
                 # insert results into results arrays
                 self.result_x[momentum_index, :] = x
                 self.result_y[momentum_index, :] = y
-
+                self.result_y[momentum_index, :] = (
+                    self.result_y[momentum_index, :]
+                    / np.sum(self.result_y[momentum_index, :])
+                ) * self.stats
                 t1 = time.time_ns()
 
                 dt = (t1 - t0) / 1e9
@@ -162,7 +166,7 @@ class TrimModel(QObject):
                 MomSigma = 0.01 * self.momentum_spread * mom
 
                 xres, yres = [], []
-
+                total_counter = 0
                 for i in range(self.sigma_step + 1):
                     t0 = time.time_ns()
 
@@ -170,13 +174,15 @@ class TrimModel(QObject):
                         mom - 3 * MomSigma + i * 0.5 * MomSigma
                     )  # momentum for each iteration
 
-                    # Number of simulated muons dependent on Gaussian distribution of muon momentum
-                    NE = int(
-                        self.stats
-                        * (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma))
-                        * np.exp(-0.5 * (P - mom) ** 2 / (MomSigma**2))
+                    # Calculate number of muons to simulate for current momentum using normal distribution
+                    # Normalise value at point  using probability density function.
+                    deltaP = 0.5 * MomSigma
+
+                    pdf = (1.0 / (np.sqrt(2.0 * np.pi) * MomSigma)) * np.exp(
+                        -0.5 * (P - mom) ** 2 / MomSigma**2
                     )
 
+                    NE = round(self.stats * pdf * deltaP)
                     # get muon information
                     muon_ion = self.get_muon(P)
 
@@ -195,7 +201,9 @@ class TrimModel(QObject):
                     else:
                         for index in range(0, len(y1)):
                             yres[index] = yres[index] + y1[index]
+                    total_counter += NE
 
+                    # normalise the y
                     # insert results into results arrays
                     self.result_x[momentum_index, :] = xres
                     self.result_y[momentum_index, :] = yres
@@ -214,6 +222,11 @@ class TrimModel(QObject):
                             "sim_times": self.simulation_times,
                         }
                     )
+                self.result_y[momentum_index, :] = (
+                    self.result_y[momentum_index, :]
+                    / np.sum(self.result_y[momentum_index, :])
+                ) * self.stats
+                print("yres sum after normalising: ", np.sum(yres))
 
         else:
             raise ValueError("Invalid simulation type specified")
@@ -277,7 +290,7 @@ class TrimModel(QObject):
         self.stopping_plot_origin_shifts = np.full(
             shape=len(self.momentum), fill_value=self.default_origin_position
         )
-
+        self.depth_plot_origin_shift = self.default_origin_position
         # after sucessful run, update srim installation directory in config
         get_config()["SRIM"]["installation_directory"] = self.srim_exe_dir
         get_config()["SRIM"]["output_directory"] = self.srim_out_dir
@@ -541,7 +554,7 @@ class TrimModel(QObject):
                 pos - x_shift,
                 y_lim_upper * 0.02,
                 self.sample_names[i],
-                horizontalalignment="left",
+                horizontalalignment="right",
                 rotation="vertical",
             )
 
@@ -589,12 +602,12 @@ class TrimModel(QObject):
                 pos - x_shift,
                 y_lim_upper * 0.02,
                 self.sample_names[i],
-                horizontalalignment="left",
+                horizontalalignment="right",
                 rotation="vertical",
             )
 
         axx.legend()
-
+        self.figs[momentum_index] = axx
         return figt, axx
 
     def plot_depth_profile(self) -> tuple[plt.Figure, plt.Axes]:
@@ -659,7 +672,7 @@ class TrimModel(QObject):
                 x=closest_momenta[i],
                 y=0.04 * y_lim_upper,
                 s=name,
-                horizontalalignment="left",
+                horizontalalignment="right",
                 rotation="vertical",
             )
 
@@ -677,6 +690,19 @@ class TrimModel(QObject):
         return os.path.join(
             f"{get_config()['general']['working_directory']}",
             f"SRIM_{momentum}_MeVc.zip",
+        )
+
+    def get_default_srim_plot_save_name(self, momentum: float | None = None) -> str:
+        if momentum is None:
+            return os.path.join(
+                f"{get_config()['general']['working_directory']}",
+                "SRIM_stopping_profile_plots.zip",
+            )
+        else:
+            momentum = f"{momentum:.5f}"
+        return os.path.join(
+            f"{get_config()['general']['working_directory']}",
+            f"SRIM_{momentum}_stopping_profile.png",
         )
 
     def save_sim(self, path: str, rows: list | int | None = None):
@@ -724,6 +750,31 @@ class TrimModel(QObject):
                     layer_curve_str = "".join(header) + "".join(layer_data)
 
                     zf.writestr(layer_filename, layer_curve_str)
+
+    def save_plot(self, path: str, rows: list | int | None = None):
+        if isinstance(rows, int):
+            fig = self.figs[
+                rows
+            ].figure  # get the matplotlib Figure object from the Axes
+            fig.savefig(path, bbox_inches="tight")  # save the figure
+
+        if rows is None:
+            with ZipFile(path, "w") as zipf:
+                for i, momentum_value in enumerate(self.momentum):
+                    if i not in self.figs:
+                        continue  # skip rows with no plot
+
+                    fig = self.figs[i].figure
+
+                    # Save figure to a bytes buffer
+                    buf = io.BytesIO()
+                    fig.savefig(buf, format="png", bbox_inches="tight")
+                    buf.seek(0)
+
+                    # Use a descriptive filename inside the zip
+                    filename = f"SRIM_plot_momentum_{momentum_value:.1f}.png"
+                    zipf.writestr(filename, buf.read())
+                    buf.close()
 
     def save_settings(
         self,

@@ -147,7 +147,10 @@ class TestModelSpectrumModel:
             assert np.array_equal(spectrum.y, ydata), "Incorrect ydata plotted"
 
     @pytest.mark.parametrize("notation", [0, 1, 2])
-    @pytest.mark.skipif(True, reason="Temporarily disabled until issue with missing mudirac intensities is fixed")
+    @pytest.mark.skipif(
+        True,
+        reason="Temporarily disabled until issue with missing mudirac intensities is fixed",
+    )
     # This test currently always fails as it tries to compare lines in the previous mu_xray_db and the current extended one.
     def test_plot_components(self, notation):
         test = base_test.copy()

@@ -67,8 +67,10 @@ class TrimPresenter(QWidget):
         self.view.depth_shift_plot_origin_s.connect(self.depth_shift_plot_origin)
         self.view.depth_reset_plot_origin_s.connect(self.depth_reset_plot_origin)
 
-        self.view.save_s.connect(self.on_save_sim_result)
+        self.view.save_data_s.connect(self.on_save_sim_result)
+        self.view.save_img_s.connect(self.on_save_sim_plot)
         self.view.save_all_sims_button.clicked.connect(self.on_save_all_sim_results)
+        self.view.save_all_imgs_button.clicked.connect(self.on_save_all_sim_plot)
         self.view.show_plot_s.connect(self.show_plot)
         self.view.momentum_slider.valueChanged.connect(self.on_slider_moved)
 
@@ -186,7 +188,7 @@ class TrimPresenter(QWidget):
 
     def depth_reset_plot_origin(self):
         try:
-            self.model.depth_plot_origin_shift = 0
+            self.model.depth_plot_origin_shift = self.model.default_origin_position
             self.view.depth_shift_origin_linedit.setText("0")
             fig, ax = self.model.plot_depth_profile()
 
@@ -439,7 +441,7 @@ class TrimPresenter(QWidget):
             self.model.save_sim(path, row)
 
     def on_save_all_sim_results(self):
-        if len(self.model.result_x) == 0:  # if no simulations have been run
+        if not self.model.result_x:  # if no simulations have been run
             self.view.display_error_message(message="No simulations to save.")
             return
 
@@ -450,6 +452,40 @@ class TrimPresenter(QWidget):
 
         if path:
             self.model.save_sim(path)
+
+    def on_save_sim_plot(self, row):
+        # check if the figure for this momentum exists
+        if row not in self.model.figs:
+            self.view.display_error_message(message="No plots available to save.")
+            return
+
+        # default filename
+        default_path = self.model.get_default_srim_plot_save_name(
+            self.model.momentum[row]
+        )
+        filter_str = "PNG Image (*.png);;PDF File (*.pdf);;All Files (*)"
+
+        # get path from user
+        path = self.view.get_save_file_path(default_path, filter_str)
+
+        if path:
+            self.model.save_plot(path, row)
+
+    def on_save_all_sim_plot(self):
+        # check if the figure for this momentum exists
+        if not self.model.figs:
+            self.view.display_error_message(message="No plots available to save.")
+            return
+
+        # default filename
+        default_path = self.model.get_default_srim_plot_save_name()
+        filter_str = "Zip Archive (*.zip)"
+
+        # get path from user
+        path = self.view.get_save_file_path(default_path, filter_str)
+
+        if path:
+            self.model.save_plot(path)
 
     def save_settings(self):
         try:
