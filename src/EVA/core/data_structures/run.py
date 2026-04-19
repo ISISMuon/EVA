@@ -117,9 +117,8 @@ class Run(QObject, metaclass=MetaQObjectABC):
         """Normalise detector spectra by total counts."""
         for detector, spectrum in self._raw.items():
             if detector in normalise_which:
-                self.data[detector].y = normalise_counts(spectrum.y)
-            else:
-                self.data[detector].y = self.data[detector].y
+                self.data[detector].y = normalise_counts(self.data[detector].y)
+
         self.normalisation = "counts"
         self.normalise_which = normalise_which
 

@@ -134,6 +134,8 @@ class MultiPlotPresenter:
         norm_type = normalisation_types[normalisation_index]
         plot_type = self.view.nexus_plot_display_combo_box.currentText()
         prompt_limit = self.view.prompt_limit_textbox.text()
+        delayed_limit = self.view.delayed_limit_textbox.text()
+
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
             [
@@ -142,18 +144,18 @@ class MultiPlotPresenter:
                     bin_rate=binning,
                     plot_mode=plot_type,
                     prompt_limit=prompt_limit,
+                    delayed_limit=delayed_limit,
                 )
                 for run in self.model.loaded_runs
             ]
 
             self.start_multiplot()
-        except ValueError:
+        except ValueError as e:
             self.view.display_error_message(
-                title="Normalisation error",
-                message="Cannot normalise by events when comment file is not loaded. Please ensure that the comment.dat file is in your loaded directory.",
+                title="Run correction error",
+                message=str(e),
             )
-
-            self.populate_settings_panel()
+            # self.populate_settings_panel()
 
     def populate_settings_panel(self):
         """
@@ -164,12 +166,15 @@ class MultiPlotPresenter:
         self.normalisation = config["default_corrections"]["normalisation"]
         self.plot_mode = config["default_corrections"]["plot_mode"]
         self.prompt_limit = config["default_corrections"]["prompt_limit"]
+        self.delayed_limit = config["default_corrections"]["delayed_limit"]
+
         self.view.binning_spin_box.setValue(self.binning)
         self.view.normalisation_type_combo_box.setCurrentIndex(
             normalisation_types.index(self.normalisation)
         )
         self.view.nexus_plot_display_combo_box.setCurrentText(self.plot_mode)
         self.view.prompt_limit_textbox.setText(str(self.prompt_limit))
+        self.view.delayed_limit_textbox.setText(str(self.delayed_limit))
 
     def checkbox_checked(
         self, checkstate: Qt.CheckState, detector: str, checkbox: QCheckBox

@@ -69,6 +69,8 @@ class WorkspaceView(Ui_workspace, QMainWindow):
         if run.data_type == "biriani":
             self.nexus_plot_display_combo_box.setDisabled(True)
             self.prompt_limit_textbox.setDisabled(True)
+            self.delayed_limit_textbox.setDisabled(True)
+
         self.binning_spin_box.setSuffix("x")
 
         # hide the logbook for now (not implemented)

@@ -19,3 +19,5 @@ class SpectrumNexus:
     manual_hist_2d: h5py.Dataset = None
     cut_data: h5py.Dataset = None
     bin_range: list = None
+    efficiency_hist_counts: h5py.Dataset = None
+    efficiency_hist_energy: h5py.Dataset = None

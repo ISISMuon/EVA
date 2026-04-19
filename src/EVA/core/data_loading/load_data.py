@@ -18,6 +18,7 @@ def load_run(
     binning: int,
     plot_mode: str,
     prompt_limit: int,
+    delayed_limit: int,
 ) -> tuple[Run, dict]:
     """
     Attempts to load specified run as both Biriani and Nexus run files and returns whichever is found. Throws error if neither/both found."""
@@ -32,6 +33,7 @@ def load_run(
         binning,
         plot_mode,
         prompt_limit,
+        delayed_limit,
     )
     if brni_flags["no_files_found"] == 1 and nxs_flags["no_files_found"] == 1:
         return brni_run, {
@@ -244,9 +246,13 @@ def generate_spectrum_nxs(run_number, data_file):
     config = get_config()
 
     for i in range(1, 5):
-        check_loaded = f"raw_data_1/detector_{i}_energyA/counts"
+        check_loaded_cond_1 = f"raw_data_1/detector_{i}_energyA/counts"
+        check_loaded_cond_2 = f"raw_data_1/detector_{i}_energyHist/energy"
         try:
-            if data_file[check_loaded][()].any():
+            if (
+                data_file[check_loaded_cond_1][()].any()
+                or data_file[check_loaded_cond_2][()].any()
+            ):
                 detector_name = data_file[f"raw_data_1/instrument/detector_{i}/name"][
                     ()
                 ].decode("utf-8")
@@ -259,6 +265,17 @@ def generate_spectrum_nxs(run_number, data_file):
 
                 energy = data_file[f"raw_data_1/detector_{i}_events/event_energy"]
                 time = data_file[f"raw_data_1/detector_{i}_events/event_time_offset"]
+
+                try:
+                    efficiency_hist_energy = data_file[
+                        f"raw_data_1/detector_{i}_energyHist/energy"
+                    ]
+                    efficiency_hist_counts = data_file[
+                        f"raw_data_1/detector_{i}_energyHist/counts"
+                    ]
+                except KeyError:
+                    efficiency_hist_energy = None
+                    efficiency_hist_counts = None
 
                 ibex_hist_2d = data_file[f"raw_data_1/detector_{i}_energy2D/counts"]
                 bin_range = (np.min(delayed_energy), np.max(delayed_energy))
@@ -274,6 +291,8 @@ def generate_spectrum_nxs(run_number, data_file):
                     time=time,
                     ibex_hist_2d=ibex_hist_2d,
                     bin_range=bin_range,
+                    efficiency_hist_energy=efficiency_hist_energy,
+                    efficiency_hist_counts=efficiency_hist_counts,
                 )
                 raw[detector_name] = spectrum
                 detectors.append(detector_name)
@@ -297,6 +316,7 @@ def load_run_nxs(
     binning: int,
     plot_mode: str,
     prompt_limit: int,
+    delayed_limit: int,
 ) -> tuple[Run, dict]:
     """Loads nexus run file from given run number, collects data from each channel into dictionary of SpectrumNexus objects, stores in RunNexus object
     along with run metadata, and apply any detected corrections from saved settings in config."""
@@ -314,6 +334,7 @@ def load_run_nxs(
             comment_data=comment_data,
             plot_mode=plot_mode,
             prompt_limit=prompt_limit,
+            delayed_limit=delayed_limit,
             momentum=momentum,
         )
         try:
@@ -325,6 +346,7 @@ def load_run_nxs(
                 bin_rate=binning,
                 plot_mode=plot_mode,
                 prompt_limit=prompt_limit,
+                delayed_limit=delayed_limit,
             )
             norm_flag = 0
 

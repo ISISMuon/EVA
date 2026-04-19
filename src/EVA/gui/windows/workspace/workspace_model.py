@@ -21,28 +21,7 @@ class WorkspaceModel:
         self.normalisation = self.run.normalisation
         self.plot_mode = self.run.plot_mode
         self.prompt_limit = self.run.prompt_limit
-
-    def on_apply_settings(self, settings: dict):
-        """
-        Updates normalisation and binning in config and reapplies all corrections to the loaded run.
-
-        Args:
-            settings: input from run settings form.
-
-        """
-        self.binning = settings.get("binning", self.binning)
-        self.normalisation = normalisation_types[
-            settings.get("normalisation", self.normalisation)
-        ]
-        self.plot_mode = settings.get("plot_mode", self.plot_mode)
-        self.prompt_limit = settings.get("prompt_limit", self.prompt_limit)
-
-        self.run.set_corrections(
-            normalisation=self.normalisation,
-            bin_rate=self.binning,
-            plot_mode=self.plot_mode,
-            prompt_limit=self.prompt_limit,
-        )
+        self.delayed_limit = self.run.delayed_limit
 
     def on_config_changed(self, fields):
         config = get_config()
@@ -71,6 +50,7 @@ class WorkspaceModel:
             "detector_specific": self.run.energy_corrections,
             "plot_mode": self.run.plot_mode,
             "prompt_limit": self.run.prompt_limit,
+            "delayed_limit": self.run.delayed_limit,
             "show_plot": {det: True for det in self.run.loaded_detectors},
         }
 

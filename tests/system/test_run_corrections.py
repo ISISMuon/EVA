@@ -37,6 +37,8 @@ class TestRunCorrections:
         binning = get_config()["default_corrections"]["binning"]
         plot_mode = get_config()["default_corrections"]["plot_mode"]
         prompt_limit = get_config()["default_corrections"]["prompt_limit"]
+        delayed_limit = get_config()["default_corrections"]["delayed_limit"]
+
         run, _ = load_data.load_run(
             "2630",
             wdir,
@@ -45,6 +47,7 @@ class TestRunCorrections:
             binning,
             plot_mode,
             prompt_limit,
+            delayed_limit,
         )
         # energy correction done by EVA
         run.set_corrections(energy_corrections=e_corr)
