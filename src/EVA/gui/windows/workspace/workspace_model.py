@@ -1,3 +1,5 @@
+import zipfile
+
 import matplotlib
 import numpy as np
 
@@ -55,3 +57,26 @@ class WorkspaceModel:
         }
 
         config["saved_corrections"][working_dir][run_num] = corrections
+
+    def export_run_data(self, path):
+        """
+        Export run data as a zip file containing one .txt per detector.
+        Each .txt has two columns: x y
+        """
+
+        with zipfile.ZipFile(path, "w") as zf:
+            for detector, spectrum in self.run.data.items():
+                x = np.asarray(spectrum.x)
+                y = np.asarray(spectrum.y)
+
+                lines = "\n".join(f"{xi:.5f}\t{yi}" for xi, yi in zip(x, y))
+
+                filename = f"{detector}.txt"
+                zf.writestr(filename, lines)
+
+            zf.writestr(
+                "run corrections.txt",
+                f"Run number: {self.run.run_num}\nPlot mode: {self.run.plot_mode}\n"
+                f"Prompt limit: {self.run.prompt_limit}\nDelayed limit: {self.run.delayed_limit}\n"
+                f"Binning: {self.run.bin_rate}\nNormalisation: {self.run.normalisation}\nEnergy corrections: {self.run.energy_corrections}",
+            )
