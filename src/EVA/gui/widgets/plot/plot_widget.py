@@ -31,20 +31,19 @@ class PlotWidget(QWidget):
         self, fig=None, axs=None, parent=None, plot_name=None, plot_manager=None
     ):
         super().__init__()
+        self.layout = QVBoxLayout(self)
         # create the figure canvas
         self.canvas = FigureCanvas(fig=fig, axs=axs)
         self.plot_manager = plot_manager
         self.plot_name = plot_name
-
+        # add navbar and plot canvas to layout
         # this avoids having a navbar when there is no figure
         if fig is None:
             self.navbar = None
         else:
             self.navbar = NavigationToolbar2QT(self.canvas, self)
-
+            self.layout.addWidget(self.navbar, Qt.AlignmentFlag.AlignLeft)
         # add navbar and plot canvas to layout
-        self.layout = QVBoxLayout(self)
-        self.layout.addWidget(self.navbar, Qt.AlignmentFlag.AlignLeft)
         self.layout.addWidget(self.canvas)
         self.setLayout(self.layout)
 
