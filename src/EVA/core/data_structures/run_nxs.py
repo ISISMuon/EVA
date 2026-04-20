@@ -51,50 +51,41 @@ class RunNexus(Run):
             for key, nexus_obj in self._raw.items()
         }
 
-        try:
-            self._set_mode(plot_mode, prompt_limit, delayed_limit)
-        except Exception as e:
-            raise ValueError(f"_set_mode failed: {e}") from e
-
-        try:
-            self._set_energy_correction(energy_corrections)
-        except Exception as e:
-            raise ValueError(f"_set_energy_correction failed: {e}") from e
-
-        try:
-            self._set_binning(bin_rate, default_bin)
-        except Exception as e:
-            raise ValueError(f"_set_binning failed: {e}") from e
-
-        try:
-            self._set_normalisation(normalisation, normalise_which)
-        except Exception as e:
-            raise ValueError(f"_set_normalisation failed: {e}") from e
-
+        self._set_mode(plot_mode, prompt_limit, delayed_limit)
+        self._set_energy_correction(energy_corrections)
+        self._set_binning(bin_rate, default_bin)
+        self._set_normalisation(normalisation, normalise_which)
         self.corrections_updated_s.emit()
 
     def _set_normalisation_events(self, normalise_which):
         """Normalise spectra by event count using comment metadata."""
-        try:
-            if self.plot_mode in ["IBEX Prompt Spectrum", "Manual Prompt Spectrum"]:
+        if self.plot_mode in ["IBEX Prompt Spectrum", "Manual Prompt Spectrum"]:
+            try:
                 spills = int(self.comment_data[1])
-            elif self.plot_mode in [
-                "IBEX Delayed Spectrum",
-                "Manual Delayeed Spectrum",
-            ]:
+            except ValueError:
+                self._set_normalisation_none()
+                raise ValueError("Normalisation by events failed.")
+
+        elif self.plot_mode in [
+            "IBEX Delayed Spectrum",
+            "Manual Delayed Spectrum",
+        ]:
+            try:
                 spills = int(self.comment_data[2])
-            for detector, spectrum in self._raw.items():
-                if detector in normalise_which:
-                    self.data[detector].y = normalise_events(
-                        self.data[detector].y, spills
-                    )
+            except ValueError:
+                self._set_normalisation_none()
+                raise ValueError("Normalisation by events failed.")
+        else:
+            raise ValueError(f"{self.plot_mode} not in list of normalisation methods.")
 
-            self.normalisation = "events"
-            self.normalise_which = normalise_which
+        for detector, spectrum in self._raw.items():
+            if detector in normalise_which:
+                self.data[detector].y = normalise_events(
+                    self.data[detector].y, spills
+                )
 
-        except ValueError:
-            self._set_normalisation_none()
-            raise ValueError("Normalisation by events failed.")
+        self.normalisation = "events"
+        self.normalise_which = normalise_which
 
     def _set_mode(
         self,
