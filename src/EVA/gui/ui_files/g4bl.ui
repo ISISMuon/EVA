@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1063</width>
-    <height>1032</height>
+    <height>1132</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,14 +37,14 @@
          </font>
         </property>
         <property name="text">
-         <string>TRIM settings</string>
+         <string>G4BL settings</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QFrame" name="settings">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -52,67 +52,24 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>200</height>
+          <height>300</height>
          </size>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="sample_name_label">
+         <item row="9" column="1">
+          <widget class="QLineEdit" name="momentum_spread_linedit"/>
+         </item>
+         <item row="17" column="0">
+          <widget class="QLabel" name="stats_label_2">
            <property name="text">
-            <string>Sample Name</string>
+            <string>Bin Number</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="sample_name_linedit"/>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="momentum_linedit"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="momentum_label">
-           <property name="text">
-            <string>Momentum (MeV/c)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="momentum_spread_label">
-           <property name="text">
-            <string>Momentum Spread (%)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLineEdit" name="max_momentum_linedit"/>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLineEdit" name="momentum_step_linedit"/>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="scan_momentum_label">
-           <property name="text">
-            <string>Scan Momentum?</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="1">
-          <widget class="QLineEdit" name="stats_linedit"/>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="min_momentum_label">
-           <property name="text">
-            <string>Min Momentum (MeV/c)</string>
-           </property>
-           <property name="margin">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
+         <item row="8" column="1">
           <widget class="QComboBox" name="sim_type_combo">
            <item>
             <property name="text">
@@ -126,7 +83,7 @@
            </item>
           </widget>
          </item>
-         <item row="8" column="0">
+         <item row="14" column="0">
           <widget class="QLabel" name="g4bl_exe_dir_label">
            <property name="text">
             <string>G4BL.exe directory</string>
@@ -134,26 +91,106 @@
           </widget>
          </item>
          <item row="6" column="0">
+          <widget class="QLabel" name="momentum_step_label">
+           <property name="text">
+            <string>Momentum Step (MeV/c)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="1">
+          <widget class="QLineEdit" name="bin_number_linedit"/>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="momentum_linedit"/>
+         </item>
+         <item row="5" column="0">
           <widget class="QLabel" name="max_momentum_label">
            <property name="text">
             <string>Max Momentum (MeV/c)</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QLineEdit" name="min_momentum_linedit"/>
+         <item row="15" column="1">
+          <widget class="QLineEdit" name="g4bl_out_dir_linedit"/>
          </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="momentum_spread_linedit"/>
+         <item row="0" column="0">
+          <widget class="QLabel" name="sample_name_label">
+           <property name="text">
+            <string>Sample Name</string>
+           </property>
+          </widget>
          </item>
-         <item row="10" column="0">
+         <item row="15" column="0">
+          <widget class="QLabel" name="g4bl_out_dir_label">
+           <property name="text">
+            <string>G4BL output directory</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0">
+          <widget class="QLabel" name="momentum_spread_label">
+           <property name="text">
+            <string>Momentum Spread (%)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="1">
+          <widget class="QLineEdit" name="g4bl_exe_dir_linedit"/>
+         </item>
+         <item row="16" column="0">
           <widget class="QLabel" name="stats_label">
            <property name="text">
             <string>Stats for optimal run</string>
            </property>
           </widget>
          </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="min_momentum_label">
+           <property name="text">
+            <string>Min Momentum (MeV/c)</string>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="sim_type_label">
+           <property name="text">
+            <string>Simulation type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="momentum_label">
+           <property name="text">
+            <string>Momentum (MeV/c)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="max_momentum_linedit"/>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="momentum_step_linedit"/>
+         </item>
          <item row="4" column="1">
+          <widget class="QLineEdit" name="min_momentum_linedit"/>
+         </item>
+         <item row="16" column="1">
+          <widget class="QLineEdit" name="stats_linedit"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="scan_momentum_label">
+           <property name="text">
+            <string>Scan Momentum?</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="sample_name_linedit"/>
+         </item>
+         <item row="3" column="1">
           <widget class="QComboBox" name="scan_momentum_combo">
            <item>
             <property name="text">
@@ -165,47 +202,6 @@
              <string>Yes</string>
             </property>
            </item>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="momentum_step_label">
-           <property name="text">
-            <string>Momentum Step (MeV/c)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="sim_type_label">
-           <property name="text">
-            <string>Simulation type</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLineEdit" name="g4bl_exe_dir_linedit"/>
-         </item>
-         <item row="9" column="1">
-          <widget class="QLineEdit" name="g4bl_out_dir_linedit"/>
-         </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="g4bl_out_dir_label">
-           <property name="text">
-            <string>G4BL output directory</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="0">
-          <widget class="QLabel" name="visualisation_label">
-           <property name="text">
-            <string>Visualise Beam</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="1">
-          <widget class="QCheckBox" name="visualisation_checkbox">
-           <property name="text">
-            <string>Disabled</string>
-           </property>
           </widget>
          </item>
         </layout>
@@ -257,6 +253,12 @@
       </item>
       <item>
        <widget class="QWidget" name="widget_5" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <layout class="QHBoxLayout" name="horizontalLayout_10">
          <item>
           <widget class="QRadioButton" name="stack_layer_radio">
@@ -332,6 +334,13 @@
           <string>Results</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_5">
+          <item row="4" column="0" colspan="2">
+           <widget class="QPushButton" name="placement_save_all_sim_results_button">
+            <property name="text">
+             <string>Save all</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0" colspan="2">
            <widget class="BaseTable" name="placement_results_table">
             <column>
@@ -347,9 +356,9 @@
            </widget>
           </item>
           <item row="3" column="0" colspan="2">
-           <widget class="QPushButton" name="placement_save_all_sim_results_button">
+           <widget class="QPushButton" name="placement_save_all_imgs_button">
             <property name="text">
-             <string>Save all</string>
+             <string>Save all plots</string>
             </property>
            </widget>
           </item>
@@ -446,13 +455,6 @@
           <string>Results</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="3" column="0" colspan="2">
-           <widget class="QPushButton" name="save_all_sims_button">
-            <property name="text">
-             <string>Save all</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0" colspan="2">
            <widget class="BaseTable" name="stack_results_table">
             <column>
@@ -465,6 +467,20 @@
               <string>Options</string>
              </property>
             </column>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="stack_save_all_imgs_button">
+            <property name="text">
+             <string>Save all plots</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="stack_save_all_sims_button">
+            <property name="text">
+             <string>Save all data</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -588,7 +604,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="3">
+         <item row="0" column="2">
           <widget class="QPushButton" name="cancel_sim_button">
            <property name="text">
             <string>Cancel</string>

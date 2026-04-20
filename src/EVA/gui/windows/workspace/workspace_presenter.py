@@ -61,7 +61,7 @@ class WorkspacePresenter:
 
         self.view.tabWidget.tabCloseRequested.connect(self.view.close_tab)
         self.populate_settings_panel()
-
+        self.view.export_run_data_button.clicked.connect(self.export_run_data)
         self.view.save_and_close_requested_s.connect(self.save_and_close)
 
         get_config().config_modified_s.connect(self.process_setting_updates)
@@ -282,3 +282,12 @@ class WorkspacePresenter:
 
         # notify rest of program that window has closed
         self.view.window_closed_s.emit(event)
+
+    def export_run_data(self):
+        # default filename
+        def_dir = get_config()["general"]["working_directory"]
+        filter_str = "Zip Archive (*.zip)"
+        # get path from user
+        path = self.view.get_save_file_path(def_dir, filter_str)
+        if path:
+            self.model.export_run_data(path)
