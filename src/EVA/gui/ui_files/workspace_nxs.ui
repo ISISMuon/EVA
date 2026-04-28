@@ -179,7 +179,7 @@ QGroupBox::title {
            <property name="bottomMargin">
             <number>9</number>
            </property>
-           <item row="16" column="2" colspan="3">
+           <item row="17" column="2" colspan="3">
             <widget class="QPushButton" name="apply_run_settings_button">
              <property name="text">
               <string>Apply</string>
@@ -296,7 +296,7 @@ QGroupBox::title {
              </property>
             </widget>
            </item>
-           <item row="18" column="2" colspan="2">
+           <item row="19" column="2" colspan="2">
             <widget class="QPushButton" name="export_run_data_button">
              <property name="text">
               <string>Export Run Data</string>
@@ -320,7 +320,7 @@ QGroupBox::title {
              </property>
             </widget>
            </item>
-           <item row="19" column="2">
+           <item row="16" column="2">
             <spacer name="verticalSpacer">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
