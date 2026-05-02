@@ -467,6 +467,17 @@ class G4blModel(QObject):
         else:
             momentum = f"{momentum:.1f}"
         return os.path.join(f"{get_config()['general']['working_directory']}", f"G4BL_{momentum}_stopping_profile.png")
+
+    def get_default_g4bl_save_name(self, momentum: float | None = None) -> str:
+        if momentum is None:
+            momentum = "all"
+        else:
+            momentum = f"{momentum:.5f}"
+        return os.path.join(
+            f"{get_config()['general']['working_directory']}",
+            f"G4BL_{momentum}_MeVc.zip",
+        )
+
     
     def save_plot(self, path: str, rows: list | int | None = None):
         if isinstance(rows, int):
@@ -490,7 +501,52 @@ class G4blModel(QObject):
                     filename = f"SRIM_plot_momentum_{momentum_value:.1f}.png"
                     zipf.writestr(filename, buf.read())
                     buf.close()
-                    
+
+    def save_sim(self, path: str, rows: list | int | None = None):
+        if isinstance(rows, int):
+            rows = [rows]
+
+        if rows is None:
+            rows = [i for i, _ in enumerate(self.momentum)]
+
+        # prepare header text (will be the same for all files)
+        header = [
+            (
+                f"Layer {i}: {self.sample_names[i]} at ({self.layer_boundary_positions[i]}mm, "
+                f"{self.layer_boundary_positions[i + 1]}mm)\n"
+            )
+            for i, layer in enumerate(self.sample_layers)
+        ]
+
+        header.append("\nDepth (mm), Muon count\n")
+
+        # create zip archive
+        with ZipFile(path, "w") as zf:
+            for row in rows:
+                momentum = self.momentum[row]
+                total_curve_filename = f"{momentum:.5f}MeVc_total_profile.dat"
+
+                total_curve_data = [
+                    f"{x}, {self.result_y[row][i]}\n"
+                    for i, x in enumerate(self.result_x[row])
+                ]
+                total_curve_str = "".join(header) + "".join(total_curve_data)
+
+                zf.writestr(total_curve_filename, total_curve_str)
+
+                for i, layer_name in enumerate(self.sample_names):
+                    layer_filename = f"{momentum:.5f}MeVc_layer{i}_profile.dat"
+
+                    ydata_per_layer = self.split_layers(
+                        row
+                    )  # list of arrays containing a y-array for each layer
+                    layer_data = [
+                        f"{x}, {ydata_per_layer[i][j]}\n"
+                        for j, x in enumerate(self.result_x[row])
+                    ]
+                    layer_curve_str = "".join(header) + "".join(layer_data)
+
+                    zf.writestr(layer_filename, layer_curve_str)
     @staticmethod
     def is_valid_path(path):
         return os.path.exists(path)

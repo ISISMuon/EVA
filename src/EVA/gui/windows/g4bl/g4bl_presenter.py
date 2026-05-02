@@ -66,7 +66,9 @@ class G4blPresenter(QWidget):
         self.view.depth_shift_plot_origin_s.connect(self.depth_shift_plot_origin)
         self.view.depth_reset_plot_origin_s.connect(self.depth_reset_plot_origin)
 
-        self.view.stack_save_all_sims_button.clicked.connect(self.on_save_sim_result)
+        self.view.save_data_s.connect(self.on_save_sim_result)
+        self.view.save_img_s.connect(self.on_save_sim_plot)
+        self.view.stack_save_all_sims_button.clicked.connect(self.on_save_all_sim_results)
         self.view.stack_save_all_imgs_button.clicked.connect(self.on_save_all_sim_plot)
         self.view.show_plot_s.connect(self.show_plot)
         self.view.momentum_slider.valueChanged.connect(self.on_slider_moved)
@@ -348,10 +350,52 @@ class G4blPresenter(QWidget):
         pass
     def depth_reset_plot_origin(self):
         pass
-    def on_save_sim_result(self):
-        pass
+
+    def on_save_sim_result(self, row):
+        if len(self.model.result_x) == 0:  # if no simulations have been run
+            self.view.display_error_message(message="No simulations to save.")
+            return
+
+        default_path = self.model.get_default_g4bl_save_name(self.model.momentum[row])
+        filter_str = "Zip Archive (*.zip)"
+
+        path = self.view.get_save_file_path(default_path, filter_str)
+
+        if path:
+            self.model.save_sim(path, row)
+
     def on_save_all_sim_results(self):
-        pass
+        if self.model.result_x is None:  # if no simulations have been run
+            self.view.display_error_message(message="No simulations to save.")
+            return
+
+        default_path = self.model.get_default_g4bl_save_name()
+        filter_str = "Zip Archive (*.zip)"
+
+        path = self.view.get_save_file_path(default_path, filter_str)
+
+        if path:
+            self.model.save_sim(path)
+
+
+    def on_save_sim_plot(self, row):
+        # check if the figure for this momentum exists
+        if row not in self.model.figs:
+            self.view.display_error_message(message="No plots available to save.")
+            return
+
+        # default filename
+        default_path = self.model.get_default_g4bl_plot_save_name(
+            self.model.momentum[row]
+        )
+        filter_str = "PNG Image (*.png);;PDF File (*.pdf);;All Files (*)"
+
+        # get path from user
+        path = self.view.get_save_file_path(default_path, filter_str)
+
+        if path:
+            self.model.save_plot(path, row)
+
 
     def on_save_all_sim_plot(self):
         # check if the figure for this momentum exists

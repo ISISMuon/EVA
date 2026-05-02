@@ -29,7 +29,9 @@ class G4blView(BaseView, Ui_g4bl):
     save_plot_requested_s = pyqtSignal(int, str)
 
     show_plot_s = pyqtSignal(int, str)
-    save_s = pyqtSignal(int)
+    save_data_s = pyqtSignal(int)
+    save_img_s = pyqtSignal(int)
+
     depth_shift_plot_origin_s = pyqtSignal()
     depth_reset_plot_origin_s = pyqtSignal()
     stopping_shift_plot_origin_s = pyqtSignal(int)
@@ -95,26 +97,27 @@ class G4blView(BaseView, Ui_g4bl):
 
             options_container = QWidget()
             layout = QHBoxLayout()
-            layout.setContentsMargins(0,0,0,0)
+            layout.setContentsMargins(0, 0, 0, 0)
             options_container.setLayout(layout)
 
             plot_whole_btn = QPushButton()
             plot_whole_btn.setText("Show plot")
 
-            save_btn = QPushButton()
-            save_btn.setText('Save plot data')
+            save_data_btn = QPushButton()
+            save_data_btn.setText("Save plot data")
 
+            save_plot_img_btn = QPushButton()
+            save_plot_img_btn.setText("Save plot image")
 
             layout.addWidget(plot_whole_btn)
-            layout.addWidget(save_btn)
+            layout.addWidget(save_data_btn)
+            layout.addWidget(save_plot_img_btn)
 
             table.setCellWidget(row, 1, options_container)
 
-            plot_whole_btn.clicked.connect(
-                lambda _, r=row, m=momentumstr: self.show_plot_s.emit(r, m))
+            save_data_btn.clicked.connect(lambda _, r=row: self.save_data_s.emit(r))
 
-            save_btn.clicked.connect(
-                lambda _, r=row: self.save_s.emit(r))
+            save_plot_img_btn.clicked.connect(lambda _, r=row: self.save_img_s.emit(r))
 
     def update_results_tree(self, tree, momenta, layer_names, proportions, proportions_errs, counts, counts_errs):
         tree.clear()
