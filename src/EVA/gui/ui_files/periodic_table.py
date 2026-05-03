@@ -2052,8 +2052,8 @@ class Ui_MainWindow(object):
         self.actionManual.setObjectName("actionManual")
 
         self.retranslateUi(MainWindow)
-        self.search_result_tab.setCurrentIndex(1)
-        self.tabWidget.setCurrentIndex(2)
+        self.search_result_tab.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
