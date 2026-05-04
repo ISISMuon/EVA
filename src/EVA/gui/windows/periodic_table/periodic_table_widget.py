@@ -197,7 +197,12 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("Periodic Table - EVA")
-
+        self.reference_label.setText(
+            'Muonic X-ray energies were calculated using \
+        <a href="https://muon-spectroscopy-computational-project.github.io/mudirac/">MuDirac</a>, \
+        Gamma ray energies were taken from the <a href="https://wwwndc.jaea.go.jp/NuC/">JAEA website database</a> and electronic X-ray results were obtained from \
+        <a href="https://xdb.lbl.gov/">Lawrence Berkeley National Laboratory</a>.'
+        )
         # disable buttons for some of the elements for which no muonic X-ray data exist
         for element in elements_disable:
             button = getattr(self, f"{element}_button", None)

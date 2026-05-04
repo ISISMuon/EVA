@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1836, 948)
+        MainWindow.resize(1836, 947)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Policy.Expanding,
             QtWidgets.QSizePolicy.Policy.Expanding,
@@ -133,6 +133,111 @@ class Ui_MainWindow(object):
         self.search_isotopes_checkbox.setObjectName("search_isotopes_checkbox")
         self.gridLayout_4.addWidget(self.search_isotopes_checkbox, 0, 0, 1, 2)
         self.gridLayout.addWidget(self.groupBox_2, 2, 0, 1, 1)
+        self.groupBox = QtWidgets.QGroupBox(parent=self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
+        self.groupBox.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.groupBox.setFont(font)
+        self.groupBox.setFlat(True)
+        self.groupBox.setCheckable(False)
+        self.groupBox.setObjectName("groupBox")
+        self.gridLayout_3 = QtWidgets.QGridLayout(self.groupBox)
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.element_info_text = QtWidgets.QPlainTextEdit(parent=self.groupBox)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
+        )
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(
+            self.element_info_text.sizePolicy().hasHeightForWidth()
+        )
+        self.element_info_text.setSizePolicy(sizePolicy)
+        self.element_info_text.setObjectName("element_info_text")
+        self.gridLayout_3.addWidget(self.element_info_text, 0, 0, 1, 1)
+        self.tabWidget = QtWidgets.QTabWidget(parent=self.groupBox)
+        self.tabWidget.setObjectName("tabWidget")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.gridLayout_5 = QtWidgets.QGridLayout(self.tab)
+        self.gridLayout_5.setObjectName("gridLayout_5")
+        self.element_info_muonic_xray_tree = QtWidgets.QTreeWidget(parent=self.tab)
+        self.element_info_muonic_xray_tree.setObjectName(
+            "element_info_muonic_xray_tree"
+        )
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.element_info_muonic_xray_tree.headerItem().setFont(0, font)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.element_info_muonic_xray_tree.headerItem().setFont(1, font)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.element_info_muonic_xray_tree.headerItem().setFont(2, font)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.element_info_muonic_xray_tree.headerItem().setFont(3, font)
+        self.element_info_muonic_xray_tree.header().setDefaultSectionSize(150)
+        self.element_info_muonic_xray_tree.header().setHighlightSections(False)
+        self.element_info_muonic_xray_tree.header().setMinimumSectionSize(150)
+        self.gridLayout_5.addWidget(self.element_info_muonic_xray_tree, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.gridLayout_6 = QtWidgets.QGridLayout(self.tab_2)
+        self.gridLayout_6.setObjectName("gridLayout_6")
+        self.treeWidget_2 = QtWidgets.QTreeWidget(parent=self.tab_2)
+        self.treeWidget_2.setObjectName("treeWidget_2")
+        self.treeWidget_2.headerItem().setText(0, "Isotope")
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.treeWidget_2.headerItem().setFont(0, font)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.treeWidget_2.headerItem().setFont(1, font)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.treeWidget_2.headerItem().setFont(2, font)
+        self.treeWidget_2.header().setDefaultSectionSize(150)
+        self.gridLayout_6.addWidget(self.treeWidget_2, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QtWidgets.QWidget()
+        self.tab_3.setObjectName("tab_3")
+        self.gridLayout_7 = QtWidgets.QGridLayout(self.tab_3)
+        self.gridLayout_7.setObjectName("gridLayout_7")
+        self.element_info_electronic_xray_table = QtWidgets.QTableWidget(
+            parent=self.tab_3
+        )
+        self.element_info_electronic_xray_table.setMinimumSize(QtCore.QSize(862, 0))
+        self.element_info_electronic_xray_table.setAlternatingRowColors(False)
+        self.element_info_electronic_xray_table.setObjectName(
+            "element_info_electronic_xray_table"
+        )
+        self.element_info_electronic_xray_table.setColumnCount(3)
+        self.element_info_electronic_xray_table.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        item.setFont(font)
+        self.element_info_electronic_xray_table.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        item.setFont(font)
+        self.element_info_electronic_xray_table.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.element_info_electronic_xray_table.setHorizontalHeaderItem(2, item)
+        self.gridLayout_7.addWidget(self.element_info_electronic_xray_table, 0, 0, 1, 1)
+        self.tabWidget.addTab(self.tab_3, "")
+        self.gridLayout_3.addWidget(self.tabWidget, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.groupBox, 0, 1, 3, 1)
         self.widget = QtWidgets.QWidget(parent=self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Policy.Ignored,
@@ -1932,111 +2037,10 @@ class Ui_MainWindow(object):
         self.Cu_button.setObjectName("Cu_button")
         self.gridLayout_2.addWidget(self.Cu_button, 3, 11, 1, 1)
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
-        self.groupBox = QtWidgets.QGroupBox(parent=self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Expanding,
-            QtWidgets.QSizePolicy.Policy.Expanding,
-        )
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
-        self.groupBox.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.groupBox.setFont(font)
-        self.groupBox.setFlat(True)
-        self.groupBox.setCheckable(False)
-        self.groupBox.setObjectName("groupBox")
-        self.gridLayout_3 = QtWidgets.QGridLayout(self.groupBox)
-        self.gridLayout_3.setObjectName("gridLayout_3")
-        self.element_info_text = QtWidgets.QPlainTextEdit(parent=self.groupBox)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
-        )
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.element_info_text.sizePolicy().hasHeightForWidth()
-        )
-        self.element_info_text.setSizePolicy(sizePolicy)
-        self.element_info_text.setObjectName("element_info_text")
-        self.gridLayout_3.addWidget(self.element_info_text, 0, 0, 1, 1)
-        self.tabWidget = QtWidgets.QTabWidget(parent=self.groupBox)
-        self.tabWidget.setObjectName("tabWidget")
-        self.tab = QtWidgets.QWidget()
-        self.tab.setObjectName("tab")
-        self.gridLayout_5 = QtWidgets.QGridLayout(self.tab)
-        self.gridLayout_5.setObjectName("gridLayout_5")
-        self.element_info_muonic_xray_tree = QtWidgets.QTreeWidget(parent=self.tab)
-        self.element_info_muonic_xray_tree.setObjectName(
-            "element_info_muonic_xray_tree"
-        )
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.element_info_muonic_xray_tree.headerItem().setFont(0, font)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.element_info_muonic_xray_tree.headerItem().setFont(1, font)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.element_info_muonic_xray_tree.headerItem().setFont(2, font)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.element_info_muonic_xray_tree.headerItem().setFont(3, font)
-        self.element_info_muonic_xray_tree.header().setDefaultSectionSize(150)
-        self.element_info_muonic_xray_tree.header().setHighlightSections(False)
-        self.element_info_muonic_xray_tree.header().setMinimumSectionSize(150)
-        self.gridLayout_5.addWidget(self.element_info_muonic_xray_tree, 0, 0, 1, 1)
-        self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.gridLayout_6 = QtWidgets.QGridLayout(self.tab_2)
-        self.gridLayout_6.setObjectName("gridLayout_6")
-        self.treeWidget_2 = QtWidgets.QTreeWidget(parent=self.tab_2)
-        self.treeWidget_2.setObjectName("treeWidget_2")
-        self.treeWidget_2.headerItem().setText(0, "Isotope")
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.treeWidget_2.headerItem().setFont(0, font)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.treeWidget_2.headerItem().setFont(1, font)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.treeWidget_2.headerItem().setFont(2, font)
-        self.treeWidget_2.header().setDefaultSectionSize(150)
-        self.gridLayout_6.addWidget(self.treeWidget_2, 0, 0, 1, 1)
-        self.tabWidget.addTab(self.tab_2, "")
-        self.tab_3 = QtWidgets.QWidget()
-        self.tab_3.setObjectName("tab_3")
-        self.gridLayout_7 = QtWidgets.QGridLayout(self.tab_3)
-        self.gridLayout_7.setObjectName("gridLayout_7")
-        self.element_info_electronic_xray_table = QtWidgets.QTableWidget(
-            parent=self.tab_3
-        )
-        self.element_info_electronic_xray_table.setMinimumSize(QtCore.QSize(862, 0))
-        self.element_info_electronic_xray_table.setAlternatingRowColors(False)
-        self.element_info_electronic_xray_table.setObjectName(
-            "element_info_electronic_xray_table"
-        )
-        self.element_info_electronic_xray_table.setColumnCount(3)
-        self.element_info_electronic_xray_table.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        item.setFont(font)
-        self.element_info_electronic_xray_table.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        item.setFont(font)
-        self.element_info_electronic_xray_table.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.element_info_electronic_xray_table.setHorizontalHeaderItem(2, item)
-        self.gridLayout_7.addWidget(self.element_info_electronic_xray_table, 0, 0, 1, 1)
-        self.tabWidget.addTab(self.tab_3, "")
-        self.gridLayout_3.addWidget(self.tabWidget, 1, 0, 1, 1)
-        self.gridLayout.addWidget(self.groupBox, 0, 1, 3, 1)
+        self.reference_label = QtWidgets.QLabel(parent=self.centralwidget)
+        self.reference_label.setOpenExternalLinks(True)
+        self.reference_label.setObjectName("reference_label")
+        self.gridLayout.addWidget(self.reference_label, 3, 0, 1, 2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -2049,7 +2053,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.search_result_tab.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -2068,12 +2072,10 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "IUPAC name"))
         item = self.mu_xray_search_result_table.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Error"))
-        self.mu_xray_search_result_table.setSortingEnabled(True)
         self.search_result_tab.setTabText(
             self.search_result_tab.indexOf(self.mu_xray_search_tab),
             _translate("MainWindow", "Muonic X-ray results"),
         )
-
         item = self.gamma_search_result_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Source"))
         item = self.gamma_search_result_table.horizontalHeaderItem(1)
@@ -2082,12 +2084,10 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Intensity"))
         item = self.gamma_search_result_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Error"))
-        self.gamma_search_result_table.setSortingEnabled(True)
         self.search_result_tab.setTabText(
             self.search_result_tab.indexOf(self.gamma_search_tab),
             _translate("MainWindow", "Gamma results"),
         )
-
         item = self.e_xray_search_result_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Source"))
         item = self.e_xray_search_result_table.horizontalHeaderItem(1)
@@ -2096,16 +2096,54 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Transition"))
         item = self.e_xray_search_result_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Error"))
-        self.e_xray_search_result_table.setSortingEnabled(True)
         self.search_result_tab.setTabText(
             self.search_result_tab.indexOf(self.e_xray_search_tab),
             _translate("MainWindow", "Electronic X-ray results"),
         )
-
         self.print_button.setText(_translate("MainWindow", "Find"))
         self.energy_label.setText(_translate("MainWindow", "Energy (keV)"))
         self.search_isotopes_checkbox.setText(
             _translate("MainWindow", "Search isotope-specific muonic X-rays")
+        )
+        self.groupBox.setTitle(
+            _translate(
+                "MainWindow",
+                "Muonic X-ray Info (click any button on the periodic table)",
+            )
+        )
+        self.element_info_muonic_xray_tree.headerItem().setText(
+            0, _translate("MainWindow", "Isotope")
+        )
+        self.element_info_muonic_xray_tree.headerItem().setText(
+            1, _translate("MainWindow", "Transition")
+        )
+        self.element_info_muonic_xray_tree.headerItem().setText(
+            2, _translate("MainWindow", "Energy (keV)")
+        )
+        self.element_info_muonic_xray_tree.headerItem().setText(
+            3, _translate("MainWindow", "IUPAC name")
+        )
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Muonic X-rays")
+        )
+        self.treeWidget_2.headerItem().setText(
+            1, _translate("MainWindow", "Energy (keV)")
+        )
+        self.treeWidget_2.headerItem().setText(
+            2, _translate("MainWindow", "Intensity (%)")
+        )
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Gamma rays")
+        )
+        item = self.element_info_electronic_xray_table.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Transition"))
+        item = self.element_info_electronic_xray_table.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Energy (keV)"))
+        item = self.element_info_electronic_xray_table.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Relative Intensity"))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab_3),
+            _translate("MainWindow", "Electronic X-rays"),
         )
         self.Al_button.setToolTip(
             _translate(
@@ -2933,44 +2971,21 @@ class Ui_MainWindow(object):
             )
         )
         self.Cu_button.setText(_translate("MainWindow", "Cu"))
-        self.groupBox.setTitle(
+        self.reference_label.setText(
             _translate(
                 "MainWindow",
-                "Muonic X-ray Info (click any button on the periodic table)",
+                "Muonic X-ray energies were calculated using MuDirac (documentation), Gamma ray energies were taken from the JAEA website database and electronic X-ray results were taken from the Center for X-ray Optics and Advanced Light Source Data Booklet.",
             )
         )
-        self.element_info_muonic_xray_tree.headerItem().setText(
-            0, _translate("MainWindow", "Isotope")
-        )
-        self.element_info_muonic_xray_tree.headerItem().setText(
-            1, _translate("MainWindow", "Transition")
-        )
-        self.element_info_muonic_xray_tree.headerItem().setText(
-            2, _translate("MainWindow", "Energy (keV)")
-        )
-        self.element_info_muonic_xray_tree.headerItem().setText(
-            3, _translate("MainWindow", "IUPAC name")
-        )
-        self.tabWidget.setTabText(
-            self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Muonic X-rays")
-        )
-        self.treeWidget_2.headerItem().setText(
-            1, _translate("MainWindow", "Energy (keV)")
-        )
-        self.treeWidget_2.headerItem().setText(
-            2, _translate("MainWindow", "Intensity (%)")
-        )
-        self.tabWidget.setTabText(
-            self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Gamma rays")
-        )
-        item = self.element_info_electronic_xray_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Transition"))
-        item = self.element_info_electronic_xray_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Energy (keV)"))
-        item = self.element_info_electronic_xray_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Relative Intensity"))
-        self.tabWidget.setTabText(
-            self.tabWidget.indexOf(self.tab_3),
-            _translate("MainWindow", "Electronic X-rays"),
-        )
         self.actionManual.setText(_translate("MainWindow", "Manual"))
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec())
