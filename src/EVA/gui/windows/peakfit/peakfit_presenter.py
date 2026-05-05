@@ -2,7 +2,7 @@ import logging
 import os
 import matplotlib.backend_bases
 from matplotlib.backend_bases import MouseButton
-
+from PyQt6.QtCore import Qt
 from EVA.core.app import get_config
 from EVA.gui.windows.peakfit.constraints_window import ConstraintsWindow
 from EVA.gui.windows.peakfit.model_fit_model import ModelFitModel
@@ -98,7 +98,7 @@ class PeakFitPresenter(object):
         self.view.side_panel_tabs.currentChanged.connect(
             lambda i: self.view.plot_container_widget.setCurrentIndex(i)
         )
-
+        self.view.plot_comp_checkbox.stateChanged.connect(lambda check_state: self.plot_component(check_state))
         self.view.window_closed_s.connect(self.model.close_figures)
         self.view.window_closed_s.connect(self.mf_model.close_figures)
 
@@ -528,3 +528,15 @@ class PeakFitPresenter(object):
 
         self.mf_model.replot_spectrum_residual()
         self.view.model_plot.update_plot()
+
+    def plot_component(self, check_state):
+
+        if self.model.fit_result is None:
+            self.view.plot_comp_checkbox.setChecked(False)
+            self.view.display_error_message(
+                message="Please perform a peak fit before plotting individual components."
+            )
+            return
+        else:
+            self.model.plot_component(check_state)
+            self.view.plot.update_plot()

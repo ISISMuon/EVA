@@ -15,19 +15,30 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QStackedWidget" name="plot_container_widget">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>2</horstretch>
-       <verstretch>2</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background: white</string>
-     </property>
-     <widget class="PlotWidget" name="plot"/>
-     <widget class="PlotWidget" name="model_plot"/>
-    </widget>
+    <layout class="QVBoxLayout" name="verticalLayout_12">
+     <item>
+      <widget class="QStackedWidget" name="plot_container_widget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>2</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background: white</string>
+       </property>
+       <widget class="PlotWidget" name="plot"/>
+       <widget class="PlotWidget" name="model_plot"/>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="plot_comp_checkbox">
+       <property name="text">
+        <string>Plot Fit Components</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QTabWidget" name="side_panel_tabs">
