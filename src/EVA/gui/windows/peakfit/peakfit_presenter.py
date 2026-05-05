@@ -421,24 +421,27 @@ class PeakFitPresenter(object):
             logger.info("Selected fit table file: %s", path)
 
     def save_params(self):
-        auto_e_range_checkbox_state = self.view.auto_e_range_checkbox.isChecked()
-        x_range = None if auto_e_range_checkbox_state else self.get_e_range()
-        param_type = "fitted"
+
         if not self.model.fit_result:
-            condition = self.view.show_question_box(title="Warning",
-                            message="No fitted parameters found. Would you like to save initial parameters?")
-            if condition:
-                param_type = "initial"
-            else:
-                return
-                
+            self.view.display_error_message(
+                message="No fitted parameters found. Please perform a peak fit first.")
+            return
+        if len(self.model.fitted_peak_params) != len(self.model.initial_peak_params):
+            self.view.display_error_message(
+                message="Number of fitted peaks does not match number of initial peaks." \
+                " Please ensure all initial peaks were fitted successfully before saving parameters.")
+            return
+        auto_e_range_checkbox_state = self.view.auto_e_range_checkbox.isChecked()
+        x_range = self.get_e_range()
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(
             default_dir=def_dir, file_filter="JSON files (*.json)"
         )
         if path:
-            self.model.save_params(param_type, path, x_range, auto_e_range_checkbox_state)
-
+            self.model.save_params(path, x_range, auto_e_range_checkbox_state)
+            self.view.peak_params_tabs.setCurrentIndex(0)
+            self.view.bg_params_tabs.setCurrentIndex(0)
+            
     def load_params(self):
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_load_file_path(

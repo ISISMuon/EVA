@@ -235,18 +235,8 @@ class PeakFitModel(QObject):
 			y_range = (-np.max(ydata) * 0.05, np.max(ydata) * 1.3)
 			self.y_range = y_range
 
-	def save_params(self, param_type: str, path: str, x_range: tuple, auto_e_range: bool):
-		if param_type == "initial":
+	def save_params(self, path: str, x_range: tuple, auto_e_range: bool):
 			obj = {
-					"param_type": param_type,
-					"init_background": self.initial_bg_params,
-					"init_peaks": self.initial_peak_params,
-					"x_range": x_range,
-					"auto_e_range": auto_e_range
-			}
-		else:
-			obj = {
-					"param_type": param_type,
 					"init_background": self.initial_bg_params,
 					"init_peaks": self.initial_peak_params,
                     "fit_background": self.fitted_bg_params,
@@ -256,7 +246,7 @@ class PeakFitModel(QObject):
 			}
 			with open(path, "w") as file:
 					json.dump(obj, file, indent=4)
-					logger.debug("Saved initial parameters to %s", path)
+					logger.debug("Saved peakfit parameters to %s", path)
 
 			file.close()
 
@@ -264,18 +254,20 @@ class PeakFitModel(QObject):
 		with open(path, "r") as file:
 			obj = json.load(file)
 			logger.debug("Loaded initial parameters from %s", path)
-		param_type = obj["param_type"]
-		if param_type == "initial":
-			self.initial_peak_params = obj["peaks"]
-			self.initial_bg_params = obj["background"]
+		# param_type = obj["param_type"]
+		param_type = "fitted"
+		#TODO make it possible to load just init params if only those were saved
 		if param_type == "fitted":
-			self.fitted_peak_params = obj["peaks"]
-			self.fitted_bg_params = obj["background"]
+			self.initial_peak_params = obj["fit_peaks"]
+			self.initial_bg_params = obj["fit_background"]
+			self.fitted_peak_params = obj["fit_peaks"]
+			self.fitted_bg_params = obj["fit_background"]
 		# update energy range
 		self.x_range = obj["x_range"]
 		auto_e_range = obj["auto_e_range"]
 		file.close()
 		return param_type, auto_e_range
+
 	def array_to_string(self,array):
 		return "".join(f"{row[0]}, {row[1]}\n" for row in array)
 	
