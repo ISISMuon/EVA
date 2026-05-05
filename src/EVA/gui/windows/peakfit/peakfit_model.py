@@ -245,8 +245,29 @@ class PeakFitModel(QObject):
 
         self.plot_residual()
 
-    # self.fig.tight_layout()
+    def plot_component(self, checked):
+        if not checked:
+            for line in self.main_axs.lines:
+                label = line.get_label()
+                if label.startswith("Fitted peak p") or label == "Fitted background":
+                    line.remove()
+            self.main_axs.legend()
 
+        else:
+            x = self.run.data[self.detector].x
+            bg = self.fitted_bg_params["background"]
+            bg_func = bg["a"]["value"] * x * x + bg["b"]["value"] * x + bg["c"]["value"]
+            self.main_axs.plot(x, bg_func, label="Fitted background")
+
+            for peak_id, param in self.fitted_peak_params.items():
+                peak_func = gaussian(
+                    x,
+                    param["center"]["value"],
+                    param["sigma"]["value"],
+                    param["amplitude"]["value"],
+                )
+                self.main_axs.plot(x, peak_func, label=f"Fitted peak {peak_id}")
+            self.main_axs.legend()
     # y range for plotting (to make plot look nice)
     def calculate_y_range(self, ydata: np.ndarray):
         y_range = (-np.max(ydata) * 0.05, np.max(ydata) * 1.3)
