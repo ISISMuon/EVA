@@ -190,3 +190,10 @@ class WorkspaceView(Ui_workspace, QMainWindow):
 
     def closeEvent(self, event: QCloseEvent):
         self.save_and_close_requested_s.emit(event)
+
+    def get_save_file_path(self, default_dir: str, file_filter: str) -> str:
+        file = QFileDialog.getSaveFileName(
+            self, "Save File", directory=default_dir, filter=file_filter
+        )
+        if file:
+            return file[0]
