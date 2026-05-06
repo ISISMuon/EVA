@@ -441,7 +441,7 @@ class TrimPresenter(QWidget):
             self.model.save_sim(path, row)
 
     def on_save_all_sim_results(self):
-        if not self.model.result_x:  # if no simulations have been run
+        if len(self.model.result_x) == 0:  # if no simulations have been run
             self.view.display_error_message(message="No simulations to save.")
             return
 
