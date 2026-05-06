@@ -226,7 +226,6 @@ class TrimModel(QObject):
                     self.result_y[momentum_index, :]
                     / np.sum(self.result_y[momentum_index, :])
                 ) * self.stats
-                print("yres sum after normalising: ", np.sum(yres))
 
         else:
             raise ValueError("Invalid simulation type specified")
