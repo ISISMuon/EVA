@@ -230,6 +230,16 @@ class TrimModel(QObject):
         else:
             raise ValueError("Invalid simulation type specified")
 
+        # Create arrays to store various components of simulation results
+        self.process_and_store_simulation_results()
+
+        # after sucessful run, update srim installation directory in config
+        get_config()["SRIM"]["installation_directory"] = self.srim_exe_dir
+        get_config()["SRIM"]["output_directory"] = self.srim_out_dir
+
+        return {"status": "success"}
+
+    def process_and_store_simulation_results(self):
         # calculate the layer boundary positions as a cumulative sum of layer thicknesses
         self.layer_boundary_positions = self.get_layer_boundary_positions()
 
@@ -283,18 +293,12 @@ class TrimModel(QObject):
             self.counts_per_layer_err[:, m] = np.round(np.sqrt(counts_per_layer), 4)
             self.proportions_per_layer[:, m] = np.round(frac * 100, 4)
             self.proportions_per_layer_err[:, m] = np.round(frac_err_filtered * 100, 4)
-
         # set all plot origins to be shifted by default so that 0 on the x-axis is located at end of aluminium layer
         self.default_origin_position = self.layer_boundary_positions[3]
         self.stopping_plot_origin_shifts = np.full(
             shape=len(self.momentum), fill_value=self.default_origin_position
         )
         self.depth_plot_origin_shift = self.default_origin_position
-        # after sucessful run, update srim installation directory in config
-        get_config()["SRIM"]["installation_directory"] = self.srim_exe_dir
-        get_config()["SRIM"]["output_directory"] = self.srim_out_dir
-
-        return {"status": "success"}
 
     def setup_sample(self, layers: list[dict]):
         """
