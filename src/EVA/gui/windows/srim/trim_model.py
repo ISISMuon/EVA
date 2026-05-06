@@ -2,7 +2,7 @@ import os
 import io
 import time
 from zipfile import ZipFile
-
+import h5py
 import numpy as np
 from PyQt6.QtCore import pyqtSignal, QObject
 from matplotlib import pyplot as plt
@@ -795,48 +795,87 @@ class TrimModel(QObject):
         layers,
         target_dir,
     ):
-        file2 = open(target_dir, "w")
-        file2.writelines("Sample Name\n")
-        out = sample_name + "\n"
-        file2.writelines(out)
-        file2.writelines("SimType\n")
-        out = sim_type + "\n"
-        file2.writelines(out)
-        file2.writelines("Momentum\n")
-        out = str(momentum) + "\n"
-        file2.writelines(out)
-        file2.writelines("Momentum Spread\n")
-        out = str(momentum_spread) + "\n"
-        file2.writelines(out)
-        file2.writelines("Scan Momentum\n")
-        out = scan_type + "\n"
-        file2.writelines(out)
-        file2.writelines("Min Momentum\n")
-        out = str(min_momentum) + "\n"
-        file2.writelines(out)
-        file2.writelines("Max Momentum\n")
-        out = str(max_momentum) + "\n"
-        file2.writelines(out)
-        file2.writelines("Momentum Step\n")
-        out = str(step_momentum) + "\n"
-        file2.writelines(out)
-        file2.writelines("Stats\n")
-        out = str(stats) + "\n"
-        file2.writelines(out)
-        file2.writelines("Sample\n")
+        with h5py.File(target_dir, "w") as f:
 
-        for layer in layers:
-            file2.writelines(
-                layer["name"]
-                + ","
-                + str(layer["thickness"])
-                + ","
-                + str(layer.get("density", ""))
-                + "\n"
-            )
-        file2.close()
+            # save sim metadata from form in one sub folder
+            meta = f.create_group("metadata")
+
+            meta.attrs["sample_name"] = sample_name
+            meta.attrs["sim_type"] = sim_type
+            meta.attrs["momentum"] = momentum
+            meta.attrs["momentum_spread"] = momentum_spread
+            meta.attrs["scan_type"] = scan_type
+            meta.attrs["min_momentum"] = min_momentum
+            meta.attrs["max_momentum"] = max_momentum
+            meta.attrs["step_momentum"] = step_momentum
+            meta.attrs["stats"] = stats
+            
+            # save layer data from table in anoother subfolder
+            layers_group = f.create_group("layers")
+            # make a subfolder for each layer and save layer information
+            for i, layer in enumerate(layers):
+                g = layers_group.create_group(f"layer_{i}")
+                g.attrs["name"] = layer["name"]
+                g.attrs["thickness"] = layer["thickness"]
+
+                if "density" in layer:
+                    g.attrs["density"] = layer["density"]
+
+            # save list of momenta simulated and result x and y data all in another subfolder
+            results = f.create_group("results")
+
+            completed_flag = 1 if self.result_x is not None else 0
+            results.attrs["completed_sim_flag"] = completed_flag
+
+            if completed_flag == 1:
+                results.create_dataset("momentum", data=self.momentum)
+                results.create_dataset("result_x", data=self.result_x)
+                results.create_dataset("result_y", data=self.result_y)
 
     def load_settings(self, target_dir):
+        with h5py.File(target_dir, "r") as f:
+            # form data
+            meta = f["metadata"]
+            form_data = {
+                "sample_name": meta.attrs["sample_name"],
+                "stats": float(meta.attrs["stats"]),
+                "srim_dir": get_config()["SRIM"]["installation_directory"],
+                "output_dir": get_config()["SRIM"]["output_directory"],
+                "momentum": float(meta.attrs["momentum"]),
+                "sim_type": meta.attrs["sim_type"],
+                "momentum_spread": float(meta.attrs["momentum_spread"]),
+                "min_momentum": float(meta.attrs["min_momentum"]),
+                "max_momentum": float(meta.attrs["max_momentum"]),
+                "step_momentum": float(meta.attrs["step_momentum"]),
+                "scan_type": meta.attrs["scan_type"],
+            }
+            # layer data
+            layers = []
+            layers_group = f["layers"]
+            for key in layers_group:
+                g = layers_group[key]
+                layer = {
+                    "name": g.attrs["name"],
+                    "thickness": g.attrs["thickness"],
+                }
+                if "density" in g.attrs:
+                    layer["density"] = g.attrs["density"]
+
+                layers.append(layer)
+            # results data
+            results = f["results"]
+            completed_flag = results.attrs["completed_sim_flag"]
+            self.result_x = None
+            self.result_y = None
+            self.momentum = None
+            if completed_flag == 1:
+                self.momentum = np.array(results["momentum"])
+                self.result_x = np.array(results["result_x"])
+                self.result_y = np.array(results["result_y"])
+
+            return form_data, layers, completed_flag
+
+    def load_default_settings(self, target_dir):
         file2 = open(target_dir, "r")
         ignore = file2.readline()
         sample_name = file2.readline().strip()
@@ -888,7 +927,6 @@ class TrimModel(QObject):
 
             layers.append(layer)
         file2.close()
-
         return form_data, layers
 
     @staticmethod
