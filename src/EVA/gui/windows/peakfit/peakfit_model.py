@@ -78,7 +78,7 @@ class PeakFitModel(QObject):
 			# clear fit parameters in between fits
 			self.fitted_bg_params = {}
 			self.fitted_peak_params = {}
-
+			
 			logger.debug("Fitting range E = (%s, %s).", round(self.x_range[0], 2), round(self.x_range[1], 2))
 			logger.debug("Initial peak parameters %s", self.initial_peak_params)
 			logger.debug("Initial background parameters %s", self.initial_bg_params)
@@ -257,11 +257,13 @@ class PeakFitModel(QObject):
 		# param_type = obj["param_type"]
 		param_type = "fitted"
 		#TODO make it possible to load just init params if only those were saved
-		if param_type == "fitted":
-			self.initial_peak_params = obj["fit_peaks"]
-			self.initial_bg_params = obj["fit_background"]
-			self.fitted_peak_params = obj["fit_peaks"]
-			self.fitted_bg_params = obj["fit_background"]
+		if param_type == "fitted":			
+			self.initial_peak_params = self.convert_fitted_to_initial(obj["fit_peaks"], type="peak")
+			self.initial_bg_params = self.convert_fitted_to_initial(obj["fit_background"], type="bg")
+			# update id counter to avoid duplicate ids when adding new peaks after loading
+			self.id_counter += len(self.initial_peak_params) 
+			# self.fitted_peak_params = obj["fit_peaks"]
+			# self.fitted_bg_params = obj["fit_background"]
 		# update energy range
 		self.x_range = obj["x_range"]
 		auto_e_range = obj["auto_e_range"]
@@ -361,6 +363,29 @@ class PeakFitModel(QObject):
 
 				writer.writerow(row)
 		logger.debug("Saved fitted parameters to CSV: %s", path)
+
+	def convert_fitted_to_initial(self, param_dict: dict, type: str) -> dict:
+		"""Converts fitted parameters to initial parameters format by removing stderr and setting vary to True."""
+		initial_params = {}
+		if type == "bg": #["background"]
+			for name, params in param_dict.items():
+				initial_params[name] = {}
+				for param_name, param_data in params.items():
+					initial_params[name][param_name] = {
+						"value": param_data["value"],
+						"vary": True,
+					}
+		elif type == "peak":
+			for name, params in param_dict.items():
+					initial_params[name] = {}
+					for param_name in ["center", "sigma", "amplitude"]:
+						initial_params[name][param_name] = {
+							"value": params[param_name]["value"],
+							"vary": True,
+							"min": 0,
+						}
+					# initial_params[name]["stderr"] = initial_params[name].pop("sigma")
+		return initial_params
 
 	def close_figures(self):
 			plt.close(self.fig)
