@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>916</width>
-    <height>788</height>
+    <height>794</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,48 +62,280 @@
        <string>Gaussian Fitting</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="14" column="0">
-        <widget class="QTabWidget" name="bg_params_tabs">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+       <item row="0" column="0">
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>80</height>
-          </size>
-         </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="initial_bg_params_tab">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>-49</y>
+            <width>402</width>
+            <height>776</height>
+           </rect>
           </property>
-          <attribute name="title">
-           <string>Initial parameters</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_12">
            <item>
-            <widget class="BaseTable" name="initial_bg_params_table">
+            <widget class="QWidget" name="fit_settings_widget" native="true">
+             <layout class="QGridLayout" name="gridLayout_3">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <item row="0" column="3">
+               <widget class="QLineEdit" name="e_range_max_line_edit"/>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="auto_e_range_checkbox">
+                <property name="text">
+                 <string>Auto</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="auto_e_range_label">
+                <property name="text">
+                 <string>Set energy range</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLineEdit" name="e_range_min_line_edit"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="peak_params_label">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Peak parameters</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="peak_menu_widget" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="add_peak_button">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Add peak</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="cancel_add_peak_button">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Cancel add peak</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="constraints_button">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Set up constraints</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="add_peak_label">
+             <property name="text">
+              <string>Click on a peak in the plot to select it.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTabWidget" name="peak_params_tabs">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="initial_peak_params_tab">
+              <attribute name="title">
+               <string>Initial guess</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="BaseTable" name="initial_peak_params_table">
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustIgnored</enum>
+                 </property>
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>15</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>75</number>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>24</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>ID</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Center</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Width</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Intensity</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Options</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="fitted_peak_params_tab">
+              <attribute name="title">
+               <string>Fit result</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="BaseTable" name="fitted_peak_params_table">
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustIgnored</enum>
+                 </property>
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>15</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>75</number>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>24</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>ID</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Center</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Width</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Intensity</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="poly_bg_label">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Polynomial background parameters</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTabWidget" name="bg_params_tabs">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -113,594 +345,388 @@
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>108</height>
+               <height>80</height>
               </size>
              </property>
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+             <property name="currentIndex">
+              <number>0</number>
              </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustIgnored</enum>
-             </property>
-             <row>
-              <property name="text">
-               <string/>
+             <widget class="QWidget" name="initial_bg_params_tab">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-             </row>
-             <column>
-              <property name="text">
-               <string>ID</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>a</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>b</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>c</string>
-              </property>
-             </column>
-             <item row="0" column="0">
-              <property name="text">
-               <string>background</string>
-              </property>
-             </item>
-             <item row="0" column="1">
-              <property name="text">
-               <string>0</string>
-              </property>
-             </item>
-             <item row="0" column="2">
-              <property name="text">
-               <string>0</string>
-              </property>
-             </item>
-             <item row="0" column="3">
-              <property name="text">
-               <string>0</string>
-              </property>
-             </item>
+              <attribute name="title">
+               <string>Initial parameters</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="BaseTable" name="initial_bg_params_table">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>108</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustIgnored</enum>
+                 </property>
+                 <row>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </row>
+                 <column>
+                  <property name="text">
+                   <string>ID</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>a</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>b</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>c</string>
+                  </property>
+                 </column>
+                 <item row="0" column="0">
+                  <property name="text">
+                   <string>background</string>
+                  </property>
+                 </item>
+                 <item row="0" column="1">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </item>
+                 <item row="0" column="2">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </item>
+                 <item row="0" column="3">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="fitted_bg_params_tab">
+              <attribute name="title">
+               <string>Fitted parameters</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="BaseTable" name="fitted_bg_params_table">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <column>
+                  <property name="text">
+                   <string>ID</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>a</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>b</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>c</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="fitted_bg_params_tab">
-          <attribute name="title">
-           <string>Fitted parameters</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
            <item>
-            <widget class="BaseTable" name="fitted_bg_params_table">
+            <widget class="QLabel" name="bg_function_label">
+             <property name="text">
+              <string>Function: f(x) = ax² + bx + c</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="plot_fit_buttons" native="true">
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="4" column="0">
+               <widget class="QPushButton" name="save_params_button">
+                <property name="text">
+                 <string>Save parameters</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="plot_initial_params_button">
+                <property name="text">
+                 <string>Plot initial parameters</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QPushButton" name="load_params_button">
+                <property name="text">
+                 <string>Load parameters</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QPushButton" name="fit_initial_params_button">
+                <property name="text">
+                 <string>Fit all parameters</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0" colspan="2">
+               <widget class="QPushButton" name="save_param_to_fit_table_button">
+                <property name="text">
+                 <string>Save to Fit Table</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Fit Table</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="widget_2" native="true">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+             <property name="mouseTracking">
+              <bool>false</bool>
              </property>
-             <column>
-              <property name="text">
-               <string>ID</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>a</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>b</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>c</string>
-              </property>
-             </column>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QLabel" name="loaded_fit_table_label">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="fit_table_select_button">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Browse</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-       <item row="36" column="0" rowspan="2">
-        <widget class="QWidget" name="save_load_buttons" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_6">
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="save_fitted_model_button">
-            <property name="text">
-             <string>Save fitted model to fit table</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="save_plot_points_button">
-            <property name="text">
-             <string>Save plot points</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QPushButton" name="save_fit_report_button">
-            <property name="text">
-             <string>Save fit report</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="12" column="0">
-        <widget class="QLabel" name="poly_bg_label">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Polynomial background parameters</string>
-         </property>
-        </widget>
-       </item>
-       <item row="28" column="0">
-        <widget class="QFrame" name="fit_report_area">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-           <horstretch>2</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>150</height>
-          </size>
-         </property>
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <property name="leftMargin">
-           <number>9</number>
-          </property>
-          <property name="topMargin">
-           <number>9</number>
-          </property>
-          <property name="rightMargin">
-           <number>9</number>
-          </property>
-          <property name="bottomMargin">
-           <number>9</number>
-          </property>
-          <item>
-           <widget class="QTextBrowser" name="fit_report_text_browser">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>200</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QWidget" name="peak_menu_widget" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="add_peak_button">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Add peak</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="cancel_add_peak_button">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Cancel add peak</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="constraints_button">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Set up constraints</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="peak_params_label">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Peak parameters</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QTabWidget" name="peak_params_tabs">
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="initial_peak_params_tab">
-          <attribute name="title">
-           <string>Initial guess</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
            <item>
-            <widget class="BaseTable" name="initial_peak_params_table">
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+            <widget class="QLabel" name="fit_report_label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustIgnored</enum>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
              </property>
-             <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>15</number>
-             </attribute>
-             <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>75</number>
-             </attribute>
-             <attribute name="verticalHeaderDefaultSectionSize">
-              <number>24</number>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>ID</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Center</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Width</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Intensity</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Options</string>
-              </property>
-             </column>
+             <property name="text">
+              <string>Fit report</string>
+             </property>
             </widget>
            </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="fitted_peak_params_tab">
-          <attribute name="title">
-           <string>Fit result</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
            <item>
-            <widget class="BaseTable" name="fitted_peak_params_table">
+            <widget class="QFrame" name="fit_report_area">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>2</horstretch>
+               <verstretch>1</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>150</height>
+              </size>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
              <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+              <enum>QFrame::StyledPanel</enum>
              </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustIgnored</enum>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <property name="leftMargin">
+               <number>9</number>
+              </property>
+              <property name="topMargin">
+               <number>9</number>
+              </property>
+              <property name="rightMargin">
+               <number>9</number>
+              </property>
+              <property name="bottomMargin">
+               <number>9</number>
+              </property>
+              <item>
+               <widget class="QTextBrowser" name="fit_report_text_browser">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>200</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="save_load_buttons" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>15</number>
-             </attribute>
-             <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>75</number>
-             </attribute>
-             <attribute name="verticalHeaderDefaultSectionSize">
-              <number>24</number>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>ID</string>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_6">
+              <property name="topMargin">
+               <number>0</number>
               </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Center</string>
+              <property name="rightMargin">
+               <number>0</number>
               </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Width</string>
+              <property name="bottomMargin">
+               <number>0</number>
               </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Intensity</string>
+              <property name="spacing">
+               <number>0</number>
               </property>
-             </column>
+              <item row="4" column="0">
+               <widget class="QPushButton" name="save_plot_points_button">
+                <property name="text">
+                 <string>Save plot points</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="2">
+               <widget class="QPushButton" name="save_fit_report_button">
+                <property name="text">
+                 <string>Save fit report</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QPushButton" name="save_fitted_model_button">
+                <property name="text">
+                 <string>Save fitted model</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
          </widget>
-        </widget>
-       </item>
-       <item row="16" column="0">
-        <widget class="QWidget" name="plot_fit_buttons" native="true">
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="2" column="0">
-           <widget class="QPushButton" name="plot_initial_params_button">
-            <property name="text">
-             <string>Plot initial parameters</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="load_params_button">
-            <property name="text">
-             <string>Load parameters</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="fit_initial_params_button">
-            <property name="text">
-             <string>Fit all parameters</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="save_params_button">
-            <property name="text">
-             <string>Save parameters</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QWidget" name="fit_settings_widget" native="true">
-         <layout class="QGridLayout" name="gridLayout_3">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <item row="0" column="3">
-           <widget class="QLineEdit" name="e_range_max_line_edit"/>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="auto_e_range_checkbox">
-            <property name="text">
-             <string>Auto</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="auto_e_range_label">
-            <property name="text">
-             <string>Set energy range</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLineEdit" name="e_range_min_line_edit"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="27" column="0">
-        <widget class="QLabel" name="fit_report_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Fit report</string>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="0">
-        <widget class="QLabel" name="bg_function_label">
-         <property name="text">
-          <string>Function: f(x) = ax² + bx + c</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="add_peak_label">
-         <property name="text">
-          <string>Click on a peak in the plot to select it.</string>
-         </property>
-        </widget>
-       </item>
-       <item row="19" column="0">
-        <widget class="QWidget" name="widget_2" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>false</bool>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QLabel" name="loaded_fit_table_label">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="fit_table_select_button">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Browse</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="18" column="0">
-        <widget class="QLabel" name="label">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Fit Table</string>
-         </property>
         </widget>
        </item>
       </layout>
@@ -1184,15 +1210,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BaseTable</class>
+   <extends>QTableWidget</extends>
+   <header>EVA.gui.base.base_table</header>
+  </customwidget>
+  <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
    <header location="global">EVA.gui.widgets.plot.plot_widget</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BaseTable</class>
-   <extends>QTableWidget</extends>
-   <header>EVA.gui.base.base_table</header>
   </customwidget>
  </customwidgets>
  <resources/>
