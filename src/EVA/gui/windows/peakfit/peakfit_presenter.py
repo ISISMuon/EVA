@@ -25,6 +25,7 @@ class PeakFitPresenter(object):
         self.view.save_params_button.clicked.connect(self.save_params)
         self.view.load_params_button.clicked.connect(self.load_params)
         self.view.save_fit_report_button.clicked.connect(self.save_fit_report)
+        self.view.save_param_to_fit_table_button.clicked.connect(self.save_param_to_fit_table)
         self.view.save_fitted_model_button.clicked.connect(self.save_fitted_model)
         self.view.fit_table_select_button.clicked.connect(self.browse_fit_table_file)
         self.view.save_plot_points_button.clicked.connect(self.save_plot_points)
@@ -478,8 +479,13 @@ class PeakFitPresenter(object):
         path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Zip Files (*.zip)")
         if path:
             self.model.save_plot_points(path)
-
     def save_fitted_model(self):
+            def_dir = get_config()["general"]["working_directory"]
+            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="JSON files (*.json)")
+            if path:
+                self.model.save_fitted_model(path)
+
+    def save_param_to_fit_table(self):
         path = get_config()["general"]["fit_table_save_file"]
         if not path:
             self.view.display_error_message(message="No fit table file selected.")
@@ -504,7 +510,7 @@ class PeakFitPresenter(object):
             )
 
         try:
-            self.model.save_fitted_model(path)
+            self.model.save_param_to_fit_table(path)
 
         except PermissionError:
             self.view.display_error_message(

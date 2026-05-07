@@ -239,7 +239,7 @@ class PeakFitModel(QObject):
 			obj = {
 					"init_background": self.initial_bg_params,
 					"init_peaks": self.initial_peak_params,
-                    "fit_background": self.fitted_bg_params,
+					"fit_background": self.fitted_bg_params,
 					"fit_peaks": self.fitted_peak_params,
 					"x_range": x_range,
 					"auto_e_range": auto_e_range
@@ -308,6 +308,19 @@ class PeakFitModel(QObject):
 		return False
 	
 	def save_fitted_model(self, path: str):
+			obj = {
+					"background": self.fitted_bg_params,
+					"peaks": self.fitted_peak_params,
+					"x_range": self.x_range
+			}
+
+			with open(path, "w") as file:
+					json.dump(obj, file, indent=4)
+					logger.debug("Saved fitted parameters to %s", path)
+
+			file.close()
+			
+	def save_param_to_fit_table(self, path: str):
 		if self.run.momentum < 0:
 			logger.warning("Run momentum not found, saving with value -100.")
 
