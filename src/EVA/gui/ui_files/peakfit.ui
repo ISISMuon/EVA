@@ -55,7 +55,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="gaussian_fit_tab">
       <attribute name="title">
@@ -72,7 +72,7 @@
            <rect>
             <x>0</x>
             <y>-49</y>
-            <width>402</width>
+            <width>422</width>
             <height>776</height>
            </rect>
           </property>
