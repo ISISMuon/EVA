@@ -84,8 +84,10 @@ class PlotWidget(QWidget):
 
             self.layout.addWidget(self.navbar)
             self.layout.addWidget(self.canvas)
+            self.navbar.update()
+            self.navbar.push_current()
 
-        self.canvas.draw()
+        self.canvas.draw_idle()
 
     def release_navigation(self, event):
         # Removes any current zoom or pan

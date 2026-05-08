@@ -5,8 +5,6 @@ from matplotlib.backend_bases import MouseButton
 from PyQt6.QtCore import Qt
 from EVA.core.app import get_config
 from EVA.gui.windows.peakfit.constraints_window import ConstraintsWindow
-from EVA.gui.windows.peakfit.model_fit_model import ModelFitModel
-from EVA.gui.windows.peakfit.peakfit_model import PeakFitModel
 
 logger = logging.getLogger(__name__)
 
@@ -24,11 +22,13 @@ class PeakFitPresenter(object):
         )
         self.view.constraints_button.clicked.connect(self.launch_constraints_menu)
 
-        self.view.save_initial_params_button.clicked.connect(self.save_init_params)
-        self.view.load_initial_params_button.clicked.connect(self.load_init_params)
+        self.view.save_params_button.clicked.connect(self.save_params)
+        self.view.load_params_button.clicked.connect(self.load_params)
         self.view.save_fit_report_button.clicked.connect(self.save_fit_report)
+        self.view.save_param_to_fit_table_button.clicked.connect(self.save_param_to_fit_table)
         self.view.save_fitted_model_button.clicked.connect(self.save_fitted_model)
         self.view.fit_table_select_button.clicked.connect(self.browse_fit_table_file)
+        self.view.save_plot_points_button.clicked.connect(self.save_plot_points)
 
         self.view.add_model_button.clicked.connect(self.add_model)
         self.view.fit_model_button.clicked.connect(self.start_model_fit)
@@ -421,50 +421,85 @@ class PeakFitPresenter(object):
             get_config()["general"]["fit_table_save_file"] = path
             logger.info("Selected fit table file: %s", path)
 
-    def save_init_params(self):
-        x_range = (
-            None if self.view.auto_e_range_checkbox.isChecked() else self.get_e_range()
-        )
+    def save_params(self):
+        # Check if a fit exists
+        if not self.model.fit_result:
+            self.view.display_error_message(
+                message="No fitted parameters found. Please perform a peak fit first.")
+            return
+        # Check if any new peaks were added but not fitted
+        if len(self.model.fitted_peak_params) != len(self.model.initial_peak_params):
+            self.view.display_error_message(
+                message="Number of fitted peaks does not match number of initial peaks." \
+                " Please ensure all initial peaks were fitted successfully before saving parameters.")
+            return
+        auto_e_range_checkbox_state = self.view.auto_e_range_checkbox.isChecked()
+        x_range = self.get_e_range()
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(
-            default_dir=def_dir, file_filter="JSON files (*.json)"
+            default_dir=def_dir, file_filter="JSON files (*.prm)"
         )
         if path:
-            self.model.save_params(path, x_range)
-
-    def load_init_params(self):
+            self.model.save_params(path, x_range, auto_e_range_checkbox_state)
+            self.view.peak_params_tabs.setCurrentIndex(0)
+            self.view.bg_params_tabs.setCurrentIndex(0)
+            
+    def load_params(self):
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_load_file_path(
-            default_dir=def_dir, file_filter="JSON files (*.json)"
+            default_dir=def_dir, file_filter="JSON files (*.prm, *.json)"
         )
 
         if not path:
             return
 
-        self.model.load_params(path)
-        self.view.initial_peak_params_table.update_contents(
-            self.format_params(self.model.initial_peak_params)
-        )
-        self.view.initial_bg_params_table.update_contents(
-            self.format_params(self.model.initial_bg_params)
-        )
+        param_type, auto_e_range_checkbox_state = self.model.load_params(path)
+        self.view.initial_peak_params_table.update_contents(self.format_params(self.model.initial_peak_params))
+        self.view.initial_bg_params_table.update_contents(self.format_params(self.model.initial_bg_params))
+        self.view.fitted_peak_params_table.update_contents(self.format_params(self.model.fitted_peak_params))
+        self.view.fitted_bg_params_table.update_contents(self.format_params(self.model.fitted_bg_params))
 
         if self.model.x_range is not None:
             self.view.update_e_range_form(self.model.x_range)
         else:
-            self.view.auto_e_range_checkbox.setChecked(True)
             self.view.e_range_max_line_edit.clear()
             self.view.e_range_min_line_edit.clear()
+        self.view.auto_e_range_checkbox.setChecked(auto_e_range_checkbox_state)
 
     def save_fit_report(self):
+        if not self.model.fit_result:
+            self.view.display_error_message(
+                message="No fit report found. Please perform a peak fit first.")
+            return
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(
-            default_dir=def_dir, file_filter="Text files (*.txt)"
+            default_dir=def_dir, file_filter="Text files (*.frt)"
         )
         if path:
             self.model.save_fit_report(path)
 
+    def save_plot_points(self):
+        if not self.model.fit_result:
+            self.view.display_error_message(
+                message="No peak fit and residual plot points found. Please perform a peak fit first.")
+            return
+        # get directory to save x and y points of detector data
+        def_dir = get_config()["general"]["working_directory"]
+        path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Zip Files (*.zip)")
+        if path:
+            self.model.save_plot_points(path)
+
     def save_fitted_model(self):
+            if not self.model.fit_result:
+                self.view.display_error_message(
+                    message="No fit model found. Please perform a peak fit first.")
+                return
+            def_dir = get_config()["general"]["working_directory"]
+            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="JSON files (*.json)")
+            if path:
+                self.model.save_fitted_model(path)
+
+    def save_param_to_fit_table(self):
         path = get_config()["general"]["fit_table_save_file"]
         if not path:
             self.view.display_error_message(message="No fit table file selected.")
@@ -489,7 +524,7 @@ class PeakFitPresenter(object):
             )
 
         try:
-            self.model.save_fitted_model(path)
+            self.model.save_param_to_fit_table(path)
 
         except PermissionError:
             self.view.display_error_message(
