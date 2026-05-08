@@ -11,6 +11,7 @@ a = Analysis(
            ("src/EVA/core/settings/defaults.json", "src/EVA/core/settings"),
            ("src/EVA/core/settings/srim_defaults.txt", "src/EVA/core/settings"),
             ("src/srim", "srim"),
+            ("src/g4bl/data", "g4bl/data"),
             ("icon.ico", ".")],
     hiddenimports=['h5py._npystrings'],
     hookspath=[],
