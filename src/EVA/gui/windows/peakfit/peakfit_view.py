@@ -112,21 +112,22 @@ class PeakFitView(BaseView, Ui_peak_fit):
 
         return os.path.abspath(path)
 
-    def get_save_file_path(self, default_dir: str, file_filter: str, caption = "Save File") -> str:
-        file = QFileDialog.getSaveFileName(self, caption, directory=default_dir, filter=file_filter)
-        if file[0] and not file[0].endswith(".gfm"):
-            file[0] += ".gfm"
-        if file:
-            return file[0]
+    def get_save_file_path(self, default_dir: str, file_filter: str, caption = "Save File", default_extension: str = None) -> str:
+        file_path, _= QFileDialog.getSaveFileName(self, caption, directory=default_dir, filter=file_filter)
+        if file_path and default_extension:
+            if not file_path.lower().endswith(default_extension.lower()):
+                file_path += default_extension
+        if file_path:
+            return file_path
         return ""
 
     def save_fit_report(self) -> str:
         config = get_config()
-        file = QFileDialog.getSaveFileName(self, 'Save File', directory=config["general"]["working_directory"])
-        if file[0] and not file[0].endswith(".frt"):
-            file[0] += ".frt"
-        if file:
-            return file[0]
+        file_path, _ = QFileDialog.getSaveFileName(self, 'Save File', directory=config["general"]["working_directory"])
+        if file_path and not file_path.endswith(".frt"):
+            file_path += ".frt"
+        if file_path:
+            return file_path
         return ""
     
     def prompt_add_peak(self, pos) -> bool:
