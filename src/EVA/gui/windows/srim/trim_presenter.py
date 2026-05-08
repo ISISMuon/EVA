@@ -506,7 +506,7 @@ class TrimPresenter(QWidget):
 
         path = self.view.get_save_file_path(
             get_config()["general"]["working_directory"],
-            file_filter="Text file (*.txt)",
+            file_filter="HDF5 file (*.h5)",
         )
         if path != "":
             self.model.save_settings(**form_data, layers=layers, target_dir=path)
@@ -514,19 +514,24 @@ class TrimPresenter(QWidget):
     def load_settings(self):
         path = self.view.get_load_file_path(
             get_config()["general"]["working_directory"],
-            file_filter="Text file (*.txt)",
+            file_filter="HDF5 file (*.h5)",
         )
         if path != "":
-            form_data, table_data = self.model.load_settings(path)
+            form_data, table_data, sim_completed_flag = self.model.load_settings(path)
             self.view.set_form_data(form_data)
             self.view.layer_setup_table.update_contents(
                 self.format_model_layers(table_data)
             )
+            if sim_completed_flag:
+                self.model.input_layers = self.get_layers_from_table()
+                self.model.setup_sample(self.model.input_layers)
+                self.model.process_and_store_simulation_results()
+                self.on_simulation_finished({"status": "finished"})
 
     def load_default_settings(self):
         path = get_path("./src/EVA/core/settings/srim_defaults.txt")
 
-        form_data, table_data = self.model.load_settings(path)
+        form_data, table_data = self.model.load_default_settings(path)
         self.view.set_form_data(form_data)
         self.view.layer_setup_table.update_contents(
             self.format_model_layers(table_data)
