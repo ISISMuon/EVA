@@ -114,15 +114,21 @@ class PeakFitView(BaseView, Ui_peak_fit):
 
     def get_save_file_path(self, default_dir: str, file_filter: str, caption = "Save File") -> str:
         file = QFileDialog.getSaveFileName(self, caption, directory=default_dir, filter=file_filter)
+        if file[0] and not file[0].endswith(".gfm"):
+            file[0] += ".gfm"
         if file:
             return file[0]
+        return ""
 
     def save_fit_report(self) -> str:
         config = get_config()
         file = QFileDialog.getSaveFileName(self, 'Save File', directory=config["general"]["working_directory"])
+        if file[0] and not file[0].endswith(".frt"):
+            file[0] += ".frt"
         if file:
             return file[0]
-
+        return ""
+    
     def prompt_add_peak(self, pos) -> bool:
         reply = QMessageBox.question(self, 'Add peak', f"Do you wish to add a peak at {pos:.1f} keV?",
                                                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,

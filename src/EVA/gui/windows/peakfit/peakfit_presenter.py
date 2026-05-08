@@ -422,11 +422,12 @@ class PeakFitPresenter(object):
             logger.info("Selected fit table file: %s", path)
 
     def save_params(self):
-
+        # Check if a fit exists
         if not self.model.fit_result:
             self.view.display_error_message(
                 message="No fitted parameters found. Please perform a peak fit first.")
             return
+        # Check if any new peaks were added but not fitted
         if len(self.model.fitted_peak_params) != len(self.model.initial_peak_params):
             self.view.display_error_message(
                 message="Number of fitted peaks does not match number of initial peaks." \
@@ -436,7 +437,7 @@ class PeakFitPresenter(object):
         x_range = self.get_e_range()
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(
-            default_dir=def_dir, file_filter="JSON files (*.json)"
+            default_dir=def_dir, file_filter="JSON files (*.prm)"
         )
         if path:
             self.model.save_params(path, x_range, auto_e_range_checkbox_state)
@@ -446,7 +447,7 @@ class PeakFitPresenter(object):
     def load_params(self):
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_load_file_path(
-            default_dir=def_dir, file_filter="JSON files (*.json)"
+            default_dir=def_dir, file_filter="JSON files (*.prm, *.json)"
         )
 
         if not path:
@@ -466,20 +467,33 @@ class PeakFitPresenter(object):
         self.view.auto_e_range_checkbox.setChecked(auto_e_range_checkbox_state)
 
     def save_fit_report(self):
+        if not self.model.fit_result:
+            self.view.display_error_message(
+                message="No fit report found. Please perform a peak fit first.")
+            return
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(
-            default_dir=def_dir, file_filter="Text files (*.txt)"
+            default_dir=def_dir, file_filter="Text files (*.frt)"
         )
         if path:
             self.model.save_fit_report(path)
 
     def save_plot_points(self):
+        if not self.model.fit_result:
+            self.view.display_error_message(
+                message="No peak fit and residual plot points found. Please perform a peak fit first.")
+            return
         # get directory to save x and y points of detector data
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Zip Files (*.zip)")
         if path:
             self.model.save_plot_points(path)
+
     def save_fitted_model(self):
+            if not self.model.fit_result:
+                self.view.display_error_message(
+                    message="No fit model found. Please perform a peak fit first.")
+                return
             def_dir = get_config()["general"]["working_directory"]
             path = self.view.get_save_file_path(default_dir=def_dir, file_filter="JSON files (*.json)")
             if path:

@@ -259,8 +259,8 @@ class PeakFitModel(QObject):
 
 	def save_params(self, path: str, x_range: tuple, auto_e_range: bool):
 			obj = {
-					"init_background": self.initial_bg_params,
-					"init_peaks": self.initial_peak_params,
+					# "init_background": self.initial_bg_params,
+					# "init_peaks": self.initial_peak_params,
 					"fit_background": self.fitted_bg_params,
 					"fit_peaks": self.fitted_peak_params,
 					"x_range": x_range,
