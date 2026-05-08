@@ -149,6 +149,7 @@ class TrimModel(QObject):
                 # report progress to gui
                 progress_callback.emit(
                     {
+                        "type": "TRIM",
                         "current": simulation_count,
                         "total": total_sims,
                         "sim_times": self.simulation_times,
@@ -217,6 +218,7 @@ class TrimModel(QObject):
                     # report progress to gui
                     progress_callback.emit(
                         {
+                            "type": "TRIM",
                             "current": simulation_count,
                             "total": total_sims,
                             "sim_times": self.simulation_times,

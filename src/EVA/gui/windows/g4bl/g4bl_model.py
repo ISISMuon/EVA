@@ -139,8 +139,13 @@ class G4blModel(QObject):
         simulation_count = 0
         for momentum_index, mom in enumerate(self.momentum):
             t0 = time.time_ns()
-
-            x, y, cancel_flag = self.run_G4BL(momentum=mom, momentum_spread=momentum_spread)
+            progress_callback.emit({
+                "type": "sim_start",
+                "completed_sims": simulation_count,  # sims fully done before this one
+                "muons_per_sim": int(self.stats),
+                "total_muons": int(total_sims * self.stats),
+            })
+            x, y, cancel_flag = self.run_G4BL(momentum=mom, momentum_spread=momentum_spread, progress_callback=progress_callback)
             simulation_count += 1
 
             # if simulation stop is requested
@@ -155,10 +160,10 @@ class G4blModel(QObject):
 
             dt = (t1 - t0) / 1e9
             self.simulation_times[simulation_count - 1] = dt
-
+            estimated_time_left = self.estimate_time_left(simulation_count, len(self.momentum))
             # report progress to gui
             progress_callback.emit(
-                {"current": simulation_count, "total": total_sims, "sim_times": self.simulation_times})
+                {"type": "iteration_end", "estimated_time_left": estimated_time_left})
 
         # calculate the layer boundary positions as a cumulative sum of layer thicknesses
         self.layer_boundary_positions = self.get_layer_boundary_positions()
@@ -209,9 +214,9 @@ class G4blModel(QObject):
 
         return {"status": "success"}
     
-    def run_G4BL(self, momentum: float, momentum_spread: float) -> tuple[list | None, list | None, int]:
+    def run_G4BL(self, momentum: float, momentum_spread: float, progress_callback: pyqtSignal) -> tuple[list | None, list | None, int,]:
         """
-        Runs TRIM simulation for a single momentum.
+        Runs G4BL simulation for a single momentum.
 
         Args:
             target: sample target
@@ -225,9 +230,12 @@ class G4blModel(QObject):
             return None, None, 1
         if self.sim_method == "Stack":
             verbosity = 1
-            g4bl_sim = G4BL(sim_type="Stack", target=self.sample_layers, muon_num=self.stats, 
-                            momentum=momentum, mom_err=momentum_spread / 100, total_thickness=self.total_thickness,verbosity=verbosity)
-            muon_final_z_position = g4bl_sim.run(self.g4bl_exe_dir, self.g4bl_out_dir)
+            g4bl_sim = G4BL(sim_type="Stack", target=self.sample_layers, muon_num=self.stats,
+                            momentum=momentum, mom_err=momentum_spread / 100,
+                            total_thickness=self.total_thickness, verbosity=verbosity)
+            muon_final_z_position = g4bl_sim.run(
+                self.g4bl_exe_dir, self.g4bl_out_dir, progress_callback=progress_callback
+            )
             bin_center, counts = rebin.nxs_rebin(x_data=muon_final_z_position, bin_num=self.bin_resolution, bin_range=(0, self.total_thickness))
             return bin_center, counts, 0
 
@@ -317,7 +325,7 @@ class G4blModel(QObject):
 
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title(f'G4BL Simulation of {int(self.stats)} muons at {momentum:.2f} MeV/c')
+        axx.set_title(f'G4BL Simulation at {momentum:.2f} MeV/c')
 
         axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
 
@@ -350,7 +358,7 @@ class G4blModel(QObject):
         figt, axx = plt.subplots()
         axx.set_xlabel('Depth ($mm$)')
         axx.set_ylabel('Number of muons')
-        axx.set_title(f'G4BL Simulation of {int(self.stats)} muons at {momentum:.2f} MeV/c')
+        axx.set_title(f'G4BL Simulation at {momentum:.2f} MeV/c')
 
         # plot overall profile
         axx.plot(self.result_x[momentum_index] - x_shift, self.result_y[momentum_index])
@@ -547,6 +555,7 @@ class G4blModel(QObject):
                     layer_curve_str = "".join(header) + "".join(layer_data)
 
                     zf.writestr(layer_filename, layer_curve_str)
+                    
     @staticmethod
     def is_valid_path(path):
         return os.path.exists(path)

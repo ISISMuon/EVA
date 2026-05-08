@@ -266,7 +266,7 @@ class G4blPresenter(QWidget):
         self.view.simulation_progress_bar.setValue(0)
 
         self.view.estimated_time_remaining_label.setText(f"Estimated time left: calculating...")
-        self.view.simulation_progress_label.setText(f"Running simulation 1 / {n_sim}")
+        self.view.simulation_progress_label.setText("Starting simulation...")
 
         # start simulation on separate thread
         self.simulation_worker = Worker(self.model.start_g4bl_simulation)
@@ -283,26 +283,25 @@ class G4blPresenter(QWidget):
         self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: -")
 
     def progress_fn(self, progress: dict):
-        """
-        Updates progress bar and progress text. Is called every time the simulation worker emits a progress signal.
+        progress_type = progress.get("type", "sim")
 
-        Args:
-            progress: dict with keys 'current' - current simulation number, 'total' - number of simulations planned
+        if progress_type == "sim_start":
+            self._completed_sims = progress["completed_sims"]
+            self._muons_per_sim = progress["muons_per_sim"]
+            self._total_muons = progress["total_muons"]
 
-        """
-        n = progress["current"]
-        total = progress["total"]
-
-        if n == total:
-            return
-
-        time_str = self.model.estimate_time_left(n, total)
-        self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: {time_str}")
-
-        self.view.simulation_progress_bar.setMaximum(total)
-        self.view.simulation_progress_label.setText(f"Running simulation {n+1} / {total}")
-        self.view.simulation_progress_bar.setValue(n)
-
+        elif progress_type == "event":
+            current_event = progress["current_event"]
+            cumulative = int(self._completed_sims * self._muons_per_sim + current_event)
+            self.view.simulation_progress_bar.setMaximum(self._total_muons)
+            self.view.simulation_progress_bar.setValue(cumulative)
+            self.view.simulation_progress_label.setText(f"Running simulation {self._completed_sims + 1} / {len(self.model.momentum)} - Muon {current_event} / {self._muons_per_sim}")
+        
+        if progress_type == "iteration_end":
+            estimated_time = progress["estimated_time_left"]
+            self.view.estimated_time_remaining_label.setText(
+                f"Estimated time remaining: {estimated_time}"
+            )
     def on_simulation_finished(self, result):
         self.model.cancel_sim = False
 
@@ -342,6 +341,7 @@ class G4blPresenter(QWidget):
             self.view.momentum_slider.setMaximum(len(self.model.momentum)-1)
             self.view.momentum_slider.setSingleStep(1)
 
+#TODO needs implentation
     def stopping_shift_plot_origin(self):
         pass
     def stopping_reset_plot_origin(self):
