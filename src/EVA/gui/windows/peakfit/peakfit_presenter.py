@@ -453,7 +453,7 @@ class PeakFitPresenter(object):
         if not path:
             return
 
-        param_type, auto_e_range_checkbox_state = self.model.load_params(path)
+        auto_e_range_checkbox_state = self.model.load_params(path)
         self.view.initial_peak_params_table.update_contents(self.format_params(self.model.initial_peak_params))
         self.view.initial_bg_params_table.update_contents(self.format_params(self.model.initial_bg_params))
         self.view.fitted_peak_params_table.update_contents(self.format_params(self.model.fitted_peak_params))

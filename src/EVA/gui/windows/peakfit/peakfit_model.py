@@ -272,25 +272,23 @@ class PeakFitModel(QObject):
 
 			file.close()
 
-	def load_params(self, path: str):
+	def load_params(self, path: str) -> bool:
 		with open(path, "r") as file:
 			obj = json.load(file)
 			logger.debug("Loaded initial parameters from %s", path)
-		# param_type = obj["param_type"]
-		param_type = "fitted"
-		#TODO make it possible to load just init params if only those were saved
-		if param_type == "fitted":			
-			self.initial_peak_params = self.convert_fitted_to_initial(obj["fit_peaks"], type="peak")
-			self.initial_bg_params = self.convert_fitted_to_initial(obj["fit_background"], type="bg")
-			# update id counter to avoid duplicate ids when adding new peaks after loading
-			self.id_counter += len(self.initial_peak_params) 
-			# self.fitted_peak_params = obj["fit_peaks"]
-			# self.fitted_bg_params = obj["fit_background"]
+
+		loaded_peaks = self.convert_fitted_to_initial(obj["fit_peaks"], type="peak")
+		loaded_bg = self.convert_fitted_to_initial(obj["fit_background"], type="bg")
+		# Remap loaded peak names to fresh IDs to avoid collisions
+		for _, peak_data in loaded_peaks.items():
+			new_id = self.next_id()
+			self.initial_peak_params[new_id] = peak_data
+		self.initial_bg_params.update(loaded_bg)
 		# update energy range
 		self.x_range = obj["x_range"]
 		auto_e_range = obj["auto_e_range"]
 		file.close()
-		return param_type, auto_e_range
+		return auto_e_range
 
 	def array_to_string(self,array):
 		return "".join(f"{row[0]}, {row[1]}\n" for row in array)
