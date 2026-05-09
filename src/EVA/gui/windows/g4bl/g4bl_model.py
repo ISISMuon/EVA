@@ -1,9 +1,9 @@
 import os
 import time
 from zipfile import ZipFile
-import subprocess
 from pathlib import Path
 import io
+import h5py
 import numpy as np
 from PyQt6.QtCore import pyqtSignal, QObject
 from matplotlib import pyplot as plt
@@ -50,8 +50,8 @@ class G4blModel(QObject):
         ### Default G4BL settings ###
         self.stats = 5000
         self.bin_resolution = 200
-        self.g4bl_exe_dir = get_config()["g4bl"]["installation_directory"]
-        self.g4bl_out_dir = get_config()["g4bl"]["output_directory"]
+        self.g4bl_exe_dir = get_config()["G4BL"]["installation_directory"]
+        self.g4bl_out_dir = get_config()["G4BL"]["output_directory"]
         self.verbosity = 1
         self.sim_type = "Mono"
         self.momentum = [27.]
@@ -165,13 +165,25 @@ class G4blModel(QObject):
             progress_callback.emit(
                 {"type": "iteration_end", "estimated_time_left": estimated_time_left})
 
+
+        # Create arrays to store various components of simulation results
+        self.process_and_store_simulation_results()
+
+        # after sucessful run, update srim installation directory in config
+        get_config()["G4BL"]["installation_directory"] = self.g4bl_exe_dir
+        get_config()["G4BL"]["output_directory"] = self.g4bl_out_dir
+
+        return {"status": "success"}
+
+    def process_and_store_simulation_results(self):
         # calculate the layer boundary positions as a cumulative sum of layer thicknesses
         self.layer_boundary_positions = self.get_layer_boundary_positions()
-
+        # create arrays to store the results
+        # ydata per layer uses bin numbers to control resolution
+        # the rest only store a float/int per layer so no bin num/resolution used
         self.ydata_per_layer = np.zeros(shape=(len(self.sample_layers), len(self.momentum), self.bin_resolution))
         self.counts_per_layer = np.zeros(shape=(len(self.sample_layers), len(self.momentum)))
         self.counts_per_layer_err = np.zeros(shape=(len(self.sample_layers), len(self.momentum)))
-
         self.proportions_per_layer = np.zeros(shape=(len(self.sample_layers), len(self.momentum)))
         self.proportions_per_layer_err = np.zeros(shape=(len(self.sample_layers), len(self.momentum)))
 
@@ -181,18 +193,23 @@ class G4blModel(QObject):
 
             # sum counts for each layer to get counts per layer for current momentum
             counts_per_layer = np.sum(comp, axis=1)
-            layer_count_err = np.sqrt(counts_per_layer) # error
+            layer_count_err = np.sqrt(counts_per_layer)  # error
 
             # sum counts per layer for each momentum to get total counts for current momentum
             total_count = np.sum(counts_per_layer)
-            total_count_err = np.sqrt(total_count) # error
+            total_count_err = np.sqrt(total_count)  # error
 
             # calculate the proportion of total counts each layer contains for current momentum
             frac = counts_per_layer / total_count
 
             # error propagation
-            with np.errstate(divide='ignore', invalid='ignore'):
-                frac_err = np.sqrt((total_count_err / total_count) ** 2 + (layer_count_err / counts_per_layer) ** 2) * frac
+            frac_err = (
+                np.sqrt(
+                    (total_count_err / total_count) ** 2
+                    + (layer_count_err / counts_per_layer) ** 2
+                )
+                * frac
+            )
 
             # replace all nan values with 0
             frac_err_filtered = np.nan_to_num(frac_err, nan=0)
@@ -201,18 +218,14 @@ class G4blModel(QObject):
             self.ydata_per_layer[:, m, :] = np.round(comp, 4)
             self.counts_per_layer[:, m] = np.round(counts_per_layer, 4)
             self.counts_per_layer_err[:, m] = np.round(np.sqrt(counts_per_layer), 4)
-            self.proportions_per_layer[:, m] = np.round(frac*100, 4)
-            self.proportions_per_layer_err[:, m] = np.round(frac_err_filtered*100, 4)
-
+            self.proportions_per_layer[:, m] = np.round(frac * 100, 4)
+            self.proportions_per_layer_err[:, m] = np.round(frac_err_filtered * 100, 4)
         # set all plot origins to be shifted by default so that 0 on the x-axis is located at end of aluminium layer
         self.default_origin_position = self.layer_boundary_positions[3]
-        self.stopping_plot_origin_shifts = np.full(shape=len(self.momentum), fill_value=self.default_origin_position)
-
-        # after sucessful run, update g4bl installation directory in config
-        get_config()["g4bl"]["installation_directory"] = self.g4bl_exe_dir
-        get_config()["g4bl"]["output_directory"] = self.g4bl_out_dir
-
-        return {"status": "success"}
+        self.stopping_plot_origin_shifts = np.full(
+            shape=len(self.momentum), fill_value=self.default_origin_position
+        )
+        self.depth_plot_origin_shift = self.default_origin_position
     
     def run_G4BL(self, momentum: float, momentum_spread: float, progress_callback: pyqtSignal) -> tuple[list | None, list | None, int,]:
         """
@@ -372,7 +385,7 @@ class G4blModel(QObject):
             # display layer boundaries
             pos = self.layer_boundary_positions[i + 1]
             axx.axvline(x=pos - x_shift, color='k', linestyle='--')
-            axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='left', rotation='vertical')
+            axx.text(pos - x_shift, y_lim_upper * 0.02, self.sample_names[i], horizontalalignment='right', rotation='vertical')
 
         axx.legend()
         self.figs[momentum_index] = axx
@@ -429,7 +442,7 @@ class G4blModel(QObject):
         for i, boundary in enumerate(boundaries):
             ix = np.where(self.layer_boundary_positions == boundary)[0][0]
             name = self.sample_names[ix-1]
-            ax.text(x=closest_momenta[i], y=0.04*y_lim_upper, s=name, horizontalalignment='left', rotation='vertical')
+            ax.text(x=closest_momenta[i], y=0.04*y_lim_upper, s=name, horizontalalignment='right', rotation='vertical')
 
         ax.set_xlabel("Momentum (MeV/c)")
         ax.set_ylabel("Proportion")
@@ -555,7 +568,106 @@ class G4blModel(QObject):
                     layer_curve_str = "".join(header) + "".join(layer_data)
 
                     zf.writestr(layer_filename, layer_curve_str)
-                    
+
+    def save_settings(
+        self,
+        sample_name,
+        stats,
+        g4bl_dir,
+        output_dir,
+        momentum,
+        momentum_spread,
+        sim_type,
+        min_momentum,
+        max_momentum,
+        step_momentum,
+        scan_type,
+        layers,
+        target_dir,
+        bin_number
+    ):
+        with h5py.File(target_dir, "w") as f:
+
+            # save sim metadata from form in one sub folder
+            meta = f.create_group("metadata")
+
+            meta.attrs["sample_name"] = sample_name
+            meta.attrs["sim_type"] = sim_type
+            meta.attrs["momentum"] = momentum
+            meta.attrs["momentum_spread"] = momentum_spread
+            meta.attrs["scan_type"] = scan_type
+            meta.attrs["min_momentum"] = min_momentum
+            meta.attrs["max_momentum"] = max_momentum
+            meta.attrs["step_momentum"] = step_momentum
+            meta.attrs["stats"] = stats
+            meta.attrs["bin_number"] = bin_number
+            
+            # save layer data from table in anoother subfolder
+            layers_group = f.create_group("layers")
+            # make a subfolder for each layer and save layer information
+            for i, layer in enumerate(layers):
+                g = layers_group.create_group(f"layer_{i}")
+                g.attrs["name"] = layer["name"]
+                g.attrs["thickness"] = layer["thickness"]
+
+                if "density" in layer:
+                    g.attrs["density"] = layer["density"]
+
+            # save list of momenta simulated and result x and y data all in another subfolder
+            results = f.create_group("results")
+
+            completed_flag = 1 if self.result_x is not None else 0
+            results.attrs["completed_sim_flag"] = completed_flag
+
+            if completed_flag == 1:
+                results.create_dataset("momentum", data=self.momentum)
+                results.create_dataset("result_x", data=self.result_x)
+                results.create_dataset("result_y", data=self.result_y)
+
+    def load_settings(self, target_dir):
+        with h5py.File(target_dir, "r") as f:
+            # form data
+            meta = f["metadata"]
+            form_data = {
+                "sample_name": meta.attrs["sample_name"],
+                "stats": float(meta.attrs["stats"]),
+                "g4bl_dir": get_config()["G4BL"]["installation_directory"],
+                "output_dir": get_config()["G4BL"]["output_directory"],
+                "momentum": float(meta.attrs["momentum"]),
+                "sim_type": meta.attrs["sim_type"],
+                "momentum_spread": float(meta.attrs["momentum_spread"]),
+                "min_momentum": float(meta.attrs["min_momentum"]),
+                "max_momentum": float(meta.attrs["max_momentum"]),
+                "step_momentum": float(meta.attrs["step_momentum"]),
+                "scan_type": meta.attrs["scan_type"],
+                "bin_number": int(meta.attrs["bin_number"])
+            }
+            # layer data
+            layers = []
+            layers_group = f["layers"]
+            for key in layers_group:
+                g = layers_group[key]
+                layer = {
+                    "name": g.attrs["name"],
+                    "thickness": g.attrs["thickness"],
+                }
+                if "density" in g.attrs:
+                    layer["density"] = g.attrs["density"]
+
+                layers.append(layer)
+            # results data
+            results = f["results"]
+            completed_flag = results.attrs["completed_sim_flag"]
+            self.result_x = None
+            self.result_y = None
+            self.momentum = None
+            if completed_flag == 1:
+                self.momentum = np.array(results["momentum"])
+                self.result_x = np.array(results["result_x"])
+                self.result_y = np.array(results["result_y"])
+
+            return form_data, layers, completed_flag
+
     @staticmethod
     def is_valid_path(path):
         return os.path.exists(path)

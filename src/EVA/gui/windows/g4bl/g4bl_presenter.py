@@ -341,15 +341,79 @@ class G4blPresenter(QWidget):
             self.view.momentum_slider.setMaximum(len(self.model.momentum)-1)
             self.view.momentum_slider.setSingleStep(1)
 
-#TODO needs implentation
-    def stopping_shift_plot_origin(self):
-        pass
-    def stopping_reset_plot_origin(self):
-        pass
+
+    def stopping_shift_plot_origin(self, index):
+        try:
+            new_shift = float(self.view.stopping_origin_shift_line_edits[index].text())
+            self.model.stopping_plot_origin_shifts[index] += new_shift
+
+            fig_comp, ax_comp = self.model.plot_components(
+                index, self.model.momentum[index]
+            )
+            fig_whole, ax_whole = self.model.plot_whole(
+                index, self.model.momentum[index]
+            )
+
+            # get the plot stack at specified index
+            plot_stack = self.view.plot_stacks[index]
+
+            # update both plots
+            plot_widget_whole = plot_stack.widget(0)
+            plot_widget_whole.update_plot(fig_whole, ax_whole)
+
+            plot_widget_comp = plot_stack.widget(1)
+            plot_widget_comp.update_plot(fig_comp, ax_comp)
+
+        except (ValueError, AttributeError) as e:
+            self.view.display_error_message(message="Invalid shift value!")
+            raise e
+
+    def stopping_reset_plot_origin(self, index):
+        self.model.stopping_plot_origin_shifts[index] = (
+            self.model.default_origin_position
+        )
+        self.view.stopping_origin_shift_line_edits[index].setText("0")
+
+        fig_comp, ax_comp = self.model.plot_components(
+            index, self.model.momentum[index]
+        )
+        fig_whole, ax_whole = self.model.plot_whole(index, self.model.momentum[index])
+
+        # get the plot stack at specified index
+        plot_stack = self.view.plot_stacks[index]
+
+        # update both plots
+        plot_widget_whole = plot_stack.widget(0)
+        plot_widget_whole.update_plot(fig_whole, ax_whole)
+
+        plot_widget_comp = plot_stack.widget(1)
+        plot_widget_comp.update_plot(fig_comp, ax_comp)
+
     def depth_shift_plot_origin(self):
-        pass
+        try:
+            new_shift = float(self.view.depth_shift_origin_linedit.text())
+            self.model.depth_plot_origin_shift = new_shift
+
+            fig, ax = self.model.plot_depth_profile()
+
+            self.view.depth_profile_plot.update_plot(fig, ax)
+
+        except (ValueError, AttributeError) as e:
+            self.view.display_error_message(message="Invalid shift value!")
+            raise e
+
     def depth_reset_plot_origin(self):
-        pass
+        try:
+            self.model.depth_plot_origin_shift = self.model.default_origin_position
+            self.view.depth_shift_origin_linedit.setText("0")
+            fig, ax = self.model.plot_depth_profile()
+
+            self.view.depth_profile_plot.update_plot(fig, ax)
+
+        except (ValueError, AttributeError) as e:
+            self.view.display_error_message(message="Invalid shift value!")
+            raise e
+
 
     def on_save_sim_result(self, row):
         if len(self.model.result_x) == 0:  # if no simulations have been run
@@ -455,10 +519,54 @@ class G4blPresenter(QWidget):
         self.show_plot(val, self.model.momentum[val])
         self.time_last_swapped = time.time_ns()
 
-    def load_settings(self):
-        pass
     def save_settings(self):
-        pass
+        try:
+            form_data = self.view.get_form_data()
+            layers = self.get_layers_from_stack_table()
+
+        except (AttributeError, ValueError) as e:
+            self.view.display_error_message(
+                message="Cannot save settings. Invalid data in form or layers table."
+            )
+            return
+
+        valid, error = self.validate_g4bl_settings(form_data)
+
+        if not valid:
+            self.view.display_error_message(message=error)
+            return
+
+        path = self.view.get_save_file_path(
+            get_config()["general"]["working_directory"],
+            file_filter="HDF5 file (*.h5)",
+        )
+        if path != "":
+            self.model.save_settings(**form_data, layers=layers, target_dir=path)
+
+    def load_settings(self):
+        path = self.view.get_load_file_path(
+            get_config()["general"]["working_directory"],
+            file_filter="HDF5 file (*.h5)",
+        )
+        if path != "":
+            form_data, table_data, sim_completed_flag = self.model.load_settings(path)
+            self.view.set_form_data(form_data)
+            self.view.stack_layer_setup_table.update_contents(
+                self.format_model_layers(table_data)
+            )
+            if sim_completed_flag:
+                self.model.stack_input = self.get_layers_from_stack_table()
+                self.model.process_and_store_simulation_results()
+                self.on_simulation_finished({"status": "finished"})
+
+    def load_default_settings(self):
+        path = get_path("./src/EVA/core/settings/g4bl_defaults.txt")
+
+        form_data, table_data = self.model.load_default_settings(path)
+        self.view.set_form_data(form_data)
+        self.view.stack_layer_setup_table.update_contents(
+            self.format_model_layers(table_data)
+        )
 
     def validate_g4bl_settings(self, form_data: dict) -> tuple[bool, str]:
         """
