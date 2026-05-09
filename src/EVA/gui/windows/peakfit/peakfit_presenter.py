@@ -437,7 +437,7 @@ class PeakFitPresenter(object):
         x_range = self.get_e_range()
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(
-            default_dir=def_dir, file_filter="JSON files (*.prm)"
+            default_dir=def_dir, file_filter="Peakfit parameter files (*prm)", default_extension=".prm"
         )
         if path:
             self.model.save_params(path, x_range, auto_e_range_checkbox_state)
@@ -447,13 +447,13 @@ class PeakFitPresenter(object):
     def load_params(self):
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_load_file_path(
-            default_dir=def_dir, file_filter="JSON files (*.prm, *.json)"
+            default_dir=def_dir, file_filter="Peakfit parameter files (*prm)"
         )
 
         if not path:
             return
 
-        param_type, auto_e_range_checkbox_state = self.model.load_params(path)
+        auto_e_range_checkbox_state = self.model.load_params(path)
         self.view.initial_peak_params_table.update_contents(self.format_params(self.model.initial_peak_params))
         self.view.initial_bg_params_table.update_contents(self.format_params(self.model.initial_bg_params))
         self.view.fitted_peak_params_table.update_contents(self.format_params(self.model.fitted_peak_params))
@@ -473,7 +473,7 @@ class PeakFitPresenter(object):
             return
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_save_file_path(
-            default_dir=def_dir, file_filter="Text files (*.frt)"
+            default_dir=def_dir, file_filter="Text files (*.txt)", default_extension=".txt"
         )
         if path:
             self.model.save_fit_report(path)
@@ -485,7 +485,7 @@ class PeakFitPresenter(object):
             return
         # get directory to save x and y points of detector data
         def_dir = get_config()["general"]["working_directory"]
-        path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Zip Files (*.zip)")
+        path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Zip Files (*.zip)", default_extension=".zip")
         if path:
             self.model.save_plot_points(path)
 
@@ -495,7 +495,7 @@ class PeakFitPresenter(object):
                     message="No fit model found. Please perform a peak fit first.")
                 return
             def_dir = get_config()["general"]["working_directory"]
-            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="JSON files (*.json)")
+            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Gaussian Fit Model file (*.gfm)", default_extension=".gfm")
             if path:
                 self.model.save_fitted_model(path)
 
@@ -534,7 +534,7 @@ class PeakFitPresenter(object):
     def add_model(self):
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_load_file_path(
-            default_dir=def_dir, file_filter="JSON files (*.json)"
+            default_dir=def_dir, file_filter="Gaussian Fit Model file (*.gfm)"
         )
         if path:
             self.mf_model.load_and_add_model(path)
