@@ -8,3 +8,6 @@ EVA.log
 src/EVA/core/settings/config.json
 .vscode/launch.json
 src/g4bl/output_data
+g4bl_terminal.txt
+input_file.g4bl
+out_file.txt
