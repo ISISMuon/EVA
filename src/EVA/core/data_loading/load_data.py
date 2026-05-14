@@ -155,7 +155,7 @@ def load_run_brni(
     try:
         # Apply corrections
         run.set_corrections(
-            energy_corrections,
+            energy_corrections=energy_corrections,
             normalise_which=None,
             normalisation=normalisation,
             bin_rate=binning,
@@ -340,7 +340,7 @@ def load_run_nxs(
         try:
             # Apply corrections
             run.set_corrections(
-                energy_corrections,
+                energy_corrections=energy_corrections,
                 normalise_which=None,
                 normalisation=normalisation,
                 bin_rate=binning,

@@ -18,24 +18,14 @@ class RunBiriani(Run):
         self.events_str = comment_data[2]
         self.comment = comment_data[3]
 
-    def set_corrections(
-        self,
-        energy_corrections=None,
-        normalisation=None,
-        normalise_which=None,
-        bin_rate=None,
-        default_bin=None,
-        plot_mode=None,
-        prompt_limit=None,
-        delayed_limit=None,
-    ):
-        if normalise_which is None:
-            normalise_which = self.normalise_which
+    def set_corrections(self, **kwargs):
+        if kwargs.get('normalise_which') is None:
+            kwargs['normalise_which'] = self.normalise_which
 
         self.data = deepcopy(self._raw)
-        self._set_energy_correction(energy_corrections)
-        self._set_normalisation(normalisation, normalise_which)
-        self._set_binning(bin_rate)
+        self._set_energy_correction(kwargs.get('energy_corrections'))
+        self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
+        self._set_binning(kwargs.get('bin_rate'))
         self.corrections_updated_s.emit()
 
     def _set_mode(self, *args, **kwargs):

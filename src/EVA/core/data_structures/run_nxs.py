@@ -33,17 +33,7 @@ class RunNexus(Run):
             for key, nexus_obj in self._raw.items()
         }
 
-    def set_corrections(
-        self,
-        energy_corrections=None,
-        normalisation=None,
-        normalise_which=None,
-        bin_rate=None,
-        default_bin=None,
-        plot_mode=None,
-        prompt_limit=None,
-        delayed_limit=None,
-    ):
+    def set_corrections(self, **kwargs):
         self.data = {
             key: Spectrum(
                 detector=nexus_obj.detector, run_number=nexus_obj.run_number
@@ -51,10 +41,10 @@ class RunNexus(Run):
             for key, nexus_obj in self._raw.items()
         }
 
-        self._set_mode(plot_mode, prompt_limit, delayed_limit)
-        self._set_energy_correction(energy_corrections)
-        self._set_binning(bin_rate, default_bin)
-        self._set_normalisation(normalisation, normalise_which)
+        self._set_mode(kwargs.get('plot_mode'), kwargs.get('prompt_limit'), kwargs.get('delayed_limit'))
+        self._set_energy_correction(kwargs.get('energy_corrections'))
+        self._set_binning(kwargs.get('bin_rate'), kwargs.get('default_bin'))
+        self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
         self.corrections_updated_s.emit()
 
     def _set_normalisation_events(self, normalise_which):
