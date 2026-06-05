@@ -176,7 +176,7 @@ class TrimPresenter(QWidget):
     def depth_shift_plot_origin(self):
         try:
             new_shift = float(self.view.depth_shift_origin_linedit.text())
-            self.model.depth_plot_origin_shift = new_shift
+            self.model.depth_plot_origin_shift += new_shift
 
             fig, ax = self.model.plot_depth_profile()
 
