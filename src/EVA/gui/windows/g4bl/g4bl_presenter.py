@@ -556,6 +556,7 @@ class G4blPresenter(QWidget):
             )
             if sim_completed_flag:
                 self.model.stack_input = self.get_layers_from_stack_table()
+                self.model.create_sample_shape_objects()
                 self.model.process_and_store_simulation_results()
                 self.on_simulation_finished({"status": "finished"})
 

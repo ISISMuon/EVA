@@ -82,7 +82,9 @@ class G4blModel(QObject):
         self.cancel_sim = False
         self.simulation_times = None # to store the time taken for each simulation
 
-    def create_sample_shape_objects(self, layers: list[dict]):
+    def create_sample_shape_objects(self, layers: list[dict] = None):
+        if layers is None:
+                layers = self.stack_input
         self.sample_layers = []
         self.sample_names = []
         if self.sim_method == "Stack":
@@ -135,7 +137,7 @@ class G4blModel(QObject):
         self.result_y = np.zeros_like(self.result_x)
         self.total_thickness = 0
         # create shape objects using parameters in sample setup table
-        self.create_sample_shape_objects(self.stack_input)
+        self.create_sample_shape_objects()
         simulation_count = 0
         for momentum_index, mom in enumerate(self.momentum):
             t0 = time.time_ns()
