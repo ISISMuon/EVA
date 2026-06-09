@@ -15,12 +15,15 @@ class G4BL(object):
 
     def run(self, g4bl_exe_dir, output_dir, vis_mode=False, progress_callback=None):
         log_file = Path(output_dir) / f"g4bl_terminal{self.instance}.txt"
+        exe_path = Path(g4bl_exe_dir) / "g4bl"
+
         input_file = Path(output_dir) / f"input_file{self.instance}.g4bl"
         with open(input_file, "w") as f:
             f.write(self.writer.input_string)
-
-        exe_path = Path(g4bl_exe_dir) / "g4bl"
         cmd = [str(exe_path), f"input_file{self.instance}.g4bl"]
+        # input_file = Path(output_dir) / r"intersect_subt.g4bl"
+        # InputWriter.edit_custom_file(input_file, self.writer.momentum, self.writer.mom_err, self.writer.muon_num)
+        # cmd = [str(exe_path), "intersect_subt.g4bl"]
         if vis_mode:
             cmd.append("viewer=best")
 

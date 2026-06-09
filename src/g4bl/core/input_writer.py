@@ -64,3 +64,19 @@ class InputWriter:
             # shapes only create their input strings at this point to conserve memory. place_shape also creates sample position member.
             material_lines.append(target.place_shape())
         self.input_string += "\n".join(material_lines)
+
+    @staticmethod
+    def edit_custom_file(custom_file, p_inj, bite, stats):
+        with open(custom_file, "r") as f:
+            lines = f.readlines()
+
+        with open(custom_file, "w") as f:
+            for line in lines:
+                if line.startswith("param -unset P_inj="):
+                    f.write(f"param -unset P_inj={p_inj}\n")
+                elif line.startswith("param -unset stats="):
+                    f.write(f"param -unset stats={stats}\n")
+                elif line.startswith("param -unset bite="):
+                    f.write(f"param -unset bite={bite}\n")
+                else:
+                    f.write(line)
