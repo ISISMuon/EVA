@@ -94,4 +94,4 @@ class TestLoadWorkspaceWindow:
             ):
                 assert np.array_equal(run_spectrum.x, run_copy_spectrum.x)
                 assert np.array_equal(run_spectrum.y, run_copy_spectrum.y)
-            matplotlib.pyplot.close()
+            self.window.widget().deleteLater()
