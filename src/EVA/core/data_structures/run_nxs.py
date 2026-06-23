@@ -1,5 +1,5 @@
 import numpy as np
-from EVA.core.data_structures.spectrum_nexus import SpectrumNexus
+from EVA.core.data_structures.spectrum import Spectrum
 from EVA.core.physics import rebin
 from EVA.core.physics.normalisation import normalise_events, normalise_counts
 from EVA.core.data_structures.run import Run
@@ -27,7 +27,7 @@ class RunNexus(Run):
         self.delayed_limit = delayed_limit
         self.bin_method = self._bin_method_from_plotmode(plot_mode)
         self.data = {
-            key: SpectrumNexus(
+            key: Spectrum(
                 detector=nexus_obj.detector, run_number=nexus_obj.run_number
             )
             for key, nexus_obj in self._raw.items()
@@ -45,7 +45,7 @@ class RunNexus(Run):
         delayed_limit=None,
     ):
         self.data = {
-            key: SpectrumNexus(
+            key: Spectrum(
                 detector=nexus_obj.detector, run_number=nexus_obj.run_number
             )
             for key, nexus_obj in self._raw.items()
@@ -61,7 +61,7 @@ class RunNexus(Run):
         """Normalise spectra by event count using comment metadata."""
         if self.plot_mode in ["IBEX Prompt Spectrum", "Manual Prompt Spectrum"]:
             try:
-                spills = int(self.comment_data[1])
+                spills = int(self.comment_data[1]) # Prompt counts
             except ValueError:
                 self._set_normalisation_none()
                 raise ValueError("Normalisation by events failed.")
@@ -71,7 +71,7 @@ class RunNexus(Run):
             "Manual Delayed Spectrum",
         ]:
             try:
-                spills = int(self.comment_data[2])
+                spills = int(self.comment_data[2]) # Delayed counts
             except ValueError:
                 self._set_normalisation_none()
                 raise ValueError("Normalisation by events failed.")

@@ -4,7 +4,6 @@ import numpy as np
 import copy
 from EVA.core.app import get_app, get_config
 from EVA.core.data_loading import load_data
-from EVA.core.data_structures.spectrum_nexus import SpectrumNexus
 from EVA.gui.windows.workspace.workspace_window import WorkspaceWindow
 from gc import get_referrers
 from PyQt6.QtCore import Qt
