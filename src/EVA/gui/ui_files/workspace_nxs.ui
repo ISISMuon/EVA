@@ -138,6 +138,164 @@ QGroupBox::title {
          </widget>
         </item>
         <item>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="palette">
+           <palette>
+            <active>
+             <colorrole role="Button">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </active>
+            <inactive>
+             <colorrole role="Button">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </inactive>
+            <disabled>
+             <colorrole role="Button">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </disabled>
+           </palette>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QGroupBox {
+	border-radius: 6px;
+	margin-top: 6px;
+	background-color: white;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 7px;
+    padding: 2px 5px 2px 5px;
+	background-color: white;
+	border: 1px solid #E8E8E8;
+	border-radius: 2px
+}</string>
+          </property>
+          <property name="title">
+           <string>Detector Group Settings</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Current Profile: None</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="group_detector_checkbox">
+             <property name="text">
+              <string>Group Detectors</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="group_detector_button">
+             <property name="text">
+              <string>Detector Groups Profiles</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <widget class="QGroupBox" name="groupBox_2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
@@ -179,6 +337,40 @@ QGroupBox::title {
            <property name="bottomMargin">
             <number>9</number>
            </property>
+           <item row="13" column="3">
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>ns</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="2">
+            <widget class="QLineEdit" name="prompt_limit_textbox"/>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Binning</string>
+             </property>
+            </widget>
+           </item>
+           <item row="19" column="2" colspan="3">
+            <widget class="QPushButton" name="export_run_data_button">
+             <property name="text">
+              <string>Export Run Data</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="3">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>ns</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="2">
+            <widget class="QLineEdit" name="delayed_limit_textbox"/>
+           </item>
            <item row="17" column="2" colspan="3">
             <widget class="QPushButton" name="apply_run_settings_button">
              <property name="text">
@@ -186,11 +378,23 @@ QGroupBox::title {
              </property>
             </widget>
            </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>Display Plot</string>
-             </property>
+           <item row="7" column="2" colspan="3">
+            <widget class="QComboBox" name="normalisation_type_combo_box">
+             <item>
+              <property name="text">
+               <string>None</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Normalisation by counts</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Normalisation by events</string>
+              </property>
+             </item>
             </widget>
            </item>
            <item row="4" column="2" colspan="3">
@@ -227,38 +431,6 @@ QGroupBox::title {
              </item>
             </widget>
            </item>
-           <item row="7" column="2" colspan="3">
-            <widget class="QComboBox" name="normalisation_type_combo_box">
-             <item>
-              <property name="text">
-               <string>None</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Normalisation by counts</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Normalisation by events</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="10" column="2">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>Prompt Limit</string>
-             </property>
-            </widget>
-           </item>
-           <item row="13" column="2">
-            <widget class="QLineEdit" name="delayed_limit_textbox"/>
-           </item>
-           <item row="11" column="2">
-            <widget class="QLineEdit" name="prompt_limit_textbox"/>
-           </item>
            <item row="9" column="2" colspan="3">
             <widget class="QDoubleSpinBox" name="binning_spin_box">
              <property name="suffix">
@@ -275,41 +447,6 @@ QGroupBox::title {
              </property>
             </widget>
            </item>
-           <item row="13" column="3">
-            <widget class="QLabel" name="label_8">
-             <property name="text">
-              <string>ns</string>
-             </property>
-            </widget>
-           </item>
-           <item row="12" column="2">
-            <widget class="QLabel" name="label_7">
-             <property name="text">
-              <string>Delayed Limit</string>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="3">
-            <widget class="QLabel" name="label_6">
-             <property name="text">
-              <string>ns</string>
-             </property>
-            </widget>
-           </item>
-           <item row="19" column="2" colspan="2">
-            <widget class="QPushButton" name="export_run_data_button">
-             <property name="text">
-              <string>Export Run Data</string>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="2">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Binning</string>
-             </property>
-            </widget>
-           </item>
            <item row="6" column="2">
             <widget class="QLabel" name="label_2">
              <property name="styleSheet">
@@ -317,6 +454,27 @@ QGroupBox::title {
              </property>
              <property name="text">
               <string>Normalisation type</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="2">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Prompt Limit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Display Plot</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="2">
+            <widget class="QLabel" name="label_7">
+             <property name="text">
+              <string>Delayed Limit</string>
              </property>
             </widget>
            </item>
