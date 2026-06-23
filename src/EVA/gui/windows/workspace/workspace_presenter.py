@@ -44,7 +44,8 @@ class WorkspacePresenter:
             self.view.peakfit_menu_actions[i].triggered.connect(
                 lambda _, det=detector: self.open_peakfit(det)
             )
-
+        # load settings from config into settings panel
+        self.populate_settings_panel()
         # self.view.trim_fit.triggered.connect(self.open_trim_fit)
         self.view.trim_simulation.triggered.connect(self.open_trim)
         self.view.model_muon_spectrum.triggered.connect(self.open_model_muon_spectrum)
@@ -57,9 +58,9 @@ class WorkspacePresenter:
         self.view.general_settings.triggered.connect(self.open_general_settings_dialog)
 
         self.view.help_manual.triggered.connect(self.open_manual)
-
         self.view.tabWidget.tabCloseRequested.connect(self.view.close_tab)
-        self.populate_settings_panel()
+
+        self.view.group_detector_checkbox.toggled.connect(self.on_group_detector_checkbox_toggled)
         self.view.export_run_data_button.clicked.connect(self.export_run_data)
         self.view.save_and_close_requested_s.connect(self.save_and_close)
 
@@ -142,6 +143,9 @@ class WorkspacePresenter:
             if "fill_colour" in settings["plot"].keys():
                 self.view.replot_spectra_s.emit()
 
+    def on_group_detector_checkbox_toggled(self):
+        detector_group_dict = self.get_detector_group_profile()
+        self.model.run.combine_detector_spectra(detector_group_dict)
     def reset_to_default_config(self):
         """
         Resets all settings to default values.
