@@ -25,6 +25,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
     """
 
     corrections_updated_s = pyqtSignal()
+    detectors_grouped_s = pyqtSignal()
 
     def __init__(
         self,
@@ -37,7 +38,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self._raw = raw
         self.loaded_detectors = loaded_detectors
         self.run_num = run_num
-
+        self.plot_mode = ""
         # Common correction parameters
         self.momentum = momentum
         self.energy_corrections = {}
@@ -69,7 +70,11 @@ class Run(QObject, metaclass=MetaQObjectABC):
         pass
 
     # Shared functions
-    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]]) -> Spectrum:
+    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None) -> Spectrum:
+        if detector_group_dict is None:
+            return
+        if self.plot_mode not in ["Biriani Spectrum", "IBEX Prompt Spectrum", "IBEX Delayed Spectrum"]:
+            raise ValueError(f"Cannot combine detectors for plot mode '{self.plot_mode}'.")
         combined_data = {}
         for group_name, detector_names in detector_group_dict.items():
             first = self.data[detector_names[0]]
@@ -94,10 +99,9 @@ class Run(QObject, metaclass=MetaQObjectABC):
                 x=first.x,  # reuse energy bin values from first detector
                 y=y_sum,
             )
+        self.data = combined_data
+        self.detectors_grouped_s.emit()
 
-        return combined_data
-
-    
     def _set_energy_correction(self, energy_corrections: dict):
         """Apply per-detector linear energy corrections."""
         if energy_corrections is None:
