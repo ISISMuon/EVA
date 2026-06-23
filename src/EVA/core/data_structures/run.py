@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from abc import ABCMeta, abstractmethod
 from copy import deepcopy
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -46,10 +47,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self.default_bin = 8192  # subclasses may override
         self.bin_method = ""  # subclass must set
 
-    # =================================================================
     # ABSTRACT INTERFACE
-    # =================================================================
-
     @abstractmethod
     def set_corrections(self, *args, **kwargs):
         """Reapply all corrections, normalisation, and binning in correct order."""
@@ -71,6 +69,35 @@ class Run(QObject, metaclass=MetaQObjectABC):
         pass
 
     # Shared functions
+    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]]) -> Spectrum:
+        combined_data = {}
+        for group_name, detector_names in detector_group_dict.items():
+            first = self.data[detector_names[0]]
+            # Create a copy of the first spectrum to add y values of each spectrum in place to the x values of the first one.
+            y_sum = np.array(first.y, copy=True)
+
+            for detector_name in detector_names[1:]:
+                spectrum = self.data[detector_name]
+                # Verify if all detectors in group have the same x values across the iteration
+                # TODO might be worth having a robust algorithm to add the histograms for different bin centers.
+                if not np.array_equal(spectrum.x, first.x):
+                    raise ValueError(
+                        f"x values for detector '{detector_name}' "
+                        f"do not match '{first.detector}'."
+                    )
+
+                y_sum += spectrum.y
+
+            combined_data[group_name] = Spectrum(
+                detector=group_name,
+                run_number=first.run_number,
+                x=first.x,  # reuse energy bin values from first detector
+                y=y_sum,
+            )
+
+        return combined_data
+
+    
     def _set_energy_correction(self, energy_corrections: dict):
         """Apply per-detector linear energy corrections."""
         if energy_corrections is None:
