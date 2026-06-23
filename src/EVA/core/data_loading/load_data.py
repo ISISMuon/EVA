@@ -5,7 +5,6 @@ from EVA.core.data_structures.run import Run
 from EVA.core.data_structures.run_nxs import RunNexus
 from EVA.core.data_structures.run_brni import RunBiriani
 from EVA.core.data_structures.spectrum import Spectrum
-from EVA.core.data_structures.spectrum_nexus import SpectrumNexus
 
 from EVA.core.app import get_config
 
@@ -241,7 +240,7 @@ def open_hex_file(run_num: int, base_path: str, max_digits: int = 10):
 
 
 def generate_spectrum_nxs(run_number, data_file):
-    """Build a SpectrumNexus object for each detector channel in Nexus file using references to raw and pre-binned data.
+    """Build a Spectrum object for each detector channel in Nexus file using references to raw and pre-binned data.
     Skips over detectors with missing data for now, eventually will handle missing detectors more gracefully TODO."""
     raw = {}
     detectors = []
@@ -281,7 +280,7 @@ def generate_spectrum_nxs(run_number, data_file):
                 ibex_hist_2d = data_file[f"raw_data_1/detector_{i}_energy2D/counts"]
                 bin_range = (np.min(delayed_energy), np.max(delayed_energy))
 
-                spectrum = SpectrumNexus(
+                spectrum = Spectrum(
                     detector=detector_name,
                     run_number=run_number,
                     prompt_count=prompt_count,
@@ -319,7 +318,7 @@ def load_run_nxs(
     prompt_limit: int,
     delayed_limit: int,
 ) -> tuple[Run, dict]:
-    """Loads nexus run file from given run number, collects data from each channel into dictionary of SpectrumNexus objects, stores in RunNexus object
+    """Loads nexus run file from given run number, collects data from each channel into dictionary of Spectrum objects, stores in RunNexus object
     along with run metadata, and apply any detected corrections from saved settings in config."""
     try:
         data_file = open_hex_file(int(run_num), working_directory)
