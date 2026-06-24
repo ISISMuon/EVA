@@ -60,7 +60,7 @@ class WorkspacePresenter:
         self.view.help_manual.triggered.connect(self.open_manual)
         self.view.tabWidget.tabCloseRequested.connect(self.view.close_tab)
 
-        self.view.group_detector_checkbox.toggled.connect(self.on_group_detector_checkbox_toggled)
+        # self.view.group_detector_checkbox.toggled.connect(self.on_group_detector_checkbox_toggled)
         self.view.export_run_data_button.clicked.connect(self.export_run_data)
         self.view.save_and_close_requested_s.connect(self.save_and_close)
 
@@ -107,20 +107,24 @@ class WorkspacePresenter:
         plot_type = self.view.nexus_plot_display_combo_box.currentText()
         prompt_limit = self.view.prompt_limit_textbox.text()
         delayed_limit = self.view.delayed_limit_textbox.text()
+
+        if self.view.group_detector_checkbox.isChecked():
+            current_profile = get_config()["general"]["current_grouping_profile"]
+            detector_group_dict = get_config()["general"]["saved_grouping_profiles"][current_profile]
+        else:
+            detector_group_dict = None
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
-            kwargs = dict(
+            run_correction_settings = dict(
                 normalisation=norm_type,
                 bin_rate=binning,
                 plot_mode=plot_type,
                 prompt_limit=int(prompt_limit),
                 delayed_limit=int(delayed_limit),
+                detector_group_dict=detector_group_dict,
             )
-            # dynamically filter only supported arguments for loaded run type
-            sig = inspect.signature(self.model.run.set_corrections)
-            valid_params = sig.parameters.keys()
-            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_params}
-            self.model.run.set_corrections(**filtered_kwargs)
+
+            self.model.run.set_corrections(**run_correction_settings)
 
         except ValueError:
             self.view.display_error_message(
@@ -143,9 +147,9 @@ class WorkspacePresenter:
             if "fill_colour" in settings["plot"].keys():
                 self.view.replot_spectra_s.emit()
 
-    def on_group_detector_checkbox_toggled(self):
-        detector_group_dict = self.get_detector_group_profile()
-        self.model.run.combine_detector_spectra(detector_group_dict)
+    # def on_group_detector_checkbox_toggled(self):
+    #     detector_group_dict = self.get_detector_group_profile()
+    #     self.model.run.combine_detector_spectra(detector_group_dict)
     def reset_to_default_config(self):
         """
         Resets all settings to default values.
