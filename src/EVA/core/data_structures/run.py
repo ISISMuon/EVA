@@ -81,18 +81,19 @@ class Run(QObject, metaclass=MetaQObjectABC):
             # Create a copy of the first spectrum to add y values of each spectrum in place to the x values of the first one.
             y_sum = np.array(first.y, copy=True)
 
+            bad = []
             for detector_name in detector_names[1:]:
                 spectrum = self.data[detector_name]
                 # Verify if all detectors in group have the same x values across the iteration
                 # TODO might be worth having a robust algorithm to add the histograms for different bin centers.
                 if not np.array_equal(spectrum.x, first.x):
-                    raise ValueError(
-                        f"x values for detector '{detector_name}' "
-                        f"do not match '{first.detector}'."
-                    )
-
-                y_sum += spectrum.y
-
+                    bad.append(detector_name)
+                else:
+                # if x vals are equal, sum up the counts
+                    y_sum += spectrum.y
+            if bad:
+                # if any of the detectors did not match, raise error with list of detectors that didnt match the first one
+                raise ValueError(f"Bad detectors: {bad}")
             combined_data[group_name] = Spectrum(
                 detector=group_name,
                 run_number=first.run_number,

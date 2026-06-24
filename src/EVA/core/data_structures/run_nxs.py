@@ -32,6 +32,7 @@ class RunNexus(Run):
             )
             for key, nexus_obj in self._raw.items()
         }
+        self.plot_detectors = self.loaded_detectors[0:4]
 
     def set_corrections(self, **kwargs):
         self.data = {
@@ -42,9 +43,7 @@ class RunNexus(Run):
         }
 
         self._set_mode(kwargs.get('plot_mode'), kwargs.get('prompt_limit'), kwargs.get('delayed_limit'))
-        # self._combine_detector_spectra(kwargs.get("detector_group_dict"))
-        from EVA.core.app import get_config
-        self._combine_detector_spectra(get_config()["general"]["current_grouping_profile"])
+        self._combine_detector_spectra(kwargs.get("detector_group_dict"))
         self._set_energy_correction(kwargs.get('energy_corrections'))
         self._set_binning(kwargs.get('bin_rate'), kwargs.get('default_bin'))
         self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
