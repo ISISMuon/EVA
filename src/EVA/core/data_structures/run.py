@@ -37,6 +37,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         super().__init__()
         self._raw = raw
         self.loaded_detectors = loaded_detectors
+        self.active_detectors = loaded_detectors # TODO refer to NOTE comment in _combine_detector_spectra()
         self.run_num = run_num
         self.plot_mode = ""
         # Common correction parameters
@@ -47,6 +48,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self.bin_rate = 1
         self.default_bin = 8192  # subclasses may override
         self.bin_method = ""  # subclass must set
+        self.plot_detectors = set(self.loaded_detectors[:4]) # by default plot the first 4 detectors for a run
 
     # ABSTRACT INTERFACE
     @abstractmethod
@@ -72,10 +74,13 @@ class Run(QObject, metaclass=MetaQObjectABC):
     # Shared functions
     def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None) -> Spectrum:
         if detector_group_dict is None:
+            self.loaded_detectors = self.active_detectors
+            self.plot_detectors = self.loaded_detectors[0:4]
             return
         if self.plot_mode not in ["Biriani Spectrum", "IBEX Prompt Spectrum", "IBEX Delayed Spectrum"]:
             raise ValueError(f"Cannot combine detectors for plot mode '{self.plot_mode}'.")
         combined_data = {}
+        self.loaded_detectors = []
         for group_name, detector_names in detector_group_dict.items():
             first = self.data[detector_names[0]]
             # Create a copy of the first spectrum to add y values of each spectrum in place to the x values of the first one.
@@ -99,9 +104,13 @@ class Run(QObject, metaclass=MetaQObjectABC):
                 run_number=first.run_number,
                 x=first.x,  # reuse energy bin values from first detector
                 y=y_sum,
+                bin_range=first.bin_range
             )
+            self.loaded_detectors.append(group_name) # Change list of loaded detectors to the names of the detector groups used
         self.data = combined_data
-        self.detectors_grouped_s.emit()
+        self.plot_detectors = self.loaded_detectors[0:4]
+        # To rename labels and peakfit options correctly.
+        # self.detectors_grouped_s.emit()
 
     def _set_energy_correction(self, energy_corrections: dict):
         """Apply per-detector linear energy corrections."""
@@ -140,14 +149,14 @@ class Run(QObject, metaclass=MetaQObjectABC):
 
     def _set_normalisation_none(self):
         """Reset all normalisation."""
-        for detector in self._raw.keys():
+        for detector in self.data.keys():
             self.data[detector].y = self.data[detector].y
         self.normalisation = "none"
         self.normalise_which = self.loaded_detectors
 
     def _set_normalisation_counts(self, normalise_which: list[str]):
         """Normalise detector spectra by total counts."""
-        for detector, spectrum in self._raw.items():
+        for detector, spectrum in self.data.items():
             if detector in normalise_which:
                 self.data[detector].y = normalise_counts(self.data[detector].y)
 
@@ -178,14 +187,14 @@ class Run(QObject, metaclass=MetaQObjectABC):
             self.bin_rate = 1.0
             return
 
-        for detector, spectrum in self._raw.items():
+        for detector, spectrum in self.data.items():
             if self.data[detector].x.size == 0:
                 continue
             self.data[detector].x, self.data[detector].y = rebin.numpy_rebin(
                 self.data[detector].x,
                 self.data[detector].y,
                 self.bin_rate,
-                self._raw[detector].bin_range,
+                self.data[detector].bin_range,
             )
 
     def _set_binning_raw(

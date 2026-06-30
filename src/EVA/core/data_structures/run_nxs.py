@@ -32,21 +32,23 @@ class RunNexus(Run):
             )
             for key, nexus_obj in self._raw.items()
         }
-        self.plot_detectors = self.loaded_detectors[0:4]
 
     def set_corrections(self, **kwargs):
+        # initialize an empty data dict with detector name: Spectrum key: value pairs
         self.data = {
             key: Spectrum(
                 detector=nexus_obj.detector, run_number=nexus_obj.run_number
             )
             for key, nexus_obj in self._raw.items()
         }
-
+        current_loaded_detectors = self.loaded_detectors
         self._set_mode(kwargs.get('plot_mode'), kwargs.get('prompt_limit'), kwargs.get('delayed_limit'))
         self._combine_detector_spectra(kwargs.get("detector_group_dict"))
         self._set_energy_correction(kwargs.get('energy_corrections'))
         self._set_binning(kwargs.get('bin_rate'), kwargs.get('default_bin'))
         self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
+        if current_loaded_detectors != self.loaded_detectors:
+            self.detectors_grouped_s.emit()
         self.corrections_updated_s.emit()
 
     def _set_normalisation_events(self, normalise_which):

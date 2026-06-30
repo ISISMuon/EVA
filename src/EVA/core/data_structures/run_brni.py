@@ -23,10 +23,13 @@ class RunBiriani(Run):
             kwargs['normalise_which'] = self.normalise_which
 
         self.data = deepcopy(self._raw)
+        current_loaded_detectors = self.loaded_detectors
         self._combine_detector_spectra(kwargs.get("detector_group_dict"))
         self._set_energy_correction(kwargs.get('energy_corrections'))
         self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
         self._set_binning(kwargs.get('bin_rate'))
+        if current_loaded_detectors != self.loaded_detectors:
+            self.detectors_grouped_s.emit()
         self.corrections_updated_s.emit()
 
     def _set_mode(self, *args, **kwargs):
@@ -35,7 +38,7 @@ class RunBiriani(Run):
 
     def _set_normalisation_counts(self, normalise_which: list[str]):
         """Normalise detector spectra by total counts."""
-        for detector, spectrum in self._raw.items():
+        for detector, spectrum in self.data.items():
             if detector in normalise_which:
                 self.data[detector].y = normalise_counts(spectrum.y)
             else:
@@ -46,7 +49,7 @@ class RunBiriani(Run):
     def _set_normalisation_events(self, normalise_which):
         try:
             spills = int(self.events_str[19:])
-            for detector, spectrum in self._raw.items():
+            for detector, spectrum in self.data.items():
                 if detector in normalise_which:
                     self.data[detector].y = normalise_events(spectrum.y, spills)
             self.normalisation = "events"
