@@ -39,53 +39,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QWidget" name="widget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QCheckBox" name="det1_checkbox">
-        <property name="text">
-         <string>2099 (GE1)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="det2_checkbox">
-        <property name="text">
-         <string>3099 (GE2)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="det3_checkbox">
-        <property name="text">
-         <string>4099 (GE3)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="det4_checkbox">
-        <property name="text">
-         <string>5099 (GE4)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="0" column="2" rowspan="2">
     <widget class="QTabWidget" name="tab_menu">
      <property name="enabled">
@@ -1202,6 +1155,30 @@
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QWidget" name="detector_checkboxes_widget" native="true">
+        <layout class="QHBoxLayout" name="detector_checkbox_hlayout"/>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
