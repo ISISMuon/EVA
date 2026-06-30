@@ -39,11 +39,8 @@ class WorkspacePresenter:
         self.model = model
 
         # Set up action bar connections
+        self.setup_peakfit_options()
 
-        for i, detector in enumerate(self.view.detector_list):
-            self.view.peakfit_menu_actions[i].triggered.connect(
-                lambda _, det=detector: self.open_peakfit(det)
-            )
         # load settings from config into settings panel
         self.populate_settings_panel()
         # self.view.trim_fit.triggered.connect(self.open_trim_fit)
@@ -55,12 +52,13 @@ class WorkspacePresenter:
         self.view.energy_correction_settings.triggered.connect(
             self.open_energy_corrections_dialog
         )
+        self.view.group_detector_button.clicked.connect(self.open_detector_group_window)
         self.view.general_settings.triggered.connect(self.open_general_settings_dialog)
 
         self.view.help_manual.triggered.connect(self.open_manual)
         self.view.tabWidget.tabCloseRequested.connect(self.view.close_tab)
 
-        # self.view.group_detector_checkbox.toggled.connect(self.on_group_detector_checkbox_toggled)
+        self.view.group_detector_checkbox.toggled.connect(self.on_group_detector_checkbox_toggled)
         self.view.export_run_data_button.clicked.connect(self.export_run_data)
         self.view.save_and_close_requested_s.connect(self.save_and_close)
 
@@ -147,9 +145,17 @@ class WorkspacePresenter:
             if "fill_colour" in settings["plot"].keys():
                 self.view.replot_spectra_s.emit()
 
-    # def on_group_detector_checkbox_toggled(self):
-    #     detector_group_dict = self.get_detector_group_profile()
-    #     self.model.run.combine_detector_spectra(detector_group_dict)
+    def setup_peakfit_options(self):
+        self.view.setup_peakfit_options()
+        for i, detector in enumerate(self.view.detector_list):
+            self.view.peakfit_menu_actions[i].triggered.connect(
+                lambda _, det=detector: self.open_peakfit(det)
+            )
+
+    def on_group_detector_checkbox_toggled(self):
+        self.on_apply_settings()
+        self.setup_peakfit_options()
+
     def reset_to_default_config(self):
         """
         Resets all settings to default values.
@@ -233,6 +239,23 @@ class WorkspacePresenter:
         logger.info("Closed periodic table window.")
 
         self.view.periodic_table_windows.remove(window)
+        window.deleteLater()
+
+    def open_detector_grouping_window(self):
+        """Opens detector groupings window."""
+        logger.info("Opening detector groupings window.")
+
+        window = DetectorGroupingWindow()
+        self.view.detector_grouping_windows.append(window)
+
+        window.showMaximized()
+        window.window_closed_s.connect(lambda: self.close_detector_grouping_window(window))
+
+    def close_detector_grouping_window(self, window):
+        """Remove reference to periodic table window when closed"""
+        logger.info("Closed detector groupings window.")
+
+        self.view.detector_grouping_windows.remove(window)
         window.deleteLater()
 
     #### OPENING TABS ##################################################

@@ -53,7 +53,7 @@ class WorkspaceModel:
             "plot_mode": self.run.plot_mode,
             "prompt_limit": self.run.prompt_limit,
             "delayed_limit": self.run.delayed_limit,
-            "show_plot": {det: True for det in self.run.loaded_detectors},
+            # "show_plot": {det: True for det in self.run.loaded_detectors},
         }
 
         config["saved_corrections"][working_dir][run_num] = corrections

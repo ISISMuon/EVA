@@ -51,16 +51,9 @@ class WorkspaceView(Ui_workspace, QMainWindow):
         self.setupUi(self)
         self.setWindowTitle(f"Workspace {run.run_num} - EVA")
 
-        self.detector_list = list(run.data.keys())
 
         self.layout().setContentsMargins(0, 0, 0, 0)
 
-        # Set up action bar items
-        self.peakfit_menu_actions = []
-
-        for detector in self.detector_list:
-            action = self.peak_fit_menu.addAction(detector)
-            self.peakfit_menu_actions.append(action)
         try:
             self.comment_text.setText(run.run_info)
         except AttributeError:
@@ -82,6 +75,15 @@ class WorkspaceView(Ui_workspace, QMainWindow):
             "Elemental Analysis",
             closable=False,
         )
+
+    def setup_peakfit_options(self):
+        self.detector_list = list(self.run.data.keys())
+        # Set up action bar items
+        self.peakfit_menu_actions = []
+        self.peak_fit_menu.clear()
+        for detector in self.detector_list:
+            action = self.peak_fit_menu.addAction(detector)
+            self.peakfit_menu_actions.append(action)
 
     def display_error_message(
         self,

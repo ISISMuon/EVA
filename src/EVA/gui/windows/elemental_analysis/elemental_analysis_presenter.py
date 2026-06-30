@@ -42,7 +42,7 @@ class ElementalAnalysisPresenter(object):
         self.view.plot.canvas.mpl_connect("button_press_event", self.on_plot_clicked)
 
         self.model.run.corrections_updated_s.connect(self.replot_spectra)
-
+        self.model.run.detectors_grouped_s.connect(self.on_detectors_grouped)
         # load form data from model
         self.view.mu_xray_search_width_line_edit.setText(
             str(self.model.mu_xray_search_width)
@@ -59,34 +59,7 @@ class ElementalAnalysisPresenter(object):
             self.model.peakfind_selected_function
         )
 
-        plot_detectors = self.model.get_plot_detectors()
-
-        self.checkboxes = [
-            self.view.det1_checkbox,
-            self.view.det2_checkbox,
-            self.view.det3_checkbox,
-            self.view.det4_checkbox,
-        ]
-
-        # Loop through and set up checkboxes
-        for i, checkbox in enumerate(self.checkboxes):
-            if i < len(self.model.run.loaded_detectors):
-                label = self.model.run.loaded_detectors[i]
-
-                checkbox.setText(label)
-                checkbox.show()
-
-                # set checked state based on plot_detectors
-                checkbox.setChecked(label in plot_detectors)
-
-                # connect with frozen values
-                checkbox.checkStateChanged.connect(
-                    lambda state, name=label, cb=checkbox: self.checkbox_checked(
-                        state, name, cb
-                    )
-                )
-            else:
-                checkbox.hide()
+        self.setup_detector_checkboxes()
 
         # set up all connections:
         self.view.mu_xray_search_width_line_edit.textEdited.connect(
@@ -255,6 +228,31 @@ class ElementalAnalysisPresenter(object):
             self.model.gamma_search_width = float(width)
         except (ValueError, AttributeError):
             self.view.display_error_message(message="Invalid muonic xray search range.")
+
+    def setup_detector_checkboxes(self):
+        # Clear existing checkboxes/widgets from the layout
+        while self.view.detector_checkbox_hlayout.count():
+            item = self.view.detector_checkbox_hlayout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.hide()
+                widget.setParent(None)
+                widget.deleteLater()
+
+        self.view.checkboxes = []
+        for i, detector_name in enumerate(self.model.run.loaded_detectors):
+            checkbox = QCheckBox(detector_name)
+            self.view.detector_checkbox_hlayout.addWidget(checkbox)
+            self.view.checkboxes.append(checkbox)
+            if detector_name in self.model.run.plot_detectors:
+                checkbox.setChecked(True)
+            # connect with frozen values
+            checkbox.checkStateChanged.connect(
+                lambda state, name=detector_name, cb=checkbox: self.checkbox_checked(
+                    state, name, cb
+                )
+            )
+            checkbox.show()
 
     def on_plot_clicked(self, event: matplotlib.backend_bases.MouseEvent):
         """
@@ -529,11 +527,9 @@ class ElementalAnalysisPresenter(object):
             )
             return
 
+        checked_boxes = [cb.text() for cb in self.view.checkboxes if cb.isChecked()]
         # if last detector has been unchecked
         if not checked:
-            # Count how many checkboxes are still checked
-            checked_boxes = [cb for cb in self.checkboxes if cb.isChecked()]
-
             # If this was the last one
             if len(checked_boxes) == 0:
                 # Recheck it immediately
@@ -543,8 +539,15 @@ class ElementalAnalysisPresenter(object):
                     message="At least one detector must remain selected.",
                 )
                 return
-
+        # Update list of detectors to be plotted in the run class
+        self.model.run.plot_detectors = checked_boxes
+        # Replot and record change in logger
         self.model.update_detector_plot_selection(checked, detector)
 
         self.view.plot.update_plot(self.model.fig, self.model.axs)
         self.view.plot.canvas.mpl_connect("button_press_event", self.on_plot_clicked)
+
+    def on_detectors_grouped(self):
+        self.setup_detector_checkboxes()
+        self.model.fig, self.model.axs = self.model.plot_run()
+        self.view.plot.update_plot(self.model.fig, self.model.axs)
