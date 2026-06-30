@@ -25,7 +25,8 @@ class TestLoadWorkspaceWindow:
     def test_load_workspace(
         self, qtbot, run_num, test_normalisation, test_binning, test_plot_mode,
     ):
-        wdir = get_config()["general"]["working_directory"]
+        wdir = get_config()["general"]["test_directory"]
+        get_config()["saved_corrections"][wdir] = {}
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
@@ -93,4 +94,4 @@ class TestLoadWorkspaceWindow:
             ):
                 assert np.array_equal(run_spectrum.x, run_copy_spectrum.x)
                 assert np.array_equal(run_spectrum.y, run_copy_spectrum.y)
-            self.window.widget().deleteLater()
+            matplotlib.pyplot.close()
