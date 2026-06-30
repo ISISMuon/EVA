@@ -49,24 +49,24 @@ class ElementalAnalysisModel(QObject):
         # generate figure
         self.fig, self.axs = self.plot_run()
 
-    def get_plot_detectors(self) -> list[str]:
-        """
-        Gets which detectors to plot for the given run number for from the loaded config.
+    # def get_plot_detectors(self) -> list[str]:
+    #     """
+    #     Gets which detectors to plot for the given run number for from the loaded config.
 
-        Returns: list of detector names to plot for.
+    #     Returns: list of detector names to plot for.
 
-        """
-        config = get_config()
-        show_plot = config.get_run_save(
-            config["general"]["working_directory"], self.run.run_num
-        )["show_plot"]
-        plot_detectors = [
-            det
-            for det, show in show_plot.items()
-            if show and det in self.run.loaded_detectors
-        ]
+    #     """
+    #     config = get_config()
+    #     show_plot = config.get_run_save(
+    #         config["general"]["working_directory"], self.run.run_num
+    #     )["show_plot"]
+    #     plot_detectors = [
+    #         det
+    #         for det, show in show_plot.items()
+    #         if show and det in self.run.loaded_detectors
+    #     ]
 
-        return plot_detectors
+    #     return plot_detectors
 
     def plot_run(self) -> tuple[plt.Figure, plt.Axes]:
         """
@@ -80,7 +80,7 @@ class ElementalAnalysisModel(QObject):
         # check config to see which detectors should be loaded
         colour = config["plot"]["fill_colour"]
         return plot_run(
-            self.run, show_detectors=self.get_plot_detectors(), colour=colour
+            self.run, show_detectors=self.run.plot_detectors, colour=colour
         )
 
     def plot_vlines_all_gammas(self, isotope: str) -> str | None:
@@ -401,13 +401,13 @@ class ElementalAnalysisModel(QObject):
         peakfind_res = {}
         result_simplified = []
         config = get_config()
-        show_plot = config.get_run_save(
-            config["general"]["working_directory"], self.run.run_num
-        )["show_plot"]
+        # show_plot = config.get_run_save(
+        #     config["general"]["working_directory"], self.run.run_num
+        # )["show_plot"]
         for dataset in self.run.data.values():
             # only find peaks in data which is plotted
 
-            if show_plot[dataset.detector]:
+            if dataset.detector in self.run.plot_detectors:
                 peakfind_res[dataset.detector] = {}
                 peaks, peaks_pos = func(
                     dataset.x,
@@ -489,15 +489,11 @@ class ElementalAnalysisModel(QObject):
             detector: name of detector
         """
         # generate figure
-        config = get_config()
-        show_plot = config.get_run_save(
-            config["general"]["working_directory"], self.run.run_num
-        )["show_plot"]
         if show_detector:
-            show_plot[detector] = True
+            # self.run.plot_detectors.add(detector)
             logger.debug("Enabled %s for plotting.", detector)
         else:
-            show_plot[detector] = False
+            # self.run.plot_detectors.discard(detector)
             logger.debug("Disabled %s for plotting.", detector)
 
         self.fig, self.axs = self.plot_run()
