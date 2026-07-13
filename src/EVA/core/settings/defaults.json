@@ -5,31 +5,8 @@
     "fit_table_save_file": 0,
     "fit_table_plot_file": 0,
     "default_run_num": "0000",
-        "current_grouping_profile": "brni_test",
-        "saved_grouping_profiles": {
-            "test": {
-                "Group 1": [
-                    "GE1",
-                    "GE2",
-                    "GE3"
-                ],
-                "Group 2": [
-                    "GE4",
-                    "GE5",
-                    "GE6"
-                ]
-            },
-            "brni_test": {
-                "Group 1": [
-                    "GE1",
-                    "GE2"
-                ],
-                "Group 2": [
-                    "GE3",
-                    "GE4"
-                ]
-            }
-        },
+    "current_grouping_profile": "",
+    "saved_grouping_profiles": {},
     "enabled_detectors": [
         "GE1",
         "GE2",

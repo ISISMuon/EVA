@@ -43,7 +43,9 @@ class DetectorGroupingPresenter:
         for item in add_items:
             self.view.saved_profile_options_combobox.addItem(item)
         self.view.saved_profile_options_combobox.blockSignals(False)
-
+        # At first ever instance of creating a profile, load it automatically
+        if self.view.saved_profile_options_combobox.count() == 1:
+            self.load_selected_profile()
     def save_profile(self):
         """
         Save the current contents of the ConfigTable to a detector grouping profile dictionary.
