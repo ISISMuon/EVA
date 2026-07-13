@@ -20,7 +20,7 @@ from EVA.gui.windows.srim.trim_window import TrimWindow
 from EVA.gui.windows.trim_fitting.trim_fit_widget import TrimFitWidget
 from EVA.gui.windows.workspace.workspace_model import WorkspaceModel
 from EVA.gui.windows.workspace.workspace_view import WorkspaceView
-
+from EVA.gui.windows.detector_grouping.detector_grouping_window import DetectorGroupingWindow
 logger = logging.getLogger(__name__)
 
 class WorkspacePresenter:
@@ -39,7 +39,7 @@ class WorkspacePresenter:
         self.model = model
 
         # Set up action bar connections
-        self.setup_peakfit_options()
+        self.generate_peakfit_options()
 
         # load settings from config into settings panel
         self.populate_settings_panel()
@@ -52,7 +52,7 @@ class WorkspacePresenter:
         self.view.energy_correction_settings.triggered.connect(
             self.open_energy_corrections_dialog
         )
-        self.view.group_detector_button.clicked.connect(self.open_detector_group_window)
+        self.view.group_detector_button.clicked.connect(self.open_detector_grouping_window)
         self.view.general_settings.triggered.connect(self.open_general_settings_dialog)
 
         self.view.help_manual.triggered.connect(self.open_manual)
@@ -111,6 +111,7 @@ class WorkspacePresenter:
             detector_group_dict = get_config()["general"]["saved_grouping_profiles"][current_profile]
         else:
             detector_group_dict = None
+        
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
             run_correction_settings = dict(
@@ -145,16 +146,20 @@ class WorkspacePresenter:
             if "fill_colour" in settings["plot"].keys():
                 self.view.replot_spectra_s.emit()
 
-    def setup_peakfit_options(self):
+    def generate_peakfit_options(self):
         self.view.setup_peakfit_options()
         for i, detector in enumerate(self.view.detector_list):
             self.view.peakfit_menu_actions[i].triggered.connect(
                 lambda _, det=detector: self.open_peakfit(det)
             )
 
+    def on_detector_grouping_profile_changed(self):
+        current_profile = get_config()["general"]["current_grouping_profile"]
+        self.view.detector_grouping_profile_label.setText(f"Current profile: {current_profile}")
+
     def on_group_detector_checkbox_toggled(self):
         self.on_apply_settings()
-        self.setup_peakfit_options()
+        self.generate_peakfit_options()
 
     def reset_to_default_config(self):
         """
@@ -247,12 +252,12 @@ class WorkspacePresenter:
 
         window = DetectorGroupingWindow()
         self.view.detector_grouping_windows.append(window)
-
-        window.showMaximized()
-        window.window_closed_s.connect(lambda: self.close_detector_grouping_window(window))
+        window.widget().profile_changed_s.connect(self.on_detector_grouping_profile_changed)
+        window.widget().show()
+        window.widget().window_closed_s.connect(lambda: self.close_detector_grouping_window(window))
 
     def close_detector_grouping_window(self, window):
-        """Remove reference to periodic table window when closed"""
+        """Remove reference to detector grouping window when closed"""
         logger.info("Closed detector groupings window.")
 
         self.view.detector_grouping_windows.remove(window)
