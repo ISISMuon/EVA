@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1096</width>
-    <height>865</height>
+    <height>943</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -194,7 +194,7 @@ QGroupBox::title {
             </widget>
            </item>
            <item row="5" column="0">
-            <widget class="QLabel" name="label_9">
+            <widget class="QLabel" name="detector_grouping_profile_label">
              <property name="text">
               <string>Current Profile: None</string>
              </property>
