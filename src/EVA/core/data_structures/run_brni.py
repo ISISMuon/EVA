@@ -1,4 +1,6 @@
 from copy import deepcopy
+import numpy as np
+from EVA.core.data_structures.spectrum import Spectrum
 from EVA.core.physics.normalisation import normalise_counts, normalise_events
 from EVA.core.data_structures.run import Run
 
@@ -58,6 +60,44 @@ class RunBiriani(Run):
             self._set_normalisation_none()
             raise ValueError("Normalisation by events failed.")
 
+    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None):
+        if detector_group_dict is None:
+            self.loaded_detectors = self.active_detectors
+            self.plot_detectors = self.loaded_detectors[0:4]
+            return
+        if self.plot_mode not in ["Biriani Spectrum", "IBEX Prompt Spectrum", "IBEX Delayed Spectrum"]:
+            raise ValueError(f"Cannot combine detectors for plot mode '{self.plot_mode}'.")
+        combined_data = {}
+        self.loaded_detectors = []
+        for group_name, detector_names in detector_group_dict.items():
+            first = self.data[detector_names[0]]
+            # Create a copy of the first spectrum to add y values of each spectrum in place to the x values of the first one.
+            y_sum = np.array(first.y, copy=True)
+
+            bad = []
+            for detector_name in detector_names[1:]:
+                spectrum = self.data[detector_name]
+                # Verify if all detectors in group have the same x values across the iteration
+                # TODO might be worth having a robust algorithm to add the histograms for different bin centers.
+                if not np.array_equal(spectrum.x, first.x):
+                    bad.append(detector_name)
+                else:
+                # if x vals are equal, sum up the counts
+                    y_sum += spectrum.y
+            if bad:
+                # if any of the detectors did not match, raise error with list of detectors that didnt match the first one
+                raise ValueError(f"Bad detectors: {bad}")
+            combined_data[group_name] = Spectrum(
+                detector=group_name,
+                run_number=first.run_number,
+                x=first.x,  # reuse energy bin values from first detector
+                y=y_sum,
+                bin_range=first.bin_range
+            )
+            self.loaded_detectors.append(group_name) # Change list of loaded detectors to the names of the detector groups used
+        self.data = combined_data
+        self.plot_detectors = self.loaded_detectors[:4]
+        
     def read_comment_data(self):
         mapping = dict.fromkeys(range(32))
         start = self.start_time.translate(mapping)[21:]

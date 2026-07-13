@@ -164,7 +164,7 @@ class RunNexus(Run):
                 time_data = self._raw[detector].time[:]
                 mask = (time_data > 0) & (time_data < 2000)
                 filtered_time_data = self._raw[detector].time[mask]
-                spectrum.x, spectrum.y = rebin.nxs_rebin(
+                spectrum.x, spectrum.y = rebin.rebin_raw(
                     filtered_time_data, bin_num=100, bin_range=(0, 2000)
                 )
 
@@ -188,6 +188,90 @@ class RunNexus(Run):
             return "hist"
         else:
             raise ValueError(f"Invalid plot mode: '{plot_mode}'")
+
+    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None):
+        if detector_group_dict is None:
+            self.loaded_detectors = self.active_detectors
+            self.plot_detectors = self.loaded_detectors[0:4]
+            return
+        # if self.plot_mode not in ["Biriani Spectrum", "IBEX Prompt Spectrum", "IBEX Delayed Spectrum", "Manual Prompt Spectrum", "Manual Delayed Spectrum", "Efficiency Spectrum"]:
+        #     raise ValueError(f"Cannot combine detectors for plot mode '{self.plot_mode}'.")
+        self.loaded_detectors = []
+        if self.bin_method == "prebinned":
+            combined_data = self.combine_prebinned_spectra(detector_group_dict)
+        
+        elif self.bin_method == "raw":
+            combined_data = self.combine_raw_spectra(detector_group_dict)
+
+        self.loaded_detectors = list(detector_group_dict.keys())
+        self.data = combined_data
+        self.plot_detectors = self.loaded_detectors[:4]
+
+    def combine_prebinned_spectra(self, detector_group_dict: dict[str, list[str]]):
+        combined_data = {}
+        for group_name, detector_names in detector_group_dict.items():
+            spectra_in_group = [self.data.get(k) for k in detector_names if k in self.data]
+            if not spectra_in_group:
+                continue
+            # Reference detector defines the energy axis
+            reference_energy = spectra_in_group[0].x
+            ref_width = np.mean(np.diff(reference_energy))
+            bin_num = len(reference_energy)
+            ref_edges = np.zeros(bin_num + 1)
+
+            ref_edges[:-1] = reference_energy - ref_width/2
+            ref_edges[-1] = reference_energy[-1] + ref_width/2
+            combined_counts = np.zeros(bin_num)
+            for spectrum in spectra_in_group:
+
+                rebinned = rebin.rebin_to_reference(
+                    spectrum.x,
+                    spectrum.y,
+                    ref_edges=ref_edges,
+                    bin_number=bin_num
+                )
+
+                combined_counts += rebinned
+
+            combined_data[group_name] = Spectrum(
+                detector=group_name,
+                run_number=spectra_in_group[0].run_number,
+                x=reference_energy.copy(),
+                y=combined_counts,
+                bin_range=spectra_in_group[0].bin_range
+            )
+        return combined_data
+
+    def combine_raw_spectra(self, detector_group_dict: dict[str, list[str]]):
+        combined_data = {}
+        for group_name, detector_names in detector_group_dict.items():
+            spectra_in_group = [self._raw.get(k) for k in detector_names if k in self.data]
+            if not spectra_in_group:
+                continue
+            bin_num = int(self.default_bin / self.bin_rate)
+            edges = np.linspace(
+                spectra_in_group[0].bin_range[0],
+                spectra_in_group[0].bin_range[1],
+                bin_num + 1,
+            )
+
+            x = (edges[:-1] + edges[1:]) / 2
+            combined_counts = np.zeros(bin_num, dtype=np.int64)
+
+            for spectrum in spectra_in_group:
+                counts, _ = np.histogram(
+                    spectrum.cut_data,
+                    bins=edges,
+                )
+                combined_counts += counts
+            combined_data[group_name] = Spectrum(
+                detector=group_name,
+                run_number=spectra_in_group[0].run_number,
+                x=x,
+                y=combined_counts,
+                bin_range=spectra_in_group[0].bin_range
+            )
+        return combined_data
 
     def read_comment_data(self):
         comment = self.comment_data[0]
