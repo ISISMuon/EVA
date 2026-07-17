@@ -292,6 +292,19 @@ def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_compone
 
     if run.detector_group_dict == {}:
         return # No detector groups defined, nothing to plot
+    # else:
+    # remove step lines
+    for line in axs.lines[:]:
+        label = line.get_label()
+        if label[1:] in run.detector_group_dict[group_name]: # Drop underscore in label to match group name
+            line.remove()
+
+    # remove fills
+    for collection in axs.collections[:]:
+        label = collection.get_label()
+        if label in run.detector_group_dict[group_name]:
+            collection.remove()
+    
     if show_components:
         dets = run.detector_group_dict[group_name]
         # sort so the tallest spectrum is drawn first (bottom), smallest last (top)
@@ -306,19 +319,6 @@ def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_compone
                 label=f"_{det}",
             )
             axs.fill_between(run.data[det].x, run.data[det].y, step="mid", alpha=0.9,label=f"{det}",)
-    else:
-        # remove step lines
-        for line in axs.lines[:]:
-            label = line.get_label()
-            if label[1:] in run.detector_group_dict[group_name]: # Drop underscore in label to match group name
-                line.remove()
-
-        # remove fills
-        for collection in axs.collections[:]:
-            label = collection.get_label()
-            if label in run.detector_group_dict[group_name]:
-                collection.remove()
-    # axs.update_legend()
 
 def replot_run_residual(
     run: Run,

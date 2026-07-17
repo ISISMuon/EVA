@@ -113,7 +113,7 @@ class ElementalAnalysisPresenter(object):
         """
         Called when user applies run settings and notifies windows to update.
         """
-        self.model.replot_all_run_data()
+        self.model.replot_all_run_data(show_components=self.view.show_components_checkbox.isChecked())
         self.view.plot.update_plot()
 
     def on_fill_colour_change(self, colour):
@@ -254,9 +254,10 @@ class ElementalAnalysisPresenter(object):
             )
             checkbox.show()
         if self.model.run.group:
-            checkbox = QCheckBox("Show Components")
-            self.view.detector_checkbox_hlayout.addWidget(checkbox)
-            checkbox.checkStateChanged.connect(lambda state: self.plot_components(state))
+            show_components_checkbox = QCheckBox("Show Components")
+            self.view.detector_checkbox_hlayout.addWidget(show_components_checkbox)
+            self.view.show_components_checkbox = show_components_checkbox
+            show_components_checkbox.checkStateChanged.connect(lambda state: self.plot_components(state))
 
     def on_plot_clicked(self, event: matplotlib.backend_bases.MouseEvent):
         """
