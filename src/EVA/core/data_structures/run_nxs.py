@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import numpy as np
 from EVA.core.data_structures.spectrum import Spectrum
 from EVA.core.physics import rebin
@@ -26,30 +28,23 @@ class RunNexus(Run):
         self.prompt_limit = prompt_limit
         self.delayed_limit = delayed_limit
         self.bin_method = self._bin_method_from_plotmode(plot_mode)
-        self.data = {
-            key: Spectrum(
-                detector=nexus_obj.detector, run_number=nexus_obj.run_number
-            )
-            for key, nexus_obj in self._raw.items()
-        }
+        self.data = deepcopy(self._raw)
 
     def set_corrections(self, **kwargs):
         # initialize an empty data dict with detector name: Spectrum key: value pairs
-        self.data = {
-            key: Spectrum(
-                detector=nexus_obj.detector, run_number=nexus_obj.run_number
-            )
-            for key, nexus_obj in self._raw.items()
-        }
+        self.data = deepcopy(self._raw)
+
         current_loaded_detectors = self.loaded_detectors
         self._set_mode(kwargs.get('plot_mode'), kwargs.get('prompt_limit'), kwargs.get('delayed_limit'))
-        self._combine_detector_spectra(kwargs.get("detector_group_dict"))
+        self._group_detectors(kwargs.get("detector_group_dict"))
         self._set_energy_correction(kwargs.get('energy_corrections'))
         self._set_binning(kwargs.get('bin_rate'), kwargs.get('default_bin'))
         self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
         if current_loaded_detectors != self.loaded_detectors:
             self.detectors_grouped_s.emit()
         self.corrections_updated_s.emit()
+        # for detector, spectrum in self.data.items():
+        #     print(f"name: {detector}, tot pts = {np.sum(spectrum.y)}")
 
     def _set_normalisation_events(self, normalise_which):
         """Normalise spectra by event count using comment metadata."""
@@ -190,27 +185,16 @@ class RunNexus(Run):
             raise ValueError(f"Invalid plot mode: '{plot_mode}'")
 
     def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None):
-        if detector_group_dict is None:
-            self.loaded_detectors = self.active_detectors
-            self.plot_detectors = self.loaded_detectors[0:4]
-            return
-        # if self.plot_mode not in ["Biriani Spectrum", "IBEX Prompt Spectrum", "IBEX Delayed Spectrum", "Manual Prompt Spectrum", "Manual Delayed Spectrum", "Efficiency Spectrum"]:
-        #     raise ValueError(f"Cannot combine detectors for plot mode '{self.plot_mode}'.")
-        self.loaded_detectors = []
         if self.bin_method == "prebinned":
-            combined_data = self.combine_prebinned_spectra(detector_group_dict)
-        
+            return self.combine_prebinned_spectra(detector_group_dict)
         elif self.bin_method == "raw":
-            combined_data = self.combine_raw_spectra(detector_group_dict)
-
-        self.loaded_detectors = list(detector_group_dict.keys())
-        self.data = combined_data
-        self.plot_detectors = self.loaded_detectors[:4]
+            return self.combine_raw_spectra(detector_group_dict)
 
     def combine_prebinned_spectra(self, detector_group_dict: dict[str, list[str]]):
         combined_data = {}
         for group_name, detector_names in detector_group_dict.items():
-            spectra_in_group = [self.data.get(k) for k in detector_names if k in self.data]
+            self.detector_group_dict[group_name] = [det for det in detector_names if det in self.data]
+            spectra_in_group = [self.data.get(det) for det in detector_names if det in self.data]
             if not spectra_in_group:
                 continue
             # Reference detector defines the energy axis
@@ -245,7 +229,8 @@ class RunNexus(Run):
     def combine_raw_spectra(self, detector_group_dict: dict[str, list[str]]):
         combined_data = {}
         for group_name, detector_names in detector_group_dict.items():
-            spectra_in_group = [self._raw.get(k) for k in detector_names if k in self.data]
+            self.detector_group_dict[group_name] = [det for det in detector_names if det in self.data]
+            spectra_in_group = [self._raw.get(det) for det in detector_names if det in self.data]
             if not spectra_in_group:
                 continue
             bin_num = int(self.default_bin / self.bin_rate)

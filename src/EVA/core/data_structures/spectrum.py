@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass
 import h5py
 import numpy as np
@@ -31,5 +32,12 @@ class Spectrum:
     efficiency_hist_counts: h5py.Dataset = None
     efficiency_hist_energy: h5py.Dataset = None
 
-
+    def __deepcopy__(self, memo):
+        return Spectrum(
+            detector=self.detector,
+            run_number=self.run_number,
+            x=None if self.x is None else self.x.copy(),
+            y=None if self.y is None else self.y.copy(),
+            bin_range=deepcopy(self.bin_range, memo),
+        )
     

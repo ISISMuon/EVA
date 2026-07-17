@@ -72,7 +72,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         pass
     
     @abstractmethod
-    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None):
+    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None) -> dict[str, Spectrum]:
         """Combine detector spectra into groups using histogram or raw data points"""
         pass
     # Shared functions
@@ -92,6 +92,18 @@ class Run(QObject, metaclass=MetaQObjectABC):
                 )
         self.energy_corrections = energy_corrections
 
+    def _group_detectors(self, detector_group_dict: dict[str, list[str]]):
+        self.detector_group_dict = {}
+        if detector_group_dict is None:
+            self.group = False
+            self.loaded_detectors = self.active_detectors
+            self.plot_detectors = self.loaded_detectors[:4]
+            return
+        combined_data = self._combine_detector_spectra(detector_group_dict)
+        self.loaded_detectors = list(detector_group_dict.keys())
+        self.data.update(combined_data)
+        self.plot_detectors = self.loaded_detectors[:4]
+        self.group = True
     def _set_normalisation(
         self, normalisation: str, normalise_which: list[str] | None = None
     ):
@@ -176,7 +188,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
             self.default_bin = default_bin
 
         bin_num = int(default_bin / binning_rate)
-        for detector, spectrum in self.data.items():
+        for detector, spectrum in self._raw.items():
             if getattr(spectrum, "energy", None) is None or spectrum.energy.size == 0:
                 continue
             else:
@@ -197,3 +209,16 @@ class Run(QObject, metaclass=MetaQObjectABC):
     def get_raw(self) -> dict[Spectrum]:
         """Return a deep copy of raw data."""
         return deepcopy(self._raw)
+
+    @property
+    def displayed_detectors(self):
+        if not self.group:
+            return self.active_detectors
+
+        if self.show_components:
+            return (
+                list(self.detector_group_dict.keys())
+                + self.active_detectors
+            )
+
+        return list(self.detector_group_dict.keys())

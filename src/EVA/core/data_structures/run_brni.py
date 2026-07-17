@@ -26,7 +26,7 @@ class RunBiriani(Run):
 
         self.data = deepcopy(self._raw)
         current_loaded_detectors = self.loaded_detectors
-        self._combine_detector_spectra(kwargs.get("detector_group_dict"))
+        self._group_detectors(kwargs.get("detector_group_dict"))
         self._set_energy_correction(kwargs.get('energy_corrections'))
         self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
         self._set_binning(kwargs.get('bin_rate'))
@@ -61,16 +61,12 @@ class RunBiriani(Run):
             raise ValueError("Normalisation by events failed.")
 
     def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None):
-        if detector_group_dict is None:
-            self.loaded_detectors = self.active_detectors
-            self.plot_detectors = self.loaded_detectors[0:4]
-            return
-        if self.plot_mode not in ["Biriani Spectrum", "IBEX Prompt Spectrum", "IBEX Delayed Spectrum"]:
-            raise ValueError(f"Cannot combine detectors for plot mode '{self.plot_mode}'.")
         combined_data = {}
         self.loaded_detectors = []
         for group_name, detector_names in detector_group_dict.items():
-            first = self.data[detector_names[0]]
+            self.detector_group_dict[group_name] = [det for det in detector_names if det in self.data]
+            spectra_in_group = [self.data.get(det) for det in detector_names if det in self.data]
+            first = spectra_in_group[0]  # Use the first spectrum as a reference for x values
             # Create a copy of the first spectrum to add y values of each spectrum in place to the x values of the first one.
             y_sum = np.array(first.y, copy=True)
 
@@ -95,9 +91,7 @@ class RunBiriani(Run):
                 bin_range=first.bin_range
             )
             self.loaded_detectors.append(group_name) # Change list of loaded detectors to the names of the detector groups used
-        self.data = combined_data
-        self.plot_detectors = self.loaded_detectors[:4]
-        
+        return combined_data
     def read_comment_data(self):
         mapping = dict.fromkeys(range(32))
         start = self.start_time.translate(mapping)[21:]
