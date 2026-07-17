@@ -176,6 +176,7 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     colour = settings.get("colour", "white")
     size = settings.get("size", (16, 7))
     adjustments = settings.get("adjustment_dict", default_adjustments)
+    show_components = settings.get("show_components", False)
     num_plots = len(show_detectors)
     fig, axs = plt.subplots(nrows=num_plots, figsize=size)
 
@@ -208,7 +209,9 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
             axs[i].set_xlim(0.0)
             axs[i].set_ylim((0, 1.2 * np.max(dataset.y)))
             axs[i].set_title(dataset.detector)
+            plot_group_components(run, axs[i], detector, show_components=show_components)
             i += 1
+
     # Adjustments
     plt.subplots_adjust(**adjustments)
     return fig, axs
@@ -239,16 +242,17 @@ def replot_run(
         axes = axs.ravel().tolist()
     else:
         axes = axs
+    show_components = settings.get("show_components", False)
 
     for ax in axes:
         candidates = [
             (line.get_label()[1:], line)
             for line in ax.lines
-            if line.get_label()[1:] in run.loaded_detectors
+            if line.get_label()[1:] in run.data.keys()
         ]
         if not candidates:
             raise ValueError(
-                "No matching lines found in ax.lines with labels matching run.loaded_detectors"
+                "No matching lines found in ax.lines with labels matching run.data.keys()"
             )
 
         detector, line = candidates[0]
@@ -267,12 +271,54 @@ def replot_run(
 
         # lastly, re-fill the histogram
         fill_obj.set_data(xdata, 0, ydata)
-
+        ax.set_ylim((0, 1.2 * np.max(ydata)))
         if "colour" in settings.keys():
             fill_obj.set_color(settings["colour"])
 
-        ax.set_ylim((0, 1.2 * np.max(ydata)))
+        plot_group_components(run, ax, detector, show_components)
 
+def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_components: bool = False):
+    """
+    Plots the components of a detector group on a specified Axes instance.
+
+    Args:
+        run: Run object containing the data
+        axs: Axes instance to plot on
+        group_name: Name of the detector group to plot
+        show_components: Whether to show individual component plots
+        **settings:
+            * **colour** (str): plot fill colour (default is yellow)
+    """
+
+    if run.detector_group_dict == {}:
+        return # No detector groups defined, nothing to plot
+    if show_components:
+        dets = run.detector_group_dict[group_name]
+        # sort so the tallest spectrum is drawn first (bottom), smallest last (top)
+        dets_sorted = sorted(dets, key=lambda d: np.max(run.data[d].y), reverse=True)
+
+        for det in dets_sorted:
+            axs.step(
+                run.data[det].x,
+                run.data[det].y,
+                where="mid",
+                color="black",
+                label=f"_{det}",
+            )
+            axs.fill_between(run.data[det].x, run.data[det].y, step="mid", alpha=0.9,label=f"{det}",)
+    else:
+        # remove step lines
+        for line in axs.lines[:]:
+            label = line.get_label()
+            if label[1:] in run.detector_group_dict[group_name]: # Drop underscore in label to match group name
+                line.remove()
+
+        # remove fills
+        for collection in axs.collections[:]:
+            label = collection.get_label()
+            if label in run.detector_group_dict[group_name]:
+                collection.remove()
+    # axs.update_legend()
 
 def replot_run_residual(
     run: Run,
