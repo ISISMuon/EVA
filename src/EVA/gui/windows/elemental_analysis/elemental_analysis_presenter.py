@@ -253,6 +253,10 @@ class ElementalAnalysisPresenter(object):
                 )
             )
             checkbox.show()
+        if self.model.run.group:
+            checkbox = QCheckBox("Show Components")
+            self.view.detector_checkbox_hlayout.addWidget(checkbox)
+            checkbox.checkStateChanged.connect(lambda state: self.plot_components(state))
 
     def on_plot_clicked(self, event: matplotlib.backend_bases.MouseEvent):
         """
@@ -551,3 +555,8 @@ class ElementalAnalysisPresenter(object):
         self.setup_detector_checkboxes()
         self.model.fig, self.model.axs = self.model.plot_run()
         self.view.plot.update_plot(self.model.fig, self.model.axs)
+        self.view.plot.canvas.mpl_connect("button_press_event", self.on_plot_clicked)
+
+    def plot_components(self, checkstate: Qt.CheckState):
+            self.model.replot_all_run_data(show_components=checkstate == Qt.CheckState.Checked)
+            self.view.plot.update_plot()

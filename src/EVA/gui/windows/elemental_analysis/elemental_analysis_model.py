@@ -499,10 +499,11 @@ class ElementalAnalysisModel(QObject):
         self.fig, self.axs = self.plot_run()
         self.plot_all_current_vlines()
 
-    def replot_all_run_data(self):
+    def replot_all_run_data(self, show_components: bool = False):
         replot_run(
-            self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"]
+            self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"], show_components=show_components
         )
+        self.update_legend()
 
     def close_figure(self):
         plt.close(self.fig)

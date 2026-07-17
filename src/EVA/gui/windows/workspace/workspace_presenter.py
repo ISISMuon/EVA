@@ -40,7 +40,8 @@ class WorkspacePresenter:
 
         # Set up action bar connections
         self.generate_peakfit_options()
-
+        if get_config()["general"]["current_grouping_profile"] is not None:
+            self.view.detector_grouping_profile_label.setText(f"Current Profile: {get_config()['general']['current_grouping_profile']}")
         # load settings from config into settings panel
         self.populate_settings_panel()
         # self.view.trim_fit.triggered.connect(self.open_trim_fit)
@@ -261,7 +262,7 @@ class WorkspacePresenter:
         logger.info("Closed detector groupings window.")
 
         self.view.detector_grouping_windows.remove(window)
-        window.deleteLater()
+        window.widget().deleteLater()
 
     #### OPENING TABS ##################################################
     def open_peakfit(self, detector):
