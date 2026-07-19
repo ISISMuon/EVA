@@ -554,7 +554,7 @@ class G4blPresenter(QWidget):
             form_data, table_data, sim_completed_flag = self.model.load_settings(path)
             self.view.set_form_data(form_data)
             self.view.stack_layer_setup_table.update_contents(
-                self.format_model_layers(table_data)
+                self.format_model_layers(table_data), round_to=None
             )
             if sim_completed_flag:
                 self.model.stack_input = self.get_layers_from_stack_table()

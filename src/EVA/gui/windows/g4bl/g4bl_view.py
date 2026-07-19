@@ -280,6 +280,7 @@ class G4blView(BaseView, Ui_g4bl):
         self.momentum_step_linedit.setText(str(form_data["step_momentum"])),
         self.scan_momentum_combo.setCurrentText(form_data["scan_type"])
         self.bin_number_linedit.setText(str(int(form_data["bin_number"])))
+
     def get_save_file_path(self, default_dir: str, file_filter: str) -> str:
         file = QFileDialog.getSaveFileName(self, 'Save File', directory=default_dir, filter=file_filter)
         if file:

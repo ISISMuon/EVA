@@ -52,7 +52,10 @@ class BaseTable(QTableWidget):
                 input_item = list(row_data)[col]
 
                 if isinstance(input_item, float):
-                    table_item = QTableWidgetItem(f"{round(input_item, round_to)}")
+                    if round_to is None:
+                        table_item = QTableWidgetItem(f"{input_item}")
+                    else:
+                        table_item = QTableWidgetItem(f"{round(input_item, round_to)}")
                 else:
                     table_item = QTableWidgetItem(str(input_item))
 
