@@ -50,18 +50,22 @@ class DetectorGroupingPresenter:
         """
         Save the current contents of the ConfigTable to a detector grouping profile dictionary.
         """
+        duplicate = False
         profile_name = self.view.new_profile_name_line_edit.text()
         if not profile_name:
-            self.view.display_error_message("Please select a profile name to save.")
+            self.view.display_error_message(message="Please select a profile name to save.")
             return
         if profile_name in get_config()["general"]["saved_grouping_profiles"]:
-            self.view.display_error_message(
-                f"A profile named '{profile_name}' already exists. Please choose a different name."
+            reply = self.view.display_question(message=
+                f"A profile named '{profile_name}' already exists. Would you like to overwrite it?"
             )
-            return
+            if not reply:
+                return
+            if reply:
+                duplicate = True
         data = self.view.ConfigTable.get_contents()
         if len(data) == 0:
-            self.view.display_error_message("Cannot save an empty profile.")
+            self.view.display_error_message(message="Cannot save an empty profile.")
             return
         groups = {}
         for row in data:
@@ -81,4 +85,5 @@ class DetectorGroupingPresenter:
         config["general"]["saved_grouping_profiles"][profile_name] = groups
         config.save_config()
         logger.info(f"Saved new detector grouping profile: {profile_name}")
-        self.updated_combo_box_options(add_items=[profile_name])
+        if not duplicate:
+            self.updated_combo_box_options(add_items=[profile_name])
