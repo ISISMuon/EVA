@@ -71,7 +71,7 @@ class WorkspaceModel:
 
                 lines = "\n".join(f"{xi:.5f}\t{yi}" for xi, yi in zip(x, y))
 
-                filename = f"{detector}.txt"
+                filename = f"Run {self.run.run_num} - {detector}.txt"
                 zf.writestr(filename, lines)
 
             zf.writestr(

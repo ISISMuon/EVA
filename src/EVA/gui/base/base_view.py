@@ -41,7 +41,9 @@ class BaseView(QWidget):
         | QMessageBox.StandardButton.Cancel,
         default_button: QMessageBox.standardButton = QMessageBox.StandardButton.Yes,
     ) -> QMessageBox.StandardButton:
-        return QMessageBox.question(self, title, message, buttons, default_button)
+        reply = QMessageBox.question(self, title, message, buttons, default_button)
+
+        return reply
 
     @staticmethod
     def update_table(table, data, resize_columns=True, resize_rows=True):
