@@ -167,7 +167,8 @@ class G4blModel(QObject):
             progress_callback.emit(
                 {"type": "iteration_end", "estimated_time_left": estimated_time_left})
 
-
+        if self.cancel_sim:
+            return {"result": "cancelled"}
         # Create arrays to store various components of simulation results
         self.process_and_store_simulation_results()
 
@@ -601,8 +602,8 @@ class G4blModel(QObject):
             meta.attrs["min_momentum"] = min_momentum
             meta.attrs["max_momentum"] = max_momentum
             meta.attrs["step_momentum"] = step_momentum
-            meta.attrs["stats"] = stats
-            meta.attrs["bin_number"] = bin_number
+            meta.attrs["stats"] = int(stats)
+            meta.attrs["bin_number"] = int(bin_number)
             
             # save layer data from table in anoother subfolder
             layers_group = f.create_group("layers")
@@ -611,8 +612,9 @@ class G4blModel(QObject):
                 g = layers_group.create_group(f"layer_{i}")
                 g.attrs["name"] = layer["name"]
                 g.attrs["thickness"] = layer["thickness"]
-
-                if "density" in layer:
+                if layer["density"] == 0.0:
+                    g.attrs["density"] = ""
+                else:
                     g.attrs["density"] = layer["density"]
 
             # save list of momenta simulated and result x and y data all in another subfolder
@@ -644,6 +646,8 @@ class G4blModel(QObject):
                 "scan_type": meta.attrs["scan_type"],
                 "bin_number": int(meta.attrs["bin_number"])
             }
+            # sim parameters
+            self.bin_resolution = int(meta.attrs["bin_number"])
             # layer data
             layers = []
             layers_group = f["layers"]

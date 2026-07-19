@@ -283,6 +283,8 @@ class G4blPresenter(QWidget):
         self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: -")
 
     def progress_fn(self, progress: dict):
+        if self.model.cancel_sim:
+            return
         progress_type = progress.get("type", "sim")
 
         if progress_type == "sim_start":

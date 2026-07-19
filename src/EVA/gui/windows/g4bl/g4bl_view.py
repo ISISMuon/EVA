@@ -109,7 +109,7 @@ class G4blView(BaseView, Ui_g4bl):
             save_plot_img_btn = QPushButton()
             save_plot_img_btn.setText("Save plot image")
 
-            layout.addWidget(plot_whole_btn)
+            # layout.addWidget(plot_whole_btn)
             layout.addWidget(save_data_btn)
             layout.addWidget(save_plot_img_btn)
 
@@ -269,7 +269,7 @@ class G4blView(BaseView, Ui_g4bl):
 
     def set_form_data(self, form_data):
         self.sample_name_linedit.setText(form_data["sample_name"]),
-        self.stats_linedit.setText(str(form_data["stats"])),
+        self.stats_linedit.setText(str(int(form_data["stats"]))),
         self.g4bl_exe_dir_linedit.setText(form_data["g4bl_dir"]),
         self.g4bl_out_dir_linedit.setText(form_data["output_dir"]),
         self.momentum_linedit.setText(str(form_data["momentum"])),
@@ -279,7 +279,7 @@ class G4blView(BaseView, Ui_g4bl):
         self.max_momentum_linedit.setText(str(form_data["max_momentum"])),
         self.momentum_step_linedit.setText(str(form_data["step_momentum"])),
         self.scan_momentum_combo.setCurrentText(form_data["scan_type"])
-
+        self.bin_number_linedit.setText(str(int(form_data["bin_number"])))
     def get_save_file_path(self, default_dir: str, file_filter: str) -> str:
         file = QFileDialog.getSaveFileName(self, 'Save File', directory=default_dir, filter=file_filter)
         if file:
