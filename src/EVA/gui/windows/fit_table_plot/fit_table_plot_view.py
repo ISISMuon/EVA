@@ -1,4 +1,5 @@
 import logging
+import os
 from PyQt6.QtCore import pyqtSignal
 
 from PyQt6.QtWidgets import QPushButton, QMessageBox, QFileDialog, QTableWidgetItem
@@ -26,7 +27,7 @@ class FitTablePlotView(BaseView, Ui_fit_table_plot):
 
     def set_fit_table_file_label(self, filename: str):
         if filename:
-            self.loaded_fit_table_label.setText(filename)
+            self.loaded_fit_table_label.setText(os.path.basename(filename))
         else:
             self.loaded_fit_table_label.setText("No file loaded.")
 
