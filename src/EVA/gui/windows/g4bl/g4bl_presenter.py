@@ -272,7 +272,7 @@ class G4blPresenter(QWidget):
         self.simulation_worker = Worker(self.model.start_g4bl_simulation)
         self.simulation_worker.signals.result.connect(self.on_simulation_finished)
         self.simulation_worker.signals.progress.connect(self.progress_fn)
-        # self.simulation_worker.signals.error.connect(self.on_simulation_error)
+        self.simulation_worker.signals.error.connect(self.on_simulation_error)
 
         get_app().threadpool.start(self.simulation_worker)
 
@@ -304,6 +304,17 @@ class G4blPresenter(QWidget):
             self.view.estimated_time_remaining_label.setText(
                 f"Estimated time remaining: {estimated_time}"
             )
+    def on_simulation_error(self, error):
+            exctype, value, tb = error
+            if exctype is ValueError:
+                self.view.display_error_message(message=str(value))
+            else:
+                self.view.display_error_message(
+                    "Unexpected error occurred during simulation."
+                )
+            result = {"status" : "error"}
+            self.on_simulation_finished(result)
+
     def on_simulation_finished(self, result):
         self.model.cancel_sim = False
 
@@ -315,6 +326,8 @@ class G4blPresenter(QWidget):
             self.view.display_message(message="Simulation cancelled!")
             return
 
+        if result["status"] == "error":
+            return
         self.reset_view()
 
         # update table and implantation tree
