@@ -95,7 +95,7 @@ class PeakFitView(BaseView, Ui_peak_fit):
 
     def get_load_file_path(self, default_dir: str, file_filter: str) -> str:
         dialog = QFileDialog(self, "Open or Create File", default_dir)
-        dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
+        dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
         dialog.setNameFilter(file_filter)
 
         # Disable overwrite confirmation
@@ -138,7 +138,7 @@ class PeakFitView(BaseView, Ui_peak_fit):
     
     def set_loaded_file_text(self, filename: str):
         if filename:
-            self.loaded_fit_table_label.setText(filename)
+            self.loaded_fit_table_label.setText(os.path.basename(filename))
         
         else:
             self.loaded_fit_table_label.setText("No file loaded.")

@@ -74,7 +74,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>422</width>
+            <width>419</width>
             <height>899</height>
            </rect>
           </property>
@@ -225,6 +225,9 @@
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: &quot;white&quot;</string>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::NoFrame</enum>
@@ -396,6 +399,9 @@
                    <height>108</height>
                   </size>
                  </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: &quot;white&quot;</string>
+                 </property>
                  <property name="frameShape">
                   <enum>QFrame::NoFrame</enum>
                  </property>
@@ -405,6 +411,13 @@
                  <row>
                   <property name="text">
                    <string/>
+                  </property>
+                  <property name="background">
+                   <color>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
                   </property>
                  </row>
                  <column>
