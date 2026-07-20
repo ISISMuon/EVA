@@ -214,8 +214,8 @@ class TrimView(BaseView, Ui_trim):
     ):
         container = QWidget()
 
-        plot_stack = QStackedWidget()
-        plot_stack_layout = QHBoxLayout()
+        # plot_stack = QStackedWidget()
+        # plot_stack_layout = QHBoxLayout()
         plot_stack.setLayout(plot_stack_layout)
 
         plot_whole = PlotWidget(fig_whole, ax_whole)

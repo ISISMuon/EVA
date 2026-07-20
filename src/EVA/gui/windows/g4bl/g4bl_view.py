@@ -216,8 +216,8 @@ class G4blView(BaseView, Ui_g4bl):
         container = QWidget()
 
         plot_stack = QStackedWidget()
-        plot_stack_layout = QHBoxLayout()
-        plot_stack.setLayout(plot_stack_layout)
+        # plot_stack_layout = QHBoxLayout()
+        # plot_stack.setLayout(plot_stack_layout)
 
         plot_whole = PlotWidget(fig_whole, ax_whole)
         plot_comp = PlotWidget(fig_comp, ax_comp)
