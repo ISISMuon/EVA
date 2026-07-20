@@ -82,23 +82,26 @@ class ParametersBoundsWidget(QWidget):
         self.layout.addWidget(self.table)
 
 
-class ParameterFixedWidget(QWidget):
+class ParameterFixedWidget(QScrollArea):
     def __init__(self, available_params):
         super().__init__()
-        self.layout = QGridLayout()
-        self.setLayout(self.layout)
-        self.checkboxes = []
+        self.setWidgetResizable(True)
+        container = QWidget()
+        self.layout = QVBoxLayout(container)
+        self.setWidget(container)
 
+        self.checkboxes = []
         self.description = QLabel(
             "Ticked parameters will NOT be optimised and will remain at initial values."
         )
         self.description.setFixedHeight(25)
-        self.layout.addWidget(self.description, 0, 0)
+        self.layout.addWidget(self.description, 0)
 
         for i, param in enumerate(available_params):
-            # row, col = divmod(i, 2)
-            self.checkboxes.append(QCheckBox(param))
-            self.layout.addWidget(self.checkboxes[i], i + 1, 0)
+            checkbox = QCheckBox(param)
+            self.checkboxes.append(checkbox)
+            checkbox.setFixedHeight(25)
+            self.layout.addWidget(checkbox, i + 1)
 
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
