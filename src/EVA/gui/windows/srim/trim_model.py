@@ -149,6 +149,7 @@ class TrimModel(QObject):
                 # report progress to gui
                 progress_callback.emit(
                     {
+                        "type": "TRIM",
                         "current": simulation_count,
                         "total": total_sims,
                         "sim_times": self.simulation_times,
@@ -217,11 +218,13 @@ class TrimModel(QObject):
                     # report progress to gui
                     progress_callback.emit(
                         {
+                            "type": "TRIM",
                             "current": simulation_count,
                             "total": total_sims,
                             "sim_times": self.simulation_times,
                         }
                     )
+                # Normalise the y data to input muon number because SRIM output is ~7x more than input muons for some reason 
                 self.result_y[momentum_index, :] = (
                     self.result_y[momentum_index, :]
                     / np.sum(self.result_y[momentum_index, :])

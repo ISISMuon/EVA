@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QTableWidget, QTableWidgetItem, QHeaderView
 from PyQt6.QtCore import Qt, pyqtSignal
+from EVA.util.qt6_widgets import CompleterDelegate
 
 from EVA.core.app import get_app
 
@@ -51,7 +52,10 @@ class BaseTable(QTableWidget):
                 input_item = list(row_data)[col]
 
                 if isinstance(input_item, float):
-                    table_item = QTableWidgetItem(f"{round(input_item, round_to)}")
+                    if round_to is None:
+                        table_item = QTableWidgetItem(f"{input_item}")
+                    else:
+                        table_item = QTableWidgetItem(f"{round(input_item, round_to)}")
                 else:
                     table_item = QTableWidgetItem(str(input_item))
 
@@ -190,6 +194,13 @@ class BaseTable(QTableWidget):
     def stretch_horizontal_headers(self):
         n_cols = self.columnCount()
         for i in range(n_cols):
-            self.horizontalHeader().setSectionResizeMode(
-                i, QHeaderView.ResizeMode.Stretch
-            )
+            self.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+
+    def set_column_completer(self, column: int, words_provider):
+        """
+        Attach an auto completer to a column.
+
+        words_provider: either a list OR a callable returning a list
+        """
+        delegate = CompleterDelegate(words_provider, self)
+        self.setItemDelegateForColumn(column, delegate)

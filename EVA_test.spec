@@ -3,7 +3,7 @@
 from PyInstaller.utils.hooks import collect_data_files
 from PyInstaller.utils.hooks import collect_submodules
 a = Analysis(
-    ['src/EVA/main.py', 'EVA.spec'],
+    ['src/EVA/test_main.py', 'EVA_test.spec'],
     pathex=[],
     binaries=[],
     datas=[("src/EVA/databases", "src/EVA/databases"),
@@ -11,7 +11,7 @@ a = Analysis(
            ("src/EVA/core/settings/defaults.json", "src/EVA/core/settings"),
            ("src/EVA/core/settings/srim_defaults.txt", "src/EVA/core/settings"),
             ("src/srim", "srim"),
-            ("src/g4bl/data", "g4bl/data"),
+            ("src/g4bl", "g4bl"),
             ("icon.ico", ".")],
     hiddenimports=['h5py._npystrings'],
     hookspath=[],
