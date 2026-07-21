@@ -164,7 +164,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
             binning_rate = self.bin_rate
         else:
             self.bin_rate = binning_rate
-
+# add my comment 
         if default_bin is None:
             default_bin = self.default_bin
         else:
