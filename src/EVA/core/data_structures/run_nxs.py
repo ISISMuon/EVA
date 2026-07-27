@@ -24,6 +24,7 @@ class RunNexus(Run):
         super().__init__(raw, loaded_detectors, run_num, momentum)
         self.data_type = "nexus"
         self.comment_data = comment_data
+        # self.plot_mode = None
         self.plot_mode = plot_mode
         self.prompt_limit = prompt_limit
         self.delayed_limit = delayed_limit
@@ -43,8 +44,6 @@ class RunNexus(Run):
         if current_loaded_detectors != self.loaded_detectors:
             self.detectors_grouped_s.emit()
         self.corrections_updated_s.emit()
-        # for detector, spectrum in self.data.items():
-        #     print(f"name: {detector}, tot pts = {np.sum(spectrum.y)}")
 
     def _set_normalisation_events(self, normalise_which):
         """Normalise spectra by event count using comment metadata."""
@@ -102,18 +101,15 @@ class RunNexus(Run):
             if plot_mode == "IBEX Prompt Spectrum":
                 spectrum.x = self._raw[detector].prompt_energy[:]
                 spectrum.y = self._raw[detector].prompt_count[:]
+                self.data[detector] = deepcopy(self._raw[detector])
 
-                self.data[detector].x = spectrum.x
-                self.data[detector].y = spectrum.y
-                self.data[detector].bin_range = self._raw[detector].bin_range
                 self.bin_method = "prebinned"
 
             elif plot_mode == "IBEX Delayed Spectrum":
                 spectrum.x = self._raw[detector].delayed_energy[:]
                 spectrum.y = self._raw[detector].delayed_count[:]
-                self.data[detector].x = spectrum.x
-                self.data[detector].y = spectrum.y
-                self.data[detector].bin_range = self._raw[detector].bin_range
+                self.data[detector] = deepcopy(self._raw[detector])
+
                 self.bin_method = "prebinned"
 
             elif plot_mode == "Manual Delayed Spectrum":
@@ -122,17 +118,23 @@ class RunNexus(Run):
                 mask = (time_data > self.prompt_limit) & (
                     time_data < self.delayed_limit
                 )
-                self._raw[detector].cut_data = energy_data[mask]
-                self.data[detector].bin_range = self._raw[detector].bin_range
-                self.bin_method = "raw"
+                cut_data = energy_data[mask]
+                spectrum.x, spectrum.y = rebin.rebin_raw(
+                                    cut_data, self.default_bin, bin_range=spectrum.bin_range
+                                )
+                self.data[detector] = deepcopy(self._raw[detector])
+                self.bin_method = "prebinned"
 
             elif plot_mode == "Manual Prompt Spectrum":
                 time_data = self._raw[detector].time[:]
                 energy_data = self._raw[detector].energy[:]
                 mask = (time_data > 0) & (time_data < self.prompt_limit)
-                self._raw[detector].cut_data = energy_data[mask]
-                self.data[detector].bin_range = self._raw[detector].bin_range
-                self.bin_method = "raw"
+                cut_data = energy_data[mask]
+                spectrum.x, spectrum.y = rebin.rebin_raw(
+                                    cut_data, self.default_bin, bin_range=spectrum.bin_range
+                                )
+                self.data[detector] = deepcopy(self._raw[detector])
+                self.bin_method = "prebinned"
 
             elif plot_mode == "Efficiency Spectrum":
                 if (
@@ -150,10 +152,11 @@ class RunNexus(Run):
                     time_data = self._raw[detector].time[:]
                     energy_data = self._raw[detector].energy[:]
                     mask = time_data > 0
-                    self._raw[detector].cut_data = energy_data[mask]
-                    self.bin_method = "raw"
-
-                self.data[detector].bin_range = self._raw[detector].bin_range
+                    spectrum.x, spectrum.y = rebin.rebin_raw(
+                                        spectrum.cut_data, self.default_bin, bin_range=spectrum.bin_range
+                                    )
+                    self.data[detector] = deepcopy(self._raw[detector])
+                    self.bin_method = "prebinned"
 
             elif plot_mode == "Time Plot":
                 time_data = self._raw[detector].time[:]
