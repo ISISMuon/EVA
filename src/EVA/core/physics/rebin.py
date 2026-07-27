@@ -249,3 +249,19 @@ def rebin_to_reference(x, y, ref_edges, bin_number):
 
 
     return output
+
+def rebin_to_reference_fast(x, y, ref_edges, bin_number):
+    x = np.asarray(x)
+    y = np.asarray(y)
+
+    dx = np.mean(np.diff(x))
+    input_edges = np.concatenate([x - dx/2, [x[-1] + dx/2]])
+
+    # cumulative counts at each input edge (piecewise-linear within a bin)
+    cumulative_input = np.concatenate([[0], np.cumsum(y)])
+
+    # interpolate the cumulative distribution onto the reference edges
+    cumulative_ref = np.interp(ref_edges, input_edges, cumulative_input,
+                         left=0, right=cumulative_input[-1])
+
+    return np.diff(cumulative_ref)

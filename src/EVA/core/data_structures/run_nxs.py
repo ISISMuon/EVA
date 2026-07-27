@@ -211,7 +211,7 @@ class RunNexus(Run):
             combined_counts = np.zeros(bin_num)
             for spectrum in spectra_in_group:
 
-                rebinned = rebin.rebin_to_reference(
+                rebinned = rebin.rebin_to_reference_fast(
                     spectrum.x,
                     spectrum.y,
                     ref_edges=ref_edges,
