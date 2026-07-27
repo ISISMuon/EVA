@@ -41,6 +41,7 @@ class WorkspacePresenter:
         # Set up action bar connections
         self.generate_peakfit_options()
         if get_config()["general"]["current_grouping_profile"] is not None:
+            self.current_profile = get_config()["general"]["current_grouping_profile"]
             self.view.detector_grouping_profile_label.setText(f"Current Profile: {get_config()['general']['current_grouping_profile']}")
         # load settings from config into settings panel
         self.populate_settings_panel()
@@ -108,8 +109,7 @@ class WorkspacePresenter:
         delayed_limit = self.view.delayed_limit_textbox.text()
 
         if self.view.group_detector_checkbox.isChecked():
-            current_profile = get_config()["general"]["current_grouping_profile"]
-            detector_group_dict = get_config()["general"]["saved_grouping_profiles"][current_profile]
+            detector_group_dict = get_config()["general"]["saved_grouping_profiles"][self.current_profile]
         else:
             detector_group_dict = None
         
@@ -154,9 +154,10 @@ class WorkspacePresenter:
                 lambda _, det=detector: self.open_peakfit(det)
             )
 
-    def on_detector_grouping_profile_changed(self):
-        current_profile = get_config()["general"]["current_grouping_profile"]
-        self.view.detector_grouping_profile_label.setText(f"Current profile: {current_profile}")
+    def on_detector_grouping_profile_changed(self, selected_profile):
+        # current_profile = get_config()["general"]["current_grouping_profile"]
+        self.current_profile = selected_profile
+        self.view.detector_grouping_profile_label.setText(f"Current profile: {selected_profile}")
 
     def on_group_detector_checkbox_toggled(self):
         self.on_apply_settings()

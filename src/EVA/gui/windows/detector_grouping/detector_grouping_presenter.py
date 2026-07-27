@@ -32,7 +32,7 @@ class DetectorGroupingPresenter:
             config = get_config()
             config["general"]["current_grouping_profile"] = selected_profile
             config.save_config()
-            self.view.profile_changed_s.emit()
+            self.view.profile_changed_s.emit(selected_profile)
 
     def append_row_in_layer_table_if_last_row_clicked(self, row):
         if row == (self.view.ConfigTable.rowCount() - 1):

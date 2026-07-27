@@ -15,7 +15,7 @@ class DetectorGroupingView(BaseView, Ui_DetectorGrouping):
     GUI for the Detector Grouping window.
     Loads widgets from detector_grouping_window_gui.py and sets up dynamic elements.
     """
-    profile_changed_s = pyqtSignal()
+    profile_changed_s = pyqtSignal(str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
