@@ -1,9 +1,12 @@
+import re
+
 import numpy as np
 import os
 import h5py
 from EVA.core.data_structures.run import Run
 from EVA.core.data_structures.run_nxs import RunNexus
 from EVA.core.data_structures.run_brni import RunBiriani
+from EVA.core.data_structures.run_combined import MultiRun
 from EVA.core.data_structures.spectrum import Spectrum
 
 from EVA.core.app import get_config
@@ -34,6 +37,7 @@ def load_run(
         prompt_limit,
         delayed_limit,
     )
+
     if brni_flags["no_files_found"] == 1 and nxs_flags["no_files_found"] == 1:
         return brni_run, {
             "no_files_found": 1
@@ -45,6 +49,72 @@ def load_run(
         return brni_run, brni_flags
     else:
         return nxs_run, nxs_flags
+
+
+def load_run_multi(
+    run_nums: str,
+    working_directory: str,
+    energy_corrections: dict,
+    normalisation: str,
+    binning: int,
+    plot_mode: str,
+    prompt_limit: int,
+    delayed_limit: int,
+) -> tuple[Run, dict]:
+    flags = {
+        "no_files_found": 1,
+        "comment_not_found": 1,
+        "norm_by_spills_error": 0,
+    }
+    run_num_list = [r.strip() for r in run_nums.split(",")]
+    all_run_array = []
+    good_run_array = []
+    good_flag_array = []
+    for run_num in run_num_list:
+        run, run_flag = load_run(
+            run_num,
+            working_directory,
+            energy_corrections,
+            normalisation,
+            binning,
+            plot_mode,
+            prompt_limit,
+            delayed_limit,
+        )
+        all_run_array.append(run)
+        if run_flag["no_files_found"] == 0:
+            good_run_array.append(run)
+            good_flag_array.append(run_flag)
+
+    if len(good_run_array) > 0:
+        flags["no_files_found"] = 0
+        combined_run = MultiRun(good_run_array)
+        try:
+            # Apply corrections
+            combined_run.set_corrections(
+                energy_corrections=energy_corrections,
+                normalise_which=None,
+                normalisation=normalisation,
+                bin_rate=binning,
+                plot_mode=plot_mode,
+                prompt_limit=prompt_limit,
+                delayed_limit=delayed_limit,
+            )
+            flags["norm_by_spills_error"] = 0
+        except ValueError:
+            flags["norm_by_spills_error"] = 1 # value error is raised if normalisation fails
+        if all(
+            good_flag.get("comment_not_found") == 0 for good_flag in good_flag_array
+        ):
+            flags["comment_not_found"] = 0
+        if any(
+            good_flag.get("norm_by_spills_error") == 1
+            for good_flag in good_flag_array
+        ):
+            flags["norm_by_spills_error"] = 1
+        return combined_run, flags
+    else:
+        return 0, flags
 
 
 def load_comment_brni(run_num: str, file_path: str) -> tuple[list[str], int]:
@@ -176,7 +246,15 @@ def load_run_brni(
 
 
 ###################################
-
+def get_detector_indices(data_file: h5py.File) -> list[int]:
+    """Finds detector channels present in the Nexus file by looking up subfolders."""
+    pattern = re.compile(r"^detector_(\d+)_energyA$")
+    indices = []
+    for key in data_file["raw_data_1"].keys():
+        match = pattern.match(key)
+        if match:
+            indices.append(int(match.group(1)))
+    return sorted(indices)
 
 def load_comment_nxs(input_file: h5py.File) -> tuple[list[str], int]:
     """
@@ -189,7 +267,9 @@ def load_comment_nxs(input_file: h5py.File) -> tuple[list[str], int]:
         end_time = input_file['raw_data_1/end_time'][()].decode(encoding)
         num_prompt_events = 0
         num_delayed_events = 0
-        for i in range(1, 5):
+        detector_channels = get_detector_indices(input_file)
+
+        for i in detector_channels:
             num_prompt_events += input_file[
                 f"raw_data_1/detector_{i}_energyA/num_events"
             ][()]
@@ -240,14 +320,15 @@ def open_hex_file(run_num: int, base_path: str, max_digits: int = 10):
 
 
 def generate_spectrum_nxs(run_number, data_file):
-    """Build a Spectrum object for each detector channel in Nexus file using references to raw and pre-binned data.
+    """Build a SpectrumNexus object for each detector channel in Nexus file using references to raw and pre-binned data.
     Skips over detectors with missing data for now, eventually will handle missing detectors more gracefully TODO."""
     raw = {}
     detectors = []
     none_loaded_flag = 1
     encoding = get_config()["general"]["encoding"]
+    detector_channels = get_detector_indices(data_file)
 
-    for i in range(1, 5):
+    for i in detector_channels:
         check_loaded_cond_1 = f"raw_data_1/detector_{i}_energyA/counts"
         check_loaded_cond_2 = f"raw_data_1/detector_{i}_energyHist/energy"
         try:
@@ -318,7 +399,7 @@ def load_run_nxs(
     prompt_limit: int,
     delayed_limit: int,
 ) -> tuple[Run, dict]:
-    """Loads nexus run file from given run number, collects data from each channel into dictionary of Spectrum objects, stores in RunNexus object
+    """Loads nexus run file from given run number, collects data from each channel into dictionary of Spectrumobjects, stores in RunNexus object
     along with run metadata, and apply any detected corrections from saved settings in config."""
     try:
         data_file = open_hex_file(int(run_num), working_directory)
