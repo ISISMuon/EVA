@@ -308,17 +308,17 @@ def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_compone
     if show_components:
         dets = run.detector_group_dict[group_name]
         # sort so the tallest spectrum is drawn first (bottom), smallest last (top)
-        dets_sorted = sorted(dets, key=lambda d: np.max(run.data[d].y), reverse=True)
+        dets_sorted = sorted(dets, key=lambda d: np.max(run._raw[d].y), reverse=True)
 
         for det in dets_sorted:
             axs.step(
-                run.data[det].x,
-                run.data[det].y,
+                run._raw[det].x,
+                run._raw[det].y,
                 where="mid",
                 color="black",
                 label=f"_{det}",
             )
-            axs.fill_between(run.data[det].x, run.data[det].y, step="mid", alpha=0.9,label=f"{det}",)
+            axs.fill_between(run._raw[det].x, run._raw[det].y, step="mid", alpha=0.9,label=f"{det}",)
 
 def replot_run_residual(
     run: Run,
