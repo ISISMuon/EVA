@@ -30,7 +30,8 @@ class RunNexus(Run):
         self.delayed_limit = delayed_limit
         self.bin_method = self._bin_method_from_plotmode(plot_mode)
         self.data = deepcopy(self._raw)
-
+        self._raw_cache = {}      # detector : (time_array, energy_array)
+        self._mode_cache = {}     # (detector, plot_mode, prompt_limit, delayed_limit) : energy, counts
     def set_corrections(self, **kwargs):
         # initialize an empty data dict with detector name: Spectrum key: value pairs
         self.data = deepcopy(self._raw)
@@ -113,26 +114,14 @@ class RunNexus(Run):
                 self.bin_method = "prebinned"
 
             elif plot_mode == "Manual Delayed Spectrum":
-                time_data = self._raw[detector].time[:]
-                energy_data = self._raw[detector].energy[:]
-                mask = (time_data > self.prompt_limit) & (
-                    time_data < self.delayed_limit
+                spectrum.x, spectrum.y = self._get_manual_spectrum(
+                    detector, low_limit=self.prompt_limit, high_limit=self.delayed_limit
                 )
-                cut_data = energy_data[mask]
-                spectrum.x, spectrum.y = rebin.rebin_raw(
-                                    cut_data, self.default_bin, bin_range=spectrum.bin_range
-                                )
                 self.data[detector] = deepcopy(self._raw[detector])
                 self.bin_method = "prebinned"
 
             elif plot_mode == "Manual Prompt Spectrum":
-                time_data = self._raw[detector].time[:]
-                energy_data = self._raw[detector].energy[:]
-                mask = (time_data > 0) & (time_data < self.prompt_limit)
-                cut_data = energy_data[mask]
-                spectrum.x, spectrum.y = rebin.rebin_raw(
-                                    cut_data, self.default_bin, bin_range=spectrum.bin_range
-                                )
+                spectrum.x, spectrum.y = self._get_manual_spectrum(detector, low_limit=0, high_limit=self.prompt_limit)
                 self.data[detector] = deepcopy(self._raw[detector])
                 self.bin_method = "prebinned"
 
@@ -149,12 +138,7 @@ class RunNexus(Run):
                     ]
                     self.bin_method = "prebinned"
                 else:
-                    time_data = self._raw[detector].time[:]
-                    energy_data = self._raw[detector].energy[:]
-                    mask = time_data > 0
-                    spectrum.x, spectrum.y = rebin.rebin_raw(
-                                        spectrum.cut_data, self.default_bin, bin_range=spectrum.bin_range
-                                    )
+                    spectrum.x, spectrum.y = self._get_manual_spectrum(detector, low_limit=0, high_limit=np.inf)
                     self.data[detector] = deepcopy(self._raw[detector])
                     self.bin_method = "prebinned"
 
@@ -260,6 +244,29 @@ class RunNexus(Run):
                 bin_range=spectra_in_group[0].bin_range
             )
         return combined_data
+
+    def _get_raw_time_energy(self, detector):
+        if detector not in self._raw_cache:
+            self._raw_cache[detector] = (
+                self._raw[detector].time[:],
+                self._raw[detector].energy[:],
+            )
+        return self._raw_cache[detector]
+
+    def _get_manual_spectrum(self, detector, low_limit, high_limit):
+        """Shared by Manual Prompt/Delayed and Efficiency fallback."""
+        key = (detector, low_limit, high_limit)
+        if key in self._mode_cache:
+            return self._mode_cache[key]
+
+        time_data, energy_data = self._get_raw_time_energy(detector)
+        mask = (time_data > low_limit) & (time_data < high_limit)
+        cut_data = energy_data[mask]
+        x, y = rebin.rebin_raw(
+            cut_data, self.default_bin, bin_range=self.data[detector].bin_range
+        )
+        self._mode_cache[key] = (x, y)
+        return x, y
 
     def read_comment_data(self):
         comment = self.comment_data[0]
