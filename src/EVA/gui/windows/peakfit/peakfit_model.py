@@ -219,7 +219,7 @@ class PeakFitModel(QObject):
 					if line.get_label() in blacklisted_labels:
 						line.remove()
 
-		self.x_fit_high_res = np.linspace(self.x_range[0], self.x_range[1], 1000)
+		self.x_fit_high_res = np.arange(self.x_range[0], self.x_range[1], 0.05)
 		self.y_fit_high_res = self.fit_result.eval(x=self.x_fit_high_res)
 
 		self.main_axs.plot(self.x_fit_high_res, self.y_fit_high_res, label="Best fit")

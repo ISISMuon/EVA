@@ -46,7 +46,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self.normalisation = None
         self.normalise_which = loaded_detectors
         self.bin_rate = 1
-        self.default_bin = 32678  # subclasses may override
+        self.default_bin = 32768  # subclasses may override
         self.bin_method = ""  # subclass must set
         self.plot_detectors = set(self.loaded_detectors[:4]) # by default plot the first 4 detectors for a run
 
@@ -101,7 +101,8 @@ class Run(QObject, metaclass=MetaQObjectABC):
             return
         combined_data = self._combine_detector_spectra(detector_group_dict)
         self.loaded_detectors = list(detector_group_dict.keys())
-        self.data.update(combined_data)
+        # self.data.update(combined_data)
+        self.data = combined_data
         self.plot_detectors = self.loaded_detectors[:4]
         self.group = True
     def _set_normalisation(
@@ -209,16 +210,3 @@ class Run(QObject, metaclass=MetaQObjectABC):
     def get_raw(self) -> dict[Spectrum]:
         """Return a deep copy of raw data."""
         return deepcopy(self._raw)
-
-    @property
-    def displayed_detectors(self):
-        if not self.group:
-            return self.active_detectors
-
-        if self.show_components:
-            return (
-                list(self.detector_group_dict.keys())
-                + self.active_detectors
-            )
-
-        return list(self.detector_group_dict.keys())
