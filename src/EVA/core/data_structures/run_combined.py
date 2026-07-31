@@ -1,4 +1,5 @@
 import re
+from copy import deepcopy
 import numpy as np
 from EVA.core.data_structures.run import Run
 from EVA.core.data_structures.spectrum import Spectrum
@@ -60,7 +61,7 @@ class MultiRun(Run):
         for run in self.runs:
             run._set_mode(kwargs.get('plot_mode'), kwargs.get('prompt_limit'), kwargs.get('delayed_limit'))
         self.bin_method = self.runs[0].bin_method
-
+        self.plot_mode = kwargs.get('plot_mode')
     def _set_normalisation_events(self, normalise_which):
         """Normalise spectra by event count using comment metadata."""
         if self.plot_mode in ["IBEX Prompt Spectrum", "Manual Prompt Spectrum"]:
@@ -104,8 +105,7 @@ class MultiRun(Run):
             prompt_time = run.comment_data[5]
             delayed_time = run.comment_data[6]
 
-        start = "\n".join(f"{run.run_num} - {run.comment_data[3]}" for run in self.runs)
-        end = "\n".join(f"{run.run_num} - {run.comment_data[4]}" for run in self.runs)
+
         self.comment_data[1] = prompt_events
         self.comment_data[2] = delayed_events
         self.run_info = (
@@ -114,10 +114,12 @@ class MultiRun(Run):
             f"Prompt Interval:\n{prompt_time}\n\n"
             f"Delayed Events: {delayed_events}\n"
             f"Delayed Interval:\n{delayed_time}\n\n"
-            f"Start time:\n{start}\n\n"
-            f"End time:\n{end}"
+            f"Start time:\n{"\n".join(f"{run.run_num} - {run.comment_data[3]}" for run in self.runs)}\n\n"
+            f"End time:\n{"\n".join(f"{run.run_num} - {run.comment_data[4]}" for run in self.runs)}"
         )
 
+        start = "\t".join(f"{run.run_num} - {run.comment_data[3]}" for run in self.runs)
+        end = "\t".join(f"{run.run_num} - {run.comment_data[4]}" for run in self.runs)
         return (
             comment,
             start,
@@ -169,28 +171,6 @@ class MultiRun(Run):
 
     def _combine_runs(self):
         """Sum detector spectra across all runs."""
-
-        # for det in self.loaded_detectors:
-        #     x = None
-        #     y_sum = None
-
-        #     for run in self.runs:
-        #         try:
-        #             spectrum = run.data[det]
-        #         except KeyError:
-        #             continue
-        #         if spectrum is None or spectrum.x.size == 0:
-        #             continue
-
-        #         if x is None:
-        #             x = spectrum.x
-        #             y_sum = np.zeros_like(spectrum.y)
-
-        #         y_sum += spectrum.y
-
-        #     if x is not None:
-        #         self.data[det].x = x
-        #         self.data[det].y = y_sum
         combined = {}
         for run in self.runs:
             for det, spec in run.data.items():
@@ -203,7 +183,8 @@ class MultiRun(Run):
                     )
                 else:
                     combined[det].y += spec.y
-        self.data = dict(sorted(combined.items(), key=lambda item: detector_sort_key(item[0])))
+        self._raw = dict(sorted(combined.items(), key=lambda item: detector_sort_key(item[0])))
+        self.data = deepcopy(self._raw)
         self.loaded_detectors = list(self.data.keys())
 
 def detector_sort_key(det):
