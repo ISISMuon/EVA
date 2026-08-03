@@ -46,15 +46,16 @@ class MultiRun(Run):
     def set_corrections(self, **kwargs):
         """Apply corrections to each run then sum spectra."""
         current_loaded_detectors = self.loaded_detectors
-        self._set_mode(**kwargs)
-        self._combine_runs()
-        self._group_detectors(kwargs.get("detector_group_dict"))
-        self._set_energy_correction(kwargs.get('energy_corrections'))
+        self._set_mode(**kwargs) # Fetch specific type of spectrum for each run
+        self._combine_runs() # Combine the spectra from all runs detector-wise
+        self._group_detectors(kwargs.get("detector_group_dict")) # Group detectors according to profile and combine spectra
+        self._set_energy_correction(kwargs.get('energy_corrections')) 
         self._set_binning(kwargs.get('bin_rate'), kwargs.get('default_bin'))
         self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
-        if current_loaded_detectors != self.loaded_detectors:
+        if current_loaded_detectors != self.loaded_detectors: # Catches change from grouped <-> ungrouped detectors in either direction
             self.detectors_grouped_s.emit()
-        self.corrections_updated_s.emit()
+        else: # 
+            self.corrections_updated_s.emit()
 
     def _set_mode(self, **kwargs):
         """Call mode setting on each run."""
@@ -62,6 +63,7 @@ class MultiRun(Run):
             run._set_mode(kwargs.get('plot_mode'), kwargs.get('prompt_limit'), kwargs.get('delayed_limit'))
         self.bin_method = self.runs[0].bin_method
         self.plot_mode = kwargs.get('plot_mode')
+
     def _set_normalisation_events(self, normalise_which):
         """Normalise spectra by event count using comment metadata."""
         if self.plot_mode in ["IBEX Prompt Spectrum", "Manual Prompt Spectrum"]:
@@ -151,7 +153,7 @@ class MultiRun(Run):
             combined_counts = np.zeros(bin_num)
             for spectrum in spectra_in_group:
 
-                rebinned = rebin.rebin_to_reference(
+                rebinned = rebin.rebin_to_reference_fast(
                     spectrum.x,
                     spectrum.y,
                     ref_edges=ref_edges,

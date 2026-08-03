@@ -44,7 +44,8 @@ class RunNexus(Run):
         self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
         if current_loaded_detectors != self.loaded_detectors:
             self.detectors_grouped_s.emit()
-        self.corrections_updated_s.emit()
+        else:
+            self.corrections_updated_s.emit()
 
     def _set_normalisation_events(self, normalise_which):
         """Normalise spectra by event count using comment metadata."""
