@@ -47,26 +47,8 @@ class ElementalAnalysisModel(QObject):
         self.plotted_mu_xray_lines = {}
 
         # generate figure
+        self.fig = None
         self.fig, self.axs = self.plot_run()
-
-    # def get_plot_detectors(self) -> list[str]:
-    #     """
-    #     Gets which detectors to plot for the given run number for from the loaded config.
-
-    #     Returns: list of detector names to plot for.
-
-    #     """
-    #     config = get_config()
-    #     show_plot = config.get_run_save(
-    #         config["general"]["working_directory"], self.run.run_num
-    #     )["show_plot"]
-    #     plot_detectors = [
-    #         det
-    #         for det, show in show_plot.items()
-    #         if show and det in self.run.loaded_detectors
-    #     ]
-
-    #     return plot_detectors
 
     def plot_run(self) -> tuple[plt.Figure, plt.Axes]:
         """
@@ -80,7 +62,7 @@ class ElementalAnalysisModel(QObject):
         # check config to see which detectors should be loaded
         colour = config["plot"]["fill_colour"]
         return plot_run(
-            self.run, show_detectors=self.run.plot_detectors, colour=colour
+            self.run, self.fig, show_detectors=self.run.plot_detectors, colour=colour
         )
 
     def plot_vlines_all_gammas(self, isotope: str) -> str | None:

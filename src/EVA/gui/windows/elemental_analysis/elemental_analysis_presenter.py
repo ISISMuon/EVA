@@ -1,7 +1,6 @@
 import logging
 
 import matplotlib.backend_bases
-import numpy as np
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTableWidget, QCheckBox
 
@@ -39,7 +38,7 @@ class ElementalAnalysisPresenter(object):
 
         # plot data and connect PlotWidget
         self.view.plot.update_plot(self.model.fig, self.model.axs)
-        self.view.plot.canvas.mpl_connect("button_press_event", self.on_plot_clicked)
+        self.view.plot.plot_clicked.connect(self.on_plot_clicked)
 
         self.model.run.corrections_updated_s.connect(self.replot_spectra)
         self.model.run.detectors_grouped_s.connect(self.on_detectors_grouped)
@@ -553,13 +552,12 @@ class ElementalAnalysisPresenter(object):
         self.model.update_detector_plot_selection(checked, detector)
         self.view.show_components_checkbox.setChecked(False)
         self.view.plot.update_plot(self.model.fig, self.model.axs)
-        self.view.plot.canvas.mpl_connect("button_press_event", self.on_plot_clicked)
 
     def on_detectors_grouped(self):
         self.setup_detector_checkboxes()
         self.model.fig, self.model.axs = self.model.plot_run()
-        self.view.plot.update_plot(self.model.fig, self.model.axs)
-        self.view.plot.canvas.mpl_connect("button_press_event", self.on_plot_clicked)
+        self.model.update_legend()
+        self.view.plot.canvas.draw_idle()
 
     def plot_components(self, checkstate: Qt.CheckState):
             self.model.replot_all_run_data(show_components=checkstate == Qt.CheckState.Checked)

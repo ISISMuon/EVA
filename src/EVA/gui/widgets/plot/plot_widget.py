@@ -2,7 +2,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 from EVA.core.app import get_app
@@ -27,6 +27,7 @@ class PlotWidget(QWidget):
     navbar and plot together.
     """
 
+    plot_clicked = pyqtSignal(object)
     def __init__(
         self, fig=None, axs=None, parent=None, plot_name=None, plot_manager=None
     ):
@@ -41,6 +42,7 @@ class PlotWidget(QWidget):
         if fig is None:
             self.navbar = None
         else:
+            self.canvas.mpl_connect("button_press_event", self.plot_clicked.emit)
             self.navbar = NavigationToolbar2QT(self.canvas, self)
             self.layout.addWidget(self.navbar, Qt.AlignmentFlag.AlignLeft)
         # add navbar and plot canvas to layout
@@ -63,8 +65,8 @@ class PlotWidget(QWidget):
         if axs is not None:
             self.canvas.axs = axs
 
-        if fig is not None:
-            # close old figure to conserve memory
+        if fig is not None and fig is not self.canvas.figure:
+            # only hit this when the Figure identity actually changes
             plt.close(self.canvas.figure)
 
             self.canvas.figure = fig
@@ -80,14 +82,15 @@ class PlotWidget(QWidget):
 
             # Create new navbar and figure canvas, link them and add them back into widget layout
             self.canvas = FigureCanvas(fig=self.canvas.figure, axs=self.canvas.axs)
+            self.canvas.mpl_connect("button_press_event", self.plot_clicked.emit)
             self.navbar = NavigationToolbar2QT(self.canvas, self)
-
             self.layout.addWidget(self.navbar)
             self.layout.addWidget(self.canvas)
-            self.navbar.update()
-            self.navbar.push_current()
 
         self.canvas.draw_idle()
+        if self.navbar is not None:
+            self.navbar.update()
+            self.navbar.push_current()
 
     def release_navigation(self, event):
         # Removes any current zoom or pan

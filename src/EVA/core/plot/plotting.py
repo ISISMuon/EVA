@@ -133,7 +133,7 @@ def plot_spectrum_residual(
     return fig, ax
 
 
-def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
+def plot_run(run: Run, fig: plt.Figure, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     """
     Plots a Run with a subplot for each Spectrum in the Run.
 
@@ -178,7 +178,12 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     adjustments = settings.get("adjustment_dict", default_adjustments)
     show_components = settings.get("show_components", False)
     num_plots = len(show_detectors)
-    fig, axs = plt.subplots(nrows=num_plots, figsize=size)
+
+    if fig is None:
+        fig, axs = plt.subplots(nrows=num_plots, figsize=size)
+    else:
+        fig.clf()  # clear old axes but keep the Figure/canvas identity
+        axs = fig.subplots(nrows=num_plots)
 
     # hack to loop through all axes even if number of subplots == 1
     if num_plots == 1:
