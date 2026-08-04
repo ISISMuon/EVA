@@ -10,6 +10,7 @@ from EVA.core.data_structures.run import Run
 from EVA.core.peak_finding import find_peaks
 from EVA.core.app import get_config
 from EVA.core.plot.plotting import plot_run, Plot_Peak_Location, replot_run
+from EVA.util.transition_utils import is_primary, is_secondary, is_secondary2
 
 logger = logging.getLogger(__name__)
 
@@ -176,7 +177,7 @@ class ElementalAnalysisModel(QObject):
 
         energies = [
             float([match["element"], match["energy"], match["transition"]][1])
-            for match in res
+            for match in res if is_primary(match["transition"]) or is_secondary2(match["transition"])
         ]
 
         next_colour = self.axs[0]._get_lines.get_next_color()

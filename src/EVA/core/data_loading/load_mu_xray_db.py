@@ -1,5 +1,6 @@
 import json
 from EVA.util.path_handler import get_path
+from EVA.util.transition_utils import is_secondary, is_secondary2
 
 
 def load_mudirac_data():
@@ -90,10 +91,12 @@ def load_extended_mudirac_data():
 
         primary_energies_all_isotopes = {}
         secondary_energies_all_isotopes = {}
+        tertiary_energies_all_isotopes = {}
         all_energies_all_isotopes = {}
 
         primary_energies_default_isotope = {}
         secondary_energies_default_isotope = {}
+        tertiary_energies_default_isotope = {}
         all_energies_default_isotope = {}
 
         z_numbers = {}
@@ -117,28 +120,41 @@ def load_extended_mudirac_data():
 
             for isotope, isotope_data in element_data["Isotopes"].items():
                 primary_energy = isotope_data["Primary"]
-                secondary_energy = isotope_data["Secondary"]
+                secondary_energy = {
+                    transition: energy
+                    for transition, energy in isotope_data["Secondary"].items()
+                    if is_secondary2(transition)
+                }
+
+                tertiary_energy = {
+                    transition: energy
+                    for transition, energy in isotope_data["Secondary"].items()
+                    if not is_secondary2(transition)
+                }
                 abundancies[element][isotope] = isotope_data["Abundancy"]
 
                 # Insert isotope data into dictionaries
                 primary_energies_all_isotopes[isotope] = primary_energy
                 secondary_energies_all_isotopes[isotope] = secondary_energy
+                tertiary_energies_all_isotopes[isotope] = tertiary_energy
                 all_energies_all_isotopes[isotope] = dict(
-                    **primary_energy, **secondary_energy
+                    **primary_energy, **secondary_energy, **tertiary_energy
                 )
 
                 # If isotope is the default isotope into a separate set of dictionaries
                 if isotope == default_isotope:
                     primary_energies_default_isotope[element] = primary_energy
                     secondary_energies_default_isotope[element] = secondary_energy
+                    tertiary_energies_default_isotope[element] = tertiary_energy
                     all_energies_default_isotope[element] = dict(
-                        **primary_energy, **secondary_energy
+                        **primary_energy, **secondary_energy, **tertiary_energy
                     )
 
         # Default to using only most abundant isotope
         peak_data = {
             "Primary energies": primary_energies_default_isotope,
             "Secondary energies": secondary_energies_default_isotope,
+            "Tertiary energies": tertiary_energies_default_isotope,
             "All energies": all_energies_default_isotope,
             "Atomic numbers": z_numbers,
             "Capture ratios": capture_ratios,
@@ -148,6 +164,7 @@ def load_extended_mudirac_data():
             "All isotopes": {
                 "Primary energies": primary_energies_all_isotopes,
                 "Secondary energies": secondary_energies_all_isotopes,
+                "Tertiary energies": tertiary_energies_all_isotopes,
                 "All energies": all_energies_all_isotopes,
             },
         }

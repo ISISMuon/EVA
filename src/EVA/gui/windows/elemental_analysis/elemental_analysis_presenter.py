@@ -16,7 +16,7 @@ from EVA.gui.windows.elemental_analysis.elemental_analysis_model import (
 from EVA.gui.windows.elemental_analysis.elemental_analysis_view import (
     ElementalAnalysisView,
 )
-from EVA.util.transition_utils import is_primary
+from EVA.util.transition_utils import is_primary, is_secondary, is_secondary2
 
 logger = logging.getLogger(__name__)
 
@@ -173,7 +173,7 @@ class ElementalAnalysisPresenter(object):
             sec_res = [
                 [r["element"], r["energy"], r["transition"], ""]
                 for r in res
-                if not is_primary(r["transition"], notation="spec")
+                if is_secondary2(r["transition"], notation="spec")
             ]
 
             if len(prim_res) == 0:
