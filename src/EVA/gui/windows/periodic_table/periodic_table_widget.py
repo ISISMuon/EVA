@@ -249,6 +249,10 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
             secondary_item.setText(0, "Secondary")
             isotope_item.addChild(secondary_item)
 
+            tertiary_item = QTreeWidgetItem()
+            tertiary_item.setText(0, "Tertiary")
+            isotope_item.addChild(tertiary_item)
+
             matches = get_match.search_muxrays_single_element_all_isotopes(isotope_name)
 
             # sort primary and secondary matches
@@ -258,7 +262,18 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
                     isotope_name
                 ].keys()
             ]
-
+            secondaries = [
+                key
+                for key in mu_db["All isotopes"]["Secondary energies"][
+                    isotope_name
+                ].keys()
+            ]
+            tertiaries = [
+                key
+                for key in mu_db["All isotopes"]["Tertiary energies"][
+                    isotope_name
+                ].keys()
+            ]
             for match in matches:
                 match_item = QTreeWidgetItem()
                 match_item.setText(1, match["transition"])
@@ -267,11 +282,14 @@ class PeriodicTableWidget(QMainWindow, Ui_MainWindow):
 
                 if match["transition"] in prims:
                     primary_item.addChild(match_item)
-                else:
+                elif match["transition"] in secondaries:
                     secondary_item.addChild(match_item)
+                else:
+                    tertiary_item.addChild(match_item)
 
             primary_item.setExpanded(True)
             secondary_item.setExpanded(True)
+            tertiary_item.setExpanded(True)
             mu_xray_items.append(isotope_item)
 
         self.element_info_muonic_xray_tree.insertTopLevelItems(0, mu_xray_items)
