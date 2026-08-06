@@ -219,7 +219,7 @@ class PeakFitPresenter(object):
             return
 
         self.model.plot_fit()
-        self.view.plot.update_plot()
+        self.view.plot.update_plot(update_home_button=False)
         self.view.fitted_peak_params_table.update_contents(
             self.format_params(self.model.fitted_peak_params)
         )

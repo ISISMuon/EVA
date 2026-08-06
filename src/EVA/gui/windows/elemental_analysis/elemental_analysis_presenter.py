@@ -112,8 +112,13 @@ class ElementalAnalysisPresenter(object):
         """
         Called when user applies run settings and notifies windows to update.
         """
-        self.model.replot_all_run_data(show_components=self.view.show_components_checkbox.isChecked())
-        self.view.plot.update_plot()
+        show_components = self.view.show_components_checkbox.isChecked()
+        self.model.replot_all_run_data(show_components=show_components)
+        if show_components:
+            update_home_button = False
+        else:
+            update_home_button = True
+        self.view.plot.update_plot(update_home_button=update_home_button)
 
     def on_fill_colour_change(self, colour):
         self.model.update_fill_colour(colour)

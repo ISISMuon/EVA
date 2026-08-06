@@ -53,7 +53,7 @@ class PlotWidget(QWidget):
         if self.plot_id == plot_id:
             self.update_plot()
 
-    def update_plot(self, fig=None, axs=None):
+    def update_plot(self, fig=None, axs=None, update_home_button=True):
         """
         For a simple axes update, it is enough to update the axs parameter of the canvas and redraw.
 
@@ -88,7 +88,7 @@ class PlotWidget(QWidget):
             self.layout.addWidget(self.canvas)
 
         self.canvas.draw_idle()
-        if self.navbar is not None:
+        if self.navbar is not None and update_home_button:
             self.navbar.update()
             self.navbar.push_current()
 
