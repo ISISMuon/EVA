@@ -93,6 +93,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self.energy_corrections = energy_corrections
 
     def _group_detectors(self, detector_group_dict: dict[str, list[str]]):
+        """Merge detector channels into groups using a dictionary of group names and corresponding list of detector names."""
         self.detector_group_dict = {}
         if detector_group_dict is None:
             self.group = False

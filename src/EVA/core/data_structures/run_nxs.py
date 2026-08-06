@@ -38,8 +38,9 @@ class RunNexus(Run):
 
         current_loaded_detectors = self.loaded_detectors
         self._set_mode(kwargs.get('plot_mode'), kwargs.get('prompt_limit'), kwargs.get('delayed_limit'))
-        self._group_detectors(kwargs.get("detector_group_dict"))
         self._set_energy_correction(kwargs.get('energy_corrections'))
+        # self._set_efficiency_correction(kwargs.get('efficiency_corrections'))
+        self._group_detectors(kwargs.get("detector_group_dict"))
         self._set_binning(kwargs.get('bin_rate'), kwargs.get('default_bin'))
         self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
         if current_loaded_detectors != self.loaded_detectors:
