@@ -149,7 +149,6 @@ def search_muxrays_single_element(input_element: str) -> list[dict]:
     """
     app = get_app()
     matches = []
-
     raw_data = app.muon_database["All energies"]
     for element in raw_data:
         if element == input_element:

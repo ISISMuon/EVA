@@ -171,6 +171,7 @@ class MainView(QMainWindow):
         self.layout.addWidget(self.load_button, 6, 1)
 
         self.setCentralWidget(self.container)
+        self.resize(650,300)
 
     def set_run_num_line_edit(self, num: str):
         self.run_number_line_edit.setText(num)

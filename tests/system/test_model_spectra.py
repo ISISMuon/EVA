@@ -1,8 +1,7 @@
 import matplotlib.text
 import numpy as np
 import pytest
-
-from pandas.core.dtypes.missing import array_equals
+from EVA.core.app import get_app
 from EVA.core.physics.functions import gaussian
 from EVA.core.data_searching.get_match import search_muxrays_single_element
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_model import ModelSpectraModel
@@ -19,9 +18,13 @@ base_test = {
 class TestModelSpectrumModel:
     # this will run once before all other tests in the class
     @pytest.fixture(autouse=True)
-    def setup(self):
-        # create new model at beginning of test
-        self.model = ModelSpectraModel()
+    def setup(self, qapp, qtbot):
+        app = get_app()
+
+        if not app._databases_ready:
+            with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
+                pass
+        self.model = ModelSpectraModel(app.muon_database)
 
     def test_correct_data_fetched(self):
         test = base_test.copy()
@@ -116,7 +119,7 @@ class TestModelSpectrumModel:
                 intensity=transition["intensity"],
             )
 
-        assert array_equals(spectrum.y, total_curve), "Incorrect Gaussian calculated"
+        assert np.allclose(spectrum.y, total_curve), "Incorrect Gaussian calculated"
 
     @pytest.mark.parametrize(
         "detectors",

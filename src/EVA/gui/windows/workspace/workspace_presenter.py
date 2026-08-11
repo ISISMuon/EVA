@@ -23,7 +23,6 @@ from EVA.gui.windows.workspace.workspace_view import WorkspaceView
 
 logger = logging.getLogger(__name__)
 
-
 class WorkspacePresenter:
     """Presenter class to connect workspace view to workspace model."""
 
