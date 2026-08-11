@@ -259,8 +259,8 @@ class PeakFitModel(QObject):
 
 	def save_params(self, path: str, x_range: tuple, auto_e_range: bool):
 			obj = {
-					# "init_background": self.initial_bg_params,
-					# "init_peaks": self.initial_peak_params,
+					"init_background": self.initial_bg_params,
+					"init_peaks": self.initial_peak_params,
 					"fit_background": self.fitted_bg_params,
 					"fit_peaks": self.fitted_peak_params,
 					"x_range": x_range,
@@ -274,20 +274,18 @@ class PeakFitModel(QObject):
 
 	def load_params(self, path: str) -> bool:
 		with open(path, "r") as file:
-			obj = json.load(file)
+			params = json.load(file)
 			logger.debug("Loaded initial parameters from %s", path)
 
-		loaded_peaks = self.convert_fitted_to_initial(obj["fit_peaks"], type="peak")
-		loaded_bg = self.convert_fitted_to_initial(obj["fit_background"], type="bg")
+		loaded_peaks, loaded_bg = self.convert_fitted_to_initial(params)
 		# Remap loaded peak names to fresh IDs to avoid collisions
-		for _, peak_data in loaded_peaks.items():
+		for peak_data in loaded_peaks.values():
 			new_id = self.next_id()
 			self.initial_peak_params[new_id] = peak_data
 		self.initial_bg_params.update(loaded_bg)
 		# update energy range
-		self.x_range = obj["x_range"]
-		auto_e_range = obj["auto_e_range"]
-		file.close()
+		self.x_range = params["x_range"]
+		auto_e_range = params["auto_e_range"]
 		return auto_e_range
 
 	def array_to_string(self,array):
@@ -369,7 +367,7 @@ class PeakFitModel(QObject):
 			if not file_exists:
 				writer.writeheader()
 
-			for peak, params in self.fitted_peak_params.items():
+			for params in self.fitted_peak_params.values():
 				row = {
 					"momentum": momentum,
 					"run_number": run_number,
@@ -384,28 +382,22 @@ class PeakFitModel(QObject):
 				writer.writerow(row)
 		logger.debug("Saved fitted parameters to CSV: %s", path)
 
-	def convert_fitted_to_initial(self, param_dict: dict, type: str) -> dict:
+	def convert_fitted_to_initial(self, params: dict,) -> dict:
 		"""Converts fitted parameters to initial parameters format by removing stderr and setting vary to True."""
-		initial_params = {}
-		if type == "bg": #["background"]
-			for name, params in param_dict.items():
-				initial_params[name] = {}
-				for param_name, param_data in params.items():
-					initial_params[name][param_name] = {
-						"value": param_data["value"],
-						"vary": True,
-					}
-		elif type == "peak":
-			for name, params in param_dict.items():
-					initial_params[name] = {}
-					for param_name in ["center", "sigma", "amplitude"]:
-						initial_params[name][param_name] = {
-							"value": params[param_name]["value"],
-							"vary": True,
-							"min": 0,
-						}
-					# initial_params[name]["stderr"] = initial_params[name].pop("sigma")
-		return initial_params
+		initial_peaks = deepcopy(params["init_peaks"])
+		initial_background = deepcopy(params["init_background"])
 
+		for name in initial_peaks:
+			for param_name in initial_peaks[name]:
+				if name in params["fit_peaks"] and param_name in params["fit_peaks"][name]:
+					initial_peaks[name][param_name]["value"] = \
+						params["fit_peaks"][name][param_name]["value"]
+
+		for name in initial_background:
+			for param_name in initial_background[name]:
+				if name in params["fit_background"] and param_name in params["fit_background"][name]:
+					initial_background[name][param_name]["value"] = \
+						params["fit_background"][name][param_name]["value"]
+		return initial_peaks, initial_background
 	def close_figures(self):
 			plt.close(self.fig)
