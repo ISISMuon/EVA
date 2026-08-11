@@ -25,7 +25,7 @@ class TestLoadWorkspaceWindow:
     def test_load_workspace(
         self, qtbot, run_num, test_normalisation, test_binning, test_plot_mode,
     ):
-        wdir = get_config()["general"]["test_directory"]
+        wdir = "./test_data"
         get_config()["saved_corrections"][wdir] = {}
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
@@ -56,7 +56,7 @@ class TestLoadWorkspaceWindow:
         )
 
         if flags["no_files_found"]:
-            assert flags["no_files_found"]
+            assert run_num == "0"
         else:
             self.window = WorkspaceWindow(run)
             self.view = self.window.widget()
@@ -92,6 +92,8 @@ class TestLoadWorkspaceWindow:
             for i, (run_spectrum, run_copy_spectrum) in enumerate(
                 zip(self.model.run._raw.values(), self.run_copy._raw.values())
             ):
+                assert run_spectrum.x is not None
+                assert run_spectrum.y is not None
                 assert np.array_equal(run_spectrum.x, run_copy_spectrum.x)
                 assert np.array_equal(run_spectrum.y, run_copy_spectrum.y)
             matplotlib.pyplot.close()

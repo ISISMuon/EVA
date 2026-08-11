@@ -30,7 +30,7 @@ class TestLoadRun:
         if filename == "":
             return [], []  # return blank arrays if data is missing for the detector
 
-        path = os.path.join(config["general"]["working_directory"], filename)
+        path = os.path.join(config["general"]["data_directory"], filename)
         xdata, ydata = np.loadtxt(path, delimiter=" ", unpack=True)
         return xdata, ydata
 
@@ -41,7 +41,7 @@ class TestLoadRun:
         detector_names = []
         if filename == "":
             return [], []  # return blank arrays if data is missing for the detector
-        path = os.path.join(config["general"]["working_directory"], filename)
+        path = os.path.join(config["general"]["data_directory"], filename)
         data_file = h5py.File(path, "r")
 
         for i in range(1, 5):
@@ -71,7 +71,7 @@ class TestLoadRun:
         "run_num, filenames", list(zip(brni_run_num_list, brni_filenames_list))
     )
     def test_brni_load_run(self, qapp, run_num, filenames):
-        wdir = get_config()["general"]["working_directory"]
+        wdir = get_config()["general"]["data_directory"]
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
@@ -107,7 +107,7 @@ class TestLoadRun:
         list(zip(nxs_run_num_list, nxs_filenames_list, expected_detectors_list)),
     )
     def test_nxs_load_run(self, qapp, run_num, filename, expected_detectors):
-        wdir = get_config()["general"]["working_directory"]
+        wdir = get_config()["general"]["data_directory"]
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]

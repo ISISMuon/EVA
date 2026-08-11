@@ -26,7 +26,7 @@ class SettingsPresenter:
             )
         )
         self.view.apply_button.clicked.connect(self.on_apply)
-
+        self.view.data_dir_browse_button.clicked.connect(self.on_data_dir_btn_click)
         self.view.working_dir_browse_button.clicked.connect(self.on_wdir_btn_click)
         self.view.srim_exe_dir_button.clicked.connect(self.on_srim_exe_dir_btn_click)
         self.view.srim_output_directory_button.clicked.connect(
@@ -38,6 +38,12 @@ class SettingsPresenter:
 
         if dir is not None:
             self.view.working_dir_label.setText(dir)
+
+    def on_data_dir_btn_click(self):
+        dir = self.view.get_directory()
+
+        if dir is not None:
+            self.view.data_dir_label.setText(dir)
 
     def on_srim_exe_dir_btn_click(self):
         dir = self.view.get_directory()
@@ -55,6 +61,7 @@ class SettingsPresenter:
         config = get_config()
 
         settings = {
+            "data_dir": config["general"]["data_directory"],
             "working_dir": config["general"]["working_directory"],
             "srim_exe_dir": config["SRIM"]["installation_directory"],
             "srim_out_dir": config["SRIM"]["output_directory"],
@@ -70,7 +77,8 @@ class SettingsPresenter:
         restructured_settings = {
             "general": {
                 "working_directory": settings["working_dir"],
-                "encoding": settings["encoding"]
+                "encoding": settings["encoding"],
+                "data_directory": settings["data_dir"]
             },
             "SRIM": {
                 "installation_directory": settings["srim_exe_dir"],

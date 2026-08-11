@@ -162,7 +162,7 @@ class MainPresenter:
         if flags["no_files_found"]: #  no data was loaded - return now
             # Update GUI
             self.view.set_run_num_label(
-                f"No files found for run {run_num} in {get_path(get_config()['general']['working_directory'])}"
+                f"No files found for run {run_num} in {get_path(get_config()['general']['data_directory'])}"
             )
             self.view.set_comment_labels("Comment file not found.", "N/A", "N/A", "N/A")
             return

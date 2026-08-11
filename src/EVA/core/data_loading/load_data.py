@@ -14,7 +14,7 @@ from EVA.core.app import get_config
 
 def load_run(
     run_num: str,
-    working_directory: str,
+    data_directory: str,
     energy_corrections: dict,
     normalisation: str,
     binning: int,
@@ -25,11 +25,11 @@ def load_run(
     """
     Attempts to load specified run as both Biriani and Nexus run files and returns whichever is found. Throws error if neither/both found."""
     brni_run, brni_flags = load_run_brni(
-        run_num, working_directory, energy_corrections, normalisation, binning
+        run_num, data_directory, energy_corrections, normalisation, binning
     )
     nxs_run, nxs_flags = load_run_nxs(
         run_num,
-        working_directory,
+        data_directory,
         energy_corrections,
         normalisation,
         binning,
@@ -53,7 +53,7 @@ def load_run(
 
 def load_run_multi(
     run_nums: str,
-    working_directory: str,
+    data_directory: str,
     energy_corrections: dict,
     normalisation: str,
     binning: int,
@@ -73,7 +73,7 @@ def load_run_multi(
     for run_num in run_num_list:
         run, run_flag = load_run(
             run_num,
-            working_directory,
+            data_directory,
             energy_corrections,
             normalisation,
             binning,
@@ -161,7 +161,7 @@ def load_comment_brni(run_num: str, file_path: str) -> tuple[list[str], int]:
 
 def load_run_brni(
     run_num: str,
-    working_directory: str,
+    data_directory: str,
     energy_corrections: dict,
     normalisation: str,
     binning: int,
@@ -185,7 +185,7 @@ def load_run_brni(
     channels = {"GE1": "2099", "GE2": "3099", "GE3": "4099", "GE4": "5099"}
 
     # Load metadata from comment
-    comment_data, comment_flag = load_comment_brni(run_num, working_directory)
+    comment_data, comment_flag = load_comment_brni(run_num, data_directory)
 
     raw = {}
     detectors = []
@@ -193,7 +193,7 @@ def load_run_brni(
     none_loaded_flag = 1
     encoding = get_config()["general"]["encoding"]
     for detector, channel in channels.items():
-        filename = f"{working_directory}/ral0{run_num}.rooth{channel}.dat"
+        filename = f"{data_directory}/ral0{run_num}.rooth{channel}.dat"
         try:
             # Attempt to load data from file using selected encoding, raises UnicodeDecodeError if encoding is incorrect
             # Which main presenter handles.
@@ -391,7 +391,7 @@ def generate_spectrum_nxs(run_number, data_file):
 
 def load_run_nxs(
     run_num: str,
-    working_directory: str,
+    data_directory: str,
     energy_corrections: dict,
     normalisation: str,
     binning: int,
@@ -402,7 +402,7 @@ def load_run_nxs(
     """Loads nexus run file from given run number, collects data from each channel into dictionary of Spectrumobjects, stores in RunNexus object
     along with run metadata, and apply any detected corrections from saved settings in config."""
     try:
-        data_file = open_hex_file(int(run_num), working_directory)
+        data_file = open_hex_file(int(run_num), data_directory)
         comment_data, comment_flag = load_comment_nxs(data_file)
         detectors, raw, momentum, none_loaded_flag = generate_spectrum_nxs(
             run_num, data_file

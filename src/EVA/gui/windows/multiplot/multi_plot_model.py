@@ -98,7 +98,7 @@ class MultiPlotModel:
     @staticmethod
     def load_multirun(run_list):
         config = get_config()
-        working_directory = config["general"]["working_directory"]
+        data_directory = config["general"]["data_directory"]
         corrections = config["default_corrections"]
         energy_corrections = corrections["detector_specific"]
         normalisation = corrections["normalisation"]
@@ -110,7 +110,7 @@ class MultiPlotModel:
         result = [
             load_data.load_run(
                 run_num,
-                working_directory,
+                data_directory,
                 energy_corrections,
                 normalisation,
                 binning,
@@ -150,7 +150,7 @@ class MultiPlotModel:
         """
         config = get_config()
         show_plot = config.get_run_save(
-            config["general"]["working_directory"], self.loaded_runs[0].run_num
+            config["general"]["data_directory"], self.loaded_runs[0].run_num
         )["show_plot"]
         plot_detectors = [
             det

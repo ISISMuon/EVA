@@ -43,7 +43,7 @@ class WorkspaceModel:
     def save_run_corrections(self):
         config = get_config()
 
-        working_dir = config["general"]["working_directory"]
+        data_dir = config["general"]["data_directory"]
         run_num = self.run.run_num
 
         corrections = {
@@ -56,7 +56,7 @@ class WorkspaceModel:
             # "show_plot": {det: True for det in self.run.loaded_detectors},
         }
 
-        config["saved_corrections"][working_dir][run_num] = corrections
+        config["saved_corrections"][data_dir][run_num] = corrections
 
     def export_run_data(self, path):
         """

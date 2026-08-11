@@ -17,8 +17,8 @@ class MainModel(QObject):
         config = get_config()
 
         # create new record for the run if it has never been loaded before
-        working_directory = config["general"]["working_directory"]
-        corrections = config.get_run_save(working_directory, run_num)
+        data_directory = config["general"]["data_directory"]
+        corrections = config.get_run_save(data_directory, run_num)
         energy_corrections = corrections["detector_specific"]
         normalisation = corrections["normalisation"]
         binning = corrections["binning"]
@@ -29,7 +29,7 @@ class MainModel(QObject):
         if self.run_type == "single":
             run, flags = load_data.load_run(
                 run_num,
-                working_directory,
+                data_directory,
                 energy_corrections,
                 normalisation,
                 binning,
@@ -41,7 +41,7 @@ class MainModel(QObject):
         elif self.run_type == "multi":
             run, flags = load_data.load_run_multi(
                 run_num,
-                working_directory,
+                data_directory,
                 energy_corrections,
                 normalisation,
                 binning,
@@ -53,7 +53,7 @@ class MainModel(QObject):
         if flags["no_files_found"]:  # no data was loaded - return now
             logging.error(
                 "No files were found in %s for run %s",
-                config["general"]["working_directory"],
+                config["general"]["data_directory"],
                 run_num,
             )
 
@@ -85,5 +85,5 @@ class MainModel(QObject):
     def set_default_directory(new_dir):
         config = get_config()
         if new_dir:
-            config["general"]["working_directory"] = new_dir
-            logger.info("Working directory set to %s.", new_dir)
+            config["general"]["data_directory"] = new_dir
+            logger.info("Data directory set to %s.", new_dir)

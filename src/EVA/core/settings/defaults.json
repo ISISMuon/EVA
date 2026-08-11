@@ -2,6 +2,7 @@
 "general": {
     "test_directory": "./test_data",
     "working_directory": "./",
+    "data_directory": "./test_data",
     "fit_table_save_file": 0,
     "fit_table_plot_file": 0,
     "default_run_num": "0000",

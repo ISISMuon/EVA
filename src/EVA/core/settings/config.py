@@ -38,23 +38,23 @@ class Config(QObject):
     def __getitem__(self, item):
         return self._data[item]
 
-    def get_run_save(self, working_dir, run_num):
+    def get_run_save(self, data_dir, run_num):
         default_corrections = self._data["default_corrections"]
         saved_corrections = self._data["saved_corrections"]
 
-        if working_dir in saved_corrections.keys():
-            if run_num in saved_corrections[working_dir].keys():
-                return self._data["saved_corrections"][working_dir][run_num]
+        if data_dir in saved_corrections.keys():
+            if run_num in saved_corrections[data_dir].keys():
+                return self._data["saved_corrections"][data_dir][run_num]
             else:
-                self._data["saved_corrections"][working_dir][run_num] = (
+                self._data["saved_corrections"][data_dir][run_num] = (
                     default_corrections
                 )
         else:
-            self._data["saved_corrections"][working_dir] = {
+            self._data["saved_corrections"][data_dir] = {
                 run_num: default_corrections
             }
 
-        return self._data["saved_corrections"][working_dir][run_num]
+        return self._data["saved_corrections"][data_dir][run_num]
 
     def save_config(self):
         """
