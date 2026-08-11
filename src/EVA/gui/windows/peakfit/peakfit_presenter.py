@@ -32,6 +32,9 @@ class PeakFitPresenter(object):
 
         self.view.add_model_button.clicked.connect(self.add_model)
         self.view.fit_model_button.clicked.connect(self.start_model_fit)
+        self.view.save_model_fit_report_button.clicked.connect(self.save_model_fit_report)
+        self.view.save_model_fitted_model_button.clicked.connect(self.save_model_fitted_model)
+        self.view.save_model_plot_points_button.clicked.connect(self.save_model_plot_points)
 
         self.view.fit_initial_params_button.clicked.connect(self.start_peakfit)
         self.view.plot_initial_params_button.clicked.connect(self.plot_initial)
@@ -259,6 +262,7 @@ class PeakFitPresenter(object):
                 logger.error("Invalid energy range - aborting peakfit.")
                 return
 
+        self.mf_model.proportions_constraint = None
         if self.view.constrain_proportions_checkbox.isChecked():
             try:
                 self.mf_model.proportions_constraint = float(
@@ -441,9 +445,9 @@ class PeakFitPresenter(object):
         )
         if path:
             self.model.save_params(path, x_range, auto_e_range_checkbox_state)
-            self.view.peak_params_tabs.setCurrentIndex(0)
-            self.view.bg_params_tabs.setCurrentIndex(0)
-            
+            # self.view.peak_params_tabs.setCurrentIndex(0)
+            # self.view.bg_params_tabs.setCurrentIndex(0)
+
     def load_params(self):
         def_dir = get_config()["general"]["working_directory"]
         path = self.view.get_load_file_path(
@@ -478,6 +482,18 @@ class PeakFitPresenter(object):
         if path:
             self.model.save_fit_report(path)
 
+    def save_model_fit_report(self):
+        if not self.mf_model.fit_result:
+            self.view.display_error_message(
+                message="No fit report found. Please perform a peak fit first.")
+            return
+        def_dir = get_config()["general"]["working_directory"]
+        path = self.view.get_save_file_path(
+            default_dir=def_dir, file_filter="Text files (*.txt)", default_extension=".txt"
+        )
+        if path:
+            self.mf_model.save_fit_report(path)
+
     def save_plot_points(self):
         if not self.model.fit_result:
             self.view.display_error_message(
@@ -489,6 +505,18 @@ class PeakFitPresenter(object):
         if path:
             self.model.save_plot_points(path)
 
+
+    def save_model_plot_points(self):
+        if not self.mf_model.fit_result:
+            self.view.display_error_message(
+                message="No model fit and residual plot points found. Please perform a model fit first.")
+            return
+        # get directory to save x and y points of detector data
+        def_dir = get_config()["general"]["working_directory"]
+        path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Zip Files (*.zip)", default_extension=".zip")
+        if path:
+            self.mf_model.save_plot_points(path)
+
     def save_fitted_model(self):
             if not self.model.fit_result:
                 self.view.display_error_message(
@@ -498,6 +526,16 @@ class PeakFitPresenter(object):
             path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Gaussian Fit Model file (*.gfm)", default_extension=".gfm")
             if path:
                 self.model.save_fitted_model(path)
+
+    def save_model_fitted_model(self):
+            if not self.mf_model.fit_result:
+                self.view.display_error_message(
+                    message="No fit model found. Please perform a peak fit first.")
+                return
+            def_dir = get_config()["general"]["working_directory"]
+            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Gaussian Fit Model file (*.gfm)", default_extension=".gfm")
+            if path:
+                self.mf_model.save_fitted_model(path)
 
     def save_param_to_fit_table(self):
         path = get_config()["general"]["fit_table_save_file"]
