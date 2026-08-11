@@ -42,7 +42,11 @@ class WorkspacePresenter:
         self.generate_peakfit_options()
         if get_config()["general"]["current_grouping_profile"] is not None:
             self.current_profile = get_config()["general"]["current_grouping_profile"]
-            self.view.detector_grouping_profile_label.setText(f"Current Profile: {get_config()['general']['current_grouping_profile']}")
+            self.view.detector_grouping_profile_label.setText(f"Current Profile: {self.current_profile}")
+        else:
+            self.current_profile = None
+            self.view.detector_grouping_profile_label.setText(f"Current Profile: None")
+
         # load settings from config into settings panel
         self.populate_settings_panel()
         # self.view.trim_fit.triggered.connect(self.open_trim_fit)
@@ -109,7 +113,7 @@ class WorkspacePresenter:
         delayed_limit = self.view.delayed_limit_textbox.text()
 
         if self.view.group_detector_checkbox.isChecked():
-            detector_group_dict = get_config()["general"]["saved_grouping_profiles"][self.current_profile]
+            detector_group_dict = self.detector_group_dict
         else:
             detector_group_dict = None
         
@@ -158,10 +162,45 @@ class WorkspacePresenter:
         # current_profile = get_config()["general"]["current_grouping_profile"]
         self.current_profile = selected_profile
         self.view.detector_grouping_profile_label.setText(f"Current profile: {selected_profile}")
+        self.view.group_detector_checkbox.setChecked(False)
+
 
     def on_group_detector_checkbox_toggled(self):
+        valid = self.validate_grouping_profile()
+        if not valid:
+            self.view.group_detector_checkbox.blockSignals(True)
+            self.view.group_detector_checkbox.setChecked(False)
+            self.view.group_detector_checkbox.blockSignals(False)
+            return
         self.on_apply_settings()
         self.generate_peakfit_options()
+
+    def validate_grouping_profile(self):
+        if self.current_profile == "":
+            self.view.display_error_message(
+                title="No grouping profile selected",
+                message="Please select a grouping profile before enabling detector grouping.",
+            )
+            return False
+
+        grouping_profile = get_config()["general"]["saved_grouping_profiles"][
+            self.current_profile
+        ]
+        # Filter out groups that do not have any detectors in the current run
+        valid_groups = {
+            group: [det for det in detectors if det in self.model.run._raw]
+            for group, detectors in grouping_profile.items()
+            if any(det in self.model.run._raw for det in detectors)
+        }
+        if len(valid_groups) == 0:
+            self.view.display_error_message(
+                title="Invalid grouping profile",
+                message=f"Grouping profile {self.current_profile} does not include any detectors. Please update the grouping profile.",
+            )
+            return False
+        else:
+            self.detector_group_dict = valid_groups
+            return True
 
     def reset_to_default_config(self):
         """
