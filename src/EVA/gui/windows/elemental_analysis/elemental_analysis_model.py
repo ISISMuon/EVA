@@ -168,28 +168,41 @@ class ElementalAnalysisModel(QObject):
         Returns:
             formatted name for plot legend.
         """
-
-        name = f"{element} (μ)"
-        if name in self.plotted_mu_xray_lines.keys():
-            return None  # ignore if it's already been plotted
-
         res = get_match.search_muxrays_single_element(element)
+        prim_name = f"{element} (μ) primary"
+        sec_name = f"{element} (μ) secondary"
+        if prim_name in self.plotted_mu_xray_lines.keys():
+            return None  # ignore if it's already been plotted
+        else:
+            prim_energies = [
+                float([match["element"], match["energy"], match["transition"]][1])
+                for match in res if is_primary(match["transition"])
+            ]
+            next_colour = self.axs[0]._get_lines.get_next_color()
 
-        energies = [
-            float([match["element"], match["energy"], match["transition"]][1])
-            for match in res if is_primary(match["transition"]) or is_secondary2(match["transition"])
-        ]
+            for energy in prim_energies:
+                for i in range(len(self.axs)):
+                    self.axs[i].axvline(
+                        energy, color=next_colour, linestyle="--", label=prim_name
+                    )
 
-        next_colour = self.axs[0]._get_lines.get_next_color()
+        if sec_name in self.plotted_mu_xray_lines.keys():
+            return None  # ignore secondary lines if they're already been plotted
+        else:
+            sec_energies = [
+                float([match["element"], match["energy"], match["transition"]][1])
+                for match in res if is_secondary2(match["transition"])
+            ]
+            next_colour = self.axs[0]._get_lines.get_next_color()
+            for energy in sec_energies:
+                for i in range(len(self.axs)):
+                    self.axs[i].axvline(
+                        energy, color=next_colour, linestyle="--", label=sec_name
+                    )
+        self.plotted_mu_xray_lines[prim_name] = (prim_energies, next_colour)
+        self.plotted_mu_xray_lines[sec_name] = (sec_energies, next_colour)
 
-        for energy in energies:
-            for i in range(len(self.axs)):
-                self.axs[i].axvline(
-                    energy, color=next_colour, linestyle="--", label=name
-                )
-
-        self.plotted_mu_xray_lines[name] = (energies, next_colour)
-        return name
+        return prim_name
 
     def plot_vlines_single_mu_xrays(self, element: str, transition: str) -> str:
         """
