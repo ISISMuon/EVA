@@ -136,13 +136,19 @@ class WorkspaceView(Ui_workspace, QMainWindow):
         self.tabWidget.setCurrentIndex(ix)
 
         if not closable:
-            self.tabWidget.tabBar().tabButton(
+            btn = self.tabWidget.tabBar().tabButton(
                 ix, QTabBar.ButtonPosition.RightSide
-            ).deleteLater()
+            )
             self.tabWidget.tabBar().setTabButton(
                 ix, QTabBar.ButtonPosition.RightSide, None
             )
-
+            if btn is None:
+                btn = self.tabWidget.tabBar().tabButton(
+                ix, QTabBar.ButtonPosition.LeftSide
+            )
+                self.tabWidget.tabBar().setTabButton(
+                    ix, QTabBar.ButtonPosition.LeftSide, None
+                )
     def close_tab(self, i: int):
         """
         Opens a prompt to the user and closes the targeted tab is user accepts.
