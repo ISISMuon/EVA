@@ -52,7 +52,7 @@ class InputWriter:
                 "sigmaP=$bite*$P_inj"
             ),
             "particlecolor mu-='0,1,0' e-='1,0,0' gamma='0,0,1'",
-            f"beamlossntuple test file=out_file{self.instance} require=PDGid==13 \n",
+            f"beamlossntuple test file=out_file{self.instance}.txt require=PDGid==13 format=ascii\n",
         ]
         self.input_string = "\n".join(beam_lines)
 
