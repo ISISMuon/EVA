@@ -20,8 +20,8 @@ class MetaQObjectABC(type(QObject), ABCMeta):
 
 class Run(QObject, metaclass=MetaQObjectABC):
     """
-    Abstract base class for experiment runs.
-    Provides shared logic and enforces a consistent interface for RunNexus and RunBiriani.
+    Abstract base class for experiment run file formats and logic.
+    Provides shared logic and enforces a consistent interface for RunNexus and RunBiriani (and potentially other formats).
     """
 
     corrections_updated_s = pyqtSignal()
@@ -53,12 +53,12 @@ class Run(QObject, metaclass=MetaQObjectABC):
     # ABSTRACT INTERFACE
     @abstractmethod
     def set_corrections(self, *args, **kwargs):
-        """Reapply all corrections, normalisation, and binning in correct order."""
+        """Reapply all corrections, normalisation, and binning in correct order, which may be different for different files."""
         pass
 
     @abstractmethod
     def read_comment_data(self):
-        """Return formatted metadata from comment file (comment, start time, end time, etc.)."""
+        """Return formatted metadata from comment file (comment, start time, end time, etc.) which may be different for different files."""
         pass
 
     @abstractmethod
@@ -75,6 +75,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
     def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None) -> dict[str, Spectrum]:
         """Combine detector spectra into groups using histogram or raw data points"""
         pass
+
     # Shared functions
     def _set_energy_correction(self, energy_corrections: dict):
         """Apply per-detector linear energy corrections."""
@@ -100,7 +101,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
             self.loaded_detectors = self.active_detectors
             self.plot_detectors = self.loaded_detectors[:4]
             return
-        combined_data = self._combine_detector_spectra(detector_group_dict)
+        combined_data = self._combine_detector_spectra(detector_group_dict) # Logic for merging 
         self.loaded_detectors = list(detector_group_dict.keys())
         # self.data.update(combined_data)
         self.data = combined_data
