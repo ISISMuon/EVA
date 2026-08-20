@@ -64,9 +64,6 @@ def load_run(
     else:
         return nxs_run, nxs_flags
 
-############## BIRIANI RUN FILE FORMAT #####################
-
-
 def load_run_multi(
     run_nums: str,
     data_directory: str,
@@ -131,6 +128,8 @@ def load_run_multi(
         return combined_run, flags
     else:
         return 0, flags
+
+############## BIRIANI RUN FILE FORMAT #####################
 
 
 def load_comment_brni(run_num: str, file_path: str) -> tuple[list[str], int]:
