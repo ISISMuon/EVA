@@ -130,10 +130,10 @@ class WorkspacePresenter:
 
             self.model.run.set_corrections(**run_correction_settings)
 
-        except ValueError:
+        except ValueError as e:
             self.view.display_error_message(
-                title="Normalisation error",
-                message="Cannot normalise by events when comment file is not loaded. Please ensure that the comment.dat file is in your loaded directory.",
+                title="Error occured while applying settings",
+                message=str(e),
             )
 
             self.populate_settings_panel()

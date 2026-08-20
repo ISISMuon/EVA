@@ -265,10 +265,10 @@ def load_run_brni(
 ############## NEXUS RUN FILE FORMAT #####################
 
 def get_detector_indices(data_file: h5py.File) -> list[int]:
-    """Finds detector channels present in the Nexus file by looking up subfolders."""
+    """Finds detector channels present in the Nexus file by looking up subfolders in the pattern detector_X_energyA where X is a whole number."""
     pattern = re.compile(r"^detector_(\d+)_energyA$")
     indices = []
-    for key in data_file["raw_data_1"].keys():
+    for key in data_file.keys():
         match = pattern.match(key)
         if match:
             indices.append(int(match.group(1)))
@@ -298,19 +298,19 @@ def load_comment_nxs(input_file: h5py.File) -> tuple[list[str], int]:
 
         for i in detector_channels:
             num_prompt_events += input_file[
-                f"raw_data_1/detector_{i}_energyA/num_events"
+                f"detector_{i}_energyA/num_events"
             ][()]
             num_delayed_events += input_file[
-                f"raw_data_1/detector_{i}_energyB/num_events"
+                f"detector_{i}_energyB/num_events"
             ][()]
             try:  # Failsafe for now as not sure if all four channels will always record time
-                key_Amin = f"raw_data_1/detector_{i}_energyA/event_time_min"
-                key_Amax = f"raw_data_1/detector_{i}_energyA/event_time_max"
+                key_Amin = f"detector_{i}_energyA/event_time_min"
+                key_Amax = f"detector_{i}_energyA/event_time_max"
                 prompt_time = (
                     f"{input_file[key_Amin][()]} - {input_file[key_Amax][()]} ns"
                 )
-                key_Bmin = f"raw_data_1/detector_{i}_energyB/event_time_min"
-                key_Bmax = f"raw_data_1/detector_{i}_energyB/event_time_max"
+                key_Bmin = f"detector_{i}_energyB/event_time_min"
+                key_Bmax = f"detector_{i}_energyB/event_time_max"
                 delayed_time = (
                     f"{input_file[key_Bmin][()]} - {input_file[key_Bmax][()]} ns"
                 )
@@ -345,21 +345,21 @@ def open_hex_file(run_num: int, base_path: str, max_digits: int = 10) -> h5py.Fi
         FileNotFoundError: If run file is not in current folder.
 
     Returns:
-        h5py.File: returns a File object of the loaded HDF run file.
+        h5py.File: returns a raw_data_1 File object of the loaded HDF run file.
     """
     for digits in range(len(str(run_num)), max_digits + 1):
         filename = f"MUX{run_num:0{digits}d}.nxs"  # e.g. hex0_000123_ch0.nxs
         file_path = os.path.join(base_path, filename)
         file_path = os.path.normpath(file_path)
         if os.path.exists(file_path):
-            return h5py.File(file_path, "r")
-
+            file = h5py.File(file_path, "r")
+            return file["raw_data_1"]
     # If loop finishes without returning, raise an error
     raise FileNotFoundError(f"No file found for run number {run_num} in {base_path}")
 
 
 def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
-    """Build a SpectrumNexus object for each detector channel in Nexus file using references to raw and pre-binned data.
+    """Build a Spectrum object for each detector channel in Nexus file using references to raw and pre-binned data.
     Skips over detectors with missing data for now, eventually will handle missing detectors more gracefully TODO.
     Combines detector name and Spectrum objects into a dict.
     Args:
@@ -367,7 +367,7 @@ def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
         data_file (h5py.File): HDF file to load detector data from 
 
     Returns:
-        _type_: _description_
+        dict[str: Spectrum]: a dictionary of detector names : all data sets in run file for associated detector.
     """
     raw = {}
     detectors = []
@@ -376,8 +376,8 @@ def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
     detector_channels = get_detector_indices(data_file)
 
     for i in detector_channels:
-        check_loaded_cond_1 = f"raw_data_1/detector_{i}_energyA/counts"
-        check_loaded_cond_2 = f"raw_data_1/detector_{i}_energyHist/energy"
+        check_loaded_cond_1 = f"detector_{i}_energyA/counts"
+        check_loaded_cond_2 = f"detector_{i}_energyHist/energy"
         try:
             if (
                 data_file[check_loaded_cond_1][()].any()
@@ -388,24 +388,24 @@ def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
                 prompt_energy = data_file[f"raw_data_1/detector_{i}_energyA/energy"]
                 prompt_count = data_file[f"raw_data_1/detector_{i}_energyA/counts"]
 
-                delayed_energy = data_file[f"raw_data_1/detector_{i}_energyB/energy"]
-                delayed_count = data_file[f"raw_data_1/detector_{i}_energyB/counts"]
+                delayed_energy = data_file[f"detector_{i}_energyB/energy"]
+                delayed_count = data_file[f"detector_{i}_energyB/counts"]
 
-                energy = data_file[f"raw_data_1/detector_{i}_events/event_energy"]
-                time = data_file[f"raw_data_1/detector_{i}_events/event_time_offset"]
+                energy = data_file[f"detector_{i}_events/event_energy"]
+                time = data_file[f"detector_{i}_events/event_time_offset"]
 
                 try:
                     efficiency_hist_energy = data_file[
-                        f"raw_data_1/detector_{i}_energyHist/energy"
+                        f"detector_{i}_energyHist/energy"
                     ]
                     efficiency_hist_counts = data_file[
-                        f"raw_data_1/detector_{i}_energyHist/counts"
+                        f"detector_{i}_energyHist/counts"
                     ]
                 except KeyError:
                     efficiency_hist_energy = None
                     efficiency_hist_counts = None
 
-                ibex_hist_2d = data_file[f"raw_data_1/detector_{i}_energy2D/counts"]
+                ibex_hist_2d = data_file[f"detector_{i}_energy2D/counts"]
                 bin_width_lower_limit = delayed_energy[1] - delayed_energy[0]
                 bin_width_upper_limit = delayed_energy[-1] - delayed_energy[-2]
 
@@ -432,7 +432,7 @@ def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
         except KeyError:
             pass
     try:
-        momentum = data_file["/raw_data_1/selog/Momentum/value"][()][0]
+        momentum = data_file["/selog/Momentum/value"][()][0]
 
     except KeyError:
         momentum = -100

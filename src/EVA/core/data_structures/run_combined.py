@@ -101,7 +101,6 @@ class MultiRun(Run):
         start = ""
         end = ""
         for run in self.runs:
-            comment = run.comment_data[0]
             prompt_events += int(run.comment_data[1])
             delayed_events += int(run.comment_data[2])
             prompt_time = run.comment_data[5]
@@ -111,7 +110,8 @@ class MultiRun(Run):
         self.comment_data[1] = prompt_events
         self.comment_data[2] = delayed_events
         self.run_info = (
-            f"Run number: {self.run_num}\n\n{comment}\n\n"
+            f"Run numbers: {self.run_num}\n\n"
+            f"Comments:\n{"\n\n".join(f"{run.run_num} - {run.comment_data[0]}" for run in self.runs)}\n\n"
             f"Prompt Events: {prompt_events}\n"
             f"Prompt Interval:\n{prompt_time}\n\n"
             f"Delayed Events: {delayed_events}\n"
@@ -123,7 +123,7 @@ class MultiRun(Run):
         start = "\t".join(f"{run.run_num} - {run.comment_data[3]}" for run in self.runs)
         end = "\t".join(f"{run.run_num} - {run.comment_data[4]}" for run in self.runs)
         return (
-            comment,
+            self.runs[0].comment_data[0],
             start,
             end,
             f"Prompt events: {prompt_events} Delayed events: {delayed_events}",

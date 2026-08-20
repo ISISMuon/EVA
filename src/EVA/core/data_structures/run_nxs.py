@@ -90,14 +90,14 @@ class RunNexus(Run):
         """Loads datasets onto memory/ from saved references in the Nexus file/
         Fetches from memory if manual spectra are requested after the first time.
         For (prompt/delayed) manual spectra, also apply requested time selection cuts
-
+        the spectrum objects stored in self._raw are then copied on to self.data
+        for other run corrections.
         Args:
-            plot_mode (str | None, optional): _description_. Defaults to None.
-            prompt_limit (str | None, optional): _description_. Defaults to None.
-            delayed_limit (str | None, optional): _description_. Defaults to None.
-
+            plot_mode (str | None, optional): Spectrum required. Defaults to None.
+            prompt_limit (str | None, optional): Upper time limit for IBEX/Manual prompt spectra, lower limit for delayed equivalents. if None, uses last saved one.
+            delayed_limit (str | None, optional): Upper time limit for IBEX/Manual delayed spectra. if None, uses last saved one.
         Raises:
-            ValueError: _description_
+            ValueError: If a 
         """
         if plot_mode is None:
             plot_mode = self.plot_mode
@@ -173,7 +173,15 @@ class RunNexus(Run):
             else:
                 raise ValueError(f"Invalid plot mode: '{plot_mode}'")
 
+            if len(self.data[detector].x) == 0 or len(self.data[detector].y) == 0:
+                raise ValueError(f"No data was successfully loaded for {plot_mode}")
+            
     def _bin_method_from_plotmode(self, plot_mode: str) -> str:
+        """ 
+        Legacy function that used to control type of binning function called depending on if data was pre-binned or raw data points.
+        Currently redundant as all data types are now binned to the same 32768 base first before rebin is called, but leaving it here if things
+        change in the future.
+        """
         if plot_mode in ["IBEX Prompt Spectrum", "IBEX Delayed Spectrum", "Time Plot"]:
             return "prebinned"
         elif plot_mode in [
@@ -188,6 +196,10 @@ class RunNexus(Run):
             raise ValueError(f"Invalid plot mode: '{plot_mode}'")
 
     def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None):
+        """ 
+        Legacy function that controlled algorithm used to combine events into a single histogram depending on type. Currently all the main spectra are
+        pre-binned before this block is executed so defaults to combine prebinned spectra.
+        """
         if self.bin_method == "prebinned":
             return self.combine_prebinned_spectra(detector_group_dict)
         elif self.bin_method == "raw":
@@ -206,30 +218,31 @@ class RunNexus(Run):
         """
         combined_data = {}
         for group_name, detector_names in detector_group_dict.items():
+            # Fetch detectors and spectra that are in a group that are also detected within the run.
             self.detector_group_dict[group_name] = [det for det in detector_names if det in self.data]
             spectra_in_group = [self.data.get(det) for det in detector_names if det in self.data]
             if not spectra_in_group:
-                continue
-            # Reference detector defines the energy axis
+                continue # If no run data is in a group, skip over it.
+            # Use the x/energy/bin centers of the first spectrum as the reference base to interpolate other spectra onto.
             reference_energy = spectra_in_group[0].x
             ref_width = np.mean(np.diff(reference_energy))
             bin_num = len(reference_energy)
             ref_edges = np.zeros(bin_num + 1)
-
+            # Convert the bin centers to lower and upper limit for bin edges
             ref_edges[:-1] = reference_energy - ref_width/2
             ref_edges[-1] = reference_energy[-1] + ref_width/2
             combined_counts = np.zeros(bin_num)
             for spectrum in spectra_in_group:
-
+                # Interpolate each spectra to the reference bins.
                 rebinned = rebin.rebin_to_reference_fast(
                     spectrum.x,
                     spectrum.y,
                     ref_edges=ref_edges,
                     bin_number=bin_num
                 )
-
+                # Add the spectra up
                 combined_counts += rebinned
-
+            # Create a combined data dict with similar format to self.data
             combined_data[group_name] = Spectrum(
                 detector=group_name,
                 run_number=spectra_in_group[0].run_number,
@@ -238,39 +251,42 @@ class RunNexus(Run):
                 bin_range=spectra_in_group[0].bin_range
             )
         return combined_data
-    # An implementation was made for binning raw data points from each spectrum onto the same x axis and summing them up was made
-    # But was discarded due to digitizer limitations, left here for potential future implementations 
-    # def combine_raw_spectra(self, detector_group_dict: dict[str, list[str]]):
-    #     combined_data = {}
-    #     for group_name, detector_names in detector_group_dict.items():
-    #         self.detector_group_dict[group_name] = [det for det in detector_names if det in self.data]
-    #         spectra_in_group = [self._raw.get(det) for det in detector_names if det in self.data]
-    #         if not spectra_in_group:
-    #             continue
-    #         bin_num = int(self.default_bin / self.bin_rate)
-    #         edges = np.linspace(
-    #             spectra_in_group[0].bin_range[0],
-    #             spectra_in_group[0].bin_range[1],
-    #             bin_num + 1,
-    #         )
 
-    #         x = (edges[:-1] + edges[1:]) / 2
-    #         combined_counts = np.zeros(bin_num, dtype=np.int64)
+    def combine_raw_spectra(self, detector_group_dict: dict[str, list[str]]):
+        """ 
+        An implementation was made for binning raw data points from each spectrum onto the same x axis and summing them up was made
+        But was discarded due to digitizer limitations, left here for potential future implementations 
+        """
+        combined_data = {}
+        for group_name, detector_names in detector_group_dict.items():
+            self.detector_group_dict[group_name] = [det for det in detector_names if det in self.data]
+            spectra_in_group = [self._raw.get(det) for det in detector_names if det in self.data]
+            if not spectra_in_group:
+                continue
+            bin_num = int(self.default_bin / self.bin_rate)
+            edges = np.linspace(
+                spectra_in_group[0].bin_range[0],
+                spectra_in_group[0].bin_range[1],
+                bin_num + 1,
+            )
 
-    #         for spectrum in spectra_in_group:
-    #             counts, _ = np.histogram(
-    #                 spectrum.cut_data,
-    #                 bins=edges,
-    #             )
-    #             combined_counts += counts
-    #         combined_data[group_name] = Spectrum(
-    #             detector=group_name,
-    #             run_number=spectra_in_group[0].run_number,
-    #             x=x,
-    #             y=combined_counts,
-    #             bin_range=spectra_in_group[0].bin_range
-    #         )
-    #     return combined_data
+            x = (edges[:-1] + edges[1:]) / 2
+            combined_counts = np.zeros(bin_num, dtype=np.int64)
+
+            for spectrum in spectra_in_group:
+                counts, _ = np.histogram(
+                    spectrum.cut_data,
+                    bins=edges,
+                )
+                combined_counts += counts
+            combined_data[group_name] = Spectrum(
+                detector=group_name,
+                run_number=spectra_in_group[0].run_number,
+                x=x,
+                y=combined_counts,
+                bin_range=spectra_in_group[0].bin_range
+            )
+        return combined_data
 
     def _get_raw_time_energy(self, detector) -> list[np.array, np.array]:
         """Loads raw data on to memory when accessed for the first time for manual spectra.
