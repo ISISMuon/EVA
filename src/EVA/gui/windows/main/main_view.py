@@ -1,3 +1,4 @@
+from __future__ import annotations
 import logging
 from types import NoneType
 
@@ -15,7 +16,7 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QApplication,
 )
-
+import EVA
 from EVA.core.app import get_config
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.windows.manual.manual_window import ManualWindow
@@ -56,7 +57,7 @@ class MainView(QMainWindow):
 
     def init_gui(self):
         # Set up action bar items
-        self.setWindowTitle("EVA")
+        self.setWindowTitle(f"EVA ({EVA.__version__})")
         self.setFixedSize(QSize(650, 300))
 
         self.bar = self.menuBar()

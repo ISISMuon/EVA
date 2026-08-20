@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QDialog,
 )
-
+import EVA
 from EVA.core.data_structures.run import Run
 from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import (
     EnergyCorrectionsDialog,
@@ -50,7 +50,7 @@ class WorkspaceView(Ui_workspace, QMainWindow):
         self.run = run
 
         self.setupUi(self)
-        self.setWindowTitle(f"Workspace {run.run_num} - EVA")
+        self.setWindowTitle(f"Workspace {run.run_num} - EVA ({EVA.__version__})")
 
 
         self.layout().setContentsMargins(0, 0, 0, 0)
