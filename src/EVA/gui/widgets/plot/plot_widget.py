@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
@@ -89,8 +90,34 @@ class PlotWidget(QWidget):
 
         self.canvas.draw_idle()
         if self.navbar is not None and update_home_button:
-            self.navbar.update()
-            self.navbar.push_current()
+            self._reset_home_view(self.canvas.axs)
+
+    def _reset_home_view(self, axs):
+        """
+        Set the toolbar's "home" view to the full data range (x: 0 to
+        max, y: 0 to 1.2 * data max) without changing what's currently displayed.
+        """
+        axs = axs if isinstance(axs, (list, tuple, np.ndarray)) else [axs]
+
+        # remember the current (zoomed) view so we can restore it after
+        current_limits = [(ax.get_xlim(), ax.get_ylim()) for ax in axs]
+
+        for ax in axs:
+            ax.relim()  # refresh dataLim based on current artist data
+            ax.set_xlim(ax.dataLim.x0, ax.dataLim.x1)
+            lower_ylim = min(0, ax.dataLim.y0)
+            ax.set_ylim(1.2* lower_ylim, 1.2 * ax.dataLim.y1)
+
+        # wipe the nav stack and capture this full view as "home"
+        self.navbar.update()
+        self.navbar.push_current()
+
+        # put the actual (zoomed) view back on screen
+        for ax, (xlim, ylim) in zip(axs, current_limits):
+            ax.set_xlim(xlim)
+            ax.set_ylim(ylim)
+
+        self.canvas.draw_idle()
 
     def release_navigation(self, event):
         # Removes any current zoom or pan

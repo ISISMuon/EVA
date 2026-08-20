@@ -128,6 +128,7 @@ def plot_spectrum_residual(
     )
     main_ax.set_ylim(0.0)
     main_ax.set_xlim(0.0)
+    residual_ax.set_ylim(-1,1)
     main_ax.tick_params(labelbottom=True)
 
     return fig, ax

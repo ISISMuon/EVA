@@ -39,8 +39,8 @@ class PeakFitPresenter(object):
         self.view.fit_initial_params_button.clicked.connect(self.start_peakfit)
         self.view.plot_initial_params_button.clicked.connect(self.plot_initial)
         # display figure from model in the PlotWidget
-        self.view.plot.update_plot(self.model.fig, self.model.axs)
-        self.view.model_plot.update_plot(self.mf_model.fig, self.mf_model.axs)
+        self.view.plot.update_plot(self.model.fig, self.model.axs, update_home_button=False)
+        self.view.model_plot.update_plot(self.mf_model.fig, self.mf_model.axs, update_home_button=False)
         self.view.plot.canvas.mpl_connect("button_press_event", self.on_plot_click)
 
         # setting up connections for tables
