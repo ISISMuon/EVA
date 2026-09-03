@@ -3,6 +3,7 @@ import time
 import logging
 import os
 import csv
+import re
 from copy import copy, deepcopy
 from zipfile import ZipFile
 
@@ -278,14 +279,39 @@ class PeakFitModel(QObject):
 			logger.debug("Loaded initial parameters from %s", path)
 
 		loaded_peaks, loaded_bg = self.convert_fitted_to_initial(params)
-		# Remap loaded peak names to fresh IDs to avoid collisions
-		for peak_data in loaded_peaks.values():
-			new_id = self.next_id()
+
+		# Map loaded peak names to fresh IDs to avoid collisions
+		id_map = {}
+		for old_id in loaded_peaks:
+			id_map[old_id] = self.next_id()
+
+		# Rename peak IDs and any expr references using the mapping
+		for old_id, peak_data in loaded_peaks.items():
+			new_id = id_map[old_id]
+
+			for param_data in peak_data.values():
+				expr = param_data.get("expr")
+				# If a constraint expression for a saved peak exists, replace old peak IDs with
+				# new IDs in place (automatically updates constraint menu as it looks up this data
+				# to fill up the menu).
+				if expr:
+					pattern = r"\b(" + "|".join(map(re.escape, id_map)) + r")(?=_)"
+
+					expr = re.sub(
+						pattern,
+						lambda match: id_map[match.group(1)],
+						expr,
+					)
+					param_data["expr"] = expr
+
 			self.initial_peak_params[new_id] = peak_data
+
 		self.initial_bg_params.update(loaded_bg)
-		# update energy range
+
+		# Update energy range
 		self.x_range = params["x_range"]
 		auto_e_range = params["auto_e_range"]
+
 		return auto_e_range
 
 	def array_to_string(self,array):
@@ -383,7 +409,6 @@ class PeakFitModel(QObject):
 		logger.debug("Saved fitted parameters to CSV: %s", path)
 
 	def convert_fitted_to_initial(self, params: dict,) -> dict:
-		"""Converts fitted parameters to initial parameters format by removing stderr and setting vary to True."""
 		initial_peaks = deepcopy(params["init_peaks"])
 		initial_background = deepcopy(params["init_background"])
 
@@ -399,5 +424,6 @@ class PeakFitModel(QObject):
 					initial_background[name][param_name]["value"] = \
 						params["fit_background"][name][param_name]["value"]
 		return initial_peaks, initial_background
+
 	def close_figures(self):
 			plt.close(self.fig)
