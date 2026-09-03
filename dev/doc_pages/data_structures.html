@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data structures &mdash; EVA 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Data loading" href="data_loading.html" />
+    <link rel="prev" title="Plotting" href="plotting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            EVA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual.html">User manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../dev_index.html">Developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code_overview.html">Code overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gui.html">GUI implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unit_testing.html">Unit testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../versioning.html">Releasing versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../writing_documentation.html">Writing documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyinstaller.html">Building executables with pyinstaller</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../docs.html">Code documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="peak_finding.html">Peak Finding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_searching.html">Data searching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fitting.html">Fitting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plotting.html">Plotting</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Data structures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-EVA.core.data_structures.spectrum">Spectrum class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-EVA.core.data_structures.run">Run class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-EVA.core.data_structures.detector">Detector class</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="data_loading.html">Data loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="physics.html">Physics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EVA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../dev_index.html">Developer documentation</a></li>
+          <li class="breadcrumb-item"><a href="../docs.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">Data structures</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/dev/doc_pages/data_structures.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-structures">
+<h1>Data structures<a class="headerlink" href="#data-structures" title="Link to this heading"></a></h1>
+<section id="module-EVA.core.data_structures.spectrum">
+<span id="spectrum-class"></span><h2>Spectrum class<a class="headerlink" href="#module-EVA.core.data_structures.spectrum" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="EVA.core.data_structures.spectrum.Spectrum">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">EVA.core.data_structures.spectrum.</span></span><span class="sig-name descname"><span class="pre">Spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">detector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.spectrum.Spectrum" title="Link to this definition"></a></dt>
+<dd><p>The ‘Spectrum’ dataclass holds the data from a single detector for a single run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>detector</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – string, name of detector.</p></li>
+<li><p><strong>run_number</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – string, run number for the spectrum.</p></li>
+<li><p><strong>x</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – numpy array, containing the x-data measured by the detector (histogram bins).</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – numpy array, containing y-data measured by the detector (counts per bin).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-EVA.core.data_structures.run">
+<span id="run-class"></span><h2>Run class<a class="headerlink" href="#module-EVA.core.data_structures.run" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="EVA.core.data_structures.run.MetaQObjectABC">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">EVA.core.data_structures.run.</span></span><span class="sig-name descname"><span class="pre">MetaQObjectABC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.run.MetaQObjectABC" title="Link to this definition"></a></dt>
+<dd><p>Metaclass combining QObject and ABC compatibility.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="EVA.core.data_structures.run.Run">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">EVA.core.data_structures.run.</span></span><span class="sig-name descname"><span class="pre">Run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loaded_detectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">momentum</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.run.Run" title="Link to this definition"></a></dt>
+<dd><p>Abstract base class for experiment runs.
+Provides shared logic and enforces a consistent interface for RunNexus and RunBiriani.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EVA.core.data_structures.run.Run.get_nonzero_data">
+<span class="sig-name descname"><span class="pre">get_nonzero_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.run.Run.get_nonzero_data" title="Link to this definition"></a></dt>
+<dd><p>Return list of non-empty Spectrum objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="#EVA.core.data_structures.spectrum.Spectrum" title="EVA.core.data_structures.spectrum.Spectrum"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectrum</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EVA.core.data_structures.run.Run.get_raw">
+<span class="sig-name descname"><span class="pre">get_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.run.Run.get_raw" title="Link to this definition"></a></dt>
+<dd><p>Return a deep copy of raw data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<a class="reference internal" href="#EVA.core.data_structures.spectrum.Spectrum" title="EVA.core.data_structures.spectrum.Spectrum"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectrum</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EVA.core.data_structures.run.Run.is_empty">
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.run.Run.is_empty" title="Link to this definition"></a></dt>
+<dd><p>Return True if all detectors have no data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EVA.core.data_structures.run.Run.read_comment_data">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">read_comment_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.run.Run.read_comment_data" title="Link to this definition"></a></dt>
+<dd><p>Return formatted metadata (comment, start time, end time, etc.).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EVA.core.data_structures.run.Run.set_corrections">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">set_corrections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.run.Run.set_corrections" title="Link to this definition"></a></dt>
+<dd><p>Reapply all corrections, normalisation, and binning in correct order.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-EVA.core.data_structures.detector">
+<span id="detector-class"></span><h2>Detector class<a class="headerlink" href="#module-EVA.core.data_structures.detector" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="EVA.core.data_structures.detector.DetectorIndices">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">EVA.core.data_structures.detector.</span></span><span class="sig-name descname"><span class="pre">DetectorIndices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#EVA.core.data_structures.detector.DetectorIndices" title="Link to this definition"></a></dt>
+<dd><p>Enum class to map detector names to indices.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plotting.html" class="btn btn-neutral float-left" title="Plotting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_loading.html" class="btn btn-neutral float-right" title="Data loading" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, ISIS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
