@@ -1,3 +1,4 @@
+from EVA.core.app import get_app
 from EVA.gui.windows.periodic_table.periodic_table_widget import (
     PeriodicTableWidget,
     elements,
@@ -52,18 +53,24 @@ atm_nos_enable = [x for x in atm_nos if x not in set(atm_nos_disable)]
 elements_enable = [x for x in elements if x not in set(elements_disable)]
 
 data = list(zip(elements_enable, atm_nos_enable))
+class TestPeriodicTableWidget:
+    @pytest.fixture(autouse=True)
+    def setup(self, qapp, qtbot):
+        app = get_app()
 
+        if not app._databases_ready:
+            with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
+                pass
 
-@pytest.mark.parametrize("element, atm_no", data)
-def test_text_after_click(element, atm_no, qtbot):
-    widget = PeriodicTableWidget()
-    widget.show()
+    @pytest.mark.parametrize("element, atm_no", data)
+    def test_text_after_click(self, element, atm_no, qtbot):
+        widget = PeriodicTableWidget()
+        widget.show()
 
-    getattr(widget, element + "_button").click()
-    text = widget.element_info_text.toPlainText()
-    first_line = text.split("\n")[0].startswith(f"Z = {atm_no}")
-    assert first_line
+        getattr(widget, element + "_button").click()
+        text = widget.element_info_text.toPlainText()
+        first_line = text.split("\n")[0].startswith(f"Z = {atm_no}")
+        assert first_line
 
-
-def test_text_after_find(qtbot):
-    pass
+    def test_text_after_find(self, qtbot):
+        pass

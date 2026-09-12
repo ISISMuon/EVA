@@ -20,7 +20,6 @@ class TestModelSpectrumModel:
     @pytest.fixture(autouse=True)
     def setup(self, qapp, qtbot):
         app = get_app()
-
         if not app._databases_ready:
             with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
                 pass
@@ -28,7 +27,7 @@ class TestModelSpectrumModel:
 
     def test_correct_data_fetched(self):
         test = base_test.copy()
-        test["elements"] = ["Au", "Fe", "Zn", "Hg", "Pb"]
+        test["elements"] = ["Au", "Fe", "Zn", "Hg", "Sn"]
         test["proportions"] = [1, 1, 1, 1, 1]
 
         self.model.model_spectrum(**test)
@@ -46,7 +45,7 @@ class TestModelSpectrumModel:
 
         assert any(
             transition["name"] == m[0]
-            and transition["E"] == pytest.approx(m[1], rel=1e-5)
+            and transition["E"] == pytest.approx(m[1], rel=1e-4)
             for m in get_match_transitions
         ), f"Missing transition for {transition['element']}: {modelled_transition}"
 

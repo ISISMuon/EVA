@@ -428,6 +428,7 @@ class ElementalAnalysisModel(QObject):
                     res_all,
                     _,
                     _,
+                    _,
                 ) = get_match.search_muxrays(input_data)
 
                 out = sort_match.sort_match(res_all)
@@ -443,6 +444,7 @@ class ElementalAnalysisModel(QObject):
                     input_data = list(zip(default_peaks, default_sigma))
                     (
                         res_all,
+                        _,
                         _,
                         _,
                     ) = get_match.search_muxrays(input_data)
