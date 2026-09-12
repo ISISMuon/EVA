@@ -45,33 +45,38 @@ class BaseView(QWidget):
 
     @staticmethod
     def update_table(table, data, resize_columns=True, resize_rows=True):
-        input_n_rows = len(data)
+        sorting_enabled = table.isSortingEnabled()
+        sort_column = table.horizontalHeader().sortIndicatorSection()
+        sort_order = table.horizontalHeader().sortIndicatorOrder()
 
-        if input_n_rows != 0:
-            input_n_cols = len(data[0])
-        else:
-            input_n_cols = table.columnCount()
+        table.setSortingEnabled(False)
 
-        # resize table to fit new data if requested
-        if resize_rows:
-            table.setRowCount(input_n_rows)
+        try:
+            table.clearContents()
 
-        if resize_columns:
-            table.setColumnCount(input_n_cols)
+            input_n_rows = len(data)
+            input_n_cols = len(data[0]) if data else table.columnCount()
 
-        # some lovely, probably very slow, table printing
-        for row in range(input_n_rows):
-            row_data = data[row]
+            if resize_rows:
+                table.setRowCount(input_n_rows)
 
-            for col in range(input_n_cols):
-                input_item = list(row_data)[col]
+            if resize_columns:
+                table.setColumnCount(input_n_cols)
 
-                if isinstance(input_item, float):
-                    table_item = QTableWidgetItem(f"{input_item:.2f}")
-                else:
-                    table_item = QTableWidgetItem(str(input_item))
+            for row, row_data in enumerate(data):
+                for col, input_item in enumerate(row_data):
+                    if isinstance(input_item, float):
+                        text = f"{input_item:.2f}"
+                    else:
+                        text = str(input_item)
 
-                table.setItem(row, col, QTableWidgetItem(table_item))
+                    table.setItem(row, col, QTableWidgetItem(text))
+
+        finally:
+            table.setSortingEnabled(sorting_enabled)
+
+            if sorting_enabled:
+                table.sortItems(sort_column, sort_order)
 
     def closeEvent(self, event: QCloseEvent):
         """Handles closing windows"""
