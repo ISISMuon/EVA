@@ -1,6 +1,6 @@
 import json
 from EVA.util.path_handler import get_path
-from EVA.util.transition_utils import is_secondary, is_secondary2
+from EVA.util.transition_utils import is_secondary
 
 
 def load_mudirac_data():
@@ -123,13 +123,13 @@ def load_extended_mudirac_data():
                 secondary_energy = {
                     transition: energy
                     for transition, energy in isotope_data["Secondary"].items()
-                    if is_secondary2(transition)
+                    if is_secondary(transition)
                 }
 
                 tertiary_energy = {
                     transition: energy
                     for transition, energy in isotope_data["Secondary"].items()
-                    if not is_secondary2(transition)
+                    if not is_secondary(transition)
                 }
                 abundancies[element][isotope] = isotope_data["Abundancy"]
 

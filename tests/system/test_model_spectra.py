@@ -24,7 +24,7 @@ class TestModelSpectrumModel:
         if not app._databases_ready:
             with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
                 pass
-        self.model = ModelSpectraModel(app.muon_database)
+        self.model = ModelSpectraModel()
 
     def test_correct_data_fetched(self):
         test = base_test.copy()

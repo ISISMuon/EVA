@@ -27,6 +27,7 @@ class ElementalAnalysisView(BaseView, Ui_elemental_analysis):
         self.muonic_xray_table_all.stretch_horizontal_header()
         self.muonic_xray_table_prim.stretch_horizontal_header()
         self.muonic_xray_table_sec.stretch_horizontal_header()
+        self.muonic_xray_table_tertiary.stretch_horizontal_header()
         self.gamma_table.stretch_horizontal_header()
         self.plotted_gammas_table.stretch_horizontal_header()
         self.plotted_mu_xrays_table.stretch_horizontal_header()

@@ -1,7 +1,7 @@
 import json
 import logging
 import time
-import matplotlib
+import matplotlib.pyplot
 from PyQt6.QtCore import QThreadPool, pyqtSignal
 
 from PyQt6.QtGui import QIcon

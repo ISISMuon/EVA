@@ -123,37 +123,6 @@ def is_secondary(transition: str, notation: str = "spec") -> bool:
         transition = to_iupac(transition)  # this is easier to do on iupac notation
 
     e1, e2 = transition.split("-")  # split transition name
-    if e1 == "K1" and e2[0] != "L" and e2[1] == "2" or e2[1] == "3":  # K1-X2 and K1-X3 are secondary transitions where
-        # X is not L, e.g. K1-M2, K1-N3, etc.
-        return True
-    return (ord(e2[0]) - ord(e1[0]) != 1) and (int(e2[1]) - int(e1[1]) == 2)  # convert letter to integer and subtract
-    # if letters are not sequential and the difference of the numbers is 2, then transition is secondary
-
-
-def is_secondary2(transition: str, notation: str = "spec") -> bool:
-    """
-    Args:
-        transition: transition name
-        notation: which notation is used for transition name (default is "spec", valid options are "spec, "iupac")
-
-    Returns:
-        Boolean indicating whether transition is secondary or not.
-
-    Checks if transition is secondary or not by:
-
-    * converting to IUPAC notation if not already
-
-    * splitting transition name by "-", e.g. "K1-L2" -> ["K1", "L2"]
-
-    * converting letter to integer using ord()
-
-    * subtract the letters and check the difference - if difference is 2, letters are sequential and
-    therefore transition is secondary
-    """
-    if notation != "iupac":
-        transition = to_iupac(transition)  # this is easier to do on iupac notation
-
-    e1, e2 = transition.split("-")  # split transition name
     if e1 == "K1" and e2[0] != "L" and (e2[1] == "2" or e2[1] == "3"):  # K1-X2 and K1-X3 are secondary transitions where
         # X is not L, e.g. K1-M2, K1-N3, etc.
         return True

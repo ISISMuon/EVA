@@ -16,7 +16,7 @@ from EVA.gui.windows.elemental_analysis.elemental_analysis_model import (
 from EVA.gui.windows.elemental_analysis.elemental_analysis_view import (
     ElementalAnalysisView,
 )
-from EVA.util.transition_utils import is_primary, is_secondary, is_secondary2
+from EVA.util.transition_utils import is_primary, is_secondary
 
 logger = logging.getLogger(__name__)
 
@@ -116,6 +116,11 @@ class ElementalAnalysisPresenter(object):
             )
         )
 
+        self.view.muonic_xray_table_tertiary.cellClicked.connect(
+            lambda x, y: self.on_muonic_xray_table_cell_clicked(
+                x, y, self.view.muonic_xray_table_tertiary
+            )
+        )
         # connect line removal tables
         self.view.plotted_gammas_table.cellClicked.connect(self.remove_gamma_line)
         self.view.plotted_mu_xrays_table.cellClicked.connect(self.remove_mu_xray_line)
@@ -160,6 +165,7 @@ class ElementalAnalysisPresenter(object):
                 self.view.display_no_match_table(self.view.muonic_xray_table_all)
                 self.view.display_no_match_table(self.view.muonic_xray_table_prim)
                 self.view.display_no_match_table(self.view.muonic_xray_table_sec)
+                self.view.display_no_match_table(self.view.muonic_xray_table_tertiary)
                 return
 
             pretty_res = [[r["element"], r["energy"], r["transition"], ""] for r in res]
@@ -173,9 +179,13 @@ class ElementalAnalysisPresenter(object):
             sec_res = [
                 [r["element"], r["energy"], r["transition"], ""]
                 for r in res
-                if is_secondary2(r["transition"], notation="spec")
+                if is_secondary(r["transition"], notation="spec")
             ]
-
+            tertiary_res = [
+                [r["element"], r["energy"], r["transition"], ""]
+                for r in res
+                if not is_primary(r["transition"], notation="spec") and not is_secondary(r["transition"], notation="spec")
+            ]
             if len(prim_res) == 0:
                 self.view.display_no_match_table(self.view.muonic_xray_table_prim)
             else:
@@ -185,6 +195,11 @@ class ElementalAnalysisPresenter(object):
                 self.view.display_no_match_table(self.view.muonic_xray_table_sec)
             else:
                 self.view.muonic_xray_table_sec.update_contents(sec_res)
+
+            if len(tertiary_res) == 0:
+                self.view.display_no_match_table(self.view.muonic_xray_table_tertiary)
+            else:
+                self.view.muonic_xray_table_tertiary.update_contents(tertiary_res)
 
         except (ValueError, AttributeError) as e:
             self.view.display_error_message(
@@ -286,7 +301,7 @@ class ElementalAnalysisPresenter(object):
                 f"Possible Muonic X-ray Transitions at {x:.1f} +/- "
                 f"{self.model.mu_xray_search_width}"
             )
-            all_res, prim_res, sec_res = self.model.search_mu_xrays(x)
+            all_res, prim_res, sec_res, tertiary_res = self.model.search_mu_xrays(x)
 
             if not all_res:
                 self.view.display_no_match_table(self.view.muonic_xray_table_all)
@@ -332,6 +347,20 @@ class ElementalAnalysisPresenter(object):
                 ]
                 self.view.update_table(self.view.muonic_xray_table_sec, sec_res_subset)
 
+            if not tertiary_res:
+                self.view.display_no_match_table(self.view.muonic_xray_table_tertiary)
+            else:
+                tertiary_res_subset = [
+                    [
+                        row["element"],
+                        float(row["energy"]),
+                        row["transition"],
+                        row["diff"],
+                    ]
+                    for row in tertiary_res
+                ]
+                self.view.update_table(self.view.muonic_xray_table_tertiary, tertiary_res_subset)
+
     def on_gamma_table_cell_clicked(self, row: int, col: int):
         """
         Handles plotting gamma transitions when user clicks on a cell in the gamma table.
@@ -376,10 +405,16 @@ class ElementalAnalysisPresenter(object):
 
         element = table.item(row, 0).text()
         transition = table.item(row, 2).text()
-
         # plot all transitions for the clicked element
         if col == 0:
-            self.model.plot_vlines_all_mu_xrays(element)
+            if table == self.view.muonic_xray_table_all:
+                    self.model.plot_vlines_all_mu_xrays(element, key="all")
+            if table == self.view.muonic_xray_table_prim:
+                    self.model.plot_vlines_all_mu_xrays(element, key="prim")
+            if table == self.view.muonic_xray_table_sec:
+                    self.model.plot_vlines_all_mu_xrays(element, key="sec")
+            if table == self.view.muonic_xray_table_tertiary:
+                    self.model.plot_vlines_all_mu_xrays(element, key="tertiary")
 
         # plot only one line for the clicked transition or energy
         if col == 1 or col == 2:
