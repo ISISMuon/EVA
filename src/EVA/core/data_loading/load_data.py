@@ -122,12 +122,14 @@ def load_run_brni(
     detectors = []
 
     none_loaded_flag = 1
-
+    encoding = get_config()["general"]["encoding"]
     for detector, channel in channels.items():
         filename = f"{working_directory}/ral0{run_num}.rooth{channel}.dat"
         try:
+            # Attempt to load data from file using selected encoding, raises UnicodeDecodeError if encoding is incorrect
+            # Which main presenter handles.
+            xdata, ydata = np.loadtxt(filename, delimiter=" ", unpack=True, encoding=encoding)
             # Store data read from file in a Spectrum object
-            xdata, ydata = np.loadtxt(filename, delimiter=" ", unpack=True, encoding=get_config()["general"]["encoding"])
             spectrum = Spectrum(detector=detector, run_number=run_num, x=xdata, y=ydata)
 
             raw[detector] = spectrum  # Add Spectrum to list of spectra

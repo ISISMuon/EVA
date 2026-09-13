@@ -7,7 +7,9 @@ logger = logging.getLogger(__name__)
 #NOTE: Define the available encoding options for the application
 # Point of access to add new options for different file formats in the future.
 # Defaults to utf-8 (ie first element in the list).
-ENCODING_OPTIONS = ["utf-8", "utf-16", "latin-1", "ascii"]
+# The current error handling implementation in main presenter works for these 3 encoding but
+# may not be sufficient if new formats are added, Will require testing.
+ENCODING_OPTIONS = ["utf-8", "utf-16", "ascii"]
 
 class SettingsPresenter:
     def __init__(self, view, model):

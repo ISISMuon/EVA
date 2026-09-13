@@ -154,7 +154,7 @@ class MainPresenter:
             return
         try:
             flags, run = self.model.load_run(run_num)
-        except ValueError:
+        except UnicodeError:
             logger.warning(f"Current EVA encoding {get_config()["general"]["encoding"]} does not match run {run_num} data file(s)")
             self.view.show_error_box("File encoding does not match! Try different option from general settings.")
             return
