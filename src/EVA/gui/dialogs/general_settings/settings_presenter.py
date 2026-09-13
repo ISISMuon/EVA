@@ -4,12 +4,17 @@ from EVA.core.app import get_config
 
 logger = logging.getLogger(__name__)
 
+#NOTE: Define the available encoding options for the application
+# Point of access to add new options for different file formats in the future.
+# Defaults to utf-8 (ie first element in the list).
+ENCODING_OPTIONS = ["utf-8", "utf-16", "latin-1", "ascii"]
 
 class SettingsPresenter:
     def __init__(self, view, model):
         self.view = view
         self.model = model
-
+        for encoding in ENCODING_OPTIONS:
+            self.view.encoding_comboBox.addItem(encoding)
         self.load_current_settings()
 
         self.view.plot_fill_colour_button.clicked.connect(self.view.open_colour_dialog)

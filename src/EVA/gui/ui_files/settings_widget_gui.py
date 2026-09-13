@@ -51,8 +51,6 @@ class Ui_settings(object):
         self.gridLayout.addWidget(self.srim_exe_dir_button, 3, 2, 1, 1)
         self.encoding_comboBox = QtWidgets.QComboBox(parent=self.groupBox)
         self.encoding_comboBox.setObjectName("encoding_comboBox")
-        self.encoding_comboBox.addItem("")
-        self.encoding_comboBox.addItem("")
         self.gridLayout.addWidget(self.encoding_comboBox, 7, 0, 1, 3)
         self.verticalLayout.addWidget(self.groupBox)
         self.groupBox_2 = QtWidgets.QGroupBox(parent=settings)
@@ -71,16 +69,13 @@ class Ui_settings(object):
         self.verticalLayout.addWidget(self.groupBox_2)
         self.buttonBox = QtWidgets.QDialogButtonBox(parent=settings)
         self.buttonBox.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.buttonBox.setStandardButtons(
-            QtWidgets.QDialogButtonBox.StandardButton.Apply
-            | QtWidgets.QDialogButtonBox.StandardButton.Cancel
-        )
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Apply|QtWidgets.QDialogButtonBox.StandardButton.Cancel)
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(settings)
-        self.buttonBox.accepted.connect(settings.accept)  # type: ignore
-        self.buttonBox.rejected.connect(settings.reject)  # type: ignore
+        self.buttonBox.accepted.connect(settings.accept) # type: ignore
+        self.buttonBox.rejected.connect(settings.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(settings)
 
     def retranslateUi(self, settings):
@@ -97,8 +92,6 @@ class Ui_settings(object):
         self.srim_exe_dir_label.setText(_translate("settings", "./"))
         self.label_2.setText(_translate("settings", "SRIM directory:"))
         self.srim_exe_dir_button.setText(_translate("settings", "Browse"))
-        self.encoding_comboBox.setItemText(0, _translate("settings", "utf-8"))
-        self.encoding_comboBox.setItemText(1, _translate("settings", "utf-16"))
         self.groupBox_2.setTitle(_translate("settings", "Plotting"))
         self.label_7.setText(_translate("settings", "Default plot fill colour"))
         self.plot_fill_colour_button.setText(_translate("settings", "Edit"))
@@ -106,7 +99,6 @@ class Ui_settings(object):
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     settings = QtWidgets.QDialog()
     ui = Ui_settings()
