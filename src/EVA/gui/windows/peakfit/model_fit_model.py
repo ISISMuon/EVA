@@ -8,7 +8,7 @@ from PyQt6.QtCore import QObject
 from matplotlib import pyplot as plt
 
 from EVA.core.fitting import fit_data
-from EVA.core.plot.plotting import replot_run, replot_run_residual
+from EVA.core.plot.plotting import replot_run, replot_spectrum_residual
 from EVA.util.trim_data import Trimdata
 
 from EVA.core.app import get_config
@@ -48,10 +48,16 @@ class ModelFitModel(QObject):
 		self.x_range = None
 		self.y_range = None
 		self.proportions_constraint = None
-
-		plot_settings = {"colour": get_config()["plot"]["fill_colour"]}
+		try:
+			title = f"Run Number: {self.run.run_num} - {self.detector} {self.run.plot_mode}\n{self.run.comment_data[0]}"
+		except AttributeError:
+			title = f"Run Number: {self.run.run_num} - {self.detector} {self.run.plot_mode}"
+		self.plot_settings = {
+			"colour": get_config()["plot"]["fill_colour"],
+			"title": title
+		}
 		self.fig, self.axs = plotting.plot_spectrum_residual(
-			self.spectrum, self.run.normalisation, **plot_settings
+			self.run, self.detector, self.run.normalisation, **self.plot_settings
 		)
 		self.main_axs = self.axs[0]
 		self.residual_axs = self.axs[1]
@@ -130,7 +136,7 @@ class ModelFitModel(QObject):
 		)
 
 	def replot_spectrum_residual(self):
-		replot_run_residual(
+		replot_spectrum_residual(
 			self.run,
 			self.fig,
 			self.axs,
@@ -238,36 +244,6 @@ class ModelFitModel(QObject):
 
 		self.plot_residual()
 
-	def save_params(self, path: str, x_range: tuple, auto_e_range: bool):
-		obj = {
-				"fit_background": self.fitted_bg_params,
-				"fit_peaks": self.fitted_model_params,
-				"x_range": x_range,
-				"auto_e_range": auto_e_range,
-				"scale": self.proportions_constraint,
-		}
-		with open(path, "w") as file:
-				json.dump(obj, file, indent=4)
-				logger.debug("Saved modelfit parameters to %s", path)
-
-		file.close()
-
-	def load_params(self, path: str) -> bool:
-		with open(path, "r") as file:
-			params = json.load(file)
-			logger.debug("Loaded initial parameters from %s", path)
-
-		loaded_models, loaded_bg = self.convert_fitted_to_initial(params)
-		# Remap loaded peak names to fresh IDs to avoid collisions
-		for peak_data in loaded_models.values():
-			new_id = self.next_id()
-			self.initial_peak_params[new_id] = peak_data
-		self.initial_bg_params.update(loaded_bg)
-		# update energy range
-		self.x_range = params["x_range"]
-		auto_e_range = params["auto_e_range"]
-		return auto_e_range
-
 	def save_fit_report(self, path):
 		with open(path, "w") as file:
 			file.write(self.fit_result.fit_report())
@@ -278,7 +254,7 @@ class ModelFitModel(QObject):
 	def save_fitted_model(self, path: str):
 		obj = {
 			"background": self.fitted_bg_params,
-			"peaks": self.fitted_peak_params,
+			"models": self.fitted_model_params,
 			"x_range": self.x_range,
 		}
 

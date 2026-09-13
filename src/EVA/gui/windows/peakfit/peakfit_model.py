@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 from EVA.core.fitting import fit_data
 from EVA.core.physics.functions import gaussian
-from EVA.core.plot.plotting import replot_run, replot_run_residual
+from EVA.core.plot.plotting import replot_run, replot_spectrum_residual
 from EVA.util.trim_data import Trimdata
 
 from EVA.core.app import get_app, get_config
@@ -63,9 +63,15 @@ class PeakFitModel(QObject):
 			self.id_counter = 0
 
 			self.add_peak_mode = False
-
-			self.plot_settings = {"colour": get_config()["plot"]["fill_colour"]}
-			self.fig, self.axs = plotting.plot_spectrum_residual(self.run.data[self.detector], self.run.normalisation, **self.plot_settings)
+			try:
+				title = f"Run Number: {self.run.run_num} - {self.detector} {self.run.plot_mode}\n{self.run.comment_data[0]}"
+			except AttributeError:
+				title = f"Run Number: {self.run.run_num} - {self.detector} {self.run.plot_mode}"
+			self.plot_settings = {
+				"colour": get_config()["plot"]["fill_colour"],
+				"title": title
+			}
+			self.fig, self.axs = plotting.plot_spectrum_residual(self.run, self.detector, self.run.normalisation, **self.plot_settings)
 			self.main_axs = self.axs[0]
 			self.residual_axs = self.axs[1]
 
@@ -328,7 +334,7 @@ class PeakFitModel(QObject):
 			zf.writestr(f"EVA_{self.run.run_num}.res", self.array_to_string(residual_data))
 
 	def replot_spectrum_residual(self):
-			replot_run_residual(self.run, self.fig, self.axs, self.fit_result, colour=get_config()["plot"]["fill_colour"])
+			replot_spectrum_residual(self.run, self.fig, self.axs, self.fit_result, colour=get_config()["plot"]["fill_colour"])
 
 	def save_fit_report(self, path: str):
 			with open(path, "w") as file:

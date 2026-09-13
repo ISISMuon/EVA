@@ -39,8 +39,8 @@ class PeakFitPresenter(object):
         self.view.fit_initial_params_button.clicked.connect(self.start_peakfit)
         self.view.plot_initial_params_button.clicked.connect(self.plot_initial)
         # display figure from model in the PlotWidget
-        self.view.plot.update_plot(self.model.fig, self.model.axs, update_home_button=False)
-        self.view.model_plot.update_plot(self.mf_model.fig, self.mf_model.axs, update_home_button=False)
+        self.view.plot.update_plot(self.model.fig, self.model.axs)
+        self.view.model_plot.update_plot(self.mf_model.fig, self.mf_model.axs)
         self.view.plot.canvas.mpl_connect("button_press_event", self.on_plot_click)
 
         # setting up connections for tables
@@ -219,7 +219,7 @@ class PeakFitPresenter(object):
             return
 
         self.model.plot_fit()
-        self.view.plot.update_plot(update_home_button=False)
+        self.view.plot.update_plot()
         self.view.fitted_peak_params_table.update_contents(
             self.format_params(self.model.fitted_peak_params)
         )
@@ -533,7 +533,7 @@ class PeakFitPresenter(object):
                     message="No fit model found. Please perform a peak fit first.")
                 return
             def_dir = get_config()["general"]["working_directory"]
-            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Gaussian Fit Model file (*.gfm)", default_extension=".gfm")
+            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Model Fit Model file (*.mfm)", default_extension=".mfm")
             if path:
                 self.mf_model.save_fitted_model(path)
 
