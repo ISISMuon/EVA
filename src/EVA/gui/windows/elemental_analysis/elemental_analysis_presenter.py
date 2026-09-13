@@ -114,11 +114,7 @@ class ElementalAnalysisPresenter(object):
         """
         show_components = self.view.show_components_checkbox.isChecked()
         self.model.replot_all_run_data(show_components=show_components)
-        if show_components:
-            update_home_button = False
-        else:
-            update_home_button = True
-        self.view.plot.update_plot(update_home_button=update_home_button)
+        self.view.plot.update_plot()
 
     def on_fill_colour_change(self, colour):
         self.model.update_fill_colour(colour)
@@ -562,8 +558,8 @@ class ElementalAnalysisPresenter(object):
         self.setup_detector_checkboxes()
         self.model.fig, self.model.axs = self.model.plot_run()
         self.model.update_legend()
-        self.view.plot.canvas.draw_idle()
+        self.view.plot.update_plot(self.model.fig, self.model.axs)
 
     def plot_components(self, checkstate: Qt.CheckState):
             self.model.replot_all_run_data(show_components=checkstate == Qt.CheckState.Checked)
-            self.view.plot.update_plot()
+            self.view.plot.update_plot(self.model.fig, self.model.axs)

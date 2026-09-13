@@ -54,7 +54,7 @@ class PlotWidget(QWidget):
         if self.plot_id == plot_id:
             self.update_plot()
 
-    def update_plot(self, fig=None, axs=None, update_home_button=True):
+    def update_plot(self, fig=None, axs=None):
         """
         For a simple axes update, it is enough to update the axs parameter of the canvas and redraw.
 
@@ -89,10 +89,9 @@ class PlotWidget(QWidget):
             self.layout.addWidget(self.canvas)
 
         self.canvas.draw_idle()
-        if self.navbar is not None and update_home_button:
-            self._reset_home_view(self.canvas.axs)
+        self.update_home_view(self.canvas.axs)
 
-    def _reset_home_view(self, axs):
+    def update_home_view(self, axs):
         """
         Set the toolbar's "home" view to the full data range (x: 0 to
         max, y: 0 to 1.2 * data max) without changing what's currently displayed.
@@ -104,9 +103,17 @@ class PlotWidget(QWidget):
 
         for ax in axs:
             ax.relim()  # refresh dataLim based on current artist data
-            ax.set_xlim(ax.dataLim.x0, ax.dataLim.x1)
-            lower_ylim = min(0, ax.dataLim.y0)
-            ax.set_ylim(1.2* lower_ylim, 1.2 * ax.dataLim.y1)
+            x0, x1 = ax.dataLim.x0, ax.dataLim.x1
+            y0, y1 = ax.dataLim.y0, ax.dataLim.y1
+
+            # skip axes with no usable data (empty/NaN artists leave dataLim non-finite)
+            # Simplest work around for blank residual axes in a fresh peakfit window I could think of.
+            if not (np.isfinite(x0) and np.isfinite(x1) and np.isfinite(y0) and np.isfinite(y1)):
+                continue
+
+            ax.set_xlim(x0, x1)
+            lower_ylim = min(0, y0)
+            ax.set_ylim(1.2 * lower_ylim, 1.2 * y1)
 
         # wipe the nav stack and capture this full view as "home"
         self.navbar.update()

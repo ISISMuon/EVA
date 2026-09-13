@@ -287,10 +287,10 @@ def load_comment_nxs(input_file: h5py.File) -> tuple[list[str], int]:
     """
     try:
         encoding = get_config()["general"]["encoding"]
-        title = input_file['raw_data_1/title'][()].decode(encoding)
-        title += ": " + input_file['raw_data_1/notes'][()].decode(encoding)
-        start_time = input_file['raw_data_1/start_time'][()].decode(encoding)
-        end_time = input_file['raw_data_1/end_time'][()].decode(encoding)
+        title = input_file['title'][()].decode(encoding)
+        title += ": " + input_file['notes'][()].decode(encoding)
+        start_time = input_file['start_time'][()].decode(encoding)
+        end_time = input_file['end_time'][()].decode(encoding)
         num_prompt_events = 0
         num_delayed_events = 0
         detector_channels = get_detector_indices(input_file)
@@ -382,10 +382,10 @@ def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
                 data_file[check_loaded_cond_1][()].any()
                 or data_file[check_loaded_cond_2][()].any()
             ):
-                detector_name = data_file[f'raw_data_1/instrument/detector_{i}/name'][()].decode(encoding)
+                detector_name = data_file[f'instrument/detector_{i}/name'][()].decode(encoding)
                 
-                prompt_energy = data_file[f"raw_data_1/detector_{i}_energyA/energy"]
-                prompt_count = data_file[f"raw_data_1/detector_{i}_energyA/counts"]
+                prompt_energy = data_file[f"detector_{i}_energyA/energy"]
+                prompt_count = data_file[f"detector_{i}_energyA/counts"]
 
                 delayed_energy = data_file[f"detector_{i}_energyB/energy"]
                 delayed_count = data_file[f"detector_{i}_energyB/counts"]

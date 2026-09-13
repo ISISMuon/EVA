@@ -84,13 +84,13 @@ def plot_spectrum(
 
 
 def plot_spectrum_residual(
-    spectrum: Spectrum, normalisation: str, **settings: dict
+    run: Run, detector: str, normalisation: str, **settings: dict
 ) -> tuple[plt.Figure, plt.Axes]:
     """
     Plots a single spectrum (for a single detector) and creates an empty plot to be populated with fit residuals.
 
     Args:
-        spectrum: Spectrum object to plot
+        run: Run object to plot
         normalisation: Normalisation type - valid options are "counts", "none", "spills"
         **settings:
             * **title** (str): plot title
@@ -100,7 +100,7 @@ def plot_spectrum_residual(
         matplotlib Figure and Axes with plotted spectrum and empty Axis for residuals
     """
     title = settings.get(
-        "title", f"Run Number: {spectrum.run_number} {spectrum.detector}"
+        "title", f"Run Number: {run.run_num} - {run.plot_mode}"
     )
     colour = settings.get("colour", "yellow")
 
@@ -111,13 +111,13 @@ def plot_spectrum_residual(
     # sets the correct labels
     fig.suptitle(title)
     fig.supylabel(get_ylabel(normalisation))
-
+    fig.supxlabel("Energy (keV)")
     main_ax.set_ylabel("Intensity")
-    residual_ax.set_ylabel(f"$\\Delta$ Intensity")
-    residual_ax.set_xlabel("Energy (keV)")
+    residual_ax.set_ylabel("$\\Delta$ Intensity")
     residual_ax.grid(True)
 
     # Plot the spectrum data in main_ax
+    spectrum = run.data[detector]
     main_ax.fill_between(spectrum.x, spectrum.y, step="mid", color=colour)
     main_ax.step(
         spectrum.x,
@@ -326,7 +326,7 @@ def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_compone
             )
             axs.fill_between(run._raw[det].x, run._raw[det].y, step="mid", alpha=0.9,label=f"{det}",)
 
-def replot_run_residual(
+def replot_spectrum_residual(
     run: Run,
     fig: plt.Figure,
     axs: np.ndarray[plt.Axes] | plt.Axes,
