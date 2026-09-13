@@ -122,12 +122,14 @@ def load_run_brni(
     detectors = []
 
     none_loaded_flag = 1
-
+    encoding = get_config()["general"]["encoding"]
     for detector, channel in channels.items():
         filename = f"{working_directory}/ral0{run_num}.rooth{channel}.dat"
         try:
+            # Attempt to load data from file using selected encoding, raises UnicodeDecodeError if encoding is incorrect
+            # Which main presenter handles.
+            xdata, ydata = np.loadtxt(filename, delimiter=" ", unpack=True, encoding=encoding)
             # Store data read from file in a Spectrum object
-            xdata, ydata = np.loadtxt(filename, delimiter=" ", unpack=True)
             spectrum = Spectrum(detector=detector, run_number=run_num, x=xdata, y=ydata)
 
             raw[detector] = spectrum  # Add Spectrum to list of spectra
@@ -181,10 +183,11 @@ def load_comment_nxs(input_file: h5py.File) -> tuple[list[str], int]:
     """
     Loads and formats comment data from metadata in Nexus file."""
     try:
-        title = input_file["raw_data_1/title"][()].decode("utf-8")
-        title += ": " + input_file["raw_data_1/notes"][()].decode("utf-8")
-        start_time = input_file["raw_data_1/start_time"][()].decode("utf-8")
-        end_time = input_file["raw_data_1/end_time"][()].decode("utf-8")
+        encoding = get_config()["general"]["encoding"]
+        title = input_file['raw_data_1/title'][()].decode(encoding)
+        title += ": " + input_file['raw_data_1/notes'][()].decode(encoding)
+        start_time = input_file['raw_data_1/start_time'][()].decode(encoding)
+        end_time = input_file['raw_data_1/end_time'][()].decode(encoding)
         num_prompt_events = 0
         num_delayed_events = 0
         for i in range(1, 5):
@@ -243,7 +246,7 @@ def generate_spectrum_nxs(run_number, data_file):
     raw = {}
     detectors = []
     none_loaded_flag = 1
-    config = get_config()
+    encoding = get_config()["general"]["encoding"]
 
     for i in range(1, 5):
         check_loaded_cond_1 = f"raw_data_1/detector_{i}_energyA/counts"
@@ -253,10 +256,8 @@ def generate_spectrum_nxs(run_number, data_file):
                 data_file[check_loaded_cond_1][()].any()
                 or data_file[check_loaded_cond_2][()].any()
             ):
-                detector_name = data_file[f"raw_data_1/instrument/detector_{i}/name"][
-                    ()
-                ].decode("utf-8")
-
+                detector_name = data_file[f'raw_data_1/instrument/detector_{i}/name'][()].decode(encoding)
+                
                 prompt_energy = data_file[f"raw_data_1/detector_{i}_energyA/energy"]
                 prompt_count = data_file[f"raw_data_1/detector_{i}_energyA/counts"]
 

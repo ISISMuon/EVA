@@ -1,6 +1,7 @@
 {
   "general": {
     "working_directory": "./",
+    "encoding": "utf-8",
     "fit_table_save_file": 0,
     "fit_table_plot_file": 0,
     "default_run_num": "0000",

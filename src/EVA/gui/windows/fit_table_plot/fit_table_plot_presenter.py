@@ -43,7 +43,6 @@ class FitTablePlotPresenter(object):
         energy_range = self.view.get_energy_range()
         plot_parameter = self.view.get_plot_parameter()
         if momentum_range is None or energy_range is None:
-            logger.warning("")
             return
         # If valid data was loaded, filter using user inputs and plot
         if hasattr(self.model, "fit_table_data") and load_flag == 1:

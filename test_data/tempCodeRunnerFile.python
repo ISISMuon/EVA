@@ -1,0 +1,15 @@
+import numpy as np
+
+base = "ral01066.rooth"
+nums = np.array([2, 3, 4, 5]) * 1000 + 99
+
+data = """1 2
+3 4
+5 1
+6 2
+"""
+
+for n in nums:
+    filename = f"{base}{n}.dat"
+    with open(filename, "w", encoding="utf-16") as f:
+        f.write(data)

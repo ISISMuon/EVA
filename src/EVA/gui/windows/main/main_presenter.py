@@ -152,10 +152,13 @@ class MainPresenter:
         except (ValueError, AttributeError):
             self.view.show_error_box("Invalid run number!")
             return
-
-        flags, run = self.model.load_run(run_num)
-
-        if flags["no_files_found"]:  #  no data was loaded - return now
+        try:
+            flags, run = self.model.load_run(run_num)
+        except UnicodeError:
+            logger.warning(f"Current EVA encoding {get_config()["general"]["encoding"]} does not match run {run_num} data file(s)")
+            self.view.show_error_box("File encoding does not match! Try different option from general settings.")
+            return
+        if flags["no_files_found"]: #  no data was loaded - return now
             # Update GUI
             self.view.set_run_num_label(
                 f"No files found for run {run_num} in {get_path(get_config()['general']['working_directory'])}"
