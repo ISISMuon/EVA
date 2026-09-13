@@ -18,11 +18,14 @@ gamma_plot_lines_tests = [[189.9, 124], [551.8, 626], [44.4, 198]]
 
 
 class TestPlotWindow:
-    # will be executed once before tests are run
+    # this will run once before all other tests in the class
     @pytest.fixture(autouse=True)
-    def setup(self, qtbot):
-        # loading database and sample data
+    def setup(self, qapp, qtbot):
         app = get_app()
+        if not app._databases_ready:
+            with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
+                pass
+
         app.use_mudirac_muon_db()
 
         get_config()["plot"]["show_plot"]["GE1"] = True
@@ -79,7 +82,7 @@ class TestPlotWindow:
 
     # test if the expected data is displayed in muon table when clicking a specific peak in the figure
     def test_clickpeaks_muon(self, qtbot):
-        tests = [("Rb", 193.4), ("Tl", 932.0)]
+        tests = [("Rb", 193.4), ("Au", 932.0)]
         for test in tests:
             # simulate click event
             event = util.trigger_figure_click_event(

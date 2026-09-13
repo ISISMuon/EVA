@@ -62,6 +62,14 @@ target_result_list_gamma = [
 
 
 class TestDatabasesGetMatch:
+    # this will run once before all other tests in the class
+    @pytest.fixture(autouse=True)
+    def setup(self, qapp, qtbot):
+        app = get_app()
+
+        if not app._databases_ready:
+            with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
+                pass
     # Parametrised test to check if database searches from legacy database matches expected results.
     @pytest.mark.parametrize(
         "default_peaks, default_sigma, target_result",
@@ -83,7 +91,7 @@ class TestDatabasesGetMatch:
         # Generate input string to test matches
         input_data = list(zip(default_peaks, [default_sigma] * len(default_peaks)))
 
-        res, res1, res2 = get_match.search_muxrays(input_data)
+        res, res1, res2, res3 = get_match.search_muxrays(input_data)
         matches = {}
 
         for match in res:
@@ -124,7 +132,7 @@ class TestDatabasesGetMatch:
         # Generate input string to test matches
         input_data = list(zip(default_peaks, [default_sigma] * len(default_peaks)))
 
-        res, _, _ = get_match.search_muxrays(input_data)
+        res, _, _, _ = get_match.search_muxrays(input_data)
 
         matches = {}
 

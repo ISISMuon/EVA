@@ -149,7 +149,6 @@ def search_muxrays_single_element(input_element: str) -> list[dict]:
     """
     app = get_app()
     matches = []
-
     raw_data = app.muon_database["All energies"]
     for element in raw_data:
         if element == input_element:
@@ -199,7 +198,7 @@ def search_muxrays_single_element_all_isotopes(input_element: str) -> list[dict]
 
 def search_muxrays(
     input_peaks: list[list[float]],
-) -> tuple[list[dict], list[dict], list[dict]]:
+) -> tuple[list[dict], list[dict], list[dict], list[dict]]:
     """
     Searches for possible muonic xray transitions in the database at multiple energies at once.
 
@@ -211,7 +210,7 @@ def search_muxrays(
 
     Returns:
         Tuple of results, where index 0 contains all matches, index 1 primary matches only, and index 2 secondary
-        matches only. The elements in the tuples are lists of dictionaries.
+        matches only and index 3 tertiary matches only. The elements in the tuples are lists of dictionaries.
 
         Dictionary keys
 
@@ -233,6 +232,7 @@ def search_muxrays(
 
     primary_matches = []
     secondary_matches = []
+    tertiary_matches = []
     all_matches = []
     prims = []
 
@@ -256,19 +256,20 @@ def search_muxrays(
                     all_matches.append(data)
 
             prims = [peak[0] for peak in peak_data["Primary energies"][element].items()]
-
+            secs = [peak[0] for peak in peak_data["Secondary energies"][element].items()]
     all_matches = sorted(all_matches, key=lambda o: o["diff"])
 
     for match in all_matches:
         if match["transition"] in prims:
             primary_matches.append(match)
-        else:
+        elif match["transition"] in secs:
             secondary_matches.append(match)
-
+        else:
+            tertiary_matches.append(match)
     end_time = time.time_ns()
     logger.debug(f"Found matches in {(end_time - start_time) / 1e9} s.")
 
-    return all_matches, primary_matches, secondary_matches
+    return all_matches, primary_matches, secondary_matches, tertiary_matches
 
 
 def search_muxrays_all_isotopes(
@@ -284,8 +285,8 @@ def search_muxrays_all_isotopes(
         input_peaks: List of [search energy, search width] search parameters.
 
     Returns:
-        Tuple of results, where index 0 contains all matches, index 1 primary matches only, and index 2 secondary
-        matches only. The elements in the tuples are lists of dictionaries.
+        Tuple of results, where index 0 contains all matches, index 1 primary matches only, index 2 secondary
+        matches only and index 3 tertiary matches only. The elements in the tuples are lists of dictionaries.
 
         Dictionary keys
 
@@ -307,9 +308,8 @@ def search_muxrays_all_isotopes(
 
     primary_matches = []
     secondary_matches = []
+    tertiary_matches = []
     all_matches = []
-    prims = []
-
     raw_data = peak_data["All isotopes"]["All energies"]
     for peak, sigma in input_peaks:
         for element in raw_data:
@@ -335,19 +335,26 @@ def search_muxrays_all_isotopes(
                     element
                 ].items()
             ]
-
+            secs = [
+                peak[0]
+                for peak in peak_data["All isotopes"]["Secondary energies"][
+                    element
+                ].items()
+            ]
     all_matches = sorted(all_matches, key=lambda o: o["diff"])
 
     for match in all_matches:
         if match["transition"] in prims:
             primary_matches.append(match)
-        else:
+        elif match["transition"] in secs:
             secondary_matches.append(match)
+        else:
+            tertiary_matches.append(match)
 
     end_time = time.time_ns()
     logger.debug(f"Found matches in {(end_time - start_time) / 1e9} s.")
 
-    return all_matches, primary_matches, secondary_matches
+    return all_matches, primary_matches, secondary_matches, tertiary_matches
 
 
 def search_gammas(input_peaks: list[list[float]]) -> list[dict]:

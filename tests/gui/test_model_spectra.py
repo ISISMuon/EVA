@@ -2,6 +2,7 @@ import pytest
 from pytestqt.plugin import qtbot
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import Qt
+from EVA.core.app import get_app
 
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import (
     ModelSpectraWindow,
@@ -21,7 +22,12 @@ base_test = {
 class TestModelSpectrumWindow:
     # this will run once before all other tests in the class
     @pytest.fixture(autouse=True)
-    def setup(self, qtbot):
+    def setup(self, qapp, qtbot):
+        app = get_app()
+
+        if not app._databases_ready:
+            with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
+                pass
         parent = QWidget()
 
         self.window = ModelSpectraWindow(parent)

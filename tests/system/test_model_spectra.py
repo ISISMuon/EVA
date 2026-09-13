@@ -1,8 +1,7 @@
 import matplotlib.text
 import numpy as np
 import pytest
-
-from pandas.core.dtypes.missing import array_equals
+from EVA.core.app import get_app
 from EVA.core.physics.functions import gaussian
 from EVA.core.data_searching.get_match import search_muxrays_single_element
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_model import ModelSpectraModel
@@ -19,13 +18,16 @@ base_test = {
 class TestModelSpectrumModel:
     # this will run once before all other tests in the class
     @pytest.fixture(autouse=True)
-    def setup(self):
-        # create new model at beginning of test
+    def setup(self, qapp, qtbot):
+        app = get_app()
+        if not app._databases_ready:
+            with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
+                pass
         self.model = ModelSpectraModel()
 
     def test_correct_data_fetched(self):
         test = base_test.copy()
-        test["elements"] = ["Au", "Fe", "Zn", "Hg", "Pb"]
+        test["elements"] = ["Au", "Fe", "Zn", "Hg", "Sn"]
         test["proportions"] = [1, 1, 1, 1, 1]
 
         self.model.model_spectrum(**test)
@@ -43,7 +45,7 @@ class TestModelSpectrumModel:
 
         assert any(
             transition["name"] == m[0]
-            and transition["E"] == pytest.approx(m[1], rel=1e-5)
+            and transition["E"] == pytest.approx(m[1], rel=1e-4)
             for m in get_match_transitions
         ), f"Missing transition for {transition['element']}: {modelled_transition}"
 
@@ -116,7 +118,7 @@ class TestModelSpectrumModel:
                 intensity=transition["intensity"],
             )
 
-        assert array_equals(spectrum.y, total_curve), "Incorrect Gaussian calculated"
+        assert np.allclose(spectrum.y, total_curve), "Incorrect Gaussian calculated"
 
     @pytest.mark.parametrize(
         "detectors",

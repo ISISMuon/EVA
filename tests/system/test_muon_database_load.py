@@ -1,10 +1,20 @@
+import pytest
+
 from EVA.core.app import get_app
 
 
 class TestMuonDatabaseLoad:
+    # this will run once before all other tests in the class
+    @pytest.fixture(autouse=True)
+    def setup(self, qapp, qtbot):
+        app = get_app()
+        if not app._databases_ready:
+            with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
+                pass
+
     def test_mudirac_json_loaded(self, qapp):
         app = get_app()
-        assert len(app.muon_database) == 9, (
+        assert len(app.muon_database) == 10, (
             "Mudirac muonic xray JSON file was not loaded correctly"
         )
 
