@@ -1,6 +1,5 @@
 from scipy.signal import find_peaks
 from scipy.signal import find_peaks_cwt
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -55,7 +54,7 @@ def findpeak_with_bck_removed(
     clipped = np.where(cond_high_clip, np.nan, spectrum)
 
     ## Interpolate between dropped points
-    interpd = pd.Series(clipped).interpolate().tolist()
+    interpd = np.interp(np.arange(len(clipped)), np.where(~np.isnan(clipped))[0], clipped[~np.isnan(clipped)])
 
     ## Get baseline from the interpd signal
     rough_base = meanfilter(interpd, FSIZE // 2)
