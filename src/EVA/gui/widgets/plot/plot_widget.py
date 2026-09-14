@@ -95,6 +95,8 @@ class PlotWidget(QWidget):
         """
         Set the toolbar's "home" view to the full data range (x: 0 to
         max, y: 0 to 1.2 * data max) without changing what's currently displayed.
+        For axes that share x-axes (ie linked as in peakfit spectrum+residual plots),
+        the x-limits will be set to the min and max of all siblings.
         """
         axs = axs if isinstance(axs, (list, tuple, np.ndarray)) else [axs]
 
@@ -103,17 +105,31 @@ class PlotWidget(QWidget):
 
         for ax in axs:
             ax.relim()  # refresh dataLim based on current artist data
-            x0, x1 = ax.dataLim.x0, ax.dataLim.x1
-            y0, y1 = ax.dataLim.y0, ax.dataLim.y1
 
-            # skip axes with no usable data (empty/NaN artists leave dataLim non-finite)
-            # Simplest work around for blank residual axes in a fresh peakfit window I could think of.
-            if not (np.isfinite(x0) and np.isfinite(x1) and np.isfinite(y0) and np.isfinite(y1)):
+        visited = set()
+        for ax in axs:
+            if ax in visited:
                 continue
 
-            ax.set_xlim(x0, x1)
-            lower_ylim = min(0, y0)
-            ax.set_ylim(1.2 * lower_ylim, 1.2 * y1)
+            # Build a list of all axes that are linked to one or more other axes
+            # A set is used to avoid duplicates and maintain a unique list of all inter-dependent axes.
+            siblings = [a for a in ax.get_shared_x_axes().get_siblings(ax) if a in axs]
+            visited.update(siblings)
+            # Find the min and max x-limits of all siblings, ignoring any that are not finite
+            x0s = [a.dataLim.x0 for a in siblings if np.isfinite(a.dataLim.x0)]
+            x1s = [a.dataLim.x1 for a in siblings if np.isfinite(a.dataLim.x1)]
+
+            if x0s and x1s:
+                x_min, x_max = min(x0s), max(x1s)
+                for a in siblings:
+                    a.set_xlim(x_min, x_max)
+
+        # Y limits are independent for each axis so so they are set individually.
+        for ax in axs:
+            y0, y1 = ax.dataLim.y0, ax.dataLim.y1
+            if np.isfinite(y0) and np.isfinite(y1):
+                lower_ylim = min(0, y0)
+                ax.set_ylim(1.2 * lower_ylim, 1.2 * y1)
 
         # wipe the nav stack and capture this full view as "home"
         self.navbar.update()
