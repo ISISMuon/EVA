@@ -1,10 +1,5 @@
-import matplotlib.pyplot as plt
 
 import numpy as np
-from scipy.optimize import curve_fit
-import scipy.constants as sc
-from scipy.interpolate import interp1d
-import os  # used to execute external
 
 
 # test bit from pysrim website
@@ -41,7 +36,7 @@ results = trim.run(srim_executable_directory)
 
 """
 
-from srim import TRIM, Ion, Layer, Target, Material
+from srim import TRIM, Ion, Layer, Target
 # from srim.output import Results
 
 

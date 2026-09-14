@@ -1,22 +1,16 @@
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QDialog,
     QGridLayout,
     QLabel,
     QTextEdit,
-    QPushButton,
     QTableWidget,
-    QComboBox,
     QWidget,
-    QHBoxLayout,
     QLineEdit,
     QVBoxLayout,
     QScrollArea,
     QCheckBox,
     QTabWidget,
-    QFormLayout,
-    QSizePolicy,
     QDialogButtonBox,
     QTableWidgetItem,
     QMessageBox,

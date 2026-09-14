@@ -1,6 +1,5 @@
 import logging
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QCloseEvent
 from PyQt6.QtWidgets import (
     QGridLayout,
     QPushButton,
@@ -20,9 +19,6 @@ from EVA.gui.windows.muonic_xray_simulation.element_selector_widget import (
     ElementSelectorWidget,
 )
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
-from EVA.gui.windows.muonic_xray_simulation.model_spectra_presenter import (
-    ModelSpectraPresenter,
-)
 
 logger = logging.getLogger(__name__)
 

@@ -1,18 +1,14 @@
 import matplotlib
 import pytest
 import numpy as np
-import copy
-from EVA.core.app import get_app, get_config
+from EVA.core.app import get_config
 from EVA.core.data_loading import load_data
 from EVA.gui.windows.workspace.workspace_window import WorkspaceWindow
-from gc import get_referrers
 from PyQt6.QtCore import Qt
-from pytestqt.plugin import qtbot
-from matplotlib.backend_bases import MouseButton
 from unittest.mock import MagicMock
 
-run_list = ["780", "2630", "0"]
-plot_modes = [["IBEX Prompt Spectrum", 0],["IBEX Delayed Spectrum", 1], ["Manual Prompt Spectrum", 2], ["Manual Delayed Spectrum", 3]]
+run_list = ["1041", "1042", "2630", "0"]
+plot_modes = [["IBEX Prompt Spectrum", 0], ["Manual Delayed Spectrum", 3]]
 normalisation_methods = [["none", 0], ["counts", 1], ["events", 2]]
 bin_values = [0.5, 2]
 
@@ -23,7 +19,12 @@ class TestLoadWorkspaceWindow:
     @pytest.mark.parametrize("test_binning", bin_values)
     @pytest.mark.parametrize("test_plot_mode", plot_modes)
     def test_load_workspace(
-        self, qtbot, run_num, test_normalisation, test_binning, test_plot_mode,
+        self,
+        qtbot,
+        run_num,
+        test_normalisation,
+        test_binning,
+        test_plot_mode,
     ):
         wdir = "./test_data"
         get_config()["saved_corrections"][wdir] = {}
@@ -33,8 +34,11 @@ class TestLoadWorkspaceWindow:
         plot_mode = get_config()["default_corrections"]["plot_mode"]
         prompt_limit = get_config()["default_corrections"]["prompt_limit"]
         delayed_limit = get_config()["default_corrections"]["delayed_limit"]
+        load_fn = (
+            load_data.load_run_multi if "," in str(run_num) else load_data.load_run
+        )
 
-        run, flags = load_data.load_run(
+        run, flags = load_fn(
             run_num,
             wdir,
             energy_corrections,
@@ -44,7 +48,7 @@ class TestLoadWorkspaceWindow:
             prompt_limit,
             delayed_limit,
         )
-        self.run_copy, _ = load_data.load_run(
+        self.run_copy, _ = load_fn(
             run_num,
             wdir,
             energy_corrections,
@@ -67,7 +71,9 @@ class TestLoadWorkspaceWindow:
             qtbot.wait(500)
             assert self.model.run.run_num == run_num
             self.view.nexus_plot_display_combo_box.setCurrentIndex(test_plot_mode[1])
-            self.view.normalisation_type_combo_box.setCurrentIndex(test_normalisation[1])
+            self.view.normalisation_type_combo_box.setCurrentIndex(
+                test_normalisation[1]
+            )
             self.view.binning_spin_box.setValue(test_binning)
             qtbot.mouseClick(
                 self.view.apply_run_settings_button, Qt.MouseButton.LeftButton

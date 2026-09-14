@@ -1,10 +1,8 @@
 import pytest
-from pytestqt.plugin import qapp
 from EVA.core.data_searching import get_match
 from EVA.core.app import get_app
 from tests.system.test_util import (
     load_mudirac_test_db,
-    load_gamma_test_db,
     load_legacy_test_db,
 )
 
@@ -70,6 +68,7 @@ class TestDatabasesGetMatch:
         if not app._databases_ready:
             with qtbot.waitSignal(app.databases_loaded, timeout=10_000):
                 pass
+
     # Parametrised test to check if database searches from legacy database matches expected results.
     @pytest.mark.parametrize(
         "default_peaks, default_sigma, target_result",

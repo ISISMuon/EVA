@@ -1,7 +1,13 @@
 from EVA.gui.base.base_window import BaseWindow
-from EVA.gui.windows.detector_grouping.detector_grouping_model import DetectorGroupingModel
-from EVA.gui.windows.detector_grouping.detector_grouping_presenter import DetectorGroupingPresenter
-from EVA.gui.windows.detector_grouping.detector_grouping_view import DetectorGroupingView
+from EVA.gui.windows.detector_grouping.detector_grouping_model import (
+    DetectorGroupingModel,
+)
+from EVA.gui.windows.detector_grouping.detector_grouping_presenter import (
+    DetectorGroupingPresenter,
+)
+from EVA.gui.windows.detector_grouping.detector_grouping_view import (
+    DetectorGroupingView,
+)
 
 
 class DetectorGroupingWindow(BaseWindow):

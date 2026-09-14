@@ -19,9 +19,14 @@ brni_filenames_list = [
     ["ral03064.rooth2099.dat", "ral03064.rooth3099.dat", "ral03064.rooth4099.dat", ""],
     ["", "", "", ""],
 ]
-nxs_run_num_list = ["780", "0"]
-nxs_filenames_list = ["MUX00000780.nxs", ""]
-expected_detectors_list = [["GE6", "GE5", "GE8", "GE7"], []]
+nxs_run_num_list = ["1041", "1042", "0"]
+nxs_filenames_list = ["MUX00001041.nxs", "MUX00001042.nxs", ""]
+expected_detectors_list = [
+    ["GE5", "GE7", "GE6", "GE8"],
+    ["GE5", "GE7", "GE6", "GE8"],
+    ["GE5", "GE7", "GE6", "GE8"],
+    [],
+]
 
 
 class TestLoadRun:
@@ -30,7 +35,7 @@ class TestLoadRun:
         if filename == "":
             return [], []  # return blank arrays if data is missing for the detector
 
-        path = os.path.join(config["general"]["data_directory"], filename)
+        path = os.path.join(config["general"]["test_directory"], filename)
         xdata, ydata = np.loadtxt(path, delimiter=" ", unpack=True)
         return xdata, ydata
 
@@ -41,7 +46,7 @@ class TestLoadRun:
         detector_names = []
         if filename == "":
             return [], []  # return blank arrays if data is missing for the detector
-        path = os.path.join(config["general"]["data_directory"], filename)
+        path = os.path.join(config["general"]["test_directory"], filename)
         data_file = h5py.File(path, "r")
 
         for i in range(1, 5):
@@ -71,7 +76,7 @@ class TestLoadRun:
         "run_num, filenames", list(zip(brni_run_num_list, brni_filenames_list))
     )
     def test_brni_load_run(self, qapp, run_num, filenames):
-        wdir = get_config()["general"]["data_directory"]
+        wdir = get_config()["general"]["test_directory"]
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
@@ -107,7 +112,7 @@ class TestLoadRun:
         list(zip(nxs_run_num_list, nxs_filenames_list, expected_detectors_list)),
     )
     def test_nxs_load_run(self, qapp, run_num, filename, expected_detectors):
-        wdir = get_config()["general"]["data_directory"]
+        wdir = get_config()["general"]["test_directory"]
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]

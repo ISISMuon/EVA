@@ -2,8 +2,8 @@ import lmfit.model
 import numpy as np
 from functools import partial
 
-from lmfit import Model, Parameter
-from lmfit.models import GaussianModel, QuadraticModel, ConstantModel
+from lmfit import Model
+from lmfit.models import GaussianModel, QuadraticModel
 
 from EVA.core.physics.functions import gaussian
 

@@ -1,14 +1,9 @@
 import time
 import logging
 
-from copy import copy
-from idlelib.configdialog import font_sample_text
 
-from PyQt6.QtCore import QThreadPool
 from PyQt6.QtWidgets import QWidget
-from matplotlib import pyplot as plt
 
-from EVA.gui.windows.trim_fitting.trim_fit_model import TrimFitModel
 from EVA.util.path_handler import get_path
 from EVA.util.worker import Worker
 
@@ -270,7 +265,7 @@ class TrimPresenter(QWidget):
         try:
             # get form data from view
             form_data = self.view.get_form_data()
-        except (ValueError, AttributeError) as e:
+        except (ValueError, AttributeError):
             self.view.display_error_message(message="Invalid form input!")
             return
 
@@ -343,7 +338,7 @@ class TrimPresenter(QWidget):
         self.view.simulation_progress_bar.setValue(0)
 
         self.view.estimated_time_remaining_label.setText(
-            f"Estimated time left: calculating..."
+            "Estimated time left: calculating..."
         )
         self.view.simulation_progress_label.setText(f"Running simulation 1 / {n_sim}")
 
@@ -358,7 +353,7 @@ class TrimPresenter(QWidget):
         # if user has requested the simulation to be cancelled, set this flag to True to notify the model
         self.model.cancel_sim = True
         self.view.simulation_progress_label.setText("Stopping...")
-        self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: -")
+        self.view.estimated_time_remaining_label.setText("Estimated time remaining: -")
 
     def progress_fn(self, progress: dict):
         """
@@ -492,7 +487,7 @@ class TrimPresenter(QWidget):
             form_data = self.view.get_form_data()
             layers = self.get_layers_from_table()
 
-        except (AttributeError, ValueError) as e:
+        except (AttributeError, ValueError):
             self.view.display_error_message(
                 message="Cannot save settings. Invalid data in form or layers table."
             )

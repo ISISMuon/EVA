@@ -53,6 +53,8 @@ atm_nos_enable = [x for x in atm_nos if x not in set(atm_nos_disable)]
 elements_enable = [x for x in elements if x not in set(elements_disable)]
 
 data = list(zip(elements_enable, atm_nos_enable))
+
+
 class TestPeriodicTableWidget:
     @pytest.fixture(autouse=True)
     def setup(self, qapp, qtbot):

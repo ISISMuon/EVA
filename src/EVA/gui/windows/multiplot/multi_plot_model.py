@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 
 from EVA.core.app import get_config
 from EVA.core.data_loading import load_data
-from EVA.core.data_structures.run import Run, normalisation_types
 from EVA.core.plot.plotting import get_ylabel
 
 

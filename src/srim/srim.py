@@ -8,7 +8,6 @@ import distutils.spawn
 
 from .core.utils import (
     check_input,
-    is_zero,
     is_zero_or_one,
     is_zero_to_two,
     is_zero_to_five,

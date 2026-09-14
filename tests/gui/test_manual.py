@@ -1,4 +1,3 @@
-from pytestqt.plugin import qtbot
 import os
 
 from PyQt6.QtWidgets import QWidget

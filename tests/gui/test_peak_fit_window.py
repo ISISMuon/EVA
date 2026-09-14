@@ -1,7 +1,5 @@
 import pytest
-from pytestqt.plugin import qtbot
 
-from EVA.core.app import get_app
 
 
 class TestPeakFitWindow:

@@ -224,7 +224,7 @@ class TrimModel(QObject):
                             "sim_times": self.simulation_times,
                         }
                     )
-                # Normalise the y data to input muon number because SRIM output is ~7x more than input muons for some reason 
+                # Normalise the y data to input muon number because SRIM output is ~7x more than input muons for some reason
                 self.result_y[momentum_index, :] = (
                     self.result_y[momentum_index, :]
                     / np.sum(self.result_y[momentum_index, :])
@@ -800,7 +800,6 @@ class TrimModel(QObject):
         target_dir,
     ):
         with h5py.File(target_dir, "w") as f:
-
             # save sim metadata from form in one sub folder
             meta = f.create_group("metadata")
 
@@ -813,7 +812,7 @@ class TrimModel(QObject):
             meta.attrs["max_momentum"] = max_momentum
             meta.attrs["step_momentum"] = step_momentum
             meta.attrs["stats"] = stats
-            
+
             # save layer data from table in anoother subfolder
             layers_group = f.create_group("layers")
             # make a subfolder for each layer and save layer information

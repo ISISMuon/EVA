@@ -22,7 +22,7 @@ def load_run(
     prompt_limit: int,
     delayed_limit: int,
 ) -> tuple[Run, dict]:
-    """ Attempts to load specified run as both Biriani and Nexus run files 
+    """Attempts to load specified run as both Biriani and Nexus run files
     and returns whichever is found along with erorr flags. Throws file not found error if neither/both found.
 
     Args:
@@ -39,7 +39,11 @@ def load_run(
         tuple[Run, dict]: _description_
     """
     brni_run, brni_flags = load_run_brni(
-        run_num=run_num, data_directory=data_directory, energy_corrections=energy_corrections, normalisation=normalisation, binning=binning
+        run_num=run_num,
+        data_directory=data_directory,
+        energy_corrections=energy_corrections,
+        normalisation=normalisation,
+        binning=binning,
     )
     nxs_run, nxs_flags = load_run_nxs(
         run_num=run_num,
@@ -63,6 +67,7 @@ def load_run(
         return brni_run, brni_flags
     else:
         return nxs_run, nxs_flags
+
 
 def load_run_multi(
     run_nums: str,
@@ -115,19 +120,21 @@ def load_run_multi(
             )
             flags["norm_by_spills_error"] = 0
         except ValueError:
-            flags["norm_by_spills_error"] = 1 # value error is raised if normalisation fails
+            flags["norm_by_spills_error"] = (
+                1  # value error is raised if normalisation fails
+            )
         if all(
             good_flag.get("comment_not_found") == 0 for good_flag in good_flag_array
         ):
             flags["comment_not_found"] = 0
         if any(
-            good_flag.get("norm_by_spills_error") == 1
-            for good_flag in good_flag_array
+            good_flag.get("norm_by_spills_error") == 1 for good_flag in good_flag_array
         ):
             flags["norm_by_spills_error"] = 1
         return combined_run, flags
     else:
         return 0, flags
+
 
 ############## BIRIANI RUN FILE FORMAT #####################
 
@@ -213,7 +220,9 @@ def load_run_brni(
         try:
             # Attempt to load data from file using selected encoding, raises UnicodeDecodeError if encoding is incorrect
             # Which main presenter handles.
-            xdata, ydata = np.loadtxt(filename, delimiter=" ", unpack=True, encoding=encoding)
+            xdata, ydata = np.loadtxt(
+                filename, delimiter=" ", unpack=True, encoding=encoding
+            )
             # Store data read from file in a Spectrum object
             spectrum = Spectrum(detector=detector, run_number=run_num, x=xdata, y=ydata)
 
@@ -263,6 +272,7 @@ def load_run_brni(
 
 ############## NEXUS RUN FILE FORMAT #####################
 
+
 def get_detector_indices(data_file: h5py.File) -> list[int]:
     """Finds detector channels present in the Nexus file by looking up subfolders in the pattern detector_X_energyA where X is a whole number."""
     pattern = re.compile(r"^detector_(\d+)_energyA$")
@@ -272,6 +282,7 @@ def get_detector_indices(data_file: h5py.File) -> list[int]:
         if match:
             indices.append(int(match.group(1)))
     return sorted(indices)
+
 
 def load_comment_nxs(input_file: h5py.File) -> tuple[list[str], int]:
     """
@@ -287,21 +298,17 @@ def load_comment_nxs(input_file: h5py.File) -> tuple[list[str], int]:
     """
     try:
         encoding = get_config()["general"]["encoding"]
-        title = input_file['title'][()].decode(encoding)
-        title += ": " + input_file['notes'][()].decode(encoding)
-        start_time = input_file['start_time'][()].decode(encoding)
-        end_time = input_file['end_time'][()].decode(encoding)
+        title = input_file["title"][()].decode(encoding)
+        title += ": " + input_file["notes"][()].decode(encoding)
+        start_time = input_file["start_time"][()].decode(encoding)
+        end_time = input_file["end_time"][()].decode(encoding)
         num_prompt_events = 0
         num_delayed_events = 0
         detector_channels = get_detector_indices(input_file)
 
         for i in detector_channels:
-            num_prompt_events += input_file[
-                f"detector_{i}_energyA/num_events"
-            ][()]
-            num_delayed_events += input_file[
-                f"detector_{i}_energyB/num_events"
-            ][()]
+            num_prompt_events += input_file[f"detector_{i}_energyA/num_events"][()]
+            num_delayed_events += input_file[f"detector_{i}_energyB/num_events"][()]
             try:  # Failsafe for now as not sure if all four channels will always record time
                 key_Amin = f"detector_{i}_energyA/event_time_min"
                 key_Amax = f"detector_{i}_energyA/event_time_max"
@@ -363,7 +370,7 @@ def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
     Combines detector name and Spectrum objects into a dict.
     Args:
         run_number (str): Store a string of the loaded run's number for individual access in peakfit
-        data_file (h5py.File): HDF file to load detector data from 
+        data_file (h5py.File): HDF file to load detector data from
 
     Returns:
         dict[str: Spectrum]: a dictionary of detector names : all data sets in run file for associated detector.
@@ -382,8 +389,10 @@ def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
                 data_file[check_loaded_cond_1][()].any()
                 or data_file[check_loaded_cond_2][()].any()
             ):
-                detector_name = data_file[f'instrument/detector_{i}/name'][()].decode(encoding)
-                
+                detector_name = data_file[f"instrument/detector_{i}/name"][()].decode(
+                    encoding
+                )
+
                 prompt_energy = data_file[f"detector_{i}_energyA/energy"]
                 prompt_count = data_file[f"detector_{i}_energyA/counts"]
 
@@ -408,7 +417,10 @@ def generate_spectrum_nxs(run_number, data_file) -> dict[str:Spectrum]:
                 bin_width_lower_limit = delayed_energy[1] - delayed_energy[0]
                 bin_width_upper_limit = delayed_energy[-1] - delayed_energy[-2]
 
-                bin_range = (np.min(delayed_energy) - bin_width_lower_limit, np.max(delayed_energy) - bin_width_upper_limit)
+                bin_range = (
+                    np.min(delayed_energy) - bin_width_lower_limit,
+                    np.max(delayed_energy) - bin_width_upper_limit,
+                )
 
                 spectrum = Spectrum(
                     detector=detector_name,

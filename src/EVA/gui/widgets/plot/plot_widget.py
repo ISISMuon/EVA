@@ -6,8 +6,6 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolb
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
-from EVA.core.app import get_app
-
 matplotlib.use("QtAgg")
 
 
@@ -29,6 +27,7 @@ class PlotWidget(QWidget):
     """
 
     plot_clicked = pyqtSignal(object)
+
     def __init__(
         self, fig=None, axs=None, parent=None, plot_name=None, plot_manager=None
     ):

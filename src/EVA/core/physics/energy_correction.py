@@ -1,4 +1,3 @@
-import numpy as np
 # from EVA.app import get_config
 
 """

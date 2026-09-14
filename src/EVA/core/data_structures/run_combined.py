@@ -6,6 +6,7 @@ from EVA.core.data_structures.spectrum import Spectrum
 from EVA.core.physics import rebin
 from EVA.core.physics.normalisation import normalise_events
 
+
 class MultiRun(Run):
     """Run class to hold multiple RunNexus/RunBiriani objects and combine results from run corrections."""
 
@@ -20,10 +21,13 @@ class MultiRun(Run):
             # Combine loaded detectors from all runs into a single list. This is a bit complicated
             # for just finding and sorting all unique detectors in GE1-GE9 but more robust if different types of detectors
             # are used in the same run(s) in the future.
-
-            loaded_detectors = sorted(set().union(*(run.loaded_detectors for run in runs)), key=detector_sort_key,),
+            loaded_detectors=sorted(
+                set().union(*(run.loaded_detectors for run in runs)),
+                key=detector_sort_key,
+            ),
             run_num=",".join([r.run_num for r in runs]),
-            momentum=first.momentum,)
+            momentum=first.momentum,
+        )
         # self.data = {}
         # for detector in self.loaded_detectors:
         #     self.data[detector] = Spectrum(detector=detector, run_number=self.run_num)
@@ -46,29 +50,39 @@ class MultiRun(Run):
     def set_corrections(self, **kwargs):
         """Apply corrections to each run then sum spectra."""
         current_loaded_detectors = self.loaded_detectors
-        self._set_mode(**kwargs) # Fetch specific type of spectrum for each run
-        self._combine_runs() # Combine the spectra from all runs detector-wise
-        self._group_detectors(kwargs.get("detector_group_dict")) # Group detectors according to profile and combine spectra
-        self._set_energy_correction(kwargs.get('energy_corrections')) 
-        self._set_binning(kwargs.get('bin_rate'), kwargs.get('default_bin'))
-        self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
-        if current_loaded_detectors != self.loaded_detectors: # Catches change from grouped <-> ungrouped detectors in either direction
+        self._set_mode(**kwargs)  # Fetch specific type of spectrum for each run
+        self._combine_runs()  # Combine the spectra from all runs detector-wise
+        self._group_detectors(
+            kwargs.get("detector_group_dict")
+        )  # Group detectors according to profile and combine spectra
+        self._set_energy_correction(kwargs.get("energy_corrections"))
+        self._set_binning(kwargs.get("bin_rate"), kwargs.get("default_bin"))
+        self._set_normalisation(
+            kwargs.get("normalisation"), kwargs.get("normalise_which")
+        )
+        if (
+            current_loaded_detectors != self.loaded_detectors
+        ):  # Catches change from grouped <-> ungrouped detectors in either direction
             self.detectors_grouped_s.emit()
-        else: # 
+        else:  #
             self.corrections_updated_s.emit()
 
     def _set_mode(self, **kwargs):
         """Call mode setting on each run."""
         for run in self.runs:
-            run._set_mode(kwargs.get('plot_mode'), kwargs.get('prompt_limit'), kwargs.get('delayed_limit'))
+            run._set_mode(
+                kwargs.get("plot_mode"),
+                kwargs.get("prompt_limit"),
+                kwargs.get("delayed_limit"),
+            )
         self.bin_method = self.runs[0].bin_method
-        self.plot_mode = kwargs.get('plot_mode')
+        self.plot_mode = kwargs.get("plot_mode")
 
     def _set_normalisation_events(self, normalise_which):
         """Normalise spectra by event count using comment metadata."""
         if self.plot_mode in ["IBEX Prompt Spectrum", "Manual Prompt Spectrum"]:
             try:
-                spills = int(self.comment_data[1]) # Prompt counts
+                spills = int(self.comment_data[1])  # Prompt counts
             except ValueError:
                 self._set_normalisation_none()
                 raise ValueError("Normalisation by events failed.")
@@ -78,7 +92,7 @@ class MultiRun(Run):
             "Manual Delayed Spectrum",
         ]:
             try:
-                spills = int(self.comment_data[2]) # Delayed counts
+                spills = int(self.comment_data[2])  # Delayed counts
             except ValueError:
                 self._set_normalisation_none()
                 raise ValueError("Normalisation by events failed.")
@@ -87,9 +101,7 @@ class MultiRun(Run):
 
         for detector, spectrum in self.data.items():
             if detector in normalise_which:
-                self.data[detector].y = normalise_events(
-                    self.data[detector].y, spills
-                )
+                self.data[detector].y = normalise_events(self.data[detector].y, spills)
 
         self.normalisation = "events"
         self.normalise_which = normalise_which
@@ -106,18 +118,17 @@ class MultiRun(Run):
             prompt_time = run.comment_data[5]
             delayed_time = run.comment_data[6]
 
-
         self.comment_data[1] = prompt_events
         self.comment_data[2] = delayed_events
         self.run_info = (
             f"Run numbers: {self.run_num}\n\n"
-            f"Comments:\n{"\n\n".join(f"{run.run_num} - {run.comment_data[0]}" for run in self.runs)}\n\n"
+            f"Comments:\n{'\n\n'.join(f'{run.run_num} - {run.comment_data[0]}' for run in self.runs)}\n\n"
             f"Prompt Events: {prompt_events}\n"
             f"Prompt Interval:\n{prompt_time}\n\n"
             f"Delayed Events: {delayed_events}\n"
             f"Delayed Interval:\n{delayed_time}\n\n"
-            f"Start time:\n{"\n".join(f"{run.run_num} - {run.comment_data[3]}" for run in self.runs)}\n\n"
-            f"End time:\n{"\n".join(f"{run.run_num} - {run.comment_data[4]}" for run in self.runs)}"
+            f"Start time:\n{'\n'.join(f'{run.run_num} - {run.comment_data[3]}' for run in self.runs)}\n\n"
+            f"End time:\n{'\n'.join(f'{run.run_num} - {run.comment_data[4]}' for run in self.runs)}"
         )
 
         start = "\t".join(f"{run.run_num} - {run.comment_data[3]}" for run in self.runs)
@@ -129,7 +140,9 @@ class MultiRun(Run):
             f"Prompt events: {prompt_events} Delayed events: {delayed_events}",
         )
 
-    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None):
+    def _combine_detector_spectra(
+        self, detector_group_dict: dict[str, list[str]] = None
+    ):
         if self.bin_method == "prebinned":
             return self.combine_prebinned_spectra(detector_group_dict)
         elif self.bin_method == "raw":
@@ -138,8 +151,12 @@ class MultiRun(Run):
     def combine_prebinned_spectra(self, detector_group_dict: dict[str, list[str]]):
         combined_data = {}
         for group_name, detector_names in detector_group_dict.items():
-            self.detector_group_dict[group_name] = [det for det in detector_names if det in self.data]
-            spectra_in_group = [self.data.get(det) for det in detector_names if det in self.data]
+            self.detector_group_dict[group_name] = [
+                det for det in detector_names if det in self.data
+            ]
+            spectra_in_group = [
+                self.data.get(det) for det in detector_names if det in self.data
+            ]
             if not spectra_in_group:
                 continue
             # Reference detector defines the energy axis
@@ -148,16 +165,12 @@ class MultiRun(Run):
             bin_num = len(reference_energy)
             ref_edges = np.zeros(bin_num + 1)
 
-            ref_edges[:-1] = reference_energy - ref_width/2
-            ref_edges[-1] = reference_energy[-1] + ref_width/2
+            ref_edges[:-1] = reference_energy - ref_width / 2
+            ref_edges[-1] = reference_energy[-1] + ref_width / 2
             combined_counts = np.zeros(bin_num)
             for spectrum in spectra_in_group:
-
                 rebinned = rebin.rebin_to_reference_fast(
-                    spectrum.x,
-                    spectrum.y,
-                    ref_edges=ref_edges,
-                    bin_number=bin_num
+                    spectrum.x, spectrum.y, ref_edges=ref_edges, bin_number=bin_num
                 )
 
                 combined_counts += rebinned
@@ -167,7 +180,7 @@ class MultiRun(Run):
                 run_number=spectra_in_group[0].run_number,
                 x=reference_energy.copy(),
                 y=combined_counts,
-                bin_range=spectra_in_group[0].bin_range
+                bin_range=spectra_in_group[0].bin_range,
             )
         return combined_data
 
@@ -181,16 +194,16 @@ class MultiRun(Run):
                         detector=det,
                         run_number=self.run_num,
                         x=spec.x.copy(),
-                        y=spec.y.copy()
+                        y=spec.y.copy(),
                     )
                 else:
                     combined[det].y += spec.y
-        self._raw = dict(sorted(combined.items(), key=lambda item: detector_sort_key(item[0])))
+        self._raw = dict(
+            sorted(combined.items(), key=lambda item: detector_sort_key(item[0]))
+        )
         self.data = deepcopy(self._raw)
         self.loaded_detectors = list(self.data.keys())
 
+
 def detector_sort_key(det):
-    return (
-        re.match(r"[A-Za-z]+", det).group(),
-        int(re.search(r"\d+", det).group())
-    )
+    return (re.match(r"[A-Za-z]+", det).group(), int(re.search(r"\d+", det).group()))

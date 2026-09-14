@@ -1,12 +1,10 @@
-import os
 import sys
 from PyQt6.QtWidgets import (
     QVBoxLayout,
     QTextBrowser,
-    QWidget,
 )
 
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt
 
 from EVA.gui.base.base_view import BaseView
 from EVA.util.path_handler import get_path

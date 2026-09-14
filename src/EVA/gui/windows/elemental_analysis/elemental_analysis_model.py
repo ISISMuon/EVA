@@ -1,5 +1,5 @@
 import logging
-import matplotlib
+from matplotlib.collections import PolyCollection, FillBetweenPolyCollection
 import numpy as np
 
 from PyQt6.QtCore import QObject
@@ -160,7 +160,8 @@ class ElementalAnalysisModel(QObject):
             else:
                 prim_energies = [
                     float([match["element"], match["energy"], match["transition"]][1])
-                    for match in res if is_primary(match["transition"])
+                    for match in res
+                    if is_primary(match["transition"])
                 ]
                 next_colour = self.axs[0]._get_lines.get_next_color()
 
@@ -177,7 +178,8 @@ class ElementalAnalysisModel(QObject):
             else:
                 sec_energies = [
                     float([match["element"], match["energy"], match["transition"]][1])
-                    for match in res if is_secondary(match["transition"])
+                    for match in res
+                    if is_secondary(match["transition"])
                 ]
                 next_colour = self.axs[0]._get_lines.get_next_color()
                 for energy in sec_energies:
@@ -192,15 +194,23 @@ class ElementalAnalysisModel(QObject):
             else:
                 tertiary_energies = [
                     float([match["element"], match["energy"], match["transition"]][1])
-                for match in res if not is_secondary(match["transition"]) and not is_primary(match["transition"])
+                    for match in res
+                    if not is_secondary(match["transition"])
+                    and not is_primary(match["transition"])
                 ]
                 next_colour = self.axs[0]._get_lines.get_next_color()
                 for energy in tertiary_energies:
                     for i in range(len(self.axs)):
                         self.axs[i].axvline(
-                            energy, color=next_colour, linestyle="--", label=tertiary_name
+                            energy,
+                            color=next_colour,
+                            linestyle="--",
+                            label=tertiary_name,
                         )
-                self.plotted_mu_xray_lines[tertiary_name] = (tertiary_energies, next_colour)
+                self.plotted_mu_xray_lines[tertiary_name] = (
+                    tertiary_energies,
+                    next_colour,
+                )
 
         return prim_name
 
@@ -446,7 +456,7 @@ class ElementalAnalysisModel(QObject):
         for ax in self.axs:
             for coll in ax.collections:
                 # delete every collection except the plotted data which is a PolyCollection
-                if not isinstance(coll, matplotlib.collections.PolyCollection):
+                if not isinstance(coll, PolyCollection):
                     coll.remove()
 
     def update_fill_colour(self, colour):
@@ -456,7 +466,7 @@ class ElementalAnalysisModel(QObject):
             fill_obj = [
                 child
                 for child in ax.get_children()
-                if isinstance(child, matplotlib.collections.FillBetweenPolyCollection)
+                if isinstance(child, FillBetweenPolyCollection)
             ][0]
 
             # re-colour the histogram
@@ -483,7 +493,11 @@ class ElementalAnalysisModel(QObject):
 
     def replot_all_run_data(self, show_components: bool = False):
         replot_run(
-            self.run, self.fig, self.axs, colour=get_config()["plot"]["fill_colour"], show_components=show_components
+            self.run,
+            self.fig,
+            self.axs,
+            colour=get_config()["plot"]["fill_colour"],
+            show_components=show_components,
         )
         self.update_legend()
 

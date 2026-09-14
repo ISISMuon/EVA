@@ -1,6 +1,5 @@
 import logging
 
-from PyQt6.QtCore import pyqtSignal
 
 from EVA.gui.dialogs.energy_corrections.energy_corrections_model import (
     EnergyCorrectionsModel,

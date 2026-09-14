@@ -1,8 +1,5 @@
 import logging
-import os
 from EVA.core.app import get_config
-from EVA.gui.windows.fit_table_plot.fit_table_plot_model import FitTablePlotModel
-from EVA.gui.windows.fit_table_plot.fit_table_plot_view import FitTablePlotView
 
 logger = logging.getLogger(__name__)
 

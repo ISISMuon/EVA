@@ -1,5 +1,4 @@
 import pytest
-from pytestqt.plugin import qtbot
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import Qt
 from EVA.core.app import get_app

@@ -1,8 +1,7 @@
 import numpy as np
 import pytest
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QTableWidgetItem, QMessageBox
-from pytestqt.plugin import qtbot
+from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
 
 
 from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow

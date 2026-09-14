@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 
+
 def plot_per_shape(data):
-        # Create a plot for each key
-    fig, axes = plt.subplots(len(data), 1, figsize=(8, 4*len(data)), squeeze=False)
+    # Create a plot for each key
+    fig, axes = plt.subplots(len(data), 1, figsize=(8, 4 * len(data)), squeeze=False)
 
     for i, (key, value) in enumerate(data.items()):
         x, y = value
@@ -17,7 +18,8 @@ def plot_per_shape(data):
     plt.tight_layout()
     plt.show()
 
-def plot_combined(data, model = None):
+
+def plot_combined(data, model=None):
     plt.figure(figsize=(10, 6))
 
     x_shift = 0
@@ -28,7 +30,12 @@ def plot_combined(data, model = None):
         plt.plot(x - x_shift, y, label=key)
     if hasattr(model, "layer_boundary_positions") and model.layer_boundary_positions:
         for boundary in model.layer_boundary_positions:
-            plt.axvline(x=boundary - x_shift, color='black', linestyle='--', label='Layer Boundary')
+            plt.axvline(
+                x=boundary - x_shift,
+                color="black",
+                linestyle="--",
+                label="Layer Boundary",
+            )
     plt.xlabel("x")
     plt.ylabel("y")
     plt.title("Scatter plot of all data")

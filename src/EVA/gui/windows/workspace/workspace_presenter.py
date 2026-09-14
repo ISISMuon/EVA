@@ -1,5 +1,4 @@
 import logging
-import inspect
 from PyQt6.QtGui import QCloseEvent
 
 from EVA.core.app import get_config
@@ -8,7 +7,6 @@ from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import (
     EnergyCorrectionsDialog,
 )
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
-from EVA.gui.windows.manual import manual_window
 from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import (
     ModelSpectraWindow,
@@ -17,11 +15,14 @@ from EVA.gui.windows.peakfit.peakfit_window import PeakFitWindow
 from EVA.gui.windows.fit_table_plot.fit_table_plot_window import FitTablePlotWindow
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
-from EVA.gui.windows.trim_fitting.trim_fit_widget import TrimFitWidget
 from EVA.gui.windows.workspace.workspace_model import WorkspaceModel
 from EVA.gui.windows.workspace.workspace_view import WorkspaceView
-from EVA.gui.windows.detector_grouping.detector_grouping_window import DetectorGroupingWindow
+from EVA.gui.windows.detector_grouping.detector_grouping_window import (
+    DetectorGroupingWindow,
+)
+
 logger = logging.getLogger(__name__)
+
 
 class WorkspacePresenter:
     """Presenter class to connect workspace view to workspace model."""
@@ -42,10 +43,12 @@ class WorkspacePresenter:
         self.generate_peakfit_options()
         if get_config()["general"]["current_grouping_profile"] is not None:
             self.current_profile = get_config()["general"]["current_grouping_profile"]
-            self.view.detector_grouping_profile_label.setText(f"Current Profile: {self.current_profile}")
+            self.view.detector_grouping_profile_label.setText(
+                f"Current Profile: {self.current_profile}"
+            )
         else:
             self.current_profile = None
-            self.view.detector_grouping_profile_label.setText(f"Current Profile: None")
+            self.view.detector_grouping_profile_label.setText("Current Profile: None")
 
         # load settings from config into settings panel
         self.populate_settings_panel()
@@ -58,13 +61,17 @@ class WorkspacePresenter:
         self.view.energy_correction_settings.triggered.connect(
             self.open_energy_corrections_dialog
         )
-        self.view.group_detector_button.clicked.connect(self.open_detector_grouping_window)
+        self.view.group_detector_button.clicked.connect(
+            self.open_detector_grouping_window
+        )
         self.view.general_settings.triggered.connect(self.open_general_settings_dialog)
 
         self.view.help_manual.triggered.connect(self.open_manual)
         self.view.tabWidget.tabCloseRequested.connect(self.view.close_tab)
 
-        self.view.group_detector_checkbox.toggled.connect(self.on_group_detector_checkbox_toggled)
+        self.view.group_detector_checkbox.toggled.connect(
+            self.on_group_detector_checkbox_toggled
+        )
         self.view.export_run_data_button.clicked.connect(self.export_run_data)
         self.view.save_and_close_requested_s.connect(self.save_and_close)
 
@@ -116,7 +123,7 @@ class WorkspacePresenter:
             detector_group_dict = self.detector_group_dict
         else:
             detector_group_dict = None
-        
+
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
             run_correction_settings = dict(
@@ -161,9 +168,10 @@ class WorkspacePresenter:
     def on_detector_grouping_profile_changed(self, selected_profile):
         # current_profile = get_config()["general"]["current_grouping_profile"]
         self.current_profile = selected_profile
-        self.view.detector_grouping_profile_label.setText(f"Current profile: {selected_profile}")
+        self.view.detector_grouping_profile_label.setText(
+            f"Current profile: {selected_profile}"
+        )
         self.view.group_detector_checkbox.setChecked(False)
-
 
     def on_group_detector_checkbox_toggled(self):
         valid = self.validate_grouping_profile()
@@ -293,9 +301,13 @@ class WorkspacePresenter:
 
         window = DetectorGroupingWindow()
         self.view.detector_grouping_windows.append(window)
-        window.widget().profile_changed_s.connect(self.on_detector_grouping_profile_changed)
+        window.widget().profile_changed_s.connect(
+            self.on_detector_grouping_profile_changed
+        )
         window.widget().show()
-        window.widget().window_closed_s.connect(lambda: self.close_detector_grouping_window(window))
+        window.widget().window_closed_s.connect(
+            lambda: self.close_detector_grouping_window(window)
+        )
 
     def close_detector_grouping_window(self, window):
         """Remove reference to detector grouping window when closed"""

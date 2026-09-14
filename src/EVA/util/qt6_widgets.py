@@ -14,7 +14,8 @@ class NumericTableWidgetItem(QTableWidgetItem):
         if isinstance(other, NumericTableWidgetItem):
             return self.value < other.value
         return super().__lt__(other)
-    
+
+
 class CompleterDelegate(QStyledItemDelegate):
     def __init__(self, words_provider, parent=None):
         super().__init__(parent)

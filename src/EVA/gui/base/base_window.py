@@ -1,6 +1,3 @@
-from PyQt6.QtCore import pyqtEnum, pyqtSignal
-from PyQt6.QtGui import QCloseEvent
-from PyQt6.QtWidgets import QWidget
 
 
 class BaseWindow(object):

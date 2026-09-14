@@ -1,7 +1,7 @@
 import logging
 from PyQt6.QtCore import QObject
 
-from EVA.core.app import get_config, get_app
+from EVA.core.app import get_config
 from EVA.core.data_loading import load_data
 
 logger = logging.getLogger(__name__)
@@ -65,7 +65,8 @@ class MainModel(QObject):
 
         logging.info("Found data for run number %s.", run_num)
         logging.info(
-            "Data was found for detectors %s.", ", ".join(loaded_detector for loaded_detector in run.loaded_detectors)
+            "Data was found for detectors %s.",
+            ", ".join(loaded_detector for loaded_detector in run.loaded_detectors),
         )
 
         if flags["comment_not_found"]:  # Comment file was not found

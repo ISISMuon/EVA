@@ -256,7 +256,9 @@ def search_muxrays(
                     all_matches.append(data)
 
             prims = [peak[0] for peak in peak_data["Primary energies"][element].items()]
-            secs = [peak[0] for peak in peak_data["Secondary energies"][element].items()]
+            secs = [
+                peak[0] for peak in peak_data["Secondary energies"][element].items()
+            ]
     all_matches = sorted(all_matches, key=lambda o: o["diff"])
 
     for match in all_matches:

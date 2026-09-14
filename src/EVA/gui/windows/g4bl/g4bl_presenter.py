@@ -1,12 +1,9 @@
 import time
 import logging
 
-from copy import copy
-from idlelib.configdialog import font_sample_text
 
-from PyQt6.QtCore import QThreadPool, Qt
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QTableWidgetItem
-from matplotlib import pyplot as plt
 
 from EVA.util.path_handler import get_path
 from EVA.util.worker import Worker
@@ -35,7 +32,9 @@ class G4blPresenter(QWidget):
         # self.view.visualisation_checkbox.hide() #disable for now.
         # set momentum scam params to only be visible if momentum scan is selected
         self.on_scan_type_changed(self.view.scan_momentum_combo.currentText())
-        self.view.scan_momentum_combo.currentTextChanged.connect(self.on_scan_type_changed)
+        self.view.scan_momentum_combo.currentTextChanged.connect(
+            self.on_scan_type_changed
+        )
 
         # set momentum bite param to only be visible is momentum spread simulation is selected
         self.on_sim_type_changed(self.view.sim_type_combo.currentText())
@@ -46,18 +45,36 @@ class G4blPresenter(QWidget):
         self.view.stack_layer_radio.setChecked(True)
 
         # add an empty row to the end of the layer table after every time the contents are updated
-        self.view.stack_layer_setup_table.contents_updated_s.connect(self.view.stack_layer_setup_table.append_row)
-        self.view.stack_layer_setup_table.cellClicked.connect(self.append_row_in_stack_layer_table_if_last_row_clicked)
-        
-        # check if user added sample, verify is sample provided is in the NIST database, request density if not #TODO need to actually be able to use this density 
-        self.view.stack_layer_setup_table.user_edited_cell_s.connect(self.on_user_edited_cell)
+        self.view.stack_layer_setup_table.contents_updated_s.connect(
+            self.view.stack_layer_setup_table.append_row
+        )
+        self.view.stack_layer_setup_table.cellClicked.connect(
+            self.append_row_in_stack_layer_table_if_last_row_clicked
+        )
 
-        self.view.stack_layer_setup_table.set_column_completer(0, lambda: self.model.g4bl_materials)
-        self.view.stack_layer_setup_table.update_contents(self.format_model_layers(), round_to=4)
+        # check if user added sample, verify is sample provided is in the NIST database, request density if not #TODO need to actually be able to use this density
+        self.view.stack_layer_setup_table.user_edited_cell_s.connect(
+            self.on_user_edited_cell
+        )
 
-        self.view.place_sample_implantation_collapse_checkbox.checkStateChanged.connect(self.view.collapse_expand_implantation)
-        self.view.stack_implantation_collapse_checkbox.checkStateChanged.connect(lambda state: self.collapse_expand_tree(self.view.stack_results_tree, state))
-        self.view.place_sample_implantation_collapse_checkbox.checkStateChanged.connect(lambda state: self.collapse_expand_tree(self.view.place_sample_results_tree, state))
+        self.view.stack_layer_setup_table.set_column_completer(
+            0, lambda: self.model.g4bl_materials
+        )
+        self.view.stack_layer_setup_table.update_contents(
+            self.format_model_layers(), round_to=4
+        )
+
+        self.view.place_sample_implantation_collapse_checkbox.checkStateChanged.connect(
+            self.view.collapse_expand_implantation
+        )
+        self.view.stack_implantation_collapse_checkbox.checkStateChanged.connect(
+            lambda state: self.collapse_expand_tree(self.view.stack_results_tree, state)
+        )
+        self.view.place_sample_implantation_collapse_checkbox.checkStateChanged.connect(
+            lambda state: self.collapse_expand_tree(
+                self.view.place_sample_results_tree, state
+            )
+        )
         self.view.run_sim_button.clicked.connect(self.start_sim)
         self.view.cancel_sim_button.clicked.connect(self.cancel_sim)
         self.view.stopping_shift_plot_origin_s.connect(self.stopping_shift_plot_origin)
@@ -68,7 +85,9 @@ class G4blPresenter(QWidget):
 
         self.view.save_data_s.connect(self.on_save_sim_result)
         self.view.save_img_s.connect(self.on_save_sim_plot)
-        self.view.stack_save_all_sims_button.clicked.connect(self.on_save_all_sim_results)
+        self.view.stack_save_all_sims_button.clicked.connect(
+            self.on_save_all_sim_results
+        )
         self.view.stack_save_all_imgs_button.clicked.connect(self.on_save_all_sim_plot)
         self.view.show_plot_s.connect(self.show_plot)
         self.view.momentum_slider.valueChanged.connect(self.on_slider_moved)
@@ -87,7 +106,6 @@ class G4blPresenter(QWidget):
         for plot_stack in self.view.plot_stacks:
             self.model.close_figure(plot_stack.widget(0).canvas.figure)
             self.model.close_figure(plot_stack.widget(1).canvas.figure)
-
 
     def on_scan_type_changed(self, scan_type: str):
         """
@@ -124,11 +142,11 @@ class G4blPresenter(QWidget):
         self.view.momentum_spread_linedit.setVisible(visibility)
 
     def append_row_in_stack_layer_table_if_last_row_clicked(self, row):
-        if row == (self.view.stack_layer_setup_table.rowCount()-1):
+        if row == (self.view.stack_layer_setup_table.rowCount() - 1):
             self.view.stack_layer_setup_table.append_row()
 
     def on_mode_changed(self, button, checked):
-        if not checked:   # ignore the button that was turned off
+        if not checked:  # ignore the button that was turned off
             return
 
         if button is self.view.stack_layer_radio:
@@ -145,8 +163,9 @@ class G4blPresenter(QWidget):
             self.current_table = self.view.placement_results_table
             self.current_tree = self.view.placement_results_tree
 
-
-    def format_model_layers(self, layers: list | None = None) -> list[list[str | float]]:
+    def format_model_layers(
+        self, layers: list | None = None
+    ) -> list[list[str | float]]:
         """
         Formats the layers in G4blModel to a format compatible with the BaseTable's update_contents() method.
 
@@ -156,7 +175,10 @@ class G4blPresenter(QWidget):
         if layers is None:
             layers = self.model.stack_input
 
-        return [[layer["name"], layer["thickness"], layer.get("density", " ")] for layer in layers]
+        return [
+            [layer["name"], layer["thickness"], layer.get("density", " ")]
+            for layer in layers
+        ]
 
     def get_layers_from_stack_table(self) -> list[dict] | None:
         """
@@ -184,7 +206,7 @@ class G4blPresenter(QWidget):
                 raise ValueError
 
             # layer density is allowed to be empty for 'Beamline Window' and 'Air (compressed)'
-            #TODO have eva check if material exists in g4bl database, if yes then skip density requirement
+            # TODO have eva check if material exists in g4bl database, if yes then skip density requirement
             try:
                 if layer[2] != "":
                     layer_dict["density"] = float(layer[2])
@@ -192,7 +214,7 @@ class G4blPresenter(QWidget):
                     layer_dict["density"] = 0.0
             except ValueError:
                 raise ValueError
-            
+
             structured_layers.append(layer_dict)
         return structured_layers
 
@@ -200,7 +222,7 @@ class G4blPresenter(QWidget):
         try:
             # get form data from view
             form_data = self.view.get_form_data()
-        except (ValueError, AttributeError) as e:
+        except (ValueError, AttributeError):
             self.view.display_error_message(message="Invalid form input!")
             return
 
@@ -211,28 +233,36 @@ class G4blPresenter(QWidget):
             self.view.display_error_message(message=error)
             return
         try:
-            if self.model.sim_method=="Stack": 
+            if self.model.sim_method == "Stack":
                 self.model.stack_input = self.get_layers_from_stack_table()
 
         except (ValueError, AttributeError, KeyError) as e:
-            self.view.display_error_message(message="Invalid layers specified. All layers must have a thickness, and all undefined layers "
-                                                    "must have a density specified. "
-                                                    "Ensure all values are greater than 0.")
+            self.view.display_error_message(
+                message="Invalid layers specified. All layers must have a thickness, and all undefined layers "
+                "must have a density specified. "
+                "Ensure all values are greater than 0."
+            )
             raise e
         # check if g4bl exe and output path is valid
         g4bldir_valid = self.model.is_valid_path(form_data["g4bl_dir"])
         outputdir_valid = self.model.is_valid_path(form_data["output_dir"])
 
         if not g4bldir_valid:
-            self.view.display_error_message(message="Could not find g4bl.exe at specified location. "
-                                     "Please ensure you have G4BL installed.")
+            self.view.display_error_message(
+                message="Could not find g4bl.exe at specified location. "
+                "Please ensure you have G4BL installed."
+            )
             return
         if not outputdir_valid:
-            self.view.display_error_message(message="Invalid output directory. Please ensure directory exists and the path is valid")
+            self.view.display_error_message(
+                message="Invalid output directory. Please ensure directory exists and the path is valid"
+            )
             return
 
         if form_data["sim_type"] == "Momentum Spread" and form_data["stats"] < 500:
-            self.view.display_error_message(message="Momentum spread simulation requires a minimum of 500 muons.")
+            self.view.display_error_message(
+                message="Momentum spread simulation requires a minimum of 500 muons."
+            )
             return
         # if everything is ok, send data to model and simulate
         try:
@@ -252,7 +282,9 @@ class G4blPresenter(QWidget):
                 self.model.momentum = [form_data["momentum"]]
 
         except Exception as e:
-            self.view.display_error_message(message=f"An unexpected error has occurred! \n{e}")
+            self.view.display_error_message(
+                message=f"An unexpected error has occurred! \n{e}"
+            )
             logger.critical("Simulation failed! %s", e)
             raise e
 
@@ -265,7 +297,9 @@ class G4blPresenter(QWidget):
         self.view.simulation_progress_bar.setMaximum(n_sim)
         self.view.simulation_progress_bar.setValue(0)
 
-        self.view.estimated_time_remaining_label.setText(f"Estimated time left: calculating...")
+        self.view.estimated_time_remaining_label.setText(
+            "Estimated time left: calculating..."
+        )
         self.view.simulation_progress_label.setText("Starting simulation...")
 
         # start simulation on separate thread
@@ -280,7 +314,7 @@ class G4blPresenter(QWidget):
         # if user has requested the simulation to be cancelled, set this flag to True to notify the model
         self.model.cancel_sim = True
         self.view.simulation_progress_label.setText("Stopping...")
-        self.view.estimated_time_remaining_label.setText(f"Estimated time remaining: -")
+        self.view.estimated_time_remaining_label.setText("Estimated time remaining: -")
 
     def progress_fn(self, progress: dict):
         if self.model.cancel_sim:
@@ -297,23 +331,26 @@ class G4blPresenter(QWidget):
             cumulative = int(self._completed_sims * self._muons_per_sim + current_event)
             self.view.simulation_progress_bar.setMaximum(self._total_muons)
             self.view.simulation_progress_bar.setValue(cumulative)
-            self.view.simulation_progress_label.setText(f"Running simulation {self._completed_sims + 1} / {len(self.model.momentum)} - Muon {current_event} / {self._muons_per_sim}")
-        
+            self.view.simulation_progress_label.setText(
+                f"Running simulation {self._completed_sims + 1} / {len(self.model.momentum)} - Muon {current_event} / {self._muons_per_sim}"
+            )
+
         if progress_type == "iteration_end":
             estimated_time = progress["estimated_time_left"]
             self.view.estimated_time_remaining_label.setText(
                 f"Estimated time remaining: {estimated_time}"
             )
+
     def on_simulation_error(self, error):
-            exctype, value, tb = error
-            if exctype is ValueError:
-                self.view.display_error_message(message=str(value))
-            else:
-                self.view.display_error_message(message=
-                    "Unexpected error occurred during simulation."
-                )
-            result = {"status" : "error"}
-            self.on_simulation_finished(result)
+        exctype, value, tb = error
+        if exctype is ValueError:
+            self.view.display_error_message(message=str(value))
+        else:
+            self.view.display_error_message(
+                message="Unexpected error occurred during simulation."
+            )
+        result = {"status": "error"}
+        self.on_simulation_finished(result)
 
     def on_simulation_finished(self, result):
         self.model.cancel_sim = False
@@ -333,19 +370,23 @@ class G4blPresenter(QWidget):
         # update table and implantation tree
         self.view.setup_results_table(self.model.momentum, self.current_table)
 
-        self.view.update_results_tree(tree=self.current_tree,
-                                      momenta=self.model.momentum,
-                                      layer_names=[layer["name"] for layer in self.model.stack_input],
-                                      proportions=self.model.proportions_per_layer,
-                                      proportions_errs=self.model.proportions_per_layer_err,
-                                      counts=self.model.counts_per_layer,
-                                      counts_errs=self.model.counts_per_layer_err)
+        self.view.update_results_tree(
+            tree=self.current_tree,
+            momenta=self.model.momentum,
+            layer_names=[layer["name"] for layer in self.model.stack_input],
+            proportions=self.model.proportions_per_layer,
+            proportions_errs=self.model.proportions_per_layer_err,
+            counts=self.model.counts_per_layer,
+            counts_errs=self.model.counts_per_layer_err,
+        )
 
         for i, momentum in enumerate(self.model.momentum):
             fig_whole, ax_whole = self.model.plot_whole(i, momentum)
             fig_comp, ax_comp = self.model.plot_components(i, momentum)
 
-            self.view.generate_plot_tab(momentum, i, fig_whole, ax_whole, fig_comp, ax_comp)
+            self.view.generate_plot_tab(
+                momentum, i, fig_whole, ax_whole, fig_comp, ax_comp
+            )
 
         # Plot stopping profiles and depth profiles
         if len(self.model.momentum) > 1:
@@ -353,9 +394,8 @@ class G4blPresenter(QWidget):
 
             self.view.slider_container.show()
             self.view.momentum_slider.setMinimum(0)
-            self.view.momentum_slider.setMaximum(len(self.model.momentum)-1)
+            self.view.momentum_slider.setMaximum(len(self.model.momentum) - 1)
             self.view.momentum_slider.setSingleStep(1)
-
 
     def stopping_shift_plot_origin(self, index):
         try:
@@ -429,7 +469,6 @@ class G4blPresenter(QWidget):
             self.view.display_error_message(message="Invalid shift value!")
             raise e
 
-
     def on_save_sim_result(self, row):
         if len(self.model.result_x) == 0:  # if no simulations have been run
             self.view.display_error_message(message="No simulations to save.")
@@ -456,7 +495,6 @@ class G4blPresenter(QWidget):
         if path:
             self.model.save_sim(path)
 
-
     def on_save_sim_plot(self, row):
         # check if the figure for this momentum exists
         if row not in self.model.figs:
@@ -474,7 +512,6 @@ class G4blPresenter(QWidget):
 
         if path:
             self.model.save_plot(path, row)
-
 
     def on_save_all_sim_plot(self):
         # check if the figure for this momentum exists
@@ -510,7 +547,9 @@ class G4blPresenter(QWidget):
         if sample_name in self.model.g4bl_materials:
             if sample_name in self.model.g4bl_compounds:
                 table.setItem(row, 2, QTableWidgetItem("placeholderdisabled"))
-                density_item.setFlags(density_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                density_item.setFlags(
+                    density_item.flags() & ~Qt.ItemFlag.ItemIsEditable
+                )
             else:
                 table.setItem(row, 2, QTableWidgetItem(""))
                 # make editable again
@@ -529,7 +568,7 @@ class G4blPresenter(QWidget):
         dt = time.time_ns() - self.time_last_swapped
 
         if dt < 1e7:
-            return # limit swapping plots to once every 10ms
+            return  # limit swapping plots to once every 10ms
 
         self.show_plot(val, self.model.momentum[val])
         self.time_last_swapped = time.time_ns()
@@ -539,7 +578,7 @@ class G4blPresenter(QWidget):
             form_data = self.view.get_form_data()
             layers = self.get_layers_from_stack_table()
 
-        except (AttributeError, ValueError) as e:
+        except (AttributeError, ValueError):
             self.view.display_error_message(
                 message="Cannot save settings. Invalid data in form or layers table."
             )
@@ -606,14 +645,20 @@ class G4blPresenter(QWidget):
         self.model.scan_type = form_data["scan_type"]
         self.model.sim_type = form_data["sim_type"]
 
-        if (form_data["max_momentum"] <= 0 or form_data["min_momentum"] <= 0 or
-                form_data["step_momentum"] <= 0 or form_data["momentum"] <= 0):
+        if (
+            form_data["max_momentum"] <= 0
+            or form_data["min_momentum"] <= 0
+            or form_data["step_momentum"] <= 0
+            or form_data["momentum"] <= 0
+        ):
             return False, "Momentum must be greater than 0."
 
         if form_data["min_momentum"] >= form_data["max_momentum"]:
             return False, "Min momentum must be less than max momentum."
 
-        if (form_data["max_momentum"] - form_data["min_momentum"]) < form_data["step_momentum"]:
+        if (form_data["max_momentum"] - form_data["min_momentum"]) < form_data[
+            "step_momentum"
+        ]:
             return False, "Momentum step too high."
 
         if form_data["stats"] <= 0:
@@ -622,7 +667,10 @@ class G4blPresenter(QWidget):
         if form_data["momentum_spread"] <= 0:
             return False, "Momentum spread be greater than 0."
 
-        if ((form_data["max_momentum"] - form_data["min_momentum"]) / form_data["step_momentum"]) > 1e6:
+        if (
+            (form_data["max_momentum"] - form_data["min_momentum"])
+            / form_data["step_momentum"]
+        ) > 1e6:
             return False, "Too many simulations! Please increase the momentum step."
 
         return True, ""

@@ -2,7 +2,7 @@ import logging
 import os
 from PyQt6.QtCore import pyqtSignal
 
-from PyQt6.QtWidgets import QPushButton, QMessageBox, QFileDialog, QTableWidgetItem
+from PyQt6.QtWidgets import QFileDialog, QTableWidgetItem
 
 from EVA.gui.ui_files.fit_table_plot_gui import Ui_fit_table_plot
 from EVA.gui.base.base_view import BaseView

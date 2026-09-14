@@ -1,7 +1,7 @@
 class DetectorGroupingModel:
     def __init__(self):
         return
-    
+
     def load_profile(self, groups: dict) -> list:
         """
         Load a detector grouping profile from dict stored in config

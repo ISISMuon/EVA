@@ -1,6 +1,3 @@
-from scipy.signal import find_peaks
-from scipy.signal import find_peaks_cwt
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -36,6 +33,8 @@ def findpeak_with_bck_removed(
     Returns:
         SciPy find_peaks() result and ndarray of the x-values where peaks were detected.
     """
+    from scipy.signal import find_peaks
+
     spectrum = y
 
     FSIZE = 20
@@ -55,7 +54,11 @@ def findpeak_with_bck_removed(
     clipped = np.where(cond_high_clip, np.nan, spectrum)
 
     ## Interpolate between dropped points
-    interpd = pd.Series(clipped).interpolate().tolist()
+    interpd = np.interp(
+        np.arange(len(clipped)),
+        np.where(~np.isnan(clipped))[0],
+        clipped[~np.isnan(clipped)],
+    )
 
     ## Get baseline from the interpd signal
     rough_base = meanfilter(interpd, FSIZE // 2)
@@ -95,6 +98,8 @@ def findpeaks(
     Returns:
         SciPy find_peaks() result and ndarray of the x-values where peaks were detected.
     """
+    from scipy.signal import find_peaks
+
     peaks = find_peaks(y, height=h, threshold=t, distance=d)
     peak_pos = x[peaks[0]]
 
@@ -102,6 +107,7 @@ def findpeaks(
 
 
 def FindPeaksCwt(x, y, h, t, d):
+    from scipy.signal import find_peaks_cwt
     # peaks = find_peaks(y,height=h,threshold = t, distance = d)
     peaks = find_peaks_cwt(y, [h])
     # height = peaks[1]['peak_heights']

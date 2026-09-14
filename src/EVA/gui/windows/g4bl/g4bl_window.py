@@ -7,7 +7,8 @@ from EVA.gui.windows.g4bl.g4bl_view import G4blView
 
 
 class G4blWindow(BaseWindow):
-    """ Coordinator class to string together the MVP components of the TRIM window """
+    """Coordinator class to string together the MVP components of the TRIM window"""
+
     def __init__(self, parent: QWidget | None = None):
         """
         Args:

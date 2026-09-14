@@ -1,4 +1,3 @@
-from pytestqt.plugin import qapp
 from EVA.core.app import get_app
 
 

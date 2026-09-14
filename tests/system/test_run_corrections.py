@@ -1,7 +1,5 @@
 import numpy as np
-from EVA.core.app import get_app
 import pytest
-from pytestqt.plugin import qapp
 
 from EVA.core.data_loading import load_data
 from EVA.core.app import get_config
