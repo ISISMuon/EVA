@@ -9,7 +9,9 @@ from EVA.gui.windows.manual.manual_window import ManualWindow
 from EVA.gui.windows.multiplot.multi_plot_window import MultiPlotWindow
 from EVA.gui.windows.fit_table_plot.fit_table_plot_window import FitTablePlotWindow
 from EVA.gui.windows.g4bl.g4bl_window import G4blWindow
-from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import ModelSpectraWindow
+from EVA.gui.windows.muonic_xray_simulation.model_spectra_window import (
+    ModelSpectraWindow,
+)
 from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWidget
 from EVA.gui.windows.srim.trim_window import TrimWindow
 from EVA.gui.windows.workspace.workspace_window import WorkspaceWindow
@@ -31,7 +33,9 @@ class MainPresenter:
         self.model = model
 
         self.view.set_run_num_line_edit(get_config()["general"]["default_run_num"])
-        self.on_text_changed(self.view.get_run_num_line_edit()) # Update loading options if saved run number in config is a multi-run
+        self.on_text_changed(
+            self.view.get_run_num_line_edit()
+        )  # Update loading options if saved run number in config is a multi-run
         # Set up action bar connections
         self.view.file_save.triggered.connect(self.save_settings)
         self.view.file_browse_dir.triggered.connect(self.set_default_directory)
@@ -156,10 +160,14 @@ class MainPresenter:
         try:
             flags, run = self.model.load_run(run_num)
         except UnicodeError:
-            logger.warning(f"Current EVA encoding {get_config()["general"]["encoding"]} does not match run {run_num} data file(s)")
-            self.view.show_error_box("File encoding does not match! Try different option from general settings.")
+            logger.warning(
+                f"Current EVA encoding {get_config()['general']['encoding']} does not match run {run_num} data file(s)"
+            )
+            self.view.show_error_box(
+                "File encoding does not match! Try different option from general settings."
+            )
             return
-        if flags["no_files_found"]: #  no data was loaded - return now
+        if flags["no_files_found"]:  #  no data was loaded - return now
             # Update GUI
             self.view.set_run_num_label(
                 f"No files found for run {run_num} in {get_path(get_config()['general']['data_directory'])}"
@@ -318,7 +326,7 @@ class MainPresenter:
         window.widget().deleteLater()
 
     def open_g4bl_sim(self):
-        """ Opens a window for g4bl simulations. """
+        """Opens a window for g4bl simulations."""
         logger.info("Opening G4BL sim window.")
 
         window = G4blWindow()
@@ -328,7 +336,7 @@ class MainPresenter:
         window.widget().window_closed_s.connect(lambda: self.close_g4bl_sim(window))
 
     def close_g4bl_sim(self, window):
-        """ Remove reference to g4bl window when closed """
+        """Remove reference to g4bl window when closed"""
         logger.info("Closed G4BL window.")
 
         self.view.g4bl_windows.remove(window)

@@ -1,7 +1,6 @@
-import matplotlib
+from matplotlib.collections import FillBetweenPolyCollection
 import matplotlib.pyplot as plt
 import numpy as np
-from EVA.core.app import get_app
 from EVA.core.data_structures.run import Run
 from EVA.core.data_structures.spectrum import Spectrum
 
@@ -99,9 +98,7 @@ def plot_spectrum_residual(
     Returns:
         matplotlib Figure and Axes with plotted spectrum and empty Axis for residuals
     """
-    title = settings.get(
-        "title", f"Run Number: {run.run_num} - {run.plot_mode}"
-    )
+    title = settings.get("title", f"Run Number: {run.run_num} - {run.plot_mode}")
     colour = settings.get("colour", "yellow")
 
     fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={"height_ratios": [3, 1]})
@@ -128,13 +125,15 @@ def plot_spectrum_residual(
     )
     main_ax.set_ylim(0.0)
     main_ax.set_xlim(0.0)
-    residual_ax.set_ylim(-1,1)
+    residual_ax.set_ylim(-1, 1)
     main_ax.tick_params(labelbottom=True)
 
     return fig, ax
 
 
-def plot_run(run: Run, fig: plt.Figure, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
+def plot_run(
+    run: Run, fig: plt.Figure, **settings: dict
+) -> tuple[plt.Figure, plt.Axes]:
     """
     Plots a Run with a subplot for each Spectrum in the Run.
 
@@ -215,7 +214,9 @@ def plot_run(run: Run, fig: plt.Figure, **settings: dict) -> tuple[plt.Figure, p
             axs[i].set_xlim(0.0)
             axs[i].set_ylim((0, 1.2 * np.max(dataset.y)))
             axs[i].set_title(dataset.detector)
-            plot_group_components(run, axs[i], detector, show_components=show_components)
+            plot_group_components(
+                run, axs[i], detector, show_components=show_components
+            )
             i += 1
 
     # Adjustments
@@ -272,7 +273,7 @@ def replot_run(
         fill_obj = [
             child
             for child in ax.get_children()
-            if isinstance(child, matplotlib.collections.FillBetweenPolyCollection)
+            if isinstance(child, FillBetweenPolyCollection)
         ][0]
 
         # lastly, re-fill the histogram
@@ -283,7 +284,10 @@ def replot_run(
 
         plot_group_components(run, ax, detector, show_components)
 
-def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_components: bool = False):
+
+def plot_group_components(
+    run: Run, axs: plt.Axes, group_name: str, show_components: bool = False
+):
     """
     Plots the components of a detector group on a specified Axes instance.
 
@@ -297,12 +301,14 @@ def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_compone
     """
 
     if run.detector_group_dict == {}:
-        return # No detector groups defined, nothing to plot
+        return  # No detector groups defined, nothing to plot
     # else:
     # remove step lines
     for line in axs.lines[:]:
         label = line.get_label()
-        if label[1:] in run.detector_group_dict[group_name]: # Drop underscore in label to match group name
+        if (
+            label[1:] in run.detector_group_dict[group_name]
+        ):  # Drop underscore in label to match group name
             line.remove()
 
     # remove fills
@@ -310,7 +316,7 @@ def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_compone
         label = collection.get_label()
         if label in run.detector_group_dict[group_name]:
             collection.remove()
-    
+
     if show_components:
         dets = run.detector_group_dict[group_name]
         # sort so the tallest spectrum is drawn first (bottom), smallest last (top)
@@ -324,7 +330,14 @@ def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_compone
                 color="black",
                 label=f"_{det}",
             )
-            axs.fill_between(run._raw[det].x, run._raw[det].y, step="mid", alpha=0.9,label=f"{det}",)
+            axs.fill_between(
+                run._raw[det].x,
+                run._raw[det].y,
+                step="mid",
+                alpha=0.9,
+                label=f"{det}",
+            )
+
 
 def replot_spectrum_residual(
     run: Run,

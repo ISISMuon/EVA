@@ -3,7 +3,6 @@ This code has been adapted from https://www.pythonguis.com/tutorials/multithread
 """
 
 import sys
-import time
 import traceback
 from PyQt6.QtCore import QRunnable, pyqtSlot, QObject, pyqtSignal
 

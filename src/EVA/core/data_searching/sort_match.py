@@ -15,11 +15,11 @@ def sort_match(results: list[dict]) -> dict:
     # sorts all transitions by peaks and keeps track of which elements are found for each peak
     for line in results:
         # create dictionary key if energy has not been seen previously
-        if not line["peak_centre"] in peaks.keys():
+        if line["peak_centre"] not in peaks.keys():
             peaks[line["peak_centre"]] = []
 
         # create dictionary key if element has not been seen previously
-        if not line["element"] in counts.keys():
+        if line["element"] not in counts.keys():
             counts[line["element"]] = 0
 
         if line["element"] not in peaks[line["peak_centre"]]:

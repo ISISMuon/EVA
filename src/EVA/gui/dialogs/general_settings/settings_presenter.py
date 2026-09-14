@@ -4,12 +4,13 @@ from EVA.core.app import get_config
 
 logger = logging.getLogger(__name__)
 
-#NOTE: Define the available encoding options for the application
+# NOTE: Define the available encoding options for the application
 # Point of access to add new options for different file formats in the future.
 # Defaults to utf-8 (ie first element in the list).
 # The current error handling implementation in main presenter works for these 3 encoding but
 # may not be sufficient if new formats are added, Will require testing.
 ENCODING_OPTIONS = ["utf-8", "utf-16", "ascii"]
+
 
 class SettingsPresenter:
     def __init__(self, view, model):
@@ -66,7 +67,7 @@ class SettingsPresenter:
             "srim_exe_dir": config["SRIM"]["installation_directory"],
             "srim_out_dir": config["SRIM"]["output_directory"],
             "fill_colour": config["plot"]["fill_colour"],
-            "encoding": config["general"]["encoding"]
+            "encoding": config["general"]["encoding"],
         }
 
         self.view.set_settings(settings)
@@ -78,7 +79,7 @@ class SettingsPresenter:
             "general": {
                 "working_directory": settings["working_dir"],
                 "encoding": settings["encoding"],
-                "data_directory": settings["data_dir"]
+                "data_directory": settings["data_dir"],
             },
             "SRIM": {
                 "installation_directory": settings["srim_exe_dir"],

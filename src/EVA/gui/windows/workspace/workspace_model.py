@@ -1,11 +1,8 @@
 import zipfile
 
-import matplotlib
 import numpy as np
 
 from EVA.core.app import get_config
-from EVA.core.data_structures.run import normalisation_types
-from EVA.core.settings.config import Config
 
 
 class WorkspaceModel:

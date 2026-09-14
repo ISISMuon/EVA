@@ -1,4 +1,3 @@
-from EVA.core.data_structures.run import Run
 from EVA.gui.base.base_window import BaseWindow
 from PyQt6.QtCore import pyqtSignal
 

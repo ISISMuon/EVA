@@ -1,4 +1,3 @@
-from EVA.gui.windows.muonic_xray_simulation.model_spectra_model import ModelSpectraModel
 
 
 class ModelSpectraPresenter(object):

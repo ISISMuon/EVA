@@ -20,10 +20,15 @@ class Ui_peak_fit(object):
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.plot_widget)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.plot_container_widget = QtWidgets.QStackedWidget(parent=self.plot_widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(2)
-        sizePolicy.setHeightForWidth(self.plot_container_widget.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.plot_container_widget.sizePolicy().hasHeightForWidth()
+        )
         self.plot_container_widget.setSizePolicy(sizePolicy)
         self.plot_container_widget.setStyleSheet("background: white")
         self.plot_container_widget.setObjectName("plot_container_widget")
@@ -39,10 +44,14 @@ class Ui_peak_fit(object):
         self.verticalLayout_12.addWidget(self.plot_comp_checkbox)
         self.horizontalLayout.addWidget(self.plot_widget)
         self.side_panel_tabs = QtWidgets.QTabWidget(parent=peak_fit)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.side_panel_tabs.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.side_panel_tabs.sizePolicy().hasHeightForWidth()
+        )
         self.side_panel_tabs.setSizePolicy(sizePolicy)
         self.side_panel_tabs.setMaximumSize(QtCore.QSize(700, 16777215))
         self.side_panel_tabs.setObjectName("side_panel_tabs")
@@ -58,22 +67,30 @@ class Ui_peak_fit(object):
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_121 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_121.setObjectName("verticalLayout_121")
-        self.fit_settings_widget = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
+        self.fit_settings_widget = QtWidgets.QWidget(
+            parent=self.scrollAreaWidgetContents
+        )
         self.fit_settings_widget.setObjectName("fit_settings_widget")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.fit_settings_widget)
         self.gridLayout_3.setContentsMargins(0, -1, 0, -1)
         self.gridLayout_3.setObjectName("gridLayout_3")
-        self.e_range_max_line_edit = QtWidgets.QLineEdit(parent=self.fit_settings_widget)
+        self.e_range_max_line_edit = QtWidgets.QLineEdit(
+            parent=self.fit_settings_widget
+        )
         self.e_range_max_line_edit.setObjectName("e_range_max_line_edit")
         self.gridLayout_3.addWidget(self.e_range_max_line_edit, 0, 3, 1, 1)
-        self.auto_e_range_checkbox = QtWidgets.QCheckBox(parent=self.fit_settings_widget)
+        self.auto_e_range_checkbox = QtWidgets.QCheckBox(
+            parent=self.fit_settings_widget
+        )
         self.auto_e_range_checkbox.setChecked(True)
         self.auto_e_range_checkbox.setObjectName("auto_e_range_checkbox")
         self.gridLayout_3.addWidget(self.auto_e_range_checkbox, 0, 1, 1, 1)
         self.auto_e_range_label = QtWidgets.QLabel(parent=self.fit_settings_widget)
         self.auto_e_range_label.setObjectName("auto_e_range_label")
         self.gridLayout_3.addWidget(self.auto_e_range_label, 0, 0, 1, 1)
-        self.e_range_min_line_edit = QtWidgets.QLineEdit(parent=self.fit_settings_widget)
+        self.e_range_min_line_edit = QtWidgets.QLineEdit(
+            parent=self.fit_settings_widget
+        )
         self.e_range_min_line_edit.setObjectName("e_range_min_line_edit")
         self.gridLayout_3.addWidget(self.e_range_min_line_edit, 0, 2, 1, 1)
         self.verticalLayout_121.addWidget(self.fit_settings_widget)
@@ -84,36 +101,58 @@ class Ui_peak_fit(object):
         self.peak_params_label.setObjectName("peak_params_label")
         self.verticalLayout_121.addWidget(self.peak_params_label)
         self.peak_menu_widget = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.peak_menu_widget.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.peak_menu_widget.sizePolicy().hasHeightForWidth()
+        )
         self.peak_menu_widget.setSizePolicy(sizePolicy)
         self.peak_menu_widget.setObjectName("peak_menu_widget")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.peak_menu_widget)
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.add_peak_button = QtWidgets.QPushButton(parent=self.peak_menu_widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.add_peak_button.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.add_peak_button.sizePolicy().hasHeightForWidth()
+        )
         self.add_peak_button.setSizePolicy(sizePolicy)
         self.add_peak_button.setObjectName("add_peak_button")
         self.horizontalLayout_3.addWidget(self.add_peak_button)
-        self.cancel_add_peak_button = QtWidgets.QPushButton(parent=self.peak_menu_widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        self.cancel_add_peak_button = QtWidgets.QPushButton(
+            parent=self.peak_menu_widget
+        )
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.cancel_add_peak_button.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.cancel_add_peak_button.sizePolicy().hasHeightForWidth()
+        )
         self.cancel_add_peak_button.setSizePolicy(sizePolicy)
         self.cancel_add_peak_button.setObjectName("cancel_add_peak_button")
         self.horizontalLayout_3.addWidget(self.cancel_add_peak_button)
         self.constraints_button = QtWidgets.QPushButton(parent=self.peak_menu_widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.constraints_button.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.constraints_button.sizePolicy().hasHeightForWidth()
+        )
         self.constraints_button.setSizePolicy(sizePolicy)
         self.constraints_button.setObjectName("constraints_button")
         self.horizontalLayout_3.addWidget(self.constraints_button)
@@ -121,7 +160,9 @@ class Ui_peak_fit(object):
         self.add_peak_label = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
         self.add_peak_label.setObjectName("add_peak_label")
         self.verticalLayout_121.addWidget(self.add_peak_label)
-        self.peak_params_tabs = QtWidgets.QTabWidget(parent=self.scrollAreaWidgetContents)
+        self.peak_params_tabs = QtWidgets.QTabWidget(
+            parent=self.scrollAreaWidgetContents
+        )
         self.peak_params_tabs.setObjectName("peak_params_tabs")
         self.initial_peak_params_tab = QtWidgets.QWidget()
         self.initial_peak_params_tab.setObjectName("initial_peak_params_tab")
@@ -129,14 +170,21 @@ class Ui_peak_fit(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.initial_peak_params_table = BaseTable(parent=self.initial_peak_params_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.initial_peak_params_table.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.initial_peak_params_table.sizePolicy().hasHeightForWidth()
+        )
         self.initial_peak_params_table.setSizePolicy(sizePolicy)
-        self.initial_peak_params_table.setStyleSheet("background: \"white\"")
+        self.initial_peak_params_table.setStyleSheet('background: "white"')
         self.initial_peak_params_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.initial_peak_params_table.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.initial_peak_params_table.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.initial_peak_params_table.setObjectName("initial_peak_params_table")
         self.initial_peak_params_table.setColumnCount(5)
         self.initial_peak_params_table.setRowCount(0)
@@ -162,7 +210,9 @@ class Ui_peak_fit(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.fitted_peak_params_table = BaseTable(parent=self.fitted_peak_params_tab)
         self.fitted_peak_params_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.fitted_peak_params_table.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.fitted_peak_params_table.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.fitted_peak_params_table.setObjectName("fitted_peak_params_table")
         self.fitted_peak_params_table.setColumnCount(4)
         self.fitted_peak_params_table.setRowCount(0)
@@ -187,33 +237,47 @@ class Ui_peak_fit(object):
         self.poly_bg_label.setObjectName("poly_bg_label")
         self.verticalLayout_121.addWidget(self.poly_bg_label)
         self.bg_params_tabs = QtWidgets.QTabWidget(parent=self.scrollAreaWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.bg_params_tabs.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.bg_params_tabs.sizePolicy().hasHeightForWidth()
+        )
         self.bg_params_tabs.setSizePolicy(sizePolicy)
         self.bg_params_tabs.setMaximumSize(QtCore.QSize(16777215, 80))
         self.bg_params_tabs.setObjectName("bg_params_tabs")
         self.initial_bg_params_tab = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Maximum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Maximum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.initial_bg_params_tab.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.initial_bg_params_tab.sizePolicy().hasHeightForWidth()
+        )
         self.initial_bg_params_tab.setSizePolicy(sizePolicy)
         self.initial_bg_params_tab.setObjectName("initial_bg_params_tab")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.initial_bg_params_tab)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.initial_bg_params_table = BaseTable(parent=self.initial_bg_params_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.initial_bg_params_table.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.initial_bg_params_table.sizePolicy().hasHeightForWidth()
+        )
         self.initial_bg_params_table.setSizePolicy(sizePolicy)
         self.initial_bg_params_table.setMaximumSize(QtCore.QSize(16777215, 108))
-        self.initial_bg_params_table.setStyleSheet("background: \"white\"")
+        self.initial_bg_params_table.setStyleSheet('background: "white"')
         self.initial_bg_params_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.initial_bg_params_table.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.initial_bg_params_table.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.initial_bg_params_table.setObjectName("initial_bg_params_table")
         self.initial_bg_params_table.setColumnCount(4)
         self.initial_bg_params_table.setRowCount(1)
@@ -244,10 +308,14 @@ class Ui_peak_fit(object):
         self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.fitted_bg_params_table = BaseTable(parent=self.fitted_bg_params_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.fitted_bg_params_table.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.fitted_bg_params_table.sizePolicy().hasHeightForWidth()
+        )
         self.fitted_bg_params_table.setSizePolicy(sizePolicy)
         self.fitted_bg_params_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.fitted_bg_params_table.setObjectName("fitted_bg_params_table")
@@ -267,20 +335,26 @@ class Ui_peak_fit(object):
         self.bg_function_label = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
         self.bg_function_label.setObjectName("bg_function_label")
         self.verticalLayout_121.addWidget(self.bg_function_label)
-        self.plot_fit_buttons = QtWidgets.QGroupBox(parent=self.scrollAreaWidgetContents)
+        self.plot_fit_buttons = QtWidgets.QGroupBox(
+            parent=self.scrollAreaWidgetContents
+        )
         self.plot_fit_buttons.setObjectName("plot_fit_buttons")
         self.gridLayout = QtWidgets.QGridLayout(self.plot_fit_buttons)
         self.gridLayout.setObjectName("gridLayout")
         self.save_params_button = QtWidgets.QPushButton(parent=self.plot_fit_buttons)
         self.save_params_button.setObjectName("save_params_button")
         self.gridLayout.addWidget(self.save_params_button, 4, 0, 1, 1)
-        self.plot_initial_params_button = QtWidgets.QPushButton(parent=self.plot_fit_buttons)
+        self.plot_initial_params_button = QtWidgets.QPushButton(
+            parent=self.plot_fit_buttons
+        )
         self.plot_initial_params_button.setObjectName("plot_initial_params_button")
         self.gridLayout.addWidget(self.plot_initial_params_button, 2, 0, 1, 1)
         self.load_params_button = QtWidgets.QPushButton(parent=self.plot_fit_buttons)
         self.load_params_button.setObjectName("load_params_button")
         self.gridLayout.addWidget(self.load_params_button, 4, 1, 1, 1)
-        self.fit_initial_params_button = QtWidgets.QPushButton(parent=self.plot_fit_buttons)
+        self.fit_initial_params_button = QtWidgets.QPushButton(
+            parent=self.plot_fit_buttons
+        )
         self.fit_initial_params_button.setObjectName("fit_initial_params_button")
         self.gridLayout.addWidget(self.fit_initial_params_button, 2, 1, 1, 1)
         self.verticalLayout_121.addWidget(self.plot_fit_buttons)
@@ -291,7 +365,10 @@ class Ui_peak_fit(object):
         self.label.setObjectName("label")
         self.verticalLayout_121.addWidget(self.label)
         self.widget_2 = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.widget_2.sizePolicy().hasHeightForWidth())
@@ -301,30 +378,46 @@ class Ui_peak_fit(object):
         self.gridLayout_8 = QtWidgets.QGridLayout(self.widget_2)
         self.gridLayout_8.setObjectName("gridLayout_8")
         self.loaded_fit_table_label = QtWidgets.QLabel(parent=self.widget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.loaded_fit_table_label.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.loaded_fit_table_label.sizePolicy().hasHeightForWidth()
+        )
         self.loaded_fit_table_label.setSizePolicy(sizePolicy)
         self.loaded_fit_table_label.setObjectName("loaded_fit_table_label")
         self.gridLayout_8.addWidget(self.loaded_fit_table_label, 0, 0, 1, 1)
         self.fit_table_select_button = QtWidgets.QPushButton(parent=self.widget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.fit_table_select_button.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.fit_table_select_button.sizePolicy().hasHeightForWidth()
+        )
         self.fit_table_select_button.setSizePolicy(sizePolicy)
         self.fit_table_select_button.setObjectName("fit_table_select_button")
         self.gridLayout_8.addWidget(self.fit_table_select_button, 0, 2, 1, 1)
-        self.save_param_to_fit_table_button = QtWidgets.QPushButton(parent=self.widget_2)
-        self.save_param_to_fit_table_button.setObjectName("save_param_to_fit_table_button")
+        self.save_param_to_fit_table_button = QtWidgets.QPushButton(
+            parent=self.widget_2
+        )
+        self.save_param_to_fit_table_button.setObjectName(
+            "save_param_to_fit_table_button"
+        )
         self.gridLayout_8.addWidget(self.save_param_to_fit_table_button, 1, 0, 1, 3)
         self.verticalLayout_121.addWidget(self.widget_2)
         self.fit_report_label = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.fit_report_label.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.fit_report_label.sizePolicy().hasHeightForWidth()
+        )
         self.fit_report_label.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -332,10 +425,15 @@ class Ui_peak_fit(object):
         self.fit_report_label.setObjectName("fit_report_label")
         self.verticalLayout_121.addWidget(self.fit_report_label)
         self.fit_report_area = QtWidgets.QFrame(parent=self.scrollAreaWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.fit_report_area.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.fit_report_area.sizePolicy().hasHeightForWidth()
+        )
         self.fit_report_area.setSizePolicy(sizePolicy)
         self.fit_report_area.setMaximumSize(QtCore.QSize(16777215, 150))
         self.fit_report_area.setAutoFillBackground(False)
@@ -344,11 +442,17 @@ class Ui_peak_fit(object):
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.fit_report_area)
         self.verticalLayout_5.setContentsMargins(9, 9, 9, 9)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.fit_report_text_browser = QtWidgets.QTextBrowser(parent=self.fit_report_area)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.fit_report_text_browser = QtWidgets.QTextBrowser(
+            parent=self.fit_report_area
+        )
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.fit_report_text_browser.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.fit_report_text_browser.sizePolicy().hasHeightForWidth()
+        )
         self.fit_report_text_browser.setSizePolicy(sizePolicy)
         self.fit_report_text_browser.setMaximumSize(QtCore.QSize(16777215, 200))
         self.fit_report_text_browser.setStyleSheet("")
@@ -357,10 +461,14 @@ class Ui_peak_fit(object):
         self.verticalLayout_5.addWidget(self.fit_report_text_browser)
         self.verticalLayout_121.addWidget(self.fit_report_area)
         self.save_load_buttons = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Maximum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Maximum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.save_load_buttons.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.save_load_buttons.sizePolicy().hasHeightForWidth()
+        )
         self.save_load_buttons.setSizePolicy(sizePolicy)
         self.save_load_buttons.setMinimumSize(QtCore.QSize(0, 0))
         self.save_load_buttons.setObjectName("save_load_buttons")
@@ -368,13 +476,19 @@ class Ui_peak_fit(object):
         self.gridLayout_6.setContentsMargins(-1, 0, 0, 0)
         self.gridLayout_6.setSpacing(0)
         self.gridLayout_6.setObjectName("gridLayout_6")
-        self.save_plot_points_button = QtWidgets.QPushButton(parent=self.save_load_buttons)
+        self.save_plot_points_button = QtWidgets.QPushButton(
+            parent=self.save_load_buttons
+        )
         self.save_plot_points_button.setObjectName("save_plot_points_button")
         self.gridLayout_6.addWidget(self.save_plot_points_button, 4, 0, 1, 1)
-        self.save_fit_report_button = QtWidgets.QPushButton(parent=self.save_load_buttons)
+        self.save_fit_report_button = QtWidgets.QPushButton(
+            parent=self.save_load_buttons
+        )
         self.save_fit_report_button.setObjectName("save_fit_report_button")
         self.gridLayout_6.addWidget(self.save_fit_report_button, 4, 2, 1, 1)
-        self.save_fitted_model_button = QtWidgets.QPushButton(parent=self.save_load_buttons)
+        self.save_fitted_model_button = QtWidgets.QPushButton(
+            parent=self.save_load_buttons
+        )
         self.save_fitted_model_button.setObjectName("save_fitted_model_button")
         self.gridLayout_6.addWidget(self.save_fitted_model_button, 4, 1, 1, 1)
         self.verticalLayout_121.addWidget(self.save_load_buttons)
@@ -390,17 +504,25 @@ class Ui_peak_fit(object):
         self.gridLayout_4 = QtWidgets.QGridLayout(self.model_fit_settings_widget)
         self.gridLayout_4.setContentsMargins(0, -1, 0, -1)
         self.gridLayout_4.setObjectName("gridLayout_4")
-        self.model_auto_e_range_checkbox = QtWidgets.QCheckBox(parent=self.model_fit_settings_widget)
+        self.model_auto_e_range_checkbox = QtWidgets.QCheckBox(
+            parent=self.model_fit_settings_widget
+        )
         self.model_auto_e_range_checkbox.setChecked(True)
         self.model_auto_e_range_checkbox.setObjectName("model_auto_e_range_checkbox")
         self.gridLayout_4.addWidget(self.model_auto_e_range_checkbox, 0, 1, 1, 1)
-        self.model_auto_e_range_label = QtWidgets.QLabel(parent=self.model_fit_settings_widget)
+        self.model_auto_e_range_label = QtWidgets.QLabel(
+            parent=self.model_fit_settings_widget
+        )
         self.model_auto_e_range_label.setObjectName("model_auto_e_range_label")
         self.gridLayout_4.addWidget(self.model_auto_e_range_label, 0, 0, 1, 1)
-        self.model_e_range_min_line_edit = QtWidgets.QLineEdit(parent=self.model_fit_settings_widget)
+        self.model_e_range_min_line_edit = QtWidgets.QLineEdit(
+            parent=self.model_fit_settings_widget
+        )
         self.model_e_range_min_line_edit.setObjectName("model_e_range_min_line_edit")
         self.gridLayout_4.addWidget(self.model_e_range_min_line_edit, 0, 2, 1, 1)
-        self.model_e_range_max_line_edit = QtWidgets.QLineEdit(parent=self.model_fit_settings_widget)
+        self.model_e_range_max_line_edit = QtWidgets.QLineEdit(
+            parent=self.model_fit_settings_widget
+        )
         self.model_e_range_max_line_edit.setObjectName("model_e_range_max_line_edit")
         self.gridLayout_4.addWidget(self.model_e_range_max_line_edit, 0, 3, 1, 1)
         self.verticalLayout_11.addWidget(self.model_fit_settings_widget)
@@ -417,9 +539,13 @@ class Ui_peak_fit(object):
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.initial_model_params_tab)
         self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
-        self.initial_model_params_table = BaseTable(parent=self.initial_model_params_tab)
+        self.initial_model_params_table = BaseTable(
+            parent=self.initial_model_params_tab
+        )
         self.initial_model_params_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.initial_model_params_table.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.initial_model_params_table.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.initial_model_params_table.setObjectName("initial_model_params_table")
         self.initial_model_params_table.setColumnCount(4)
         self.initial_model_params_table.setRowCount(0)
@@ -443,7 +569,9 @@ class Ui_peak_fit(object):
         self.verticalLayout_7.setObjectName("verticalLayout_7")
         self.fitted_model_params_table = BaseTable(parent=self.fitted_model_params_tab)
         self.fitted_model_params_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.fitted_model_params_table.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.fitted_model_params_table.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
         self.fitted_model_params_table.setObjectName("fitted_model_params_table")
         self.fitted_model_params_table.setColumnCount(3)
         self.fitted_model_params_table.setRowCount(0)
@@ -467,11 +595,15 @@ class Ui_peak_fit(object):
         self.gridLayout_7 = QtWidgets.QGridLayout(self.widget)
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.constrain_proportions_checkbox = QtWidgets.QCheckBox(parent=self.widget)
-        self.constrain_proportions_checkbox.setObjectName("constrain_proportions_checkbox")
+        self.constrain_proportions_checkbox.setObjectName(
+            "constrain_proportions_checkbox"
+        )
         self.gridLayout_7.addWidget(self.constrain_proportions_checkbox, 0, 1, 1, 2)
         self.constrain_proportions_lineedit = QtWidgets.QLineEdit(parent=self.widget)
         self.constrain_proportions_lineedit.setEnabled(True)
-        self.constrain_proportions_lineedit.setObjectName("constrain_proportions_lineedit")
+        self.constrain_proportions_lineedit.setObjectName(
+            "constrain_proportions_lineedit"
+        )
         self.gridLayout_7.addWidget(self.constrain_proportions_lineedit, 0, 3, 1, 1)
         self.verticalLayout_11.addWidget(self.widget)
         self.poly_bg_label_2 = QtWidgets.QLabel(parent=self.model_fit_tab)
@@ -481,33 +613,51 @@ class Ui_peak_fit(object):
         self.poly_bg_label_2.setObjectName("poly_bg_label_2")
         self.verticalLayout_11.addWidget(self.poly_bg_label_2)
         self.model_bg_params_tabs = QtWidgets.QTabWidget(parent=self.model_fit_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.model_bg_params_tabs.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.model_bg_params_tabs.sizePolicy().hasHeightForWidth()
+        )
         self.model_bg_params_tabs.setSizePolicy(sizePolicy)
         self.model_bg_params_tabs.setMaximumSize(QtCore.QSize(16777215, 80))
         self.model_bg_params_tabs.setObjectName("model_bg_params_tabs")
         self.initial_model_bg_params_tab = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Maximum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Maximum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.initial_model_bg_params_tab.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.initial_model_bg_params_tab.sizePolicy().hasHeightForWidth()
+        )
         self.initial_model_bg_params_tab.setSizePolicy(sizePolicy)
         self.initial_model_bg_params_tab.setObjectName("initial_model_bg_params_tab")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.initial_model_bg_params_tab)
         self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
-        self.initial_model_bg_params_table = BaseTable(parent=self.initial_model_bg_params_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.initial_model_bg_params_table = BaseTable(
+            parent=self.initial_model_bg_params_tab
+        )
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.initial_model_bg_params_table.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.initial_model_bg_params_table.sizePolicy().hasHeightForWidth()
+        )
         self.initial_model_bg_params_table.setSizePolicy(sizePolicy)
         self.initial_model_bg_params_table.setMaximumSize(QtCore.QSize(16777215, 108))
         self.initial_model_bg_params_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.initial_model_bg_params_table.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
-        self.initial_model_bg_params_table.setObjectName("initial_model_bg_params_table")
+        self.initial_model_bg_params_table.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored
+        )
+        self.initial_model_bg_params_table.setObjectName(
+            "initial_model_bg_params_table"
+        )
         self.initial_model_bg_params_table.setColumnCount(4)
         self.initial_model_bg_params_table.setRowCount(1)
         item = QtWidgets.QTableWidgetItem()
@@ -535,11 +685,17 @@ class Ui_peak_fit(object):
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.fitted_model_bg_params_tab)
         self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_10.setObjectName("verticalLayout_10")
-        self.fitted_model_bg_params_table = BaseTable(parent=self.fitted_model_bg_params_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.fitted_model_bg_params_table = BaseTable(
+            parent=self.fitted_model_bg_params_tab
+        )
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.fitted_model_bg_params_table.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.fitted_model_bg_params_table.sizePolicy().hasHeightForWidth()
+        )
         self.fitted_model_bg_params_table.setSizePolicy(sizePolicy)
         self.fitted_model_bg_params_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.fitted_model_bg_params_table.setObjectName("fitted_model_bg_params_table")
@@ -568,10 +724,14 @@ class Ui_peak_fit(object):
         self.gridLayout_5.addWidget(self.fit_model_button, 1, 0, 1, 3)
         self.verticalLayout_11.addWidget(self.model_fit_button_area)
         self.model_fit_report_label = QtWidgets.QLabel(parent=self.model_fit_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.model_fit_report_label.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.model_fit_report_label.sizePolicy().hasHeightForWidth()
+        )
         self.model_fit_report_label.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -579,10 +739,15 @@ class Ui_peak_fit(object):
         self.model_fit_report_label.setObjectName("model_fit_report_label")
         self.verticalLayout_11.addWidget(self.model_fit_report_label)
         self.model_fit_report_frame = QtWidgets.QFrame(parent=self.model_fit_tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.model_fit_report_frame.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.model_fit_report_frame.sizePolicy().hasHeightForWidth()
+        )
         self.model_fit_report_frame.setSizePolicy(sizePolicy)
         self.model_fit_report_frame.setMaximumSize(QtCore.QSize(16777215, 150))
         self.model_fit_report_frame.setAutoFillBackground(False)
@@ -591,29 +756,47 @@ class Ui_peak_fit(object):
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.model_fit_report_frame)
         self.verticalLayout_6.setContentsMargins(9, 9, 9, 9)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.model_fit_report_text_browser = QtWidgets.QTextBrowser(parent=self.model_fit_report_frame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.model_fit_report_text_browser = QtWidgets.QTextBrowser(
+            parent=self.model_fit_report_frame
+        )
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.model_fit_report_text_browser.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.model_fit_report_text_browser.sizePolicy().hasHeightForWidth()
+        )
         self.model_fit_report_text_browser.setSizePolicy(sizePolicy)
         self.model_fit_report_text_browser.setMaximumSize(QtCore.QSize(16777215, 200))
         self.model_fit_report_text_browser.setStyleSheet("")
         self.model_fit_report_text_browser.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        self.model_fit_report_text_browser.setObjectName("model_fit_report_text_browser")
+        self.model_fit_report_text_browser.setObjectName(
+            "model_fit_report_text_browser"
+        )
         self.verticalLayout_6.addWidget(self.model_fit_report_text_browser)
         self.verticalLayout_11.addWidget(self.model_fit_report_frame)
         self.model_save_load_button = QtWidgets.QWidget(parent=self.model_fit_tab)
         self.model_save_load_button.setObjectName("model_save_load_button")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.model_save_load_button)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.save_model_plot_points_button = QtWidgets.QPushButton(parent=self.model_save_load_button)
-        self.save_model_plot_points_button.setObjectName("save_model_plot_points_button")
+        self.save_model_plot_points_button = QtWidgets.QPushButton(
+            parent=self.model_save_load_button
+        )
+        self.save_model_plot_points_button.setObjectName(
+            "save_model_plot_points_button"
+        )
         self.horizontalLayout_2.addWidget(self.save_model_plot_points_button)
-        self.save_model_fitted_model_button = QtWidgets.QPushButton(parent=self.model_save_load_button)
-        self.save_model_fitted_model_button.setObjectName("save_model_fitted_model_button")
+        self.save_model_fitted_model_button = QtWidgets.QPushButton(
+            parent=self.model_save_load_button
+        )
+        self.save_model_fitted_model_button.setObjectName(
+            "save_model_fitted_model_button"
+        )
         self.horizontalLayout_2.addWidget(self.save_model_fitted_model_button)
-        self.save_model_fit_report_button = QtWidgets.QPushButton(parent=self.model_save_load_button)
+        self.save_model_fit_report_button = QtWidgets.QPushButton(
+            parent=self.model_save_load_button
+        )
         self.save_model_fit_report_button.setObjectName("save_model_fit_report_button")
         self.horizontalLayout_2.addWidget(self.save_model_fit_report_button)
         self.verticalLayout_11.addWidget(self.model_save_load_button)
@@ -638,7 +821,9 @@ class Ui_peak_fit(object):
         self.add_peak_button.setText(_translate("peak_fit", "Add peak"))
         self.cancel_add_peak_button.setText(_translate("peak_fit", "Cancel add peak"))
         self.constraints_button.setText(_translate("peak_fit", "Set up constraints"))
-        self.add_peak_label.setText(_translate("peak_fit", "Click on a peak in the plot to select it."))
+        self.add_peak_label.setText(
+            _translate("peak_fit", "Click on a peak in the plot to select it.")
+        )
         item = self.initial_peak_params_table.horizontalHeaderItem(0)
         item.setText(_translate("peak_fit", "ID"))
         item = self.initial_peak_params_table.horizontalHeaderItem(1)
@@ -649,7 +834,10 @@ class Ui_peak_fit(object):
         item.setText(_translate("peak_fit", "Intensity"))
         item = self.initial_peak_params_table.horizontalHeaderItem(4)
         item.setText(_translate("peak_fit", "Options"))
-        self.peak_params_tabs.setTabText(self.peak_params_tabs.indexOf(self.initial_peak_params_tab), _translate("peak_fit", "Initial guess"))
+        self.peak_params_tabs.setTabText(
+            self.peak_params_tabs.indexOf(self.initial_peak_params_tab),
+            _translate("peak_fit", "Initial guess"),
+        )
         item = self.fitted_peak_params_table.horizontalHeaderItem(0)
         item.setText(_translate("peak_fit", "ID"))
         item = self.fitted_peak_params_table.horizontalHeaderItem(1)
@@ -658,8 +846,13 @@ class Ui_peak_fit(object):
         item.setText(_translate("peak_fit", "Width"))
         item = self.fitted_peak_params_table.horizontalHeaderItem(3)
         item.setText(_translate("peak_fit", "Intensity"))
-        self.peak_params_tabs.setTabText(self.peak_params_tabs.indexOf(self.fitted_peak_params_tab), _translate("peak_fit", "Fit result"))
-        self.poly_bg_label.setText(_translate("peak_fit", "Polynomial background parameters"))
+        self.peak_params_tabs.setTabText(
+            self.peak_params_tabs.indexOf(self.fitted_peak_params_tab),
+            _translate("peak_fit", "Fit result"),
+        )
+        self.poly_bg_label.setText(
+            _translate("peak_fit", "Polynomial background parameters")
+        )
         item = self.initial_bg_params_table.horizontalHeaderItem(0)
         item.setText(_translate("peak_fit", "ID"))
         item = self.initial_bg_params_table.horizontalHeaderItem(1)
@@ -679,7 +872,10 @@ class Ui_peak_fit(object):
         item = self.initial_bg_params_table.item(0, 3)
         item.setText(_translate("peak_fit", "0"))
         self.initial_bg_params_table.setSortingEnabled(__sortingEnabled)
-        self.bg_params_tabs.setTabText(self.bg_params_tabs.indexOf(self.initial_bg_params_tab), _translate("peak_fit", "Initial parameters"))
+        self.bg_params_tabs.setTabText(
+            self.bg_params_tabs.indexOf(self.initial_bg_params_tab),
+            _translate("peak_fit", "Initial parameters"),
+        )
         item = self.fitted_bg_params_table.horizontalHeaderItem(0)
         item.setText(_translate("peak_fit", "ID"))
         item = self.fitted_bg_params_table.horizontalHeaderItem(1)
@@ -688,24 +884,42 @@ class Ui_peak_fit(object):
         item.setText(_translate("peak_fit", "b"))
         item = self.fitted_bg_params_table.horizontalHeaderItem(3)
         item.setText(_translate("peak_fit", "c"))
-        self.bg_params_tabs.setTabText(self.bg_params_tabs.indexOf(self.fitted_bg_params_tab), _translate("peak_fit", "Fitted parameters"))
-        self.bg_function_label.setText(_translate("peak_fit", "Function: f(x) = ax² + bx + c"))
+        self.bg_params_tabs.setTabText(
+            self.bg_params_tabs.indexOf(self.fitted_bg_params_tab),
+            _translate("peak_fit", "Fitted parameters"),
+        )
+        self.bg_function_label.setText(
+            _translate("peak_fit", "Function: f(x) = ax² + bx + c")
+        )
         self.plot_fit_buttons.setTitle(_translate("peak_fit", "Fit parameters"))
         self.save_params_button.setText(_translate("peak_fit", "Save parameters"))
-        self.plot_initial_params_button.setText(_translate("peak_fit", "Plot initial parameters"))
+        self.plot_initial_params_button.setText(
+            _translate("peak_fit", "Plot initial parameters")
+        )
         self.load_params_button.setText(_translate("peak_fit", "Load parameters"))
-        self.fit_initial_params_button.setText(_translate("peak_fit", "Fit all parameters"))
+        self.fit_initial_params_button.setText(
+            _translate("peak_fit", "Fit all parameters")
+        )
         self.label.setText(_translate("peak_fit", "Fit Table"))
         self.loaded_fit_table_label.setText(_translate("peak_fit", "TextLabel"))
         self.fit_table_select_button.setText(_translate("peak_fit", "Browse"))
-        self.save_param_to_fit_table_button.setText(_translate("peak_fit", "Save to Fit Table"))
+        self.save_param_to_fit_table_button.setText(
+            _translate("peak_fit", "Save to Fit Table")
+        )
         self.fit_report_label.setText(_translate("peak_fit", "Fit report"))
         self.save_plot_points_button.setText(_translate("peak_fit", "Save plot points"))
         self.save_fit_report_button.setText(_translate("peak_fit", "Save fit report"))
-        self.save_fitted_model_button.setText(_translate("peak_fit", "Save fitted model"))
-        self.side_panel_tabs.setTabText(self.side_panel_tabs.indexOf(self.gaussian_fit_tab), _translate("peak_fit", "Gaussian Fitting"))
+        self.save_fitted_model_button.setText(
+            _translate("peak_fit", "Save fitted model")
+        )
+        self.side_panel_tabs.setTabText(
+            self.side_panel_tabs.indexOf(self.gaussian_fit_tab),
+            _translate("peak_fit", "Gaussian Fitting"),
+        )
         self.model_auto_e_range_checkbox.setText(_translate("peak_fit", "Auto"))
-        self.model_auto_e_range_label.setText(_translate("peak_fit", "Set energy range"))
+        self.model_auto_e_range_label.setText(
+            _translate("peak_fit", "Set energy range")
+        )
         self.models_label.setText(_translate("peak_fit", "Models"))
         item = self.initial_model_params_table.horizontalHeaderItem(0)
         item.setText(_translate("peak_fit", "ID"))
@@ -715,18 +929,28 @@ class Ui_peak_fit(object):
         item.setText(_translate("peak_fit", "Proportion"))
         item = self.initial_model_params_table.horizontalHeaderItem(3)
         item.setText(_translate("peak_fit", "Options"))
-        self.model_params_tabs.setTabText(self.model_params_tabs.indexOf(self.initial_model_params_tab), _translate("peak_fit", "Initial guess"))
+        self.model_params_tabs.setTabText(
+            self.model_params_tabs.indexOf(self.initial_model_params_tab),
+            _translate("peak_fit", "Initial guess"),
+        )
         item = self.fitted_model_params_table.horizontalHeaderItem(0)
         item.setText(_translate("peak_fit", "ID"))
         item = self.fitted_model_params_table.horizontalHeaderItem(1)
         item.setText(_translate("peak_fit", "Offset"))
         item = self.fitted_model_params_table.horizontalHeaderItem(2)
         item.setText(_translate("peak_fit", "Proportion"))
-        self.model_params_tabs.setTabText(self.model_params_tabs.indexOf(self.fitted_model_params_tab), _translate("peak_fit", "Fit result"))
+        self.model_params_tabs.setTabText(
+            self.model_params_tabs.indexOf(self.fitted_model_params_tab),
+            _translate("peak_fit", "Fit result"),
+        )
         self.add_model_button.setText(_translate("peak_fit", "Add fitted model"))
-        self.constrain_proportions_checkbox.setText(_translate("peak_fit", "Constrain sum of model proportions to equal:"))
+        self.constrain_proportions_checkbox.setText(
+            _translate("peak_fit", "Constrain sum of model proportions to equal:")
+        )
         self.constrain_proportions_lineedit.setText(_translate("peak_fit", "1"))
-        self.poly_bg_label_2.setText(_translate("peak_fit", "Polynomial background parameters"))
+        self.poly_bg_label_2.setText(
+            _translate("peak_fit", "Polynomial background parameters")
+        )
         item = self.initial_model_bg_params_table.horizontalHeaderItem(0)
         item.setText(_translate("peak_fit", "ID"))
         item = self.initial_model_bg_params_table.horizontalHeaderItem(1)
@@ -746,7 +970,10 @@ class Ui_peak_fit(object):
         item = self.initial_model_bg_params_table.item(0, 3)
         item.setText(_translate("peak_fit", "0"))
         self.initial_model_bg_params_table.setSortingEnabled(__sortingEnabled)
-        self.model_bg_params_tabs.setTabText(self.model_bg_params_tabs.indexOf(self.initial_model_bg_params_tab), _translate("peak_fit", "Initial parameters"))
+        self.model_bg_params_tabs.setTabText(
+            self.model_bg_params_tabs.indexOf(self.initial_model_bg_params_tab),
+            _translate("peak_fit", "Initial parameters"),
+        )
         item = self.fitted_model_bg_params_table.horizontalHeaderItem(0)
         item.setText(_translate("peak_fit", "ID"))
         item = self.fitted_model_bg_params_table.horizontalHeaderItem(1)
@@ -755,20 +982,37 @@ class Ui_peak_fit(object):
         item.setText(_translate("peak_fit", "b"))
         item = self.fitted_model_bg_params_table.horizontalHeaderItem(3)
         item.setText(_translate("peak_fit", "c"))
-        self.model_bg_params_tabs.setTabText(self.model_bg_params_tabs.indexOf(self.fitted_model_bg_params_tab), _translate("peak_fit", "Fitted parameters"))
-        self.bg_function_label_2.setText(_translate("peak_fit", "Function: f(x) = ax² + bx + c"))
+        self.model_bg_params_tabs.setTabText(
+            self.model_bg_params_tabs.indexOf(self.fitted_model_bg_params_tab),
+            _translate("peak_fit", "Fitted parameters"),
+        )
+        self.bg_function_label_2.setText(
+            _translate("peak_fit", "Function: f(x) = ax² + bx + c")
+        )
         self.fit_model_button.setText(_translate("peak_fit", "Fit parameters"))
         self.model_fit_report_label.setText(_translate("peak_fit", "Fit report"))
-        self.save_model_plot_points_button.setText(_translate("peak_fit", "Save plot points"))
-        self.save_model_fitted_model_button.setText(_translate("peak_fit", "Save fitted model"))
-        self.save_model_fit_report_button.setText(_translate("peak_fit", "Save fit report"))
-        self.side_panel_tabs.setTabText(self.side_panel_tabs.indexOf(self.model_fit_tab), _translate("peak_fit", "Model Fitting"))
+        self.save_model_plot_points_button.setText(
+            _translate("peak_fit", "Save plot points")
+        )
+        self.save_model_fitted_model_button.setText(
+            _translate("peak_fit", "Save fitted model")
+        )
+        self.save_model_fit_report_button.setText(
+            _translate("peak_fit", "Save fit report")
+        )
+        self.side_panel_tabs.setTabText(
+            self.side_panel_tabs.indexOf(self.model_fit_tab),
+            _translate("peak_fit", "Model Fitting"),
+        )
+
+
 from EVA.gui.base.base_table import BaseTable
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     peak_fit = QtWidgets.QWidget()
     ui = Ui_peak_fit()

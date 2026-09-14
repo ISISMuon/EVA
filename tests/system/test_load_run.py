@@ -21,7 +21,12 @@ brni_filenames_list = [
 ]
 nxs_run_num_list = ["1039", "1041", "1042", "0"]
 nxs_filenames_list = ["MUX00001039.nxs", "MUX00001041.nxs", "MUX00001042.nxs", ""]
-expected_detectors_list = [["GE6", "GE5", "GE8", "GE7"], ["GE6", "GE5", "GE8", "GE7"], ["GE6", "GE5", "GE8", "GE7"], []]
+expected_detectors_list = [
+    ["GE5", "GE7", "GE6", "GE8"],
+    ["GE5", "GE7", "GE6", "GE8"],
+    ["GE5", "GE7", "GE6", "GE8"],
+    [],
+]
 
 
 class TestLoadRun:

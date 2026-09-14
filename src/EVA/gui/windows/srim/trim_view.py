@@ -1,4 +1,3 @@
-from matplotlib import pyplot as plt
 from PyQt6.QtCore import pyqtSignal, Qt
 
 from PyQt6.QtWidgets import (
@@ -22,7 +21,6 @@ from PyQt6.QtWidgets import (
 from EVA.gui.ui_files.trim_gui import Ui_trim
 from EVA.gui.base.base_view import BaseView
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
-from EVA.gui.windows.srim.trim_presenter import TrimPresenter
 
 
 class TrimView(BaseView, Ui_trim):

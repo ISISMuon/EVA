@@ -46,13 +46,9 @@ class Config(QObject):
             if run_num in saved_corrections[data_dir].keys():
                 return self._data["saved_corrections"][data_dir][run_num]
             else:
-                self._data["saved_corrections"][data_dir][run_num] = (
-                    default_corrections
-                )
+                self._data["saved_corrections"][data_dir][run_num] = default_corrections
         else:
-            self._data["saved_corrections"][data_dir] = {
-                run_num: default_corrections
-            }
+            self._data["saved_corrections"][data_dir] = {run_num: default_corrections}
 
         return self._data["saved_corrections"][data_dir][run_num]
 

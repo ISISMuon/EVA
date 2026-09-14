@@ -75,7 +75,6 @@ class App(QApplication):
         worker = Worker(self._load_databases)
         worker.signals.result.connect(self._on_databases_loaded)
         worker.signals.error.connect(self._on_database_load_error)
-        # keep a reference until it's done, just to be safe
         self._db_worker = worker
         self.threadpool.start(worker)
 
@@ -102,7 +101,9 @@ class App(QApplication):
     def _on_databases_loaded(self, databases):
         """Called once database dicts have been generated. Fetches individual db and assigns it to memory"""
         self.gamma_database = databases["gamma_database"]
-        self.mudirac_muon_database_with_intensity = databases["mudirac_muon_database_with_intensity"]
+        self.mudirac_muon_database_with_intensity = databases[
+            "mudirac_muon_database_with_intensity"
+        ]
         self.mudirac_muon_database = databases["mudirac_muon_database"]
         self.legacy_muon_database = databases["legacy_muon_database"]
         self.e_xray_database = databases["e_xray_database"]

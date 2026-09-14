@@ -2,14 +2,13 @@ import os
 import sys
 import logging
 from pathlib import Path
-
-from EVA.gui.windows.main.main_window import MainWindow
+import time
+t0 = time.time()
 
 # Changes cwd to root so that paths can be specified relative to root level - MUST BE BEFORE ANY EVA IMPORTS
 ROOT = Path(__file__).resolve().parent.parent.parent  # get root dir using pathlib
 os.chdir(ROOT)  # change cwd to root
-
-from EVA.gui.windows.main.main_view import MainView
+from EVA.gui.windows.main.main_window import MainWindow
 from EVA.core.app import App
 
 # set up logging and handling exceptions
@@ -47,4 +46,5 @@ if __name__ == "__main__":
     logger.info("Launching main window.")
 
     app.main_window.widget().show()
+    print(f"EVA started in {time.time() - t0:.2f} seconds.")
     sys.exit(app.exec())

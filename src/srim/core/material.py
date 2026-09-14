@@ -204,7 +204,7 @@ class Material(object):
             return False
 
         for element in self.elements:
-            if not element in material.elements:
+            if element not in material.elements:
                 return False
             for prop in self.elements[element]:
                 if (

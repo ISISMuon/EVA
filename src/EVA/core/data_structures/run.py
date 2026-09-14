@@ -1,11 +1,10 @@
 import logging
-import numpy as np
 from abc import ABCMeta, abstractmethod
 from copy import deepcopy
 from PyQt6.QtCore import QObject, pyqtSignal
 from EVA.core.data_structures.spectrum import Spectrum
 from EVA.core.physics import rebin
-from EVA.core.physics.normalisation import normalise_events, normalise_counts
+from EVA.core.physics.normalisation import normalise_counts
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +36,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         super().__init__()
         self._raw = raw
         self.loaded_detectors = loaded_detectors
-        self.active_detectors = loaded_detectors # TODO refer to NOTE comment in _combine_detector_spectra()
+        self.active_detectors = loaded_detectors  # TODO refer to NOTE comment in _combine_detector_spectra()
         self.run_num = run_num
         self.plot_mode = ""
         # Common correction parameters
@@ -48,7 +47,9 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self.bin_rate = 1
         self.default_bin = 32768  # subclasses may override
         self.bin_method = ""  # subclass must set
-        self.plot_detectors = set(self.loaded_detectors[:4]) # by default plot the first 4 detectors for a run
+        self.plot_detectors = set(
+            self.loaded_detectors[:4]
+        )  # by default plot the first 4 detectors for a run
 
     # ABSTRACT INTERFACE
     @abstractmethod
@@ -70,9 +71,11 @@ class Run(QObject, metaclass=MetaQObjectABC):
     def _set_mode(self, *args, **kwargs):
         """Set data depending on plot mode (IBEX/Manual/etc.)."""
         pass
-    
+
     @abstractmethod
-    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None) -> dict[str, Spectrum]:
+    def _combine_detector_spectra(
+        self, detector_group_dict: dict[str, list[str]] = None
+    ) -> dict[str, Spectrum]:
         """Combine detector spectra into groups using histogram or raw data points"""
         pass
 
@@ -101,12 +104,15 @@ class Run(QObject, metaclass=MetaQObjectABC):
             self.loaded_detectors = self.active_detectors
             self.plot_detectors = self.loaded_detectors[:4]
             return
-        combined_data = self._combine_detector_spectra(detector_group_dict) # Logic for merging 
+        combined_data = self._combine_detector_spectra(
+            detector_group_dict
+        )  # Logic for merging
         self.loaded_detectors = list(detector_group_dict.keys())
         # self.data.update(combined_data)
         self.data = combined_data
         self.plot_detectors = self.loaded_detectors[:4]
         self.group = True
+
     def _set_normalisation(
         self, normalisation: str, normalise_which: list[str] | None = None
     ):

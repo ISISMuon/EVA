@@ -1,7 +1,17 @@
 from g4bl.core.shapes import Shape
 
+
 class InputWriter:
-    def __init__(self, targets: list[Shape], beam_off: bool, muon_num: int, momentum: float, mom_err: float, optional_params: dict = None, instance: str = ""):
+    def __init__(
+        self,
+        targets: list[Shape],
+        beam_off: bool,
+        muon_num: int,
+        momentum: float,
+        mom_err: float,
+        optional_params: dict = None,
+        instance: str = "",
+    ):
         self.targets = targets
         self.muon_num = muon_num
         self.momentum = momentum
@@ -14,7 +24,7 @@ class InputWriter:
         self.material_block()
 
     def beam_block(self):
-        # current default parameters for the port 4 beam, optionally can be overriden IF nceessary but other parameters are REQUIRED. 
+        # current default parameters for the port 4 beam, optionally can be overriden IF nceessary but other parameters are REQUIRED.
         params = {
             "particle": "mu-",
             "spot_size": 15.0,

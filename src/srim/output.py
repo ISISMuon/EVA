@@ -40,7 +40,7 @@ class SRIM_Output(object):
 
     def _read_target(self, output):
         match_target = re.search(
-            br"(?<=====\r\n)Layer\s+\d+\s+:.*?(?=====)", output, re.DOTALL
+            rb"(?<=====\r\n)Layer\s+\d+\s+:.*?(?=====)", output, re.DOTALL
         )
         if match_target:
             print(match_target.group(0))
@@ -71,14 +71,14 @@ class SRIM_Output(object):
         raise SRIMOutputParseError("unable to extract total target from file")
 
     def _read_num_ions(self, output):
-        match = re.search(br"Total Ions calculated\s+=(\d+.\d+)", output)
+        match = re.search(rb"Total Ions calculated\s+=(\d+.\d+)", output)
         if match:
             # Cast string -> float -> round down to nearest int
             return int(float(match.group(1)))
         raise SRIMOutputParseError("unable to extract total ions from file")
 
     def _read_table(self, output):
-        match = re.search((br"=+(.*)-+(?:\s+-+)+"), output, re.DOTALL)
+        match = re.search((rb"=+(.*)-+(?:\s+-+)+"), output, re.DOTALL)
         # Read Data from table
 
         if match:
@@ -828,8 +828,8 @@ class SRResults(object):
         output_array = [[] for i in range(6)]
 
         # function for
-        energy_conversion = (
-            lambda a: 1
+        energy_conversion = lambda a: (
+            1
             if ("keV" in a)
             else (
                 1e3
@@ -839,8 +839,8 @@ class SRResults(object):
         )
 
         # function for
-        length_conversion = (
-            lambda a: 1
+        length_conversion = lambda a: (
+            1
             if ("um" in a)
             else (1e-4 if ("A" in a) else (1e3 if ("mm" in a) else None))
         )

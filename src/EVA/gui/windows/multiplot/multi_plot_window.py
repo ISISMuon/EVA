@@ -1,5 +1,3 @@
-from PyQt6.QtWidgets import QWidget
-from EVA.core.data_structures.run import Run
 from EVA.gui.base.base_window import BaseWindow
 from EVA.gui.windows.multiplot.multi_plot_model import MultiPlotModel
 from EVA.gui.windows.multiplot.multi_plot_presenter import MultiPlotPresenter

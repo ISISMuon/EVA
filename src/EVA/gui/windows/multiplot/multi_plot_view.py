@@ -1,6 +1,5 @@
 import logging
 from PyQt6.QtWidgets import QVBoxLayout, QTableWidgetItem
-from PyQt6.QtCore import Qt
 
 from EVA.gui.base.base_view import BaseView
 from EVA.gui.ui_files.multiplot_gui import (

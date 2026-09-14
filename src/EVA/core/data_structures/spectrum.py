@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import h5py
 import numpy as np
 
+
 @dataclass
 class Spectrum:
     """
@@ -16,6 +17,7 @@ class Spectrum:
         x: numpy array, containing the x-data measured by the detector (histogram bin centers).
         y: numpy array, containing y-data measured by the detector (counts per bin).
     """
+
     detector: str
     run_number: str
     x: np.ndarray = None
@@ -50,4 +52,3 @@ class Spectrum:
             y=None if self.y is None else self.y.copy(),
             bin_range=deepcopy(self.bin_range, memo),
         )
-    

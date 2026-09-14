@@ -194,7 +194,9 @@ class BaseTable(QTableWidget):
     def stretch_horizontal_headers(self):
         n_cols = self.columnCount()
         for i in range(n_cols):
-            self.horizontalHeader().setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+            self.horizontalHeader().setSectionResizeMode(
+                i, QHeaderView.ResizeMode.Stretch
+            )
 
     def set_column_completer(self, column: int, words_provider):
         """

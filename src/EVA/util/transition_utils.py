@@ -47,6 +47,7 @@ def to_iupac(transition: str) -> str:
     shell2_iupac = spec_single_to_IUPAC(shell2)
     return f"{shell2_iupac}-{shell1_iupac}"
 
+
 def is_primary(transition: str, notation: str = "spec") -> bool:
     if notation != "iupac":
         transition = to_iupac(transition)  # this is easier to do on iupac notation
@@ -68,9 +69,10 @@ def is_primary(transition: str, notation: str = "spec") -> bool:
         "R15-S17",
         "R14-S16",
         "S17-T19",
-        "S16-T18"
+        "S16-T18",
     ]
     return transition in list_of_primary
+
 
 def is_primary_legacy(transition: str, notation: str = "spec") -> bool:
     """
@@ -99,6 +101,7 @@ def is_primary_legacy(transition: str, notation: str = "spec") -> bool:
     return ord(e2[0]) - ord(e1[0]) == 1  # convert letter to integer and subtract
     # if letters are sequential their difference is 1
 
+
 def is_secondary(transition: str, notation: str = "spec") -> bool:
     """
     Args:
@@ -123,10 +126,16 @@ def is_secondary(transition: str, notation: str = "spec") -> bool:
         transition = to_iupac(transition)  # this is easier to do on iupac notation
 
     e1, e2 = transition.split("-")  # split transition name
-    if e1 == "K1" and e2[0] != "L" and (e2[1] == "2" or e2[1] == "3"):  # K1-X2 and K1-X3 are secondary transitions where
+    if (
+        e1 == "K1" and e2[0] != "L" and (e2[1] == "2" or e2[1] == "3")
+    ):  # K1-X2 and K1-X3 are secondary transitions where
         # X is not L, e.g. K1-M2, K1-N3, etc.
         return True
-    return (ord(e2[0]) - ord(e1[0]) != 1) and (int(e2[1:]) - int(e1[1:]) == 2) and (int(e1[1:]) >= 2 * (ord(e1[0]) - ord("K")))  
+    return (
+        (ord(e2[0]) - ord(e1[0]) != 1)
+        and (int(e2[1:]) - int(e1[1:]) == 2)
+        and (int(e1[1:]) >= 2 * (ord(e1[0]) - ord("K")))
+    )
     # convert starting letter to integer and subtract, check they are not sequential.
     # check if the difference of the numbers is 2.
     # check that the number of the lower transition meets the minimum requirement:

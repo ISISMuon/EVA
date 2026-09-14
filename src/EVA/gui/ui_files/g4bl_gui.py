@@ -29,7 +29,10 @@ class Ui_g4bl(object):
         self.label_2.setObjectName("label_2")
         self.verticalLayout.addWidget(self.label_2)
         self.settings = QtWidgets.QFrame(parent=self.side_panel)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.settings.sizePolicy().hasHeightForWidth())
@@ -135,7 +138,10 @@ class Ui_g4bl(object):
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
         self.widget_5 = QtWidgets.QWidget(parent=self.side_panel)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.widget_5.sizePolicy().hasHeightForWidth())
@@ -183,9 +189,15 @@ class Ui_g4bl(object):
         self.placement_results_tab.setObjectName("placement_results_tab")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.placement_results_tab)
         self.gridLayout_5.setObjectName("gridLayout_5")
-        self.placement_save_all_sim_results_button = QtWidgets.QPushButton(parent=self.placement_results_tab)
-        self.placement_save_all_sim_results_button.setObjectName("placement_save_all_sim_results_button")
-        self.gridLayout_5.addWidget(self.placement_save_all_sim_results_button, 4, 0, 1, 2)
+        self.placement_save_all_sim_results_button = QtWidgets.QPushButton(
+            parent=self.placement_results_tab
+        )
+        self.placement_save_all_sim_results_button.setObjectName(
+            "placement_save_all_sim_results_button"
+        )
+        self.gridLayout_5.addWidget(
+            self.placement_save_all_sim_results_button, 4, 0, 1, 2
+        )
         self.placement_results_table = BaseTable(parent=self.placement_results_tab)
         self.placement_results_table.setObjectName("placement_results_table")
         self.placement_results_table.setColumnCount(2)
@@ -195,19 +207,31 @@ class Ui_g4bl(object):
         item = QtWidgets.QTableWidgetItem()
         self.placement_results_table.setHorizontalHeaderItem(1, item)
         self.gridLayout_5.addWidget(self.placement_results_table, 0, 0, 1, 2)
-        self.placement_save_all_imgs_button = QtWidgets.QPushButton(parent=self.placement_results_tab)
-        self.placement_save_all_imgs_button.setObjectName("placement_save_all_imgs_button")
+        self.placement_save_all_imgs_button = QtWidgets.QPushButton(
+            parent=self.placement_results_tab
+        )
+        self.placement_save_all_imgs_button.setObjectName(
+            "placement_save_all_imgs_button"
+        )
         self.gridLayout_5.addWidget(self.placement_save_all_imgs_button, 3, 0, 1, 2)
         self.placement_tabWidget.addTab(self.placement_results_tab, "")
         self.placement_implantation_tab = QtWidgets.QWidget()
         self.placement_implantation_tab.setObjectName("placement_implantation_tab")
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.placement_implantation_tab)
         self.verticalLayout_10.setObjectName("verticalLayout_10")
-        self.place_sample_implantation_collapse_checkbox = QtWidgets.QCheckBox(parent=self.placement_implantation_tab)
+        self.place_sample_implantation_collapse_checkbox = QtWidgets.QCheckBox(
+            parent=self.placement_implantation_tab
+        )
         self.place_sample_implantation_collapse_checkbox.setChecked(True)
-        self.place_sample_implantation_collapse_checkbox.setObjectName("place_sample_implantation_collapse_checkbox")
-        self.verticalLayout_10.addWidget(self.place_sample_implantation_collapse_checkbox)
-        self.placement_results_tree = QtWidgets.QTreeWidget(parent=self.placement_implantation_tab)
+        self.place_sample_implantation_collapse_checkbox.setObjectName(
+            "place_sample_implantation_collapse_checkbox"
+        )
+        self.verticalLayout_10.addWidget(
+            self.place_sample_implantation_collapse_checkbox
+        )
+        self.placement_results_tree = QtWidgets.QTreeWidget(
+            parent=self.placement_implantation_tab
+        )
         self.placement_results_tree.setMinimumSize(QtCore.QSize(0, 200))
         self.placement_results_tree.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.placement_results_tree.setObjectName("placement_results_tree")
@@ -257,11 +281,17 @@ class Ui_g4bl(object):
         self.stack_implantation_tab.setObjectName("stack_implantation_tab")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.stack_implantation_tab)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.stack_implantation_collapse_checkbox = QtWidgets.QCheckBox(parent=self.stack_implantation_tab)
+        self.stack_implantation_collapse_checkbox = QtWidgets.QCheckBox(
+            parent=self.stack_implantation_tab
+        )
         self.stack_implantation_collapse_checkbox.setChecked(True)
-        self.stack_implantation_collapse_checkbox.setObjectName("stack_implantation_collapse_checkbox")
+        self.stack_implantation_collapse_checkbox.setObjectName(
+            "stack_implantation_collapse_checkbox"
+        )
         self.verticalLayout_5.addWidget(self.stack_implantation_collapse_checkbox)
-        self.stack_results_tree = QtWidgets.QTreeWidget(parent=self.stack_implantation_tab)
+        self.stack_results_tree = QtWidgets.QTreeWidget(
+            parent=self.stack_implantation_tab
+        )
         self.stack_results_tree.setMinimumSize(QtCore.QSize(0, 200))
         self.stack_results_tree.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.stack_results_tree.setObjectName("stack_results_tree")
@@ -278,13 +308,21 @@ class Ui_g4bl(object):
         self.simulation_progress_widget.setObjectName("simulation_progress_widget")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.simulation_progress_widget)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.simulation_progress_label = QtWidgets.QLabel(parent=self.simulation_progress_widget)
+        self.simulation_progress_label = QtWidgets.QLabel(
+            parent=self.simulation_progress_widget
+        )
         self.simulation_progress_label.setObjectName("simulation_progress_label")
         self.verticalLayout_6.addWidget(self.simulation_progress_label)
-        self.estimated_time_remaining_label = QtWidgets.QLabel(parent=self.simulation_progress_widget)
-        self.estimated_time_remaining_label.setObjectName("estimated_time_remaining_label")
+        self.estimated_time_remaining_label = QtWidgets.QLabel(
+            parent=self.simulation_progress_widget
+        )
+        self.estimated_time_remaining_label.setObjectName(
+            "estimated_time_remaining_label"
+        )
         self.verticalLayout_6.addWidget(self.estimated_time_remaining_label)
-        self.simulation_progress_bar = QtWidgets.QProgressBar(parent=self.simulation_progress_widget)
+        self.simulation_progress_bar = QtWidgets.QProgressBar(
+            parent=self.simulation_progress_widget
+        )
         self.simulation_progress_bar.setProperty("value", 24)
         self.simulation_progress_bar.setObjectName("simulation_progress_bar")
         self.verticalLayout_6.addWidget(self.simulation_progress_bar)
@@ -327,8 +365,10 @@ class Ui_g4bl(object):
         self.label_3.setObjectName("label_3")
         self.horizontalLayout_3.addWidget(self.label_3)
         self.momentum_slider = QtWidgets.QSlider(parent=self.slider_container)
-        self.momentum_slider.setStyleSheet("QSlider::groove:horizontal {height: 10px; margin: 0 0;}\n"
-"QSlider::ticks {color: grey}")
+        self.momentum_slider.setStyleSheet(
+            "QSlider::groove:horizontal {height: 10px; margin: 0 0;}\n"
+            "QSlider::ticks {color: grey}"
+        )
         self.momentum_slider.setTracking(True)
         self.momentum_slider.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.momentum_slider.setInvertedAppearance(False)
@@ -336,7 +376,9 @@ class Ui_g4bl(object):
         self.momentum_slider.setObjectName("momentum_slider")
         self.horizontalLayout_3.addWidget(self.momentum_slider)
         self.verticalLayout_3.addWidget(self.slider_container)
-        self.stopping_profiles_tab_widget = QtWidgets.QTabWidget(parent=self.stopping_profiles_tab)
+        self.stopping_profiles_tab_widget = QtWidgets.QTabWidget(
+            parent=self.stopping_profiles_tab
+        )
         self.stopping_profiles_tab_widget.setObjectName("stopping_profiles_tab_widget")
         self.verticalLayout_3.addWidget(self.stopping_profiles_tab_widget)
         self.results_tabs.addTab(self.stopping_profiles_tab, "")
@@ -345,14 +387,23 @@ class Ui_g4bl(object):
         self.depth_profile_layout = QtWidgets.QVBoxLayout(self.depth_profile_tab)
         self.depth_profile_layout.setObjectName("depth_profile_layout")
         self.not_enough_momentum_label = QtWidgets.QLabel(parent=self.depth_profile_tab)
-        self.not_enough_momentum_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
+        self.not_enough_momentum_label.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignLeading
+            | QtCore.Qt.AlignmentFlag.AlignLeft
+            | QtCore.Qt.AlignmentFlag.AlignTop
+        )
         self.not_enough_momentum_label.setObjectName("not_enough_momentum_label")
         self.depth_profile_layout.addWidget(self.not_enough_momentum_label)
         self.depth_profile_plot = PlotWidget(parent=self.depth_profile_tab)
         self.depth_profile_plot.setEnabled(True)
         self.depth_profile_plot.setObjectName("depth_profile_plot")
         self.depth_profile_layout.addWidget(self.depth_profile_plot)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(
+            20,
+            40,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         self.depth_profile_layout.addItem(spacerItem)
         self.depth_settings_widget = QtWidgets.QWidget(parent=self.depth_profile_tab)
         self.depth_settings_widget.setObjectName("depth_settings_widget")
@@ -398,55 +449,113 @@ class Ui_g4bl(object):
         item.setText(_translate("g4bl", "Parameters"))
         self.add_sample_button.setText(_translate("g4bl", "Add Sample"))
         self.visualise_button.setText(_translate("g4bl", "Visualise Setup"))
-        self.placement_tabWidget.setTabText(self.placement_tabWidget.indexOf(self.placement_layers_tab), _translate("g4bl", "Layers"))
-        self.placement_save_all_sim_results_button.setText(_translate("g4bl", "Save all"))
+        self.placement_tabWidget.setTabText(
+            self.placement_tabWidget.indexOf(self.placement_layers_tab),
+            _translate("g4bl", "Layers"),
+        )
+        self.placement_save_all_sim_results_button.setText(
+            _translate("g4bl", "Save all")
+        )
         item = self.placement_results_table.horizontalHeaderItem(0)
         item.setText(_translate("g4bl", "Momentum (MeV/c)"))
         item = self.placement_results_table.horizontalHeaderItem(1)
         item.setText(_translate("g4bl", "Options"))
-        self.placement_save_all_imgs_button.setText(_translate("g4bl", "Save all plots"))
-        self.placement_tabWidget.setTabText(self.placement_tabWidget.indexOf(self.placement_results_tab), _translate("g4bl", "Results"))
-        self.place_sample_implantation_collapse_checkbox.setText(_translate("g4bl", " Expand all / Collapse"))
-        self.placement_results_tree.headerItem().setText(0, _translate("g4bl", "Momentum (MeV/c)"))
-        self.placement_results_tree.headerItem().setText(1, _translate("g4bl", "Layers"))
-        self.placement_results_tree.headerItem().setText(2, _translate("g4bl", "% of muons in layer"))
-        self.placement_results_tree.headerItem().setText(3, _translate("g4bl", "# of muons in layer"))
-        self.placement_tabWidget.setTabText(self.placement_tabWidget.indexOf(self.placement_implantation_tab), _translate("g4bl", "Implantation"))
+        self.placement_save_all_imgs_button.setText(
+            _translate("g4bl", "Save all plots")
+        )
+        self.placement_tabWidget.setTabText(
+            self.placement_tabWidget.indexOf(self.placement_results_tab),
+            _translate("g4bl", "Results"),
+        )
+        self.place_sample_implantation_collapse_checkbox.setText(
+            _translate("g4bl", " Expand all / Collapse")
+        )
+        self.placement_results_tree.headerItem().setText(
+            0, _translate("g4bl", "Momentum (MeV/c)")
+        )
+        self.placement_results_tree.headerItem().setText(
+            1, _translate("g4bl", "Layers")
+        )
+        self.placement_results_tree.headerItem().setText(
+            2, _translate("g4bl", "% of muons in layer")
+        )
+        self.placement_results_tree.headerItem().setText(
+            3, _translate("g4bl", "# of muons in layer")
+        )
+        self.placement_tabWidget.setTabText(
+            self.placement_tabWidget.indexOf(self.placement_implantation_tab),
+            _translate("g4bl", "Implantation"),
+        )
         item = self.stack_layer_setup_table.horizontalHeaderItem(0)
         item.setText(_translate("g4bl", "Sample"))
         item = self.stack_layer_setup_table.horizontalHeaderItem(1)
         item.setText(_translate("g4bl", "Thickness (mm)"))
         item = self.stack_layer_setup_table.horizontalHeaderItem(2)
         item.setText(_translate("g4bl", "Density (g/cm^3)"))
-        self.stack_tabWidget.setTabText(self.stack_tabWidget.indexOf(self.stack_layers_tab), _translate("g4bl", "Layers"))
+        self.stack_tabWidget.setTabText(
+            self.stack_tabWidget.indexOf(self.stack_layers_tab),
+            _translate("g4bl", "Layers"),
+        )
         item = self.stack_results_table.horizontalHeaderItem(0)
         item.setText(_translate("g4bl", "Momentum (MeV/c)"))
         item = self.stack_results_table.horizontalHeaderItem(1)
         item.setText(_translate("g4bl", "Options"))
         self.stack_save_all_imgs_button.setText(_translate("g4bl", "Save all plots"))
         self.stack_save_all_sims_button.setText(_translate("g4bl", "Save all data"))
-        self.stack_tabWidget.setTabText(self.stack_tabWidget.indexOf(self.results_tab), _translate("g4bl", "Results"))
-        self.stack_implantation_collapse_checkbox.setText(_translate("g4bl", " Expand all / Collapse"))
-        self.stack_results_tree.headerItem().setText(0, _translate("g4bl", "Momentum (MeV/c)"))
+        self.stack_tabWidget.setTabText(
+            self.stack_tabWidget.indexOf(self.results_tab),
+            _translate("g4bl", "Results"),
+        )
+        self.stack_implantation_collapse_checkbox.setText(
+            _translate("g4bl", " Expand all / Collapse")
+        )
+        self.stack_results_tree.headerItem().setText(
+            0, _translate("g4bl", "Momentum (MeV/c)")
+        )
         self.stack_results_tree.headerItem().setText(1, _translate("g4bl", "Layers"))
-        self.stack_results_tree.headerItem().setText(2, _translate("g4bl", "% of muons in layer"))
-        self.stack_results_tree.headerItem().setText(3, _translate("g4bl", "# of muons in layer"))
-        self.stack_tabWidget.setTabText(self.stack_tabWidget.indexOf(self.stack_implantation_tab), _translate("g4bl", "Implantation"))
-        self.simulation_progress_label.setText(_translate("g4bl", "Simulation in progress..."))
-        self.estimated_time_remaining_label.setText(_translate("g4bl", "Estimated time remaining: "))
+        self.stack_results_tree.headerItem().setText(
+            2, _translate("g4bl", "% of muons in layer")
+        )
+        self.stack_results_tree.headerItem().setText(
+            3, _translate("g4bl", "# of muons in layer")
+        )
+        self.stack_tabWidget.setTabText(
+            self.stack_tabWidget.indexOf(self.stack_implantation_tab),
+            _translate("g4bl", "Implantation"),
+        )
+        self.simulation_progress_label.setText(
+            _translate("g4bl", "Simulation in progress...")
+        )
+        self.estimated_time_remaining_label.setText(
+            _translate("g4bl", "Estimated time remaining: ")
+        )
         self.run_sim_button.setText(_translate("g4bl", "Run Simulations"))
         self.cancel_sim_button.setText(_translate("g4bl", "Cancel"))
         self.results_label.setText(_translate("g4bl", "Results"))
         self.label_3.setText(_translate("g4bl", "Slide to increase momentum:"))
-        self.results_tabs.setTabText(self.results_tabs.indexOf(self.stopping_profiles_tab), _translate("g4bl", "Stopping profiles"))
-        self.not_enough_momentum_label.setText(_translate("g4bl", "A momentum scan with at least 2 momenta is required to generate a depth profile plot."))
-        self.results_tabs.setTabText(self.results_tabs.indexOf(self.depth_profile_tab), _translate("g4bl", "Depth profile"))
+        self.results_tabs.setTabText(
+            self.results_tabs.indexOf(self.stopping_profiles_tab),
+            _translate("g4bl", "Stopping profiles"),
+        )
+        self.not_enough_momentum_label.setText(
+            _translate(
+                "g4bl",
+                "A momentum scan with at least 2 momenta is required to generate a depth profile plot.",
+            )
+        )
+        self.results_tabs.setTabText(
+            self.results_tabs.indexOf(self.depth_profile_tab),
+            _translate("g4bl", "Depth profile"),
+        )
+
+
 from EVA.gui.base.base_table import BaseTable
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     g4bl = QtWidgets.QWidget()
     ui = Ui_g4bl()

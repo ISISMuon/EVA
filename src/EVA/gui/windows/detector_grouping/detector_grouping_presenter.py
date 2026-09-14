@@ -1,9 +1,11 @@
-import json
 import logging
-import os
 from EVA.core.app import get_config
-from EVA.gui.windows.detector_grouping.detector_grouping_model import DetectorGroupingModel
-from EVA.gui.windows.detector_grouping.detector_grouping_view import DetectorGroupingView
+from EVA.gui.windows.detector_grouping.detector_grouping_model import (
+    DetectorGroupingModel,
+)
+from EVA.gui.windows.detector_grouping.detector_grouping_view import (
+    DetectorGroupingView,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -16,18 +18,26 @@ class DetectorGroupingPresenter:
             self.append_row_in_layer_table_if_last_row_clicked
         )
         self.view.save_profile_button.clicked.connect(self.save_profile)
-        self.updated_combo_box_options(get_config()["general"]["saved_grouping_profiles"].keys())
+        self.updated_combo_box_options(
+            get_config()["general"]["saved_grouping_profiles"].keys()
+        )
         current_profile = get_config()["general"]["current_grouping_profile"]
         if current_profile:
             self.view.saved_profile_options_combobox.setCurrentText(current_profile)
-            detector_grouping_data = self.model.load_profile(get_config()["general"]["saved_grouping_profiles"][current_profile])
+            detector_grouping_data = self.model.load_profile(
+                get_config()["general"]["saved_grouping_profiles"][current_profile]
+            )
             self.view.ConfigTable.update_contents(detector_grouping_data)
-        self.view.saved_profile_options_combobox.currentIndexChanged.connect(self.load_selected_profile)
+        self.view.saved_profile_options_combobox.currentIndexChanged.connect(
+            self.load_selected_profile
+        )
 
     def load_selected_profile(self):
         selected_profile = self.view.saved_profile_options_combobox.currentText()
         if selected_profile:
-            detector_grouping_data = self.model.load_profile(get_config()["general"]["saved_grouping_profiles"][selected_profile])
+            detector_grouping_data = self.model.load_profile(
+                get_config()["general"]["saved_grouping_profiles"][selected_profile]
+            )
             self.view.ConfigTable.update_contents(detector_grouping_data)
             config = get_config()
             config["general"]["current_grouping_profile"] = selected_profile
@@ -46,6 +56,7 @@ class DetectorGroupingPresenter:
         # At first ever instance of creating a profile, load it automatically
         if self.view.saved_profile_options_combobox.count() == 1:
             self.load_selected_profile()
+
     def save_profile(self):
         """
         Save the current contents of the ConfigTable to a detector grouping profile dictionary.
@@ -53,11 +64,13 @@ class DetectorGroupingPresenter:
         duplicate = False
         profile_name = self.view.new_profile_name_line_edit.text()
         if not profile_name:
-            self.view.display_error_message(message="Please select a profile name to save.")
+            self.view.display_error_message(
+                message="Please select a profile name to save."
+            )
             return
         if profile_name in get_config()["general"]["saved_grouping_profiles"]:
-            reply = self.view.display_question(message=
-                f"A profile named '{profile_name}' already exists. Would you like to overwrite it?"
+            reply = self.view.display_question(
+                message=f"A profile named '{profile_name}' already exists. Would you like to overwrite it?"
             )
             if not reply:
                 return

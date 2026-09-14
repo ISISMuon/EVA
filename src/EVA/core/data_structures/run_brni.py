@@ -21,15 +21,17 @@ class RunBiriani(Run):
         self.comment = comment_data[3]
 
     def set_corrections(self, **kwargs):
-        if kwargs.get('normalise_which') is None:
-            kwargs['normalise_which'] = self.normalise_which
+        if kwargs.get("normalise_which") is None:
+            kwargs["normalise_which"] = self.normalise_which
 
         self.data = deepcopy(self._raw)
         current_loaded_detectors = self.loaded_detectors
         self._group_detectors(kwargs.get("detector_group_dict"))
-        self._set_energy_correction(kwargs.get('energy_corrections'))
-        self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
-        self._set_binning(kwargs.get('bin_rate'))
+        self._set_energy_correction(kwargs.get("energy_corrections"))
+        self._set_normalisation(
+            kwargs.get("normalisation"), kwargs.get("normalise_which")
+        )
+        self._set_binning(kwargs.get("bin_rate"))
         if current_loaded_detectors != self.loaded_detectors:
             self.detectors_grouped_s.emit()
         self.corrections_updated_s.emit()
@@ -60,13 +62,21 @@ class RunBiriani(Run):
             self._set_normalisation_none()
             raise ValueError("Normalisation by events failed.")
 
-    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None):
+    def _combine_detector_spectra(
+        self, detector_group_dict: dict[str, list[str]] = None
+    ):
         combined_data = {}
         self.loaded_detectors = []
         for group_name, detector_names in detector_group_dict.items():
-            self.detector_group_dict[group_name] = [det for det in detector_names if det in self.data]
-            spectra_in_group = [self.data.get(det) for det in detector_names if det in self.data]
-            first = spectra_in_group[0]  # Use the first spectrum as a reference for x values
+            self.detector_group_dict[group_name] = [
+                det for det in detector_names if det in self.data
+            ]
+            spectra_in_group = [
+                self.data.get(det) for det in detector_names if det in self.data
+            ]
+            first = spectra_in_group[
+                0
+            ]  # Use the first spectrum as a reference for x values
             # Create a copy of the first spectrum to add y values of each spectrum in place to the x values of the first one.
             y_sum = np.array(first.y, copy=True)
 
@@ -78,7 +88,7 @@ class RunBiriani(Run):
                 if not np.array_equal(spectrum.x, first.x):
                     bad.append(detector_name)
                 else:
-                # if x vals are equal, sum up the counts
+                    # if x vals are equal, sum up the counts
                     y_sum += spectrum.y
             if bad:
                 # if any of the detectors did not match, raise error with list of detectors that didnt match the first one
@@ -88,10 +98,13 @@ class RunBiriani(Run):
                 run_number=first.run_number,
                 x=first.x,  # reuse energy bin values from first detector
                 y=y_sum,
-                bin_range=first.bin_range
+                bin_range=first.bin_range,
             )
-            self.loaded_detectors.append(group_name) # Change list of loaded detectors to the names of the detector groups used
+            self.loaded_detectors.append(
+                group_name
+            )  # Change list of loaded detectors to the names of the detector groups used
         return combined_data
+
     def read_comment_data(self):
         mapping = dict.fromkeys(range(32))
         start = self.start_time.translate(mapping)[21:]

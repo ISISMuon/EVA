@@ -1,14 +1,12 @@
 import re
 
-from .utils import (
-    check_input,
-    is_positive, is_greater_than_zero,
-    is_zero_or_one
-)
+from .utils import check_input, is_positive, is_greater_than_zero, is_zero_or_one
 from .element import Element
 
+
 class Material(object):
-    """ Material Representation """
+    """Material Representation"""
+
     def __init__(self, mat_name, elements, density, phase=0):
         """Create Material from elements, density, and phase
 
@@ -73,17 +71,17 @@ class Material(object):
             values = elements[element]
 
             if isinstance(values, dict):
-                stoich = values['stoich']
-                e_disp = values.get('E_d', 25.0)
-                lattice = values.get('lattice', 0.0)
-                surface = values.get('surface', 3.0)
-                mass_fraction = values.get('mass_fraction', None)
+                stoich = values["stoich"]
+                e_disp = values.get("E_d", 25.0)
+                lattice = values.get("lattice", 0.0)
+                surface = values.get("surface", 3.0)
+                mass_fraction = values.get("mass_fraction", None)
 
             elif isinstance(values, list):
                 default_values = [0.0, 25.0, 0.0, 3.0]
                 if len(values) == 0 or len(values) > 4:
-                    raise ValueError('list must be 0 < length < 5')
-                values = values + default_values[len(values):]
+                    raise ValueError("list must be 0 < length < 5")
+                values = values + default_values[len(values) :]
                 stoich, e_disp, lattice, surface = values
             elif isinstance(values, (int, float)):
                 stoich = values
@@ -91,7 +89,7 @@ class Material(object):
                 lattice = 0.0
                 surface = 3.0
             else:
-                raise ValueError('elements must be of type int, float, list, or dict')
+                raise ValueError("elements must be of type int, float, list, or dict")
 
             # Check input
             stoich = check_input(float, is_greater_than_zero, stoich)
@@ -104,20 +102,25 @@ class Material(object):
             if not isinstance(element, Element):
                 element = Element(element)
 
-            self.elements.update({element: {
-                'stoich': stoich, 'E_d': e_disp,
-                'lattice': lattice, 'surface': surface,
-                'mass_fraction': mass_fraction,
-            }})
+            self.elements.update(
+                {
+                    element: {
+                        "stoich": stoich,
+                        "E_d": e_disp,
+                        "lattice": lattice,
+                        "surface": surface,
+                        "mass_fraction": mass_fraction,
+                    }
+                }
+            )
 
         # Normalize the Chemical Composisiton to 1.0
         for element in self.elements:
-            self.elements[element]['stoich'] /= stoich_sum
-
+            self.elements[element]["stoich"] /= stoich_sum
 
     @classmethod
     def from_formula(cls, mat_name, chemical_formula, density, phase=0):
-        """ Creation Material from chemical formula string and density
+        """Creation Material from chemical formula string and density
 
         Parameters
         ----------
@@ -141,18 +144,20 @@ class Material(object):
         Chemical Formula will be normalized to 1.0
         """
         elements = cls._formula_to_elements(chemical_formula)
-        return Material(mat_name=mat_name, elements=elements, density=density, phase=phase)
+        return Material(
+            mat_name=mat_name, elements=elements, density=density, phase=phase
+        )
 
     @staticmethod
     def _formula_to_elements(chemical_formula):
-        """ Convert chemical formula to elements """
-        single_element = r'([A-Z][a-z]?)([0-9]*(?:\.[0-9]*)?)?'
+        """Convert chemical formula to elements"""
+        single_element = r"([A-Z][a-z]?)([0-9]*(?:\.[0-9]*)?)?"
         elements = {}
 
-        if re.match(r'^(?:{})+$'.format(single_element), chemical_formula):
+        if re.match(r"^(?:{})+$".format(single_element), chemical_formula):
             matches = re.findall(single_element, chemical_formula)
         else:
-            error_str = 'chemical formula string {} does not match regex'
+            error_str = "chemical formula string {} does not match regex"
             raise ValueError(error_str.format(chemical_formula))
 
         # Check for errors in stoichiometry
@@ -160,15 +165,17 @@ class Material(object):
         for symbol, fraction in matches:
             element = Element(symbol)
             if element in elements:
-                error_str = 'cannot have duplicate elements {} in stoichiometry'
+                error_str = "cannot have duplicate elements {} in stoichiometry"
                 raise ValueError(error_str.format(element.symbol))
 
-            if fraction == '':
+            if fraction == "":
                 fraction = 1.0
             total_mass += element.mass * float(fraction)
-            elements.update({element: {'stoich': float(fraction)}})
+            elements.update({element: {"stoich": float(fraction)}})
         for element, properties in elements.items():
-            properties['mass_fraction'] = (element.mass * properties['stoich']) / total_mass
+            properties["mass_fraction"] = (
+                element.mass * properties["stoich"]
+            ) / total_mass
         return elements
 
     @property
@@ -192,7 +199,10 @@ class Material(object):
     @property
     def chemical_formula(self):
         """Material's chemical formula"""
-        return ' '.join('{} {:1.2f}'.format(element.symbol, self.elements[element]['stoich']) for element in self.elements)
+        return " ".join(
+            "{} {:1.2f}".format(element.symbol, self.elements[element]["stoich"])
+            for element in self.elements
+        )
 
     def __repr__(self):
         material_str = "<Material formula:{} density:{:2.3f}>"
@@ -206,9 +216,12 @@ class Material(object):
             return False
 
         for element in self.elements:
-            if not element in material.elements:
+            if element not in material.elements:
                 return False
             for prop in self.elements[element]:
-                if abs(self.elements[element][prop] - material.elements[element][prop]) > 1e-6:
+                if (
+                    abs(self.elements[element][prop] - material.elements[element][prop])
+                    > 1e-6
+                ):
                     return False
         return True

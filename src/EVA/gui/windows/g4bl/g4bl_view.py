@@ -1,4 +1,3 @@
-from matplotlib import pyplot as plt
 from PyQt6.QtCore import pyqtSignal, Qt
 
 from PyQt6.QtWidgets import (
@@ -15,13 +14,14 @@ from PyQt6.QtWidgets import (
     QCheckBox,
     QStackedWidget,
     QHBoxLayout,
-    QFrame, QMenuBar, QSizePolicy
+    QFrame,
+    QMenuBar,
+    QSizePolicy,
 )
 
 from EVA.gui.ui_files.g4bl_gui import Ui_g4bl
 from EVA.gui.base.base_view import BaseView
 from EVA.gui.widgets.plot.plot_widget import PlotWidget
-from EVA.gui.windows.srim.trim_presenter import TrimPresenter
 
 
 class G4blView(BaseView, Ui_g4bl):
@@ -70,20 +70,23 @@ class G4blView(BaseView, Ui_g4bl):
         self.mode_group.addButton(self.manual_placement_radio)
 
         self.menubar = QMenuBar()
-        self.menubar.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        self.menubar.setSizePolicy(
+            QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum
+        )
 
-        file = self.menubar.addMenu('File')
-        self.menubar.setContentsMargins(0,0,0,0)
+        file = self.menubar.addMenu("File")
+        self.menubar.setContentsMargins(0, 0, 0, 0)
 
-        self.file_load = file.addAction('Load G4BL Settings')
-        self.file_save = file.addAction('Save G4BL Settings')
-        self.file_reset = file.addAction('Restore default G4BL Settings')
+        self.file_load = file.addAction("Load G4BL Settings")
+        self.file_save = file.addAction("Save G4BL Settings")
+        self.file_reset = file.addAction("Restore default G4BL Settings")
 
         self.simulation_progress_widget.hide()
         self.cancel_sim_button.hide()
         self.slider_container.hide()
         self.depth_profile_plot.hide()
         self.widget_5.hide()
+
     # display results to table and set up connections
     def setup_results_table(self, momenta, table):
         n_rows = len(momenta)
@@ -119,7 +122,16 @@ class G4blView(BaseView, Ui_g4bl):
 
             save_plot_img_btn.clicked.connect(lambda _, r=row: self.save_img_s.emit(r))
 
-    def update_results_tree(self, tree, momenta, layer_names, proportions, proportions_errs, counts, counts_errs):
+    def update_results_tree(
+        self,
+        tree,
+        momenta,
+        layer_names,
+        proportions,
+        proportions_errs,
+        counts,
+        counts_errs,
+    ):
         tree.clear()
         # build all tree items and add to tree widget
         items = []
@@ -127,13 +139,12 @@ class G4blView(BaseView, Ui_g4bl):
             momentum_item = QTreeWidgetItem([str(round(mom, 4))])
 
             for j, layer_name in enumerate(layer_names):
-
                 layer_item = QTreeWidgetItem()
                 layer_item.setText(1, layer_name)
                 layer_item.setText(2, f"{proportions[j, i]} ± {proportions_errs[j, i]}")
-                #layer_item.setText(3, str(round(comp[1], 4)))
+                # layer_item.setText(3, str(round(comp[1], 4)))
                 layer_item.setText(3, f"{counts[j, i]} ± {counts_errs[j, i]}")
-                #layer_item.setText(5, str(comp[3]))
+                # layer_item.setText(5, str(comp[3]))
                 momentum_item.addChild(layer_item)
 
             items.append(momentum_item)
@@ -212,7 +223,9 @@ class G4blView(BaseView, Ui_g4bl):
         self.not_enough_momentum_label.show()
         self.depth_profile_plot.hide()
 
-    def generate_plot_tab(self, momentum, index, fig_whole, ax_whole, fig_comp, ax_comp):
+    def generate_plot_tab(
+        self, momentum, index, fig_whole, ax_whole, fig_comp, ax_comp
+    ):
         container = QWidget()
 
         plot_stack = QStackedWidget()
@@ -250,10 +263,16 @@ class G4blView(BaseView, Ui_g4bl):
 
         container.setLayout(layout)
 
-         # connect all buttons
-        show_comp.checkStateChanged.connect(lambda check_state, i=index: self.swap_plot_stack(check_state, i))
-        stopping_shift_button.clicked.connect(lambda x, i=index: self.stopping_shift_plot_origin_s.emit(i))
-        stopping_reset_button.clicked.connect(lambda x, i=index: self.stopping_reset_plot_origin_s.emit(i))
+        # connect all buttons
+        show_comp.checkStateChanged.connect(
+            lambda check_state, i=index: self.swap_plot_stack(check_state, i)
+        )
+        stopping_shift_button.clicked.connect(
+            lambda x, i=index: self.stopping_shift_plot_origin_s.emit(i)
+        )
+        stopping_reset_button.clicked.connect(
+            lambda x, i=index: self.stopping_reset_plot_origin_s.emit(i)
+        )
 
         self.plot_stacks.append(plot_stack)
         self.stopping_origin_shift_line_edits.append(stopping_shift_origin_linedit)
@@ -268,90 +287,120 @@ class G4blView(BaseView, Ui_g4bl):
             stack.setCurrentIndex(0)
 
     def set_form_data(self, form_data):
-        self.sample_name_linedit.setText(form_data["sample_name"]),
-        self.stats_linedit.setText(str(int(form_data["stats"]))),
-        self.g4bl_exe_dir_linedit.setText(form_data["g4bl_dir"]),
-        self.g4bl_out_dir_linedit.setText(form_data["output_dir"]),
-        self.momentum_linedit.setText(str(form_data["momentum"])),
-        self.sim_type_combo.setCurrentText(form_data["sim_type"]),
-        self.momentum_spread_linedit.setText(str(form_data["momentum_spread"])),
-        self.min_momentum_linedit.setText(str(form_data["min_momentum"])),
-        self.max_momentum_linedit.setText(str(form_data["max_momentum"])),
-        self.momentum_step_linedit.setText(str(form_data["step_momentum"])),
+        (self.sample_name_linedit.setText(form_data["sample_name"]),)
+        (self.stats_linedit.setText(str(int(form_data["stats"]))),)
+        (self.g4bl_exe_dir_linedit.setText(form_data["g4bl_dir"]),)
+        (self.g4bl_out_dir_linedit.setText(form_data["output_dir"]),)
+        (self.momentum_linedit.setText(str(form_data["momentum"])),)
+        (self.sim_type_combo.setCurrentText(form_data["sim_type"]),)
+        (self.momentum_spread_linedit.setText(str(form_data["momentum_spread"])),)
+        (self.min_momentum_linedit.setText(str(form_data["min_momentum"])),)
+        (self.max_momentum_linedit.setText(str(form_data["max_momentum"])),)
+        (self.momentum_step_linedit.setText(str(form_data["step_momentum"])),)
         self.scan_momentum_combo.setCurrentText(form_data["scan_type"])
         self.bin_number_linedit.setText(str(int(form_data["bin_number"])))
 
     def get_save_file_path(self, default_dir: str, file_filter: str) -> str:
-        file = QFileDialog.getSaveFileName(self, 'Save File', directory=default_dir, filter=file_filter)
+        file = QFileDialog.getSaveFileName(
+            self, "Save File", directory=default_dir, filter=file_filter
+        )
         if file:
             return file[0]
 
     def get_load_file_path(self, default_dir: str, file_filter: str) -> str:
-        file = QFileDialog.getOpenFileName(self, 'Load File', directory=default_dir, filter=file_filter)
+        file = QFileDialog.getOpenFileName(
+            self, "Load File", directory=default_dir, filter=file_filter
+        )
         if file:
             return file[0]
 
     def get_directory(self, default_dir):
-        file_dir = QFileDialog.getExistingDirectory(self, "Select folder", directory=default_dir)
+        file_dir = QFileDialog.getExistingDirectory(
+            self, "Select folder", directory=default_dir
+        )
         if file_dir:
             return file_dir
 
-    def file_save(self,SampleName, SimType, Momentum, MomentumSpread, ScanType, MinMomentum, MaxMomentum,
-                   StepMomentum, G4BLdir, G4BLOutDir, Stats):
-        save_file = QFileDialog.getSaveFileName(self, caption = "Save G4BL Settings")
+    def file_save(
+        self,
+        SampleName,
+        SimType,
+        Momentum,
+        MomentumSpread,
+        ScanType,
+        MinMomentum,
+        MaxMomentum,
+        StepMomentum,
+        G4BLdir,
+        G4BLOutDir,
+        Stats,
+    ):
+        save_file = QFileDialog.getSaveFileName(self, caption="Save G4BL Settings")
         print(save_file[0])
         file2 = open(save_file[0], "w")
-        file2.writelines('Sample Name\n')
-        out = SampleName.text()+'\n'
+        file2.writelines("Sample Name\n")
+        out = SampleName.text() + "\n"
         file2.writelines(out)
-        file2.writelines('SimType\n')
-        out = SimType.currentText()+'\n'
+        file2.writelines("SimType\n")
+        out = SimType.currentText() + "\n"
         file2.writelines(out)
-        file2.writelines('Momentum\n')
-        out = Momentum.text()+'\n'
+        file2.writelines("Momentum\n")
+        out = Momentum.text() + "\n"
         file2.writelines(out)
-        file2.writelines('Momentum Spread\n')
-        out = MomentumSpread.text()+'\n'
+        file2.writelines("Momentum Spread\n")
+        out = MomentumSpread.text() + "\n"
         file2.writelines(out)
-        file2.writelines('Scan Momentum\n')
-        out = ScanType.currentText()+'\n'
+        file2.writelines("Scan Momentum\n")
+        out = ScanType.currentText() + "\n"
         file2.writelines(out)
-        file2.writelines('Min Momentum\n')
-        out = MinMomentum.text()+'\n'
+        file2.writelines("Min Momentum\n")
+        out = MinMomentum.text() + "\n"
         file2.writelines(out)
-        file2.writelines('Max Momentum\n')
-        out = MaxMomentum.text()+'\n'
+        file2.writelines("Max Momentum\n")
+        out = MaxMomentum.text() + "\n"
         file2.writelines(out)
-        file2.writelines('Momentum Step\n')
-        out = StepMomentum.text()+'\n'
+        file2.writelines("Momentum Step\n")
+        out = StepMomentum.text() + "\n"
         file2.writelines(out)
-        file2.writelines('SRIM.exe dir\n')
-        out = G4BLdir.text()+'\n'
+        file2.writelines("SRIM.exe dir\n")
+        out = G4BLdir.text() + "\n"
         file2.writelines(out)
-        file2.writelines('Output dir\n')
-        out = G4BLOutDir.text()+'\n'
+        file2.writelines("Output dir\n")
+        out = G4BLOutDir.text() + "\n"
         file2.writelines(out)
-        file2.writelines('Stats\n')
-        out = Stats.text()+'\n'
+        file2.writelines("Stats\n")
+        out = Stats.text() + "\n"
         file2.writelines(out)
-        file2.writelines('Sample\n')
+        file2.writelines("Sample\n")
 
         for j in range(10):
-            line = ''
+            line = ""
             for i in range(5):
-                print(j,i)
+                print(j, i)
                 try:
-                    line += self.tab1.table_TRIMsetup.item(j, i).text()+','
+                    line += self.tab1.table_TRIMsetup.item(j, i).text() + ","
                 except:
-                    line +=','
+                    line += ","
 
-            file2.writelines(line+'\n')
+            file2.writelines(line + "\n")
         file2.close()
 
-    def file_load(self,SampleName, SimType, Momentum, MomentumSpread, ScanType, MinMomentum, MaxMomentum,
-                   StepMomentum, G4BLdir, G4BLOutDir, Stats):
-        print('in load file')
-        load_file = QFileDialog.getOpenFileName(self, caption = "Load TRIM/SRIM Settings")
+    def file_load(
+        self,
+        SampleName,
+        SimType,
+        Momentum,
+        MomentumSpread,
+        ScanType,
+        MinMomentum,
+        MaxMomentum,
+        StepMomentum,
+        G4BLdir,
+        G4BLOutDir,
+        Stats,
+    ):
+        print("in load file")
+        load_file = QFileDialog.getOpenFileName(self, caption="Load TRIM/SRIM Settings")
         print(load_file[0])
         file2 = open(load_file[0], "r")
         ignore = file2.readline()
@@ -381,13 +430,13 @@ class G4blView(BaseView, Ui_g4bl):
         line = []
 
         for j in range(10):
-            line = file2.readline().split(',')
+            line = file2.readline().split(",")
             print(line)
             for i in range(5):
-                print(j,i)
+                print(j, i)
                 try:
                     self.tab1.table_G4BLsetup.setItem(j, i, QTableWidgetItem(line[i]))
                 except:
-                    print('load finished')
+                    print("load finished")
 
         file2.close()

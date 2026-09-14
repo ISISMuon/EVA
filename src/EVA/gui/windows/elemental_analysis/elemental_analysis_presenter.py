@@ -157,7 +157,8 @@ class ElementalAnalysisPresenter(object):
             tertiary_res = [
                 [r["element"], r["energy"], r["transition"], ""]
                 for r in res
-                if not is_primary(r["transition"], notation="spec") and not is_secondary(r["transition"], notation="spec")
+                if not is_primary(r["transition"], notation="spec")
+                and not is_secondary(r["transition"], notation="spec")
             ]
             if len(prim_res) == 0:
                 self.view.display_no_match_table(self.view.muonic_xray_table_prim)
@@ -256,7 +257,9 @@ class ElementalAnalysisPresenter(object):
         show_components_checkbox = QCheckBox("Show Components")
         self.view.detector_checkbox_hlayout.addWidget(show_components_checkbox)
         self.view.show_components_checkbox = show_components_checkbox
-        show_components_checkbox.checkStateChanged.connect(lambda state: self.plot_components(state))
+        show_components_checkbox.checkStateChanged.connect(
+            lambda state: self.plot_components(state)
+        )
         show_components_checkbox.setChecked(False)
         show_components_checkbox.hide()
         if self.model.run.group:
@@ -365,7 +368,9 @@ class ElementalAnalysisPresenter(object):
                     ]
                     for row in tertiary_res
                 ]
-                self.view.update_table(self.view.muonic_xray_table_tertiary, tertiary_res_subset)
+                self.view.update_table(
+                    self.view.muonic_xray_table_tertiary, tertiary_res_subset
+                )
 
     def on_gamma_table_cell_clicked(self, row: int, col: int):
         """
@@ -414,13 +419,13 @@ class ElementalAnalysisPresenter(object):
         # plot all transitions for the clicked element
         if col == 0:
             if table == self.view.muonic_xray_table_all:
-                    self.model.plot_vlines_all_mu_xrays(element, key="all")
+                self.model.plot_vlines_all_mu_xrays(element, key="all")
             if table == self.view.muonic_xray_table_prim:
-                    self.model.plot_vlines_all_mu_xrays(element, key="prim")
+                self.model.plot_vlines_all_mu_xrays(element, key="prim")
             if table == self.view.muonic_xray_table_sec:
-                    self.model.plot_vlines_all_mu_xrays(element, key="sec")
+                self.model.plot_vlines_all_mu_xrays(element, key="sec")
             if table == self.view.muonic_xray_table_tertiary:
-                    self.model.plot_vlines_all_mu_xrays(element, key="tertiary")
+                self.model.plot_vlines_all_mu_xrays(element, key="tertiary")
 
         # plot only one line for the clicked transition or energy
         if col == 1 or col == 2:
@@ -484,7 +489,7 @@ class ElementalAnalysisPresenter(object):
                     self.view.threshold_line_edit.text()
                 )
                 self.model.default_distance = float(self.view.distance_line_edit.text())
-            except (ValueError, AttributeError) as e:
+            except (ValueError, AttributeError):
                 self.view.display_error_message(message="Invalid peak find settings.")
                 return
 
@@ -561,5 +566,7 @@ class ElementalAnalysisPresenter(object):
         self.view.plot.update_plot(self.model.fig, self.model.axs)
 
     def plot_components(self, checkstate: Qt.CheckState):
-            self.model.replot_all_run_data(show_components=checkstate == Qt.CheckState.Checked)
-            self.view.plot.update_plot(self.model.fig, self.model.axs)
+        self.model.replot_all_run_data(
+            show_components=checkstate == Qt.CheckState.Checked
+        )
+        self.view.plot.update_plot(self.model.fig, self.model.axs)

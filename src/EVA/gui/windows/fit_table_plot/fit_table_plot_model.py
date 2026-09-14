@@ -2,7 +2,6 @@ from PyQt6.QtCore import QObject
 import logging
 import csv
 import matplotlib.pyplot as plt
-from EVA.core.app import get_config
 
 logger = logging.getLogger(__name__)
 

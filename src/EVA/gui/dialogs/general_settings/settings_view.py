@@ -3,9 +3,6 @@ from PyQt6.QtGui import QCloseEvent, QColor
 from PyQt6.QtWidgets import (
     QDialog,
     QMessageBox,
-    QLineEdit,
-    QCheckBox,
-    QLabel,
     QDialogButtonBox,
     QColorDialog,
     QFileDialog,
@@ -36,6 +33,7 @@ class SettingsView(QDialog, Ui_settings):
         self.set_fill_colour_preview(settings["fill_colour"])
         self.colour_dialog.setCurrentColor(QColor(settings["fill_colour"]))
         self.encoding_comboBox.setCurrentText(settings["encoding"])
+
     def set_fill_colour_preview(self, colour):
         self.plot_fill_colour_preview.setStyleSheet(f"background-color: {colour}")
 
@@ -46,7 +44,7 @@ class SettingsView(QDialog, Ui_settings):
             "srim_out_dir": self.srim_out_dir_label.text(),
             "fill_colour": self.colour_dialog.currentColor().name(),
             "working_dir": self.working_dir_label.text(),
-            "encoding": self.encoding_comboBox.currentText()
+            "encoding": self.encoding_comboBox.currentText(),
         }
 
         return settings
