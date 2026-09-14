@@ -256,7 +256,7 @@ class G4blModel(QObject):
             muon_final_z_position = g4bl_sim.run(
                 self.g4bl_exe_dir, self.g4bl_out_dir, progress_callback=progress_callback
             )
-            bin_center, counts = rebin.nxs_rebin(x_data=muon_final_z_position, bin_num=self.bin_resolution, bin_range=(0, self.total_thickness))
+            bin_center, counts = rebin.rebin_raw(x_data=muon_final_z_position, bin_num=self.bin_resolution, bin_range=(0, self.total_thickness))
             return bin_center, counts, 0
 
         elif self.sim_method == "Manual Placement":

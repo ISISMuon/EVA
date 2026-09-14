@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def numpy_rebin(
+def rebin_using_interp(
     x0: np.ndarray, y0: np.ndarray, bin_size: int, bin_range: tuple[float, float] = None
 ) -> tuple[np.ndarray, np.ndarray]:
     """
@@ -42,19 +42,19 @@ def numpy_rebin(
     return bin_centres, hist
 
 
-def nxs_rebin(x_data: np.ndarray, bin_num: int, bin_range: tuple[float, float] = None):
+def rebin_raw(x_data: np.ndarray, bin_num: int, bin_range: tuple[float, float] = None):
     """
     Rebin raw data into desired bin sizes.
 
     Args:
-        x0: input xvalues (energy bins)
-        y0: input yvalues (counts per bin)
-        bin_factor: bin size
+        x_data: input xvalues (energy bins)
+        bin_num: number of bins
+        bin_range: tuple specifying min and max range for binning
 
     Returns:
         Rebinned data with bin centers for use with matplotlib step plots.
     """
-    if range is None:
+    if bin_range is None:
         counts, bin_edges = np.histogram(x_data, bins=bin_num)
     else:
         counts, bin_edges = np.histogram(x_data, bins=bin_num, range=bin_range)
@@ -196,3 +196,72 @@ def bin_2d(
         x_data, y_data, bins=[num_bin, num_bin], range=range_param
     )
     return H, xedges, yedges
+
+def rebin_to_reference(x, y, ref_edges, bin_number):
+
+    output = np.zeros(bin_number)
+
+    x = np.asarray(x)
+    y = np.asarray(y)
+
+
+    # input bin widths
+    dx = np.mean(np.diff(x))
+
+    input_left = x - dx/2
+    input_right = x + dx/2
+
+
+    for i, counts in enumerate(y):
+
+        if counts == 0:
+            continue
+
+        E1 = input_left[i]
+        E2 = input_right[i]
+
+
+        # bins affected in reference spectrum
+        j_start = np.searchsorted(ref_edges, E1) - 1
+        j_end = np.searchsorted(ref_edges, E2)
+
+
+        for j in range(j_start, j_end):
+
+            if j < 0 or j >= bin_number:
+                continue
+
+
+            R1 = ref_edges[j]
+            R2 = ref_edges[j+1]
+
+
+            overlap = max(
+                0,
+                min(E2, R2) - max(E1, R1)
+            )
+
+
+            if overlap > 0:
+                fraction = overlap / (E2-E1)
+
+                output[j] += counts * fraction
+
+
+    return output
+
+def rebin_to_reference_fast(x, y, ref_edges, bin_number):
+    x = np.asarray(x)
+    y = np.asarray(y)
+
+    dx = np.mean(np.diff(x))
+    input_edges = np.concatenate([x - dx/2, [x[-1] + dx/2]])
+
+    # cumulative counts at each input edge (piecewise-linear within a bin)
+    cumulative_input = np.concatenate([[0], np.cumsum(y)])
+
+    # interpolate the cumulative distribution onto the reference edges
+    cumulative_ref = np.interp(ref_edges, input_edges, cumulative_input,
+                         left=0, right=cumulative_input[-1])
+
+    return np.diff(cumulative_ref)

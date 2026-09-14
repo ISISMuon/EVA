@@ -20,7 +20,7 @@ from EVA.gui.windows.srim.trim_window import TrimWindow
 from EVA.gui.windows.trim_fitting.trim_fit_widget import TrimFitWidget
 from EVA.gui.windows.workspace.workspace_model import WorkspaceModel
 from EVA.gui.windows.workspace.workspace_view import WorkspaceView
-
+from EVA.gui.windows.detector_grouping.detector_grouping_window import DetectorGroupingWindow
 logger = logging.getLogger(__name__)
 
 class WorkspacePresenter:
@@ -39,12 +39,16 @@ class WorkspacePresenter:
         self.model = model
 
         # Set up action bar connections
+        self.generate_peakfit_options()
+        if get_config()["general"]["current_grouping_profile"] is not None:
+            self.current_profile = get_config()["general"]["current_grouping_profile"]
+            self.view.detector_grouping_profile_label.setText(f"Current Profile: {self.current_profile}")
+        else:
+            self.current_profile = None
+            self.view.detector_grouping_profile_label.setText(f"Current Profile: None")
 
-        for i, detector in enumerate(self.view.detector_list):
-            self.view.peakfit_menu_actions[i].triggered.connect(
-                lambda _, det=detector: self.open_peakfit(det)
-            )
-
+        # load settings from config into settings panel
+        self.populate_settings_panel()
         # self.view.trim_fit.triggered.connect(self.open_trim_fit)
         self.view.trim_simulation.triggered.connect(self.open_trim)
         self.view.model_muon_spectrum.triggered.connect(self.open_model_muon_spectrum)
@@ -54,12 +58,13 @@ class WorkspacePresenter:
         self.view.energy_correction_settings.triggered.connect(
             self.open_energy_corrections_dialog
         )
+        self.view.group_detector_button.clicked.connect(self.open_detector_grouping_window)
         self.view.general_settings.triggered.connect(self.open_general_settings_dialog)
 
         self.view.help_manual.triggered.connect(self.open_manual)
-
         self.view.tabWidget.tabCloseRequested.connect(self.view.close_tab)
-        self.populate_settings_panel()
+
+        self.view.group_detector_checkbox.toggled.connect(self.on_group_detector_checkbox_toggled)
         self.view.export_run_data_button.clicked.connect(self.export_run_data)
         self.view.save_and_close_requested_s.connect(self.save_and_close)
 
@@ -106,25 +111,29 @@ class WorkspacePresenter:
         plot_type = self.view.nexus_plot_display_combo_box.currentText()
         prompt_limit = self.view.prompt_limit_textbox.text()
         delayed_limit = self.view.delayed_limit_textbox.text()
+
+        if self.view.group_detector_checkbox.isChecked():
+            detector_group_dict = self.detector_group_dict
+        else:
+            detector_group_dict = None
+        
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
-            kwargs = dict(
+            run_correction_settings = dict(
                 normalisation=norm_type,
                 bin_rate=binning,
                 plot_mode=plot_type,
                 prompt_limit=int(prompt_limit),
                 delayed_limit=int(delayed_limit),
+                detector_group_dict=detector_group_dict,
             )
-            # dynamically filter only supported arguments for loaded run type
-            sig = inspect.signature(self.model.run.set_corrections)
-            valid_params = sig.parameters.keys()
-            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_params}
-            self.model.run.set_corrections(**filtered_kwargs)
 
-        except ValueError:
+            self.model.run.set_corrections(**run_correction_settings)
+
+        except ValueError as e:
             self.view.display_error_message(
-                title="Normalisation error",
-                message="Cannot normalise by events when comment file is not loaded. Please ensure that the comment.dat file is in your loaded directory.",
+                title="Error occured while applying settings",
+                message=str(e),
             )
 
             self.populate_settings_panel()
@@ -141,6 +150,57 @@ class WorkspacePresenter:
         if "plot" in settings.keys():
             if "fill_colour" in settings["plot"].keys():
                 self.view.replot_spectra_s.emit()
+
+    def generate_peakfit_options(self):
+        self.view.setup_peakfit_options()
+        for i, detector in enumerate(self.view.detector_list):
+            self.view.peakfit_menu_actions[i].triggered.connect(
+                lambda _, det=detector: self.open_peakfit(det)
+            )
+
+    def on_detector_grouping_profile_changed(self, selected_profile):
+        # current_profile = get_config()["general"]["current_grouping_profile"]
+        self.current_profile = selected_profile
+        self.view.detector_grouping_profile_label.setText(f"Current profile: {selected_profile}")
+        self.view.group_detector_checkbox.setChecked(False)
+
+
+    def on_group_detector_checkbox_toggled(self):
+        valid = self.validate_grouping_profile()
+        if not valid:
+            self.view.group_detector_checkbox.blockSignals(True)
+            self.view.group_detector_checkbox.setChecked(False)
+            self.view.group_detector_checkbox.blockSignals(False)
+            return
+        self.on_apply_settings()
+        self.generate_peakfit_options()
+
+    def validate_grouping_profile(self):
+        if self.current_profile == "":
+            self.view.display_error_message(
+                title="No grouping profile selected",
+                message="Please select a grouping profile before enabling detector grouping.",
+            )
+            return False
+
+        grouping_profile = get_config()["general"]["saved_grouping_profiles"][
+            self.current_profile
+        ]
+        # Filter out groups that do not have any detectors in the current run
+        valid_groups = {
+            group: [det for det in detectors if det in self.model.run._raw]
+            for group, detectors in grouping_profile.items()
+            if any(det in self.model.run._raw for det in detectors)
+        }
+        if len(valid_groups) == 0:
+            self.view.display_error_message(
+                title="Invalid grouping profile",
+                message=f"Grouping profile {self.current_profile} does not include any detectors. Please update the grouping profile.",
+            )
+            return False
+        else:
+            self.detector_group_dict = valid_groups
+            return True
 
     def reset_to_default_config(self):
         """
@@ -226,6 +286,23 @@ class WorkspacePresenter:
 
         self.view.periodic_table_windows.remove(window)
         window.deleteLater()
+
+    def open_detector_grouping_window(self):
+        """Opens detector groupings window."""
+        logger.info("Opening detector groupings window.")
+
+        window = DetectorGroupingWindow()
+        self.view.detector_grouping_windows.append(window)
+        window.widget().profile_changed_s.connect(self.on_detector_grouping_profile_changed)
+        window.widget().show()
+        window.widget().window_closed_s.connect(lambda: self.close_detector_grouping_window(window))
+
+    def close_detector_grouping_window(self, window):
+        """Remove reference to detector grouping window when closed"""
+        logger.info("Closed detector groupings window.")
+
+        self.view.detector_grouping_windows.remove(window)
+        window.widget().deleteLater()
 
     #### OPENING TABS ##################################################
     def open_peakfit(self, detector):

@@ -84,13 +84,13 @@ def plot_spectrum(
 
 
 def plot_spectrum_residual(
-    spectrum: Spectrum, normalisation: str, **settings: dict
+    run: Run, detector: str, normalisation: str, **settings: dict
 ) -> tuple[plt.Figure, plt.Axes]:
     """
     Plots a single spectrum (for a single detector) and creates an empty plot to be populated with fit residuals.
 
     Args:
-        spectrum: Spectrum object to plot
+        run: Run object to plot
         normalisation: Normalisation type - valid options are "counts", "none", "spills"
         **settings:
             * **title** (str): plot title
@@ -100,7 +100,7 @@ def plot_spectrum_residual(
         matplotlib Figure and Axes with plotted spectrum and empty Axis for residuals
     """
     title = settings.get(
-        "title", f"Run Number: {spectrum.run_number} {spectrum.detector}"
+        "title", f"Run Number: {run.run_num} - {run.plot_mode}"
     )
     colour = settings.get("colour", "yellow")
 
@@ -111,13 +111,13 @@ def plot_spectrum_residual(
     # sets the correct labels
     fig.suptitle(title)
     fig.supylabel(get_ylabel(normalisation))
-
+    fig.supxlabel("Energy (keV)")
     main_ax.set_ylabel("Intensity")
-    residual_ax.set_ylabel(f"$\\Delta$ Intensity")
-    residual_ax.set_xlabel("Energy (keV)")
+    residual_ax.set_ylabel("$\\Delta$ Intensity")
     residual_ax.grid(True)
 
     # Plot the spectrum data in main_ax
+    spectrum = run.data[detector]
     main_ax.fill_between(spectrum.x, spectrum.y, step="mid", color=colour)
     main_ax.step(
         spectrum.x,
@@ -128,12 +128,13 @@ def plot_spectrum_residual(
     )
     main_ax.set_ylim(0.0)
     main_ax.set_xlim(0.0)
+    residual_ax.set_ylim(-1,1)
     main_ax.tick_params(labelbottom=True)
 
     return fig, ax
 
 
-def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
+def plot_run(run: Run, fig: plt.Figure, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     """
     Plots a Run with a subplot for each Spectrum in the Run.
 
@@ -176,8 +177,14 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
     colour = settings.get("colour", "white")
     size = settings.get("size", (16, 7))
     adjustments = settings.get("adjustment_dict", default_adjustments)
+    show_components = settings.get("show_components", False)
     num_plots = len(show_detectors)
-    fig, axs = plt.subplots(nrows=num_plots, figsize=size)
+
+    if fig is None:
+        fig, axs = plt.subplots(nrows=num_plots, figsize=size)
+    else:
+        fig.clf()  # clear old axes but keep the Figure/canvas identity
+        axs = fig.subplots(nrows=num_plots)
 
     # hack to loop through all axes even if number of subplots == 1
     if num_plots == 1:
@@ -208,7 +215,9 @@ def plot_run(run: Run, **settings: dict) -> tuple[plt.Figure, plt.Axes]:
             axs[i].set_xlim(0.0)
             axs[i].set_ylim((0, 1.2 * np.max(dataset.y)))
             axs[i].set_title(dataset.detector)
+            plot_group_components(run, axs[i], detector, show_components=show_components)
             i += 1
+
     # Adjustments
     plt.subplots_adjust(**adjustments)
     return fig, axs
@@ -239,16 +248,17 @@ def replot_run(
         axes = axs.ravel().tolist()
     else:
         axes = axs
+    show_components = settings.get("show_components", False)
 
     for ax in axes:
         candidates = [
             (line.get_label()[1:], line)
             for line in ax.lines
-            if line.get_label()[1:] in run.loaded_detectors
+            if line.get_label()[1:] in run.data.keys()
         ]
         if not candidates:
             raise ValueError(
-                "No matching lines found in ax.lines with labels matching run.loaded_detectors"
+                "No matching lines found in ax.lines with labels matching run.data.keys()"
             )
 
         detector, line = candidates[0]
@@ -267,14 +277,56 @@ def replot_run(
 
         # lastly, re-fill the histogram
         fill_obj.set_data(xdata, 0, ydata)
-
+        ax.set_ylim((0, 1.2 * np.max(ydata)))
         if "colour" in settings.keys():
             fill_obj.set_color(settings["colour"])
 
-        ax.set_ylim((0, 1.2 * np.max(ydata)))
+        plot_group_components(run, ax, detector, show_components)
 
+def plot_group_components(run: Run, axs: plt.Axes, group_name: str, show_components: bool = False):
+    """
+    Plots the components of a detector group on a specified Axes instance.
 
-def replot_run_residual(
+    Args:
+        run: Run object containing the data
+        axs: Axes instance to plot on
+        group_name: Name of the detector group to plot
+        show_components: Whether to show individual component plots
+        **settings:
+            * **colour** (str): plot fill colour (default is yellow)
+    """
+
+    if run.detector_group_dict == {}:
+        return # No detector groups defined, nothing to plot
+    # else:
+    # remove step lines
+    for line in axs.lines[:]:
+        label = line.get_label()
+        if label[1:] in run.detector_group_dict[group_name]: # Drop underscore in label to match group name
+            line.remove()
+
+    # remove fills
+    for collection in axs.collections[:]:
+        label = collection.get_label()
+        if label in run.detector_group_dict[group_name]:
+            collection.remove()
+    
+    if show_components:
+        dets = run.detector_group_dict[group_name]
+        # sort so the tallest spectrum is drawn first (bottom), smallest last (top)
+        dets_sorted = sorted(dets, key=lambda d: np.max(run._raw[d].y), reverse=True)
+
+        for det in dets_sorted:
+            axs.step(
+                run._raw[det].x,
+                run._raw[det].y,
+                where="mid",
+                color="black",
+                label=f"_{det}",
+            )
+            axs.fill_between(run._raw[det].x, run._raw[det].y, step="mid", alpha=0.9,label=f"{det}",)
+
+def replot_spectrum_residual(
     run: Run,
     fig: plt.Figure,
     axs: np.ndarray[plt.Axes] | plt.Axes,

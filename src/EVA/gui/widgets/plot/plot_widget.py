@@ -1,8 +1,9 @@
+import numpy as np
 import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 from EVA.core.app import get_app
@@ -27,6 +28,7 @@ class PlotWidget(QWidget):
     navbar and plot together.
     """
 
+    plot_clicked = pyqtSignal(object)
     def __init__(
         self, fig=None, axs=None, parent=None, plot_name=None, plot_manager=None
     ):
@@ -41,6 +43,7 @@ class PlotWidget(QWidget):
         if fig is None:
             self.navbar = None
         else:
+            self.canvas.mpl_connect("button_press_event", self.plot_clicked.emit)
             self.navbar = NavigationToolbar2QT(self.canvas, self)
             self.layout.addWidget(self.navbar, Qt.AlignmentFlag.AlignLeft)
         # add navbar and plot canvas to layout
@@ -63,8 +66,8 @@ class PlotWidget(QWidget):
         if axs is not None:
             self.canvas.axs = axs
 
-        if fig is not None:
-            # close old figure to conserve memory
+        if fig is not None and fig is not self.canvas.figure:
+            # only hit this when the Figure identity actually changes
             plt.close(self.canvas.figure)
 
             self.canvas.figure = fig
@@ -80,12 +83,62 @@ class PlotWidget(QWidget):
 
             # Create new navbar and figure canvas, link them and add them back into widget layout
             self.canvas = FigureCanvas(fig=self.canvas.figure, axs=self.canvas.axs)
+            self.canvas.mpl_connect("button_press_event", self.plot_clicked.emit)
             self.navbar = NavigationToolbar2QT(self.canvas, self)
-
             self.layout.addWidget(self.navbar)
             self.layout.addWidget(self.canvas)
-            self.navbar.update()
-            self.navbar.push_current()
+
+        self.canvas.draw_idle()
+        self.update_home_view(self.canvas.axs)
+
+    def update_home_view(self, axs):
+        """
+        Set the toolbar's "home" view to the full data range (x: 0 to
+        max, y: 0 to 1.2 * data max) without changing what's currently displayed.
+        For axes that share x-axes (ie linked as in peakfit spectrum+residual plots),
+        the x-limits will be set to the min and max of all siblings.
+        """
+        axs = axs if isinstance(axs, (list, tuple, np.ndarray)) else [axs]
+
+        # remember the current (zoomed) view so we can restore it after
+        current_limits = [(ax.get_xlim(), ax.get_ylim()) for ax in axs]
+
+        for ax in axs:
+            ax.relim()  # refresh dataLim based on current artist data
+
+        visited = set()
+        for ax in axs:
+            if ax in visited:
+                continue
+
+            # Build a list of all axes that are linked to one or more other axes
+            # A set is used to avoid duplicates and maintain a unique list of all inter-dependent axes.
+            siblings = [a for a in ax.get_shared_x_axes().get_siblings(ax) if a in axs]
+            visited.update(siblings)
+            # Find the min and max x-limits of all siblings, ignoring any that are not finite
+            x0s = [a.dataLim.x0 for a in siblings if np.isfinite(a.dataLim.x0)]
+            x1s = [a.dataLim.x1 for a in siblings if np.isfinite(a.dataLim.x1)]
+
+            if x0s and x1s:
+                x_min, x_max = min(x0s), max(x1s)
+                for a in siblings:
+                    a.set_xlim(x_min, x_max)
+
+        # Y limits are independent for each axis so so they are set individually.
+        for ax in axs:
+            y0, y1 = ax.dataLim.y0, ax.dataLim.y1
+            if np.isfinite(y0) and np.isfinite(y1):
+                lower_ylim = min(0, y0)
+                ax.set_ylim(1.2 * lower_ylim, 1.2 * y1)
+
+        # wipe the nav stack and capture this full view as "home"
+        self.navbar.update()
+        self.navbar.push_current()
+
+        # put the actual (zoomed) view back on screen
+        for ax, (xlim, ylim) in zip(axs, current_limits):
+            ax.set_xlim(xlim)
+            ax.set_ylim(ylim)
 
         self.canvas.draw_idle()
 

@@ -31,7 +31,7 @@ class MainPresenter:
         self.model = model
 
         self.view.set_run_num_line_edit(get_config()["general"]["default_run_num"])
-
+        self.on_text_changed(self.view.get_run_num_line_edit()) # Update loading options if saved run number in config is a multi-run
         # Set up action bar connections
         self.view.file_save.triggered.connect(self.save_settings)
         self.view.file_browse_dir.triggered.connect(self.set_default_directory)
@@ -57,6 +57,7 @@ class MainPresenter:
             lambda: self.decrement_run_num(load=True)
         )
         self.view.load_button.clicked.connect(self.load_run_num)
+        self.view.run_num_text_changed_s.connect(self.on_text_changed)
 
     def save_settings(self):
         """
@@ -161,7 +162,7 @@ class MainPresenter:
         if flags["no_files_found"]: #  no data was loaded - return now
             # Update GUI
             self.view.set_run_num_label(
-                f"No files found for run {run_num} in {get_path(get_config()['general']['working_directory'])}"
+                f"No files found for run {run_num} in {get_path(get_config()['general']['data_directory'])}"
             )
             self.view.set_comment_labels("Comment file not found.", "N/A", "N/A", "N/A")
             return
@@ -188,6 +189,14 @@ class MainPresenter:
 
         # open workspace
         self.open_workspace(run)
+
+    def on_text_changed(self, text: str):
+        if "," in text:
+            self.view.on_run_num_text_changed(False)
+            self.model.run_type = "multi"
+        else:
+            self.view.on_run_num_text_changed(True)
+            self.model.run_type = "single"
 
     def open_workspace(self, run: Run):
         """Opens a new workspace for the loaded run."""

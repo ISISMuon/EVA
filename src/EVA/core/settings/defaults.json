@@ -1,10 +1,14 @@
 {
-  "general": {
+"general": {
+    "test_directory": "./test_data",
     "working_directory": "./",
+    "data_directory": "./test_data",
     "encoding": "utf-8",
     "fit_table_save_file": 0,
     "fit_table_plot_file": 0,
     "default_run_num": "0000",
+    "current_grouping_profile": "",
+    "saved_grouping_profiles": {},
     "enabled_detectors": [
         "GE1",
         "GE2",
@@ -205,6 +209,5 @@
     }
   },
     "saved_corrections": {
-
   }
 }

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import logging
 from types import NoneType
 
@@ -15,7 +16,7 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QApplication,
 )
-
+import EVA
 from EVA.core.app import get_config
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.windows.manual.manual_window import ManualWindow
@@ -36,7 +37,7 @@ class MainView(QMainWindow):
     """View class to provide the user interface for the main window."""
 
     update_all_plots_s = pyqtSignal(NoneType, NoneType)
-
+    run_num_text_changed_s = pyqtSignal(str)
     workspaces : list[WorkspaceWindow] = []
     model_spectra_windows : list[ModelSpectraWindow] = []
     manual_windows : list[ManualWindow] = []
@@ -56,7 +57,7 @@ class MainView(QMainWindow):
 
     def init_gui(self):
         # Set up action bar items
-        self.setWindowTitle("EVA")
+        self.setWindowTitle(f"EVA ({EVA.__version__})")
         self.setFixedSize(QSize(650, 300))
 
         self.bar = self.menuBar()
@@ -121,6 +122,7 @@ class MainView(QMainWindow):
         self.run_number_line_edit.setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
         )
+        self.run_number_line_edit.textChanged.connect(self.run_num_text_changed_s)
 
         self.get_next_run_button = QPushButton(self)
         self.get_next_run_button.setText("+1")
@@ -171,10 +173,15 @@ class MainView(QMainWindow):
         self.layout.addWidget(self.load_button, 6, 1)
 
         self.setCentralWidget(self.container)
-        self.resize(650,300)
 
     def set_run_num_line_edit(self, num: str):
         self.run_number_line_edit.setText(num)
+
+    def on_run_num_text_changed(self, enable_bool: bool):
+        self.get_next_run_button.setEnabled(enable_bool)
+        self.load_next_run_button.setEnabled(enable_bool)
+        self.get_prev_run_button.setEnabled(enable_bool)
+        self.load_prev_run_button.setEnabled(enable_bool)
 
     def get_run_num_line_edit(self):
         return self.run_number_line_edit.text()

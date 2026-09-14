@@ -29,6 +29,7 @@ class SettingsView(QDialog, Ui_settings):
         self.colour_dialog.show()
 
     def set_settings(self, settings: dict):
+        self.data_dir_label.setText(settings["data_dir"])
         self.working_dir_label.setText(settings["working_dir"])
         self.srim_exe_dir_label.setText(settings["srim_exe_dir"])
         self.srim_out_dir_label.setText(settings["srim_out_dir"])
@@ -40,6 +41,7 @@ class SettingsView(QDialog, Ui_settings):
 
     def get_settings(self):
         settings = {
+            "data_dir": self.data_dir_label.text(),
             "srim_exe_dir": self.srim_exe_dir_label.text(),
             "srim_out_dir": self.srim_out_dir_label.text(),
             "fill_colour": self.colour_dialog.currentColor().name(),

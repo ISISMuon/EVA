@@ -8,13 +8,14 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QDialog,
 )
-
+import EVA
 from EVA.core.data_structures.run import Run
 from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import (
     EnergyCorrectionsDialog,
 )
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.ui_files.workspace_nxs_gui import Ui_workspace
+from EVA.gui.windows.detector_grouping.detector_grouping_window import DetectorGroupingWindow
 from EVA.gui.windows.elemental_analysis.elemental_analysis_window import (
     ElementalAnalysisWindow,
 )
@@ -30,7 +31,7 @@ class WorkspaceView(Ui_workspace, QMainWindow):
 
     manual_windows: list[ManualWindow] = []
     periodic_table_windows: list[PeriodicTableWidget] = []
-
+    detector_grouping_windows: list[DetectorGroupingWindow] = []
     general_settings_dialogs: list[SettingsDialog] = []
     energy_corrections_dialogs: list[EnergyCorrectionsDialog] = []
 
@@ -49,18 +50,11 @@ class WorkspaceView(Ui_workspace, QMainWindow):
         self.run = run
 
         self.setupUi(self)
-        self.setWindowTitle(f"Workspace {run.run_num} - EVA")
+        self.setWindowTitle(f"Workspace {run.run_num} - EVA ({EVA.__version__})")
 
-        self.detector_list = list(run.data.keys())
 
         self.layout().setContentsMargins(0, 0, 0, 0)
 
-        # Set up action bar items
-        self.peakfit_menu_actions = []
-
-        for detector in self.detector_list:
-            action = self.peak_fit_menu.addAction(detector)
-            self.peakfit_menu_actions.append(action)
         try:
             self.comment_text.setText(run.run_info)
         except AttributeError:
@@ -82,6 +76,15 @@ class WorkspaceView(Ui_workspace, QMainWindow):
             "Elemental Analysis",
             closable=False,
         )
+
+    def setup_peakfit_options(self):
+        self.detector_list = list(self.run.data.keys())
+        # Set up action bar items
+        self.peakfit_menu_actions = []
+        self.peak_fit_menu.clear()
+        for detector in self.detector_list:
+            action = self.peak_fit_menu.addAction(detector)
+            self.peakfit_menu_actions.append(action)
 
     def display_error_message(
         self,

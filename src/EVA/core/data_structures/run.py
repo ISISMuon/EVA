@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from abc import ABCMeta, abstractmethod
 from copy import deepcopy
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -19,11 +20,12 @@ class MetaQObjectABC(type(QObject), ABCMeta):
 
 class Run(QObject, metaclass=MetaQObjectABC):
     """
-    Abstract base class for experiment runs.
-    Provides shared logic and enforces a consistent interface for RunNexus and RunBiriani.
+    Abstract base class for experiment run file formats and logic.
+    Provides shared logic and enforces a consistent interface for RunNexus and RunBiriani (and potentially other formats).
     """
 
     corrections_updated_s = pyqtSignal()
+    detectors_grouped_s = pyqtSignal()
 
     def __init__(
         self,
@@ -35,29 +37,28 @@ class Run(QObject, metaclass=MetaQObjectABC):
         super().__init__()
         self._raw = raw
         self.loaded_detectors = loaded_detectors
+        self.active_detectors = loaded_detectors # TODO refer to NOTE comment in _combine_detector_spectra()
         self.run_num = run_num
-
+        self.plot_mode = ""
         # Common correction parameters
         self.momentum = momentum
         self.energy_corrections = {}
         self.normalisation = None
         self.normalise_which = loaded_detectors
         self.bin_rate = 1
-        self.default_bin = 8192  # subclasses may override
+        self.default_bin = 32768  # subclasses may override
         self.bin_method = ""  # subclass must set
+        self.plot_detectors = set(self.loaded_detectors[:4]) # by default plot the first 4 detectors for a run
 
-    # =================================================================
     # ABSTRACT INTERFACE
-    # =================================================================
-
     @abstractmethod
     def set_corrections(self, *args, **kwargs):
-        """Reapply all corrections, normalisation, and binning in correct order."""
+        """Reapply all corrections, normalisation, and binning in correct order, which may be different for different files."""
         pass
 
     @abstractmethod
     def read_comment_data(self):
-        """Return formatted metadata (comment, start time, end time, etc.)."""
+        """Return formatted metadata from comment file (comment, start time, end time, etc.) which may be different for different files."""
         pass
 
     @abstractmethod
@@ -68,6 +69,11 @@ class Run(QObject, metaclass=MetaQObjectABC):
     @abstractmethod
     def _set_mode(self, *args, **kwargs):
         """Set data depending on plot mode (IBEX/Manual/etc.)."""
+        pass
+    
+    @abstractmethod
+    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None) -> dict[str, Spectrum]:
+        """Combine detector spectra into groups using histogram or raw data points"""
         pass
 
     # Shared functions
@@ -87,6 +93,20 @@ class Run(QObject, metaclass=MetaQObjectABC):
                 )
         self.energy_corrections = energy_corrections
 
+    def _group_detectors(self, detector_group_dict: dict[str, list[str]]):
+        """Merge detector channels into groups using a dictionary of group names and corresponding list of detector names."""
+        self.detector_group_dict = {}
+        if detector_group_dict is None:
+            self.group = False
+            self.loaded_detectors = self.active_detectors
+            self.plot_detectors = self.loaded_detectors[:4]
+            return
+        combined_data = self._combine_detector_spectra(detector_group_dict) # Logic for merging 
+        self.loaded_detectors = list(detector_group_dict.keys())
+        # self.data.update(combined_data)
+        self.data = combined_data
+        self.plot_detectors = self.loaded_detectors[:4]
+        self.group = True
     def _set_normalisation(
         self, normalisation: str, normalise_which: list[str] | None = None
     ):
@@ -108,14 +128,14 @@ class Run(QObject, metaclass=MetaQObjectABC):
 
     def _set_normalisation_none(self):
         """Reset all normalisation."""
-        for detector in self._raw.keys():
+        for detector in self.data.keys():
             self.data[detector].y = self.data[detector].y
         self.normalisation = "none"
         self.normalise_which = self.loaded_detectors
 
     def _set_normalisation_counts(self, normalise_which: list[str]):
         """Normalise detector spectra by total counts."""
-        for detector, spectrum in self._raw.items():
+        for detector, spectrum in self.data.items():
             if detector in normalise_which:
                 self.data[detector].y = normalise_counts(self.data[detector].y)
 
@@ -146,14 +166,14 @@ class Run(QObject, metaclass=MetaQObjectABC):
             self.bin_rate = 1.0
             return
 
-        for detector, spectrum in self._raw.items():
+        for detector, spectrum in self.data.items():
             if self.data[detector].x.size == 0:
                 continue
-            self.data[detector].x, self.data[detector].y = rebin.numpy_rebin(
+            self.data[detector].x, self.data[detector].y = rebin.rebin_using_interp(
                 self.data[detector].x,
                 self.data[detector].y,
                 self.bin_rate,
-                self._raw[detector].bin_range,
+                self.data[detector].bin_range,
             )
 
     def _set_binning_raw(
@@ -175,7 +195,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
             if getattr(spectrum, "energy", None) is None or spectrum.energy.size == 0:
                 continue
             else:
-                spectrum.x, spectrum.y = rebin.nxs_rebin(
+                spectrum.x, spectrum.y = rebin.rebin_raw(
                     spectrum.cut_data, bin_num, bin_range=spectrum.bin_range
                 )
                 self.data[detector].x, self.data[detector].y = spectrum.x, spectrum.y

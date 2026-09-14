@@ -533,7 +533,7 @@ class PeakFitPresenter(object):
                     message="No fit model found. Please perform a peak fit first.")
                 return
             def_dir = get_config()["general"]["working_directory"]
-            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Gaussian Fit Model file (*.gfm)", default_extension=".gfm")
+            path = self.view.get_save_file_path(default_dir=def_dir, file_filter="Model Fit Model file (*.mfm)", default_extension=".mfm")
             if path:
                 self.mf_model.save_fitted_model(path)
 

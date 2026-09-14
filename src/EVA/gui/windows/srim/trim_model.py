@@ -278,14 +278,15 @@ class TrimModel(QObject):
             # calculate the proportion of total counts each layer contains for current momentum
             frac = counts_per_layer / total_count
 
-            # error propagation
-            frac_err = (
-                np.sqrt(
-                    (total_count_err / total_count) ** 2
-                    + (layer_count_err / counts_per_layer) ** 2
+            # error propagation, ignore divide by zero and invalid values (nan) for error calculation
+            with np.errstate(invalid="ignore", divide="ignore"):
+                frac_err = (
+                    np.sqrt(
+                        (total_count_err / total_count) ** 2
+                        + (layer_count_err / counts_per_layer) ** 2
+                    )
+                    * frac
                 )
-                * frac
-            )
 
             # replace all nan values with 0
             frac_err_filtered = np.nan_to_num(frac_err, nan=0)

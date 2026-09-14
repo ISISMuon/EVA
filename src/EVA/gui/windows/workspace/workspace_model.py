@@ -43,7 +43,7 @@ class WorkspaceModel:
     def save_run_corrections(self):
         config = get_config()
 
-        working_dir = config["general"]["working_directory"]
+        data_dir = config["general"]["data_directory"]
         run_num = self.run.run_num
 
         corrections = {
@@ -53,10 +53,10 @@ class WorkspaceModel:
             "plot_mode": self.run.plot_mode,
             "prompt_limit": self.run.prompt_limit,
             "delayed_limit": self.run.delayed_limit,
-            "show_plot": {det: True for det in self.run.loaded_detectors},
+            # "show_plot": {det: True for det in self.run.loaded_detectors},
         }
 
-        config["saved_corrections"][working_dir][run_num] = corrections
+        config["saved_corrections"][data_dir][run_num] = corrections
 
     def export_run_data(self, path):
         """
@@ -71,7 +71,7 @@ class WorkspaceModel:
 
                 lines = "\n".join(f"{xi:.5f}\t{yi}" for xi, yi in zip(x, y))
 
-                filename = f"{detector}.txt"
+                filename = f"Run {self.run.run_num} - {detector}.txt"
                 zf.writestr(filename, lines)
 
             zf.writestr(

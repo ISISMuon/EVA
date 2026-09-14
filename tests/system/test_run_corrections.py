@@ -20,7 +20,7 @@ test_detectors = [
 class TestRunCorrections:
     @pytest.mark.parametrize("e_corr_which", test_detectors)
     def test_energy_correction(self, e_corr_which, qapp):
-        wdir = get_config()["general"]["working_directory"]
+        data_dir = get_config()["general"]["data_directory"]
 
         e_corr = {}
         for i, detector in enumerate(get_config()["general"]["enabled_detectors"]):
@@ -31,7 +31,7 @@ class TestRunCorrections:
                 "use_e_corr": use_e_corr,
             }
 
-        wdir = get_config()["general"]["working_directory"]
+        data_dir = get_config()["general"]["data_directory"]
         energy_corrections = get_config()["default_corrections"]["detector_specific"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
@@ -41,7 +41,7 @@ class TestRunCorrections:
 
         run, _ = load_data.load_run(
             "2630",
-            wdir,
+            data_dir,
             energy_corrections,
             normalisation,
             binning,

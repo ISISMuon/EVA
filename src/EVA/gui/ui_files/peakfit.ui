@@ -73,9 +73,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-172</y>
+            <y>0</y>
             <width>422</width>
-            <height>899</height>
+            <height>917</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -526,7 +526,10 @@
             </widget>
            </item>
            <item>
-            <widget class="QWidget" name="plot_fit_buttons" native="true">
+            <widget class="QGroupBox" name="plot_fit_buttons">
+             <property name="title">
+              <string>Fit parameters</string>
+             </property>
              <layout class="QGridLayout" name="gridLayout">
               <item row="4" column="0">
                <widget class="QPushButton" name="save_params_button">

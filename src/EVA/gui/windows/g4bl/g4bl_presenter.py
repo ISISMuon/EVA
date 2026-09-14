@@ -309,7 +309,7 @@ class G4blPresenter(QWidget):
             if exctype is ValueError:
                 self.view.display_error_message(message=str(value))
             else:
-                self.view.display_error_message(
+                self.view.display_error_message(message=
                     "Unexpected error occurred during simulation."
                 )
             result = {"status" : "error"}

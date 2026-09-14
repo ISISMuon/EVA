@@ -13,7 +13,7 @@ class SettingsModel:
 
         config["general"]["working_directory"] = settings["general"]["working_directory"]
         config["general"]["encoding"] = settings["general"]["encoding"]
-
+        config["general"]["data_directory"] = settings["general"]["data_directory"]
         config["plot"]["fill_colour"] = settings["plot"]["fill_colour"]
 
         config["SRIM"]["installation_directory"] = settings["SRIM"][
