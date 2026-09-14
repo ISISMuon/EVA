@@ -11,8 +11,8 @@ from pytestqt.plugin import qtbot
 from matplotlib.backend_bases import MouseButton
 from unittest.mock import MagicMock
 
-run_list = ["780", "2630", "0"]
-plot_modes = [["IBEX Prompt Spectrum", 0],["IBEX Delayed Spectrum", 1], ["Manual Prompt Spectrum", 2], ["Manual Delayed Spectrum", 3]]
+run_list = ["1041", "1042", "2630", "0"]
+plot_modes = [["IBEX Prompt Spectrum", 0], ["Manual Delayed Spectrum", 3]]
 normalisation_methods = [["none", 0], ["counts", 1], ["events", 2]]
 bin_values = [0.5, 2]
 
@@ -33,8 +33,9 @@ class TestLoadWorkspaceWindow:
         plot_mode = get_config()["default_corrections"]["plot_mode"]
         prompt_limit = get_config()["default_corrections"]["prompt_limit"]
         delayed_limit = get_config()["default_corrections"]["delayed_limit"]
+        load_fn = load_data.load_run_multi if "," in str(run_num) else load_data.load_run
 
-        run, flags = load_data.load_run(
+        run, flags = load_fn(
             run_num,
             wdir,
             energy_corrections,
@@ -44,7 +45,7 @@ class TestLoadWorkspaceWindow:
             prompt_limit,
             delayed_limit,
         )
-        self.run_copy, _ = load_data.load_run(
+        self.run_copy, _ = load_fn(
             run_num,
             wdir,
             energy_corrections,
