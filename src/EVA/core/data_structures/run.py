@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from abc import ABCMeta, abstractmethod
 from copy import deepcopy
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -42,6 +43,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
         # Common correction parameters
         self.momentum = momentum
         self.energy_corrections = {}
+        self.efficiency_corrections = {}
         self.normalisation = None
         self.normalise_which = loaded_detectors
         self.bin_rate = 1
@@ -51,35 +53,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
             self.loaded_detectors[:4]
         )  # by default plot the first 4 detectors for a run
 
-    # ABSTRACT INTERFACE
-    @abstractmethod
-    def set_corrections(self, *args, **kwargs):
-        """Reapply all corrections, normalisation, and binning in correct order, which may be different for different files."""
-        pass
-
-    @abstractmethod
-    def read_comment_data(self):
-        """Return formatted metadata from comment file (comment, start time, end time, etc.) which may be different for different files."""
-        pass
-
-    @abstractmethod
-    def _set_normalisation_events(self, normalise_which: list[str]):
-        """Normalise by events (logic differs per run type)."""
-        pass
-
-    @abstractmethod
-    def _set_mode(self, *args, **kwargs):
-        """Set data depending on plot mode (IBEX/Manual/etc.)."""
-        pass
-
-    @abstractmethod
-    def _combine_detector_spectra(
-        self, detector_group_dict: dict[str, list[str]] = None
-    ) -> dict[str, Spectrum]:
-        """Combine detector spectra into groups using histogram or raw data points"""
-        pass
-
-    # Shared functions
+    # SHARED FUNCTIONS
     def _set_energy_correction(self, energy_corrections: dict):
         """Apply per-detector linear energy corrections."""
         if energy_corrections is None:
@@ -95,6 +69,60 @@ class Run(QObject, metaclass=MetaQObjectABC):
                     f"No energy correction information found for detector {detector}. Automatically skipping correction."
                 )
         self.energy_corrections = energy_corrections
+
+    def _set_efficiency_correction(
+        self,
+        efficiency_corrections: dict | None = None,
+    ):
+        """Apply per-detector efficiency corrections."""
+
+        if efficiency_corrections is None:
+            efficiency_corrections = self.efficiency_corrections
+
+        for detector, spectrum in self.data.items():
+            try:
+                settings = efficiency_corrections[detector]
+
+                if not settings["use_eff_corr"]:
+                    continue
+
+                a, b, c, d, e, f = settings["eff_corr_coeffs"]
+                cut_off = settings["cut_off"]
+
+                x = np.asarray(spectrum.x, dtype=float)
+                y = np.asarray(spectrum.y, dtype=float)
+
+                correction = np.empty_like(x)
+
+                low_energy = x < cut_off
+                high_energy = ~low_energy
+
+                # Low-energy correction:
+                # exp(a + b*log(x/100) + c*log(x/100)^2)
+                log_low = np.log(x[low_energy] / 100.0)
+                correction[low_energy] = np.exp(
+                    a
+                    + b * log_low
+                    + c * log_low**2
+                )
+
+                # High-energy correction:
+                # exp(d + e*log(x/1000) + f*log(x/1000)^2)
+                log_high = np.log(x[high_energy] / 1000.0)
+                correction[high_energy] = np.exp(
+                    d
+                    + e * log_high
+                    + f * log_high**2
+                )
+
+                # Apply correction
+                spectrum.y = y / correction
+
+            except KeyError:
+                logger.warning(
+                    f"No efficiency correction information found for detector "
+                    f"{detector}. Automatically skipping correction."
+                )
 
     def _group_detectors(self, detector_group_dict: dict[str, list[str]]):
         """Merge detector channels into groups using a dictionary of group names and corresponding list of detector names."""
@@ -218,3 +246,29 @@ class Run(QObject, metaclass=MetaQObjectABC):
     def get_raw(self) -> dict[Spectrum]:
         """Return a deep copy of raw data."""
         return deepcopy(self._raw)
+
+    # ABSTRACT INTERFACE
+    @abstractmethod
+    def set_corrections(self, *args, **kwargs):
+        """Reapply all corrections, normalisation, and binning in correct order, which may be different for different files."""
+        pass
+
+    @abstractmethod
+    def read_comment_data(self):
+        """Return formatted metadata from comment file (comment, start time, end time, etc.) which may be different for different files."""
+        pass
+
+    @abstractmethod
+    def _set_normalisation_events(self, normalise_which: list[str]):
+        """Normalise by events (logic differs per run type)."""
+        pass
+
+    @abstractmethod
+    def _set_mode(self, *args, **kwargs):
+        """Set data depending on plot mode (IBEX/Manual/etc.)."""
+        pass
+    
+    @abstractmethod
+    def _combine_detector_spectra(self, detector_group_dict: dict[str, list[str]] = None) -> dict[str, Spectrum]:
+        """Combine detector spectra into groups using histogram or raw data points"""
+        pass

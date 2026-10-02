@@ -19,7 +19,8 @@ class MainModel(QObject):
         # create new record for the run if it has never been loaded before
         data_directory = config["general"]["data_directory"]
         corrections = config.get_run_save(data_directory, run_num)
-        energy_corrections = corrections["detector_specific"]
+        energy_corrections = corrections["energy_corrections"]
+        efficiency_corrections = corrections["efficiency_corrections"]
         normalisation = corrections["normalisation"]
         binning = corrections["binning"]
         plot_mode = corrections["plot_mode"]
@@ -31,6 +32,7 @@ class MainModel(QObject):
                 run_num,
                 data_directory,
                 energy_corrections,
+                efficiency_corrections,
                 normalisation,
                 binning,
                 plot_mode,
@@ -43,6 +45,7 @@ class MainModel(QObject):
                 run_num,
                 data_directory,
                 energy_corrections,
+                efficiency_corrections,
                 normalisation,
                 binning,
                 plot_mode,

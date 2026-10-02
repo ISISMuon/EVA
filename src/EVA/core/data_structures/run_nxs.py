@@ -83,9 +83,6 @@ class RunNexus(Run):
         self.normalisation = "events"
         self.normalise_which = normalise_which
 
-    def _set_efficiency_correction(self, energy_corrections):
-        pass
-
     def _set_mode(
         self,
         plot_mode: str | None = None,

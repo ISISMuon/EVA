@@ -46,7 +46,8 @@ class WorkspaceModel:
         corrections = {
             "normalisation": self.run.normalisation,
             "binning": self.run.bin_rate,
-            "detector_specific": self.run.energy_corrections,
+            "energy_corrections": self.run.energy_corrections,
+            "efficiency_corrections": self.run.efficiency_corrections,
             "plot_mode": self.run.plot_mode,
             "prompt_limit": self.run.prompt_limit,
             "delayed_limit": self.run.delayed_limit,
