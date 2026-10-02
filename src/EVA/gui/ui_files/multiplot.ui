@@ -277,20 +277,7 @@ QGroupBox::title {
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="detector_select_layout">
-       <item>
-        <widget class="QCheckBox" name="det1_checkbox"/>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="det2_checkbox"/>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="det3_checkbox"/>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="det4_checkbox"/>
-       </item>
-      </layout>
+      <layout class="QGridLayout" name="detector_select_layout"/>
      </item>
      <item>
       <widget class="BaseTable" name="RunListTable">

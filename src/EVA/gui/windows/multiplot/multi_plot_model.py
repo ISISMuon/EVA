@@ -139,21 +139,3 @@ class MultiPlotModel:
                     good_runs.append(run)
 
         return good_runs, blank_runs, norm_failed_runs
-
-    def get_plot_detectors(self) -> list[str]:
-        """
-        Gets which detectors to plot for from the loaded config.
-
-        Returns: list of detector names to plot for.
-
-        """
-        config = get_config()
-        show_plot = config.get_run_save(
-            config["general"]["data_directory"], self.loaded_runs[0].run_num
-        )["show_plot"]
-        plot_detectors = [
-            det
-            for det, show in show_plot.items()
-            if show and det in self.loaded_runs[0].loaded_detectors
-        ]
-        return plot_detectors

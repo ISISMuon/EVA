@@ -30,6 +30,12 @@ class MultiPlotPresenter:
             return
         offset, _ = self.view.get_form_data()
         plot_detectors = self.view.get_checked_detectors()
+        if not any(plot_detectors.values()):
+            self.view.display_error_message(
+                title="No detectors selected",
+                message="Please select at least one detector."
+            )
+            return
         self.model.fig, self.model.axs = self.model.multi_plot(
             self.model.loaded_runs, offset, plot_detectors
         )
@@ -77,7 +83,7 @@ class MultiPlotPresenter:
             logger.warning("No files found for runs %s.", run_numbers_str)
 
         # Assuming all runs have same detectors loaded.
-        self.set_checkboxes()
+        self.setup_detector_checkboxes()
         self.view.apply_run_settings_button.setEnabled(True)
 
     def detect_runs(self, table_data):
@@ -93,35 +99,41 @@ class MultiPlotPresenter:
         else:
             return run_list
 
-    def set_checkboxes(self):
-        plot_detectors = self.model.get_plot_detectors()
+    def setup_detector_checkboxes(self):
+        # Clear existing checkboxes/widgets from the grid layout
+        while self.view.detector_select_layout.count():
+            item = self.view.detector_select_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.hide()
+                widget.setParent(None)
+                widget.deleteLater()
 
-        # MORE_CHANNELS IN FUTURE TO ADD MORE CHECKBOXES EXTEND THIS LIST AND UPDATE MULTI_PLOT_VIEW
-        checkboxes = [
-            self.view.det1_checkbox,
-            self.view.det2_checkbox,
-            self.view.det3_checkbox,
-            self.view.det4_checkbox,
-        ]
-        # Loop through and set up checkboxes
-        for i, checkbox in enumerate(checkboxes):
-            if i < len(self.model.loaded_runs[0].loaded_detectors):
-                label = self.model.loaded_runs[0].loaded_detectors[i]
+        self.view.checkboxes = []
 
-                checkbox.setText(label)
-                checkbox.show()
+        for i, detector_name in enumerate(self.model.loaded_runs[0].loaded_detectors):
+            checkbox = QCheckBox(detector_name)
 
-                # set checked state based on plot_detectors
-                checkbox.setChecked(label in plot_detectors)
+            # 4 checkboxes per row
+            row = i // 4
+            column = i % 4
 
-                # connect with frozen values
-                checkbox.checkStateChanged.connect(
-                    lambda state, name=label, cb=checkbox: self.checkbox_checked(
-                        state, name, cb
-                    )
-                )
-            else:
-                checkbox.hide()
+            self.view.detector_select_layout.addWidget(
+                checkbox, row, column
+            )
+
+            self.view.checkboxes.append(checkbox)
+
+            # if detector_name in self.model.loaded_runs[0].plot_detectors:
+            checkbox.setChecked(False)  # Uncheck all checkboxes by default
+
+            # Connect with frozen values
+            checkbox.checkStateChanged.connect(
+                lambda state, name=detector_name, cb=checkbox:
+                    self.checkbox_checked(state, name, cb)
+            )
+
+            checkbox.show()
 
     def on_apply_settings(self):
         """
@@ -193,9 +205,12 @@ class MultiPlotPresenter:
         # only allow loaded detectors to be plotted
 
         # if last detector has been unchecked
-        if len(self.model.get_plot_detectors()) == 1 and not checked:
+        checked_detectors = [cb for cb in self.view.checkboxes if cb.isChecked()]
+        if checked_detectors == 1 and not checked:
             checkbox.setChecked(True)
             return
+        # Currently disabling as updating plot on every checkbox change is very slow for large number of runs.
+        # offset, _ = self.view.get_form_data()
+        # self.model.fig, self.model.axs = self.model.multi_plot(self.model.loaded_runs, offset, checked_detectors)
+        # self.view.plot.update_plot(self.model.fig, self.model.axs)
 
-
-#        self.view.plot.update_plot(self.model.fig, self.model.axs)
