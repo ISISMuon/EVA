@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Energycorrections</class>
- <widget class="QDialog" name="Energycorrections">
+ <class>EfficiencyCorrections</class>
+ <widget class="QDialog" name="EfficiencyCorrections">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>284</height>
+    <width>512</width>
+    <height>341</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,22 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Set energy corrections</string>
+      <string>Efficiency correction units:</string>
      </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="efficiency_correction_units_combobox">
+     <item>
+      <property name="text">
+       <string>Percentage</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Fraction</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
@@ -60,19 +74,9 @@
      </column>
      <column>
       <property name="text">
-       <string>Use correction</string>
+       <string>Use</string>
       </property>
      </column>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLineEdit" name="lineEdit">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>1</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
     </widget>
    </item>
    <item row="2" column="0">
@@ -84,25 +88,12 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Low Energy Cutoff</string>
+      <string>Low-High Energy Cutoff</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>2</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>High Energy Cutoff</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLineEdit" name="lineEdit_2">
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="low_energy_line_edit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>1</horstretch>
@@ -111,27 +102,17 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
+   <item row="3" column="0" colspan="2">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Low energy correction function: exp((a + b*(log(x/100) + c*(log(x/100)**2))</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="2">
+   <item row="4" column="0" colspan="2">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>High energy correction function: exp((d + e*(log(x/1000) + f*(log(x/1000)**2))</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel</set>
      </property>
     </widget>
    </item>
@@ -145,38 +126,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>Energycorrections</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>Energycorrections</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
