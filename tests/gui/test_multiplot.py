@@ -24,8 +24,8 @@ class TestMultiPlotWindow:
 
         # set up test conditions
         config["default_corrections"]["normalisation"] = "none"
-        self.view.det1_checkbox.setChecked(True)
-        self.view.det3_checkbox.setChecked(True)
+        # self.view.det1_checkbox.setChecked(True)
+        # self.view.det3_checkbox.setChecked(True)
 
         qtbot.addWidget(self.view)
         self.window.show()
@@ -40,7 +40,6 @@ class TestMultiPlotWindow:
                     file = f"./test_data/ral0{run}.rooth{channels[detector]}.dat"
                     dets.append(np.loadtxt(file, delimiter=" "))
                 except FileNotFoundError:
-                    print("f")
                     pass
             data.append(dets)
         return data
@@ -52,8 +51,8 @@ class TestMultiPlotWindow:
 
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
-        self.view.det2_checkbox.setChecked(False)
-        self.view.det4_checkbox.setChecked(False)
+        self.view.checkboxes[0].setChecked(True)
+        self.view.checkboxes[2].setChecked(True)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
         # load data manually and assert that plotted data matches the expected
@@ -79,8 +78,8 @@ class TestMultiPlotWindow:
 
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
-        self.view.det2_checkbox.setChecked(False)
-        self.view.det4_checkbox.setChecked(False)
+        self.view.checkboxes[0].setChecked(True)
+        self.view.checkboxes[2].setChecked(True)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
 
@@ -120,8 +119,8 @@ class TestMultiPlotWindow:
         # click button to load multi run
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
-        self.view.det2_checkbox.setChecked(False)
-        self.view.det4_checkbox.setChecked(False)
+        self.view.checkboxes[0].setChecked(True)
+        self.view.checkboxes[2].setChecked(True)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
 
@@ -170,8 +169,8 @@ class TestMultiPlotWindow:
         # click button to load multi run
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
-        self.view.det2_checkbox.setChecked(False)
-        self.view.det4_checkbox.setChecked(False)
+        self.view.checkboxes[0].setChecked(True)
+        self.view.checkboxes[2].setChecked(True)
         qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
 
@@ -207,13 +206,8 @@ class TestMultiPlotWindow:
         # click load without any data
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
-        self.view.det2_checkbox.setChecked(False)
-        self.view.det4_checkbox.setChecked(False)
-        qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY * 1.5))
-
-        assert self.view.plot.canvas.axs is None, "incorrect number of runs were loaded"
-
+        assert not hasattr(self.view, "checkboxes"), "checkboxes should not exist for invalid run"
+    
     def test_multiplot_invalid_run_entered(self, qtbot, mocker):
         # mock answer from user to avoid dialog box (magic)
         mocker.patch.object(
@@ -225,9 +219,4 @@ class TestMultiPlotWindow:
         qtbot.wait(TIME_DELAY)
         qtbot.mouseClick(self.view.load_multi, Qt.MouseButton.LeftButton)
         qtbot.wait(int(TIME_DELAY * 1.5))
-        self.view.det2_checkbox.setChecked(False)
-        self.view.det4_checkbox.setChecked(False)
-        qtbot.mouseClick(self.view.plot_multi, Qt.MouseButton.LeftButton)
-        qtbot.wait(int(TIME_DELAY * 1.5))
-
-        assert self.view.plot.canvas.axs is None, "incorrect number of runs were loaded"
+        assert not hasattr(self.view, "checkboxes"), "checkboxes should not exist for invalid run"

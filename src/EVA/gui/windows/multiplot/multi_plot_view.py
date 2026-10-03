@@ -29,14 +29,8 @@ class MultiPlotView(BaseView, Ui_MultiPlotView):
         plot_layout.addWidget(self.plot)
         plot_layout.setContentsMargins(0, 0, 0, 0)
         self.plot_container.setLayout(plot_layout)
-
-        # --- Initialize checkboxes visibility ---
         self.apply_run_settings_button.setEnabled(False)
 
-        self.det1_checkbox.hide()
-        self.det2_checkbox.hide()
-        self.det3_checkbox.hide()
-        self.det4_checkbox.hide()
 
         # --- Initialize RunListTable ---
         self.RunListTable.setRowCount(50)
@@ -76,15 +70,6 @@ class MultiPlotView(BaseView, Ui_MultiPlotView):
 
     def get_checked_detectors(self):
         return {
-            self.det1_checkbox.text(): self.det1_checkbox.isChecked(),
-            self.det2_checkbox.text(): self.det2_checkbox.isChecked(),
-            self.det3_checkbox.text(): self.det3_checkbox.isChecked(),
-            self.det4_checkbox.text(): self.det4_checkbox.isChecked(),
+            checkbox.text(): checkbox.isChecked()
+            for checkbox in self.checkboxes if checkbox.isChecked()
         }
-
-    def show_detector_checkboxes(self):
-        """Make detector checkboxes visible after runs are loaded."""
-        self.det1_checkbox.show()
-        self.det2_checkbox.show()
-        self.det3_checkbox.show()
-        self.det4_checkbox.show()

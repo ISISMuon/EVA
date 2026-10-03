@@ -15,14 +15,17 @@ class MultiPlotModel:
     def multi_plot(runs, offset, plot_detectors):
         config = get_config()
 
-        # Sort the runs in the run list by detector to make it easier to plot
-        detectors = list(zip(*[run.data.values() for run in runs]))
 
-        # Remove detectors which either contain no data or are set to not be plotted by config
+        # Group data by detectors selected for plotting and remove detectors which either contain no data for all runs
         data = [
-            detector_data
-            for detector_data in detectors
-            if plot_detectors[detector_data[0].detector]
+            [
+                run.data[detector_name]
+                for run in runs
+                if detector_name in run.data
+                and plot_detectors.get(detector_name, False)
+                and run.data[detector_name].x.size != 0
+            ]
+            for detector_name in plot_detectors
         ]
 
         numplots = len(data)
@@ -139,21 +142,3 @@ class MultiPlotModel:
                     good_runs.append(run)
 
         return good_runs, blank_runs, norm_failed_runs
-
-    def get_plot_detectors(self) -> list[str]:
-        """
-        Gets which detectors to plot for from the loaded config.
-
-        Returns: list of detector names to plot for.
-
-        """
-        config = get_config()
-        show_plot = config.get_run_save(
-            config["general"]["data_directory"], self.loaded_runs[0].run_num
-        )["show_plot"]
-        plot_detectors = [
-            det
-            for det, show in show_plot.items()
-            if show and det in self.loaded_runs[0].loaded_detectors
-        ]
-        return plot_detectors
