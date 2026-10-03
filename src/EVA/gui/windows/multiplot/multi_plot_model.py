@@ -102,7 +102,8 @@ class MultiPlotModel:
         config = get_config()
         data_directory = config["general"]["data_directory"]
         corrections = config["default_corrections"]
-        energy_corrections = corrections["detector_specific"]
+        energy_corrections = corrections["energy_corrections"]
+        efficiency_corrections = corrections["efficiency_corrections"]
         normalisation = corrections["normalisation"]
         binning = corrections["binning"]
         plot_mode = corrections["plot_mode"]
@@ -114,6 +115,7 @@ class MultiPlotModel:
                 run_num,
                 data_directory,
                 energy_corrections,
+                efficiency_corrections,
                 normalisation,
                 binning,
                 plot_mode,

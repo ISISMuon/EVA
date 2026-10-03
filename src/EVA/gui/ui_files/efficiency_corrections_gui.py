@@ -66,6 +66,9 @@ class Ui_EfficiencyCorrections(object):
         self.high_energy_label = QtWidgets.QLabel(parent=EfficiencyCorrections)
         self.high_energy_label.setObjectName("high_energy_label")
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.ItemRole.SpanningRole, self.high_energy_label)
+        self.label = QtWidgets.QLabel(parent=EfficiencyCorrections)
+        self.label.setObjectName("label")
+        self.formLayout.setWidget(5, QtWidgets.QFormLayout.ItemRole.LabelRole, self.label)
 
         self.retranslateUi(EfficiencyCorrections)
         QtCore.QMetaObject.connectSlotsByName(EfficiencyCorrections)
@@ -95,6 +98,7 @@ class Ui_EfficiencyCorrections(object):
         self.label_3.setText(_translate("EfficiencyCorrections", "Low-High Energy Cutoff"))
         self.low_energy_label.setText(_translate("EfficiencyCorrections", "Low energy correction function: exp((a + b*(log(x/100) + c*(log(x/100)**2))"))
         self.high_energy_label.setText(_translate("EfficiencyCorrections", "High energy correction function: exp((d + e*(log(x/1000) + f*(log(x/1000)**2))"))
+        self.label.setText(_translate("EfficiencyCorrections", "Y = Y / efficiency(x)"))
 from EVA.gui.base.base_table import BaseTable
 
 

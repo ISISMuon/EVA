@@ -28,7 +28,7 @@ class SRIM_Output(object):
         raise NotImplementedError()
 
     def _read_ion(self, output):
-        ion_regex = "Ion\s+=\s+({})\s+Energy\s+=\s+({})\s+keV".format(
+        ion_regex = r"Ion\s+=\s+({})\s+Energy\s+=\s+({})\s+keV".format(
             symbol_regex, double_regex
         )
         match = re.search(ion_regex.encode("utf-8"), output)

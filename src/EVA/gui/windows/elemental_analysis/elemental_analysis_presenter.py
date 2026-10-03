@@ -228,7 +228,7 @@ class ElementalAnalysisPresenter(object):
         try:
             self.model.gamma_search_width = float(width)
         except (ValueError, AttributeError):
-            self.view.display_error_message(message="Invalid muonic xray search range.")
+            self.view.display_error_message(message="Invalid gamma search range.")
 
     def setup_detector_checkboxes(self):
         # Clear existing checkboxes/widgets from the layout
@@ -254,7 +254,7 @@ class ElementalAnalysisPresenter(object):
                 )
             )
             checkbox.show()
-        show_components_checkbox = QCheckBox("Show Components")
+        show_components_checkbox = QCheckBox("Show Raw Components")
         self.view.detector_checkbox_hlayout.addWidget(show_components_checkbox)
         self.view.show_components_checkbox = show_components_checkbox
         show_components_checkbox.checkStateChanged.connect(
