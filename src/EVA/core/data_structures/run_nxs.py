@@ -83,9 +83,6 @@ class RunNexus(Run):
         self.normalisation = "events"
         self.normalise_which = normalise_which
 
-    def _set_efficiency_correction(self, energy_corrections):
-        pass
-
     def _set_mode(
         self,
         plot_mode: str | None = None,
@@ -153,12 +150,13 @@ class RunNexus(Run):
                     self._raw[detector].efficiency_hist_counts
                     and self._raw[detector].efficiency_hist_energy
                 ):
-                    self.data[detector].x = self._raw[detector].efficiency_hist_energy[
+                    self._raw[detector].x = self._raw[detector].efficiency_hist_energy[
                         :
                     ]
-                    self.data[detector].y = self._raw[detector].efficiency_hist_counts[
+                    self._raw[detector].y = self._raw[detector].efficiency_hist_counts[
                         :
                     ]
+                    self.data[detector] = deepcopy(self._raw[detector])
                     self.bin_method = "prebinned"
                 else:
                     spectrum.x, spectrum.y = self._get_manual_spectrum(
@@ -174,7 +172,6 @@ class RunNexus(Run):
                 spectrum.x, spectrum.y = rebin.rebin_raw(
                     filtered_time_data, bin_num=100, bin_range=(0, 2000)
                 )
-
                 self.data[detector].x = spectrum.x
                 self.data[detector].y = spectrum.y
                 self.bin_method = "prebinned"

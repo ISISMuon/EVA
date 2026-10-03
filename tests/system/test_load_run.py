@@ -77,7 +77,8 @@ class TestLoadRun:
     )
     def test_brni_load_run(self, qapp, run_num, filenames):
         wdir = get_config()["general"]["test_directory"]
-        energy_corrections = get_config()["default_corrections"]["detector_specific"]
+        energy_corrections = get_config()["default_corrections"]["energy_corrections"]
+        efficiency_corrections = get_config()["default_corrections"]["efficiency_corrections"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
         plot_mode = get_config()["default_corrections"]["plot_mode"]
@@ -88,6 +89,7 @@ class TestLoadRun:
             run_num,
             wdir,
             energy_corrections,
+            efficiency_corrections,
             normalisation,
             binning,
             plot_mode,
@@ -113,17 +115,18 @@ class TestLoadRun:
     )
     def test_nxs_load_run(self, qapp, run_num, filename, expected_detectors):
         wdir = get_config()["general"]["test_directory"]
-        energy_corrections = get_config()["default_corrections"]["detector_specific"]
+        energy_corrections = get_config()["default_corrections"]["energy_corrections"]
+        efficiency_corrections = get_config()["default_corrections"]["efficiency_corrections"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
         plot_mode = get_config()["default_corrections"]["plot_mode"]
         prompt_limit = get_config()["default_corrections"]["prompt_limit"]
         delayed_limit = get_config()["default_corrections"]["delayed_limit"]
-
         run, flags = load_data.load_run(
             run_num,
             wdir,
             energy_corrections,
+            efficiency_corrections,
             normalisation,
             binning,
             plot_mode,

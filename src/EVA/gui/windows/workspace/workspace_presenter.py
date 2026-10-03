@@ -3,8 +3,8 @@ from PyQt6.QtGui import QCloseEvent
 
 from EVA.core.app import get_config
 from EVA.core.data_structures.run import normalisation_types
-from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import (
-    EnergyCorrectionsDialog,
+from EVA.gui.dialogs.detector_corrections.detector_corrections_dialog import (
+    DetectorCorrectionsDialog,
 )
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
 from EVA.gui.windows.manual.manual_window import ManualWindow
@@ -17,9 +17,6 @@ from EVA.gui.windows.periodic_table.periodic_table_widget import PeriodicTableWi
 from EVA.gui.windows.srim.trim_window import TrimWindow
 from EVA.gui.windows.workspace.workspace_model import WorkspaceModel
 from EVA.gui.windows.workspace.workspace_view import WorkspaceView
-from EVA.gui.windows.detector_grouping.detector_grouping_window import (
-    DetectorGroupingWindow,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -43,12 +40,8 @@ class WorkspacePresenter:
         self.generate_peakfit_options()
         if get_config()["general"]["current_grouping_profile"] is not None:
             self.current_profile = get_config()["general"]["current_grouping_profile"]
-            self.view.detector_grouping_profile_label.setText(
-                f"Current Profile: {self.current_profile}"
-            )
         else:
             self.current_profile = None
-            self.view.detector_grouping_profile_label.setText("Current Profile: None")
 
         # load settings from config into settings panel
         self.populate_settings_panel()
@@ -58,12 +51,8 @@ class WorkspacePresenter:
         self.view.periodic_table.triggered.connect(self.open_periodic_table)
         self.view.apply_run_settings_button.clicked.connect(self.on_apply_settings)
         self.view.fit_table_plot.triggered.connect(self.open_fit_table_plot)
-        self.view.energy_correction_settings.triggered.connect(
-            self.open_energy_corrections_dialog
-        )
-        self.view.group_detector_button.clicked.connect(
-            self.open_detector_grouping_window
-        )
+
+        self.view.detector_corrections_menu_button.clicked.connect(self.open_detector_corrections_dialog)
         self.view.general_settings.triggered.connect(self.open_general_settings_dialog)
 
         self.view.help_manual.triggered.connect(self.open_manual)
@@ -71,6 +60,12 @@ class WorkspacePresenter:
 
         self.view.group_detector_checkbox.toggled.connect(
             self.on_group_detector_checkbox_toggled
+        )
+        self.view.energy_correction_checkbox.toggled.connect(
+            self.on_energy_correction_checkbox_toggled
+        )
+        self.view.efficiency_correction_checkbox.toggled.connect(
+            self.on_efficiency_correction_checkbox_toggled
         )
         self.view.export_run_data_button.clicked.connect(self.export_run_data)
         self.view.save_and_close_requested_s.connect(self.save_and_close)
@@ -119,10 +114,17 @@ class WorkspacePresenter:
         prompt_limit = self.view.prompt_limit_textbox.text()
         delayed_limit = self.view.delayed_limit_textbox.text()
 
+        detector_group_dict = {}
+        efficiency_corrections_dict = {}
+        energy_corrections_dict = {}
         if self.view.group_detector_checkbox.isChecked():
             detector_group_dict = self.detector_group_dict
-        else:
-            detector_group_dict = None
+
+        if self.view.efficiency_correction_checkbox.isChecked():
+            efficiency_corrections_dict = self.model.run.efficiency_corrections
+
+        if self.view.energy_correction_checkbox.isChecked():
+            energy_corrections_dict = self.model.run.energy_corrections
 
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
@@ -133,6 +135,8 @@ class WorkspacePresenter:
                 prompt_limit=int(prompt_limit),
                 delayed_limit=int(delayed_limit),
                 detector_group_dict=detector_group_dict,
+                efficiency_corrections=efficiency_corrections_dict,
+                energy_corrections=energy_corrections_dict,
             )
 
             self.model.run.set_corrections(**run_correction_settings)
@@ -158,20 +162,20 @@ class WorkspacePresenter:
             if "fill_colour" in settings["plot"].keys():
                 self.view.replot_spectra_s.emit()
 
+    def on_detector_corrections_applied(self, corrections: dict):
+        self.current_profile = corrections["detector_grouping"]["profile_name"]
+        self.model.run.energy_corrections = corrections["energy_corrections"]
+        self.model.run.efficiency_corrections = corrections["efficiency_corrections"]
+        self.view.efficiency_correction_checkbox.setChecked(False)
+        self.view.energy_correction_checkbox.setChecked(False)
+        self.view.group_detector_checkbox.setChecked(False)
+
     def generate_peakfit_options(self):
         self.view.setup_peakfit_options()
         for i, detector in enumerate(self.view.detector_list):
             self.view.peakfit_menu_actions[i].triggered.connect(
                 lambda _, det=detector: self.open_peakfit(det)
             )
-
-    def on_detector_grouping_profile_changed(self, selected_profile):
-        # current_profile = get_config()["general"]["current_grouping_profile"]
-        self.current_profile = selected_profile
-        self.view.detector_grouping_profile_label.setText(
-            f"Current profile: {selected_profile}"
-        )
-        self.view.group_detector_checkbox.setChecked(False)
 
     def on_group_detector_checkbox_toggled(self):
         valid = self.validate_grouping_profile()
@@ -183,8 +187,34 @@ class WorkspacePresenter:
         self.on_apply_settings()
         self.generate_peakfit_options()
 
+    def on_energy_correction_checkbox_toggled(self):
+        if not self.model.run.energy_corrections:
+            self.view.energy_correction_checkbox.blockSignals(True)
+            self.view.energy_correction_checkbox.setChecked(False)
+            self.view.energy_correction_checkbox.blockSignals(False)
+            self.view.display_error_message(
+                title="No energy corrections",
+                message="No saved energy corrections found for the current run, please add some."
+            )
+            return
+
+        self.on_apply_settings()
+
+    def on_efficiency_correction_checkbox_toggled(self):
+        if not self.model.run.efficiency_corrections:
+            self.view.efficiency_correction_checkbox.blockSignals(True)
+            self.view.efficiency_correction_checkbox.setChecked(False)
+            self.view.efficiency_correction_checkbox.blockSignals(False)
+            self.view.display_error_message(
+                title="No efficiency corrections",
+                message="No saved efficiency corrections found for the current run, please add some."
+            )
+            return
+
+        self.on_apply_settings()
+
     def validate_grouping_profile(self):
-        if self.current_profile == "":
+        if self.current_profile is None:
             self.view.display_error_message(
                 title="No grouping profile selected",
                 message="Please select a grouping profile before enabling detector grouping.",
@@ -223,7 +253,6 @@ class WorkspacePresenter:
         )
 
     #### OPENING / CLOSING WINDOWS ############################################
-
     def open_general_settings_dialog(self):
         """Opens the general settings dialog."""
         logger.info("Opening settings dialog.")
@@ -244,22 +273,22 @@ class WorkspacePresenter:
         self.view.general_settings_dialogs.remove(dialog)
         dialog.view.deleteLater()
 
-    def open_energy_corrections_dialog(self):
-        """Opens the energy corrections dialog."""
-        dialog = EnergyCorrectionsDialog(self.model.run)
-        self.view.energy_corrections_dialogs.append(dialog)
-
+    def open_detector_corrections_dialog(self):
+        """Opens the detector corrections dialog."""
+        dialog = DetectorCorrectionsDialog(self.view, self.model.run)
+        self.view.detector_corrections_dialogs.append(dialog)
+        dialog.detector_corrections_applied_s.connect(self.on_detector_corrections_applied)
         dialog.show()
-        dialog.view.dialog_closed_s.connect(
-            lambda: self.close_energy_corrections_dialog(dialog)
+        dialog.dialog_closed_s.connect(
+            lambda: self.close_detector_corrections_dialog(dialog)
         )
 
-    def close_energy_corrections_dialog(self, dialog: EnergyCorrectionsDialog):
-        """Closes energy corrections dialog."""
-        logger.info("Closed energy corrections dialog.")
+    def close_detector_corrections_dialog(self, dialog: DetectorCorrectionsDialog):
+        """Closes detector corrections dialog."""
+        logger.info("Closed detector corrections dialog.")
 
-        self.view.energy_corrections_dialogs.remove(dialog)
-        dialog.view.deleteLater()
+        self.view.detector_corrections_dialogs.remove(dialog)
+        dialog.deleteLater()
 
     def open_manual(self):
         """Opens manual window."""
@@ -294,27 +323,6 @@ class WorkspacePresenter:
 
         self.view.periodic_table_windows.remove(window)
         window.deleteLater()
-
-    def open_detector_grouping_window(self):
-        """Opens detector groupings window."""
-        logger.info("Opening detector groupings window.")
-
-        window = DetectorGroupingWindow()
-        self.view.detector_grouping_windows.append(window)
-        window.widget().profile_changed_s.connect(
-            self.on_detector_grouping_profile_changed
-        )
-        window.widget().show()
-        window.widget().window_closed_s.connect(
-            lambda: self.close_detector_grouping_window(window)
-        )
-
-    def close_detector_grouping_window(self, window):
-        """Remove reference to detector grouping window when closed"""
-        logger.info("Closed detector groupings window.")
-
-        self.view.detector_grouping_windows.remove(window)
-        window.widget().deleteLater()
 
     #### OPENING TABS ##################################################
     def open_peakfit(self, detector):

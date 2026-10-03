@@ -16,6 +16,7 @@ def load_run(
     run_num: str,
     data_directory: str,
     energy_corrections: dict,
+    efficiency_corrections: dict,
     normalisation: str,
     binning: int,
     plot_mode: str,
@@ -39,16 +40,13 @@ def load_run(
         tuple[Run, dict]: _description_
     """
     brni_run, brni_flags = load_run_brni(
-        run_num=run_num,
-        data_directory=data_directory,
-        energy_corrections=energy_corrections,
-        normalisation=normalisation,
-        binning=binning,
+        run_num=run_num, data_directory=data_directory, energy_corrections=energy_corrections, efficiency_corrections=efficiency_corrections, normalisation=normalisation, binning=binning
     )
     nxs_run, nxs_flags = load_run_nxs(
         run_num=run_num,
         data_directory=data_directory,
         energy_corrections=energy_corrections,
+        efficiency_corrections=efficiency_corrections,
         normalisation=normalisation,
         binning=binning,
         plot_mode=plot_mode,
@@ -73,6 +71,7 @@ def load_run_multi(
     run_nums: str,
     data_directory: str,
     energy_corrections: dict,
+    efficiency_corrections: dict,
     normalisation: str,
     binning: int,
     plot_mode: str,
@@ -93,6 +92,7 @@ def load_run_multi(
             run_num,
             data_directory,
             energy_corrections,
+            efficiency_corrections,
             normalisation,
             binning,
             plot_mode,
@@ -111,6 +111,7 @@ def load_run_multi(
             # Apply corrections
             combined_run.set_corrections(
                 energy_corrections=energy_corrections,
+                efficiency_corrections=efficiency_corrections,
                 normalise_which=None,
                 normalisation=normalisation,
                 bin_rate=binning,
@@ -185,6 +186,7 @@ def load_run_brni(
     run_num: str,
     data_directory: str,
     energy_corrections: dict,
+    efficiency_corrections: dict,
     normalisation: str,
     binning: int,
 ) -> tuple[Run, dict]:
@@ -251,6 +253,7 @@ def load_run_brni(
         # Apply corrections
         run.set_corrections(
             energy_corrections=energy_corrections,
+            efficiency_corrections=efficiency_corrections,
             normalise_which=None,
             normalisation=normalisation,
             bin_rate=binning,
@@ -454,6 +457,7 @@ def load_run_nxs(
     run_num: str,
     data_directory: str,
     energy_corrections: dict,
+    efficiency_corrections: dict,
     normalisation: str,
     binning: int,
     plot_mode: str,
@@ -497,6 +501,7 @@ def load_run_nxs(
             # Apply corrections
             run.set_corrections(
                 energy_corrections=energy_corrections,
+                efficiency_corrections=efficiency_corrections,
                 normalise_which=None,
                 normalisation=normalisation,
                 bin_rate=binning,

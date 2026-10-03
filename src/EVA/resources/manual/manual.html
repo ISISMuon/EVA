@@ -67,6 +67,11 @@
                 <li><a href="#modelfit">Model fitting</a></li>
             </ul></li>
             <li><a href="#muonic-xray-sim">Muonic X-ray simulations</a></li>
+            <li><a href="#g4bl">G4Beamline simulations</a></li>
+            <li><ul>
+                <li><a href="#installing-g4bl">Installing G4Beamline</a></li>
+                <li><a href="#using-g4bl">Using the G4Beamline tool</a></li>
+            </ul></li>
             <li><a href="#srimtrim">SRIM/TRIM simulations</a></li>
             <li><ul>
                 <li><a href="#installing-srim">Installing SRIM</a></li>
@@ -81,8 +86,9 @@
         <h2 id="getting-started">Getting started</h2>
         <h3 id="loading-data">Loading data</h3>
         <p>To load your data into EVA, select a folder to load by navigating to 'File>Browse to data directory' or via 'Settings>General settings'.
-            By default, EVA will search for files in the EVA folder, so you can also drop your data files in there.
-            Then, enter the run number you'd like to load in the main window and press the 'load' button to open a new workspace.</p>
+            By default, EVA will search for files in the EVA test folder where example run data can be found.
+            Then, enter the run number you'd like to load in the main window and press the 'load' button to open a new workspace. To combine 
+            and load data from multiple runs, enter the run numbers seperated by comma, e.g., 783,784,796.</p>
         <div class="img_wrap">
             <img src="./src/EVA/resources/manual/img/loading_data.png">
         </div>
@@ -92,12 +98,23 @@
         <div class="img_wrap">
             <img src="./src/EVA/resources/manual/img/sample_workspace.png">
         </div>
+        <h3 id="corrections">Detector corrections</h3>
+        <p> The detector settings section allows you to make adjustments to the data recorded by each detector. The energy corrections are linear shifts on the x-axis. 
+            while efficiency corrections scale the y-axis (counts). Different detector channels can also be combined together by adding them to groups. Grouping detectors
+            causes all further corrections to be applied to the combined data and the changes can be visualised by clicking on plot raw components checkbox.
+        </p>
+
         <h3 id="corrections">Run corrections and settings</h3>
-        <p>In the workspaces, you can apply corrections to your data such as normalising, binning rate or energy corrections. Binning rate and normalisation
-            can be set in the 'Run settings' area in the side panel of the workspace.
-            Note that corrections by events is currently only possible if there exists a comment.dat file in the working directory.
+        <p>In the workspaces, you can also apply other corrections to your data after applying detector corrections. The Display plot option allows you to navigate between different time cuts of your data if it 
+            is in nexus format. The IBEX Prompt and Delayed spectra have already been pre-cut by MuX, the ranges used are in the comments. Users can also manually
+            cut the data using prompt and delayed limits on their respective plots. Users can also use the Binning option to make the data smoother using interpolation
+            using a factor less than 1. Using a factor greater than 1 combines data into fewers bins, which can make the peaks bigger and easier to see but may make peak
+            fitting harder. Normalisation can be used to normalise the data to 10,000 counts which can be useful for comparing different runs of different durations.
+            
+            Note that corrections by events is currently only possible for legacy biriani (.dat) files if there exists a comment.dat file in the data directory.
         <br><br>
-        You can set energy corrections by navigating to 'Settings>Energy corrections'. Corrections will only be enabled for detectors with 'Use correcion' checked.</p>
+
+        You can set energy corrections by navigating to 'Settings>Energy corrections'. Corrections will only be enabled for detectors with 'Use correction' checked.</p>
 
         <hr>
         <h2 id="elemental-analysis">Elemental Analysis</h2>
@@ -124,7 +141,9 @@
         <p>Multiplot allows you to plot multiple runs on the same figure to compare the spectra in between runs.
         You can specify which runs to plot in the table. If your run numbers are non-consecutive you can enter them in one-by-one in the 'start' column.
         Alternatively, if you have a series of consecutive runs you can specify a start number, stop number and a step size to load them all at once.
-        The 'offset' parameter can be used to offset the runs vertically on the figure. Multiplot will only plot uncorrected data (raw data as loaded from file).</p>
+        The 'offset' parameter can be used to offset the runs vertically on the figure. Multiplot will only plot uncorrected data (raw data as loaded from file).
+        Once you have added your run numbers of choice to the table, click on load multi spectra so EVA can fetch all/as many runs as it can detect.
+        Once the detector channel options appear, select the channels you want to plot and click on the plot button.</p>
 
         <hr>
         <h2 id="peakfit">Peak fitting</h2>
@@ -176,6 +195,48 @@
             If you would like to break down the individual components of the spectrum you can tick the 'show components' button and select you desired notation.
             Tip: if your simulation is taking a long time, consider using a smaller energy range, increasing step size or simulating fewer detectors at once.</p>
         <hr>
+        <h2 id="g4bl">G4Beamline simulations</h2>
+        <h3 id="installing-g4bl">Installing G4Beamline</h3>
+        <p>To use the G4Beamline tool you must have G4Beamline-3.08 installed on your computer. You can get it
+            <a href="https://g4beamline.muonsinc.com/">here</a> (https://g4beamline.muonsinc.com/). Follow the instructions for your operating system to install it. Although the website states it does not 
+            currently support Apple m1 chips, this issue appears to have been resolved. EVA needs the
+            path to the G4Beamline installation directory, and it defaults to the standard installation path on Windows, so you will have to change it accordingly on
+            other platforms (or if you chose to change the default path for some reason!).
+            Before running a G4Beamline simulation in EVA, you should run G4Beamline.app once, which will prompt you to download some data files. EVA only requires
+            the essential datasets.</p>
+        <h3 id="using-g4bl">Using the G4Beamline tool</h3>
+        <p>Enter your desired G4Beamline parameters in the form and ensure G4Beamline.exe is located at the specified path.
+            You can either specify a single momentum, or select 'Yes' under the 'Scan Momentum' dropdown menu to select a
+            range of momenta to simulate for. Using the 'Mono' simulation type will run a quick simulation assuming a perfect
+            single momentum, while 'Momentum Spread' will simulate a gaussian beam profile. For simulating MuX experiments, 4% is recommended.
+            Using a higher number of stats will make your simulation more accurate, but will also increase the simulation time. A minimum of 5000 is recommended.
+            <br><br>
+            You can build your sample layers in the table below the form, with the top layers being closest to the beam window.G4Beamline comes pre-packaged with the 
+            <a href="https://geant4.web.cern.ch/documentation/dev/bfad_html/ForApplicationDevelopers/Appendix/materialNames.html">NIST database</a> (https://geant4.web.cern.ch/documentation/dev/bfad_html/ForApplicationDevelopers/Appendix/materialNames.html).
+            When creating a sample layer, if you enter a material name in the NIST database, G4Beamline will use the density from the database if the density 
+            is not specified. If you enter a material name that is not in the NIST database, density is compulsory. G4Beamline will assume 
+            it is a chemical formula and will calculate the material properties based on the elements in the formula. It is currently only possible to create alloys/mixtures of custom ratios
+            in a convoluted way (For example, Al3Cu7 would be a mixture of 3 part Al (30%) and 7 parts Cu (70%) but G4BL can be a bit unpredictable for such large compounds so be wary!). A better
+            implementation is being developed.
+            It is recommended that you do not modify the compressed air and beamline window layers, as they have been optimised
+            to simulate the conditions in MuX experiments. By default, the G4Beamline window will load with sample layers of
+            aluminium foil and a copper plate.
+            <br><br>
+            G4Beamline will accept either element names or chemical formulas (case sensitive) for the sample materials. Thicknesses are
+            specified in mm and density is specified in g/cm<sup>3</sup>. G4Beamline will assume perfect layer boundaries, but if you want
+            to simulate diffuse layer boundaries you can (roughly!) approximate this by adding intermediate layers. For example,
+            if your sample has a diffuse boundary between Al and Cu, the following can be done:
+            <div class="img_wrap">
+                <img src="./src/EVA/resources/manual/img/srim_diffuse_boundaries.png">
+            </div>
+            While making initial momentum scans it can be very useful to add an extra layer at the end of your sample with high density for muons to stop
+            in if you are simulating close to the edge of your sample, particularly for thin/low density samples.
+            <br><br>
+            Press 'Run Simulations' to start G4Beamline. Once complete, the simulation curves can be saved under the 'Results' tab.
+            <br><br>
+            Implantation plots are also generated on the right side of the window. There are several options to save some or all of the implantation
+            data and plots. The save and load settings buttons will also save any generated implantation data, so you can load it back in later without having to re-run the simulation.
+            This also regenerates the plots.
         <h2 id="srimtrim">SRIM/TRIM simulations</h2>
         <h3 id="installing-srim">Installing SRIM</h3>
         <p>To use the SRIM/TRIM tool you must have SRIM 2013 installed on your computer. You can get it

@@ -7,8 +7,19 @@
     "fit_table_save_file": 0,
     "fit_table_plot_file": 0,
     "default_run_num": "0000",
-    "current_grouping_profile": "",
-    "saved_grouping_profiles": {},
+    "current_grouping_profile": "Default",
+    "saved_grouping_profiles": {
+        "Default": {
+            "High Energy": [
+                "GE5",
+                "GE6"
+            ],
+            "Low Energy": [
+                "GE7",
+                "GE8"
+            ]
+        }
+    },
     "enabled_detectors": [
         "GE1",
         "GE2",
@@ -70,6 +81,8 @@
         "GE8": true,
         "GE9": true
         },
+    "energy_corrections": {},
+    "efficiency_corrections": {},
     "detector_specific": {
       "GE1": {
         "e_corr_coeffs": [

@@ -9,14 +9,9 @@ from PyQt6.QtWidgets import (
 )
 import EVA
 from EVA.core.data_structures.run import Run
-from EVA.gui.dialogs.energy_corrections.energy_corrections_dialog import (
-    EnergyCorrectionsDialog,
-)
 from EVA.gui.dialogs.general_settings.settings_dialog import SettingsDialog
+from EVA.gui.dialogs.detector_corrections.detector_corrections_dialog import DetectorCorrectionsDialog
 from EVA.gui.ui_files.workspace_nxs_gui import Ui_workspace
-from EVA.gui.windows.detector_grouping.detector_grouping_window import (
-    DetectorGroupingWindow,
-)
 from EVA.gui.windows.elemental_analysis.elemental_analysis_window import (
     ElementalAnalysisWindow,
 )
@@ -31,9 +26,8 @@ class WorkspaceView(Ui_workspace, QMainWindow):
 
     manual_windows: list[ManualWindow] = []
     periodic_table_windows: list[PeriodicTableWidget] = []
-    detector_grouping_windows: list[DetectorGroupingWindow] = []
     general_settings_dialogs: list[SettingsDialog] = []
-    energy_corrections_dialogs: list[EnergyCorrectionsDialog] = []
+    detector_corrections_dialogs: list[DetectorCorrectionsDialog] = []
 
     replot_spectra_s = pyqtSignal()
     update_plot_fill_colour_s = pyqtSignal()

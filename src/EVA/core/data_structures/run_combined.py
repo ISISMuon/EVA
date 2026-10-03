@@ -51,11 +51,12 @@ class MultiRun(Run):
         """Apply corrections to each run then sum spectra."""
         current_loaded_detectors = self.loaded_detectors
         self._set_mode(**kwargs)  # Fetch specific type of spectrum for each run
+        self._set_energy_correction(kwargs.get("energy_corrections"))
+        self._set_efficiency_correction(kwargs.get("efficiency_corrections"))
         self._combine_runs()  # Combine the spectra from all runs detector-wise
         self._group_detectors(
             kwargs.get("detector_group_dict")
         )  # Group detectors according to profile and combine spectra
-        self._set_energy_correction(kwargs.get("energy_corrections"))
         self._set_binning(kwargs.get("bin_rate"), kwargs.get("default_bin"))
         self._set_normalisation(
             kwargs.get("normalisation"), kwargs.get("normalise_which")

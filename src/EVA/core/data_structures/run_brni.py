@@ -26,12 +26,11 @@ class RunBiriani(Run):
 
         self.data = deepcopy(self._raw)
         current_loaded_detectors = self.loaded_detectors
+        self._set_energy_correction(kwargs.get('energy_corrections'))
+        self._set_efficiency_correction(kwargs.get('efficiency_corrections'))
         self._group_detectors(kwargs.get("detector_group_dict"))
-        self._set_energy_correction(kwargs.get("energy_corrections"))
-        self._set_normalisation(
-            kwargs.get("normalisation"), kwargs.get("normalise_which")
-        )
-        self._set_binning(kwargs.get("bin_rate"))
+        self._set_normalisation(kwargs.get('normalisation'), kwargs.get('normalise_which'))
+        self._set_binning(kwargs.get('bin_rate'))
         if current_loaded_detectors != self.loaded_detectors:
             self.detectors_grouped_s.emit()
         self.corrections_updated_s.emit()

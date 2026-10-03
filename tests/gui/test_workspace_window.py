@@ -28,7 +28,8 @@ class TestLoadWorkspaceWindow:
     ):
         wdir = "./test_data"
         get_config()["saved_corrections"][wdir] = {}
-        energy_corrections = get_config()["default_corrections"]["detector_specific"]
+        energy_corrections = get_config()["default_corrections"]["energy_corrections"]
+        efficiency_corrections = get_config()["default_corrections"]["efficiency_corrections"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
         plot_mode = get_config()["default_corrections"]["plot_mode"]
@@ -42,6 +43,7 @@ class TestLoadWorkspaceWindow:
             run_num,
             wdir,
             energy_corrections,
+            efficiency_corrections,
             normalisation,
             binning,
             plot_mode,
@@ -52,6 +54,7 @@ class TestLoadWorkspaceWindow:
             run_num,
             wdir,
             energy_corrections,
+            efficiency_corrections,
             normalisation,
             binning,
             plot_mode,
