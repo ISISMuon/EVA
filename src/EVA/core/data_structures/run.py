@@ -40,10 +40,28 @@ class Run(QObject, metaclass=MetaQObjectABC):
         self.active_detectors = loaded_detectors  # TODO refer to NOTE comment in _combine_detector_spectra()
         self.run_num = run_num
         self.plot_mode = ""
-        # Common correction parameters
         self.momentum = momentum
-        self.energy_corrections = {}
-        self.efficiency_corrections = {}
+        # Populate default correction parameters (Correcting with these params causes in no changes)
+        # These values are placeholders and will be updated when the user applies corrections through the GUI.
+        # Or if any saved corrections are found in the config for a particular run.
+        self.energy_corrections = {
+                detector: {
+                    "e_corr_coeffs": (1.0, 0.0), # Evaulate as x = 1 * x + 0
+                    "use_e_corr": False,
+                }
+                for detector in self.active_detectors
+            }
+        self.efficiency_corrections = {
+                "detectors": {
+                    detector: {
+                        "eff_corr_coeffs": (0.0, 0.0, 0.0, 0.0, 0.0, 0.0), # Evualuate as y = 1 * y + exp(0)
+                        "use_eff_corr": False,
+                    }
+                    for detector in self.active_detectors
+                },
+                "energy_cutoff": 100.0,
+                "units": "Percentage",
+            }
         self.normalisation = None
         self.normalise_which = loaded_detectors
         self.bin_rate = 1
@@ -56,8 +74,10 @@ class Run(QObject, metaclass=MetaQObjectABC):
     # SHARED FUNCTIONS
     def _set_energy_correction(self, energy_corrections: dict):
         """Apply per-detector linear energy corrections."""
-        if energy_corrections is None:
-            energy_corrections = self.energy_corrections
+        if not energy_corrections:
+            return
+        # if energy_corrections is None:
+        #     energy_corrections = self.energy_corrections
 
         for detector, spectrum in self.data.items():
             try:
@@ -76,18 +96,20 @@ class Run(QObject, metaclass=MetaQObjectABC):
     ):
         """Apply per-detector efficiency corrections."""
 
-        if efficiency_corrections is None:
-            efficiency_corrections = self.efficiency_corrections
+        if not efficiency_corrections:
+            return
+        # if efficiency_corrections is None:
+        #     efficiency_corrections = self.efficiency_corrections
 
         for detector, spectrum in self.data.items():
             try:
-                settings = efficiency_corrections[detector]
+                settings = efficiency_corrections["detectors"][detector]
 
                 if not settings["use_eff_corr"]:
                     continue
 
                 a, b, c, d, e, f = settings["eff_corr_coeffs"]
-                cut_off = settings["cut_off"]
+                cut_off = efficiency_corrections["energy_cutoff"]
 
                 x = np.asarray(spectrum.x, dtype=float)
                 y = np.asarray(spectrum.y, dtype=float)
@@ -116,6 +138,8 @@ class Run(QObject, metaclass=MetaQObjectABC):
                 )
 
                 # Apply correction
+                if efficiency_corrections["units"] == "Percentage":
+                    correction /= 100.0
                 spectrum.y = y / correction
 
             except KeyError:
@@ -127,7 +151,7 @@ class Run(QObject, metaclass=MetaQObjectABC):
     def _group_detectors(self, detector_group_dict: dict[str, list[str]]):
         """Merge detector channels into groups using a dictionary of group names and corresponding list of detector names."""
         self.detector_group_dict = {}
-        if detector_group_dict is None:
+        if not detector_group_dict:
             self.group = False
             self.loaded_detectors = self.active_detectors
             self.plot_detectors = self.loaded_detectors[:4]
