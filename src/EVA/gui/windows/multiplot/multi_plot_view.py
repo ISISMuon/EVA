@@ -71,5 +71,5 @@ class MultiPlotView(BaseView, Ui_MultiPlotView):
     def get_checked_detectors(self):
         return {
             checkbox.text(): checkbox.isChecked()
-            for checkbox in self.checkboxes
+            for checkbox in self.checkboxes if checkbox.isChecked()
         }

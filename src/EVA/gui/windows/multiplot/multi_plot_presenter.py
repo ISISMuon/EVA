@@ -1,3 +1,5 @@
+import re
+
 from EVA.core.app import get_config
 from EVA.core.data_structures.run import normalisation_types
 import logging
@@ -110,8 +112,8 @@ class MultiPlotPresenter:
                 widget.deleteLater()
 
         self.view.checkboxes = []
-
-        for i, detector_name in enumerate(self.model.loaded_runs[0].loaded_detectors):
+        detector_list =sorted(set().union(*(run.loaded_detectors for run in self.model.loaded_runs)),key=detector_sort_key,)
+        for i, detector_name in enumerate(detector_list):
             checkbox = QCheckBox(detector_name)
 
             # 4 checkboxes per row
@@ -214,3 +216,5 @@ class MultiPlotPresenter:
         # self.model.fig, self.model.axs = self.model.multi_plot(self.model.loaded_runs, offset, checked_detectors)
         # self.view.plot.update_plot(self.model.fig, self.model.axs)
 
+def detector_sort_key(det):
+    return (re.match(r"[A-Za-z]+", det).group(), int(re.search(r"\d+", det).group()))
