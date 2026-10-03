@@ -31,8 +31,9 @@ class TestPlotWindow:
         get_config()["plot"]["show_plot"]["GE3"] = True
         get_config()["plot"]["show_plot"]["GE4"] = False
 
-        wdir = get_config()["general"]["working_directory"]
-        energy_corrections = get_config()["default_corrections"]["detector_specific"]
+        wdir = get_config()["general"]["test_directory"]
+        energy_corrections = get_config()["default_corrections"]["energy_corrections"]
+        efficiency_corrections = get_config()["default_corrections"]["efficiency_corrections"]
         normalisation = get_config()["default_corrections"]["normalisation"]
         binning = get_config()["default_corrections"]["binning"]
         plot_mode = get_config()["default_corrections"]["plot_mode"]
@@ -42,6 +43,7 @@ class TestPlotWindow:
             "2630",
             wdir,
             energy_corrections,
+            efficiency_corrections,
             normalisation,
             binning,
             plot_mode,
