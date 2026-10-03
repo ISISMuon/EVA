@@ -61,6 +61,12 @@ class WorkspacePresenter:
         self.view.group_detector_checkbox.toggled.connect(
             self.on_group_detector_checkbox_toggled
         )
+        self.view.energy_correction_checkbox.toggled.connect(
+            self.on_energy_correction_checkbox_toggled
+        )
+        self.view.efficiency_correction_checkbox.toggled.connect(
+            self.on_efficiency_correction_checkbox_toggled
+        )
         self.view.export_run_data_button.clicked.connect(self.export_run_data)
         self.view.save_and_close_requested_s.connect(self.save_and_close)
 
@@ -108,17 +114,17 @@ class WorkspacePresenter:
         prompt_limit = self.view.prompt_limit_textbox.text()
         delayed_limit = self.view.delayed_limit_textbox.text()
 
-        detector_group_dict = None
-        efficiency_corrections_dict = None
-        energy_corrections_dict = None
+        detector_group_dict = {}
+        efficiency_corrections_dict = {}
+        energy_corrections_dict = {}
         if self.view.group_detector_checkbox.isChecked():
             detector_group_dict = self.detector_group_dict
 
         if self.view.efficiency_correction_checkbox.isChecked():
-            efficiency_corrections_dict = self.efficiency_corrections
+            efficiency_corrections_dict = self.model.run.efficiency_corrections
 
         if self.view.energy_correction_checkbox.isChecked():
-            energy_corrections_dict = self.energy_corrections
+            energy_corrections_dict = self.model.run.energy_corrections
 
         # normalisation can fail if user wants to normalise by events but no comment file have been loaded
         try:
@@ -157,11 +163,11 @@ class WorkspacePresenter:
                 self.view.replot_spectra_s.emit()
 
     def on_detector_corrections_applied(self, corrections: dict):
-        self.current_profile = corrections["detector_grouping"]
-        self.energy_corrections = corrections["energy_corrections"]
-        self.efficiency_corrections = corrections["efficiency_corrections"]
-        self.view.efficiency_corrections_checkbox.setChecked(False)
-        self.view.energy_corrections_checkbox.setChecked(False)
+        self.current_profile = corrections["detector_grouping"]["profile_name"]
+        self.model.run.energy_corrections = corrections["energy_corrections"]
+        self.model.run.efficiency_corrections = corrections["efficiency_corrections"]
+        self.view.efficiency_correction_checkbox.setChecked(False)
+        self.view.energy_correction_checkbox.setChecked(False)
         self.view.group_detector_checkbox.setChecked(False)
 
     def generate_peakfit_options(self):
@@ -180,6 +186,32 @@ class WorkspacePresenter:
             return
         self.on_apply_settings()
         self.generate_peakfit_options()
+
+    def on_energy_correction_checkbox_toggled(self):
+        if not self.model.run.energy_corrections:
+            self.view.energy_correction_checkbox.blockSignals(True)
+            self.view.energy_correction_checkbox.setChecked(False)
+            self.view.energy_correction_checkbox.blockSignals(False)
+            self.view.display_error_message(
+                title="No energy corrections",
+                message="No saved energy corrections found for the current run, please add some."
+            )
+            return
+
+        self.on_apply_settings()
+
+    def on_efficiency_correction_checkbox_toggled(self):
+        if not self.model.run.efficiency_corrections:
+            self.view.efficiency_correction_checkbox.blockSignals(True)
+            self.view.efficiency_correction_checkbox.setChecked(False)
+            self.view.efficiency_correction_checkbox.blockSignals(False)
+            self.view.display_error_message(
+                title="No efficiency corrections",
+                message="No saved efficiency corrections found for the current run, please add some."
+            )
+            return
+
+        self.on_apply_settings()
 
     def validate_grouping_profile(self):
         if self.current_profile is None:
@@ -256,7 +288,7 @@ class WorkspacePresenter:
         logger.info("Closed detector corrections dialog.")
 
         self.view.detector_corrections_dialogs.remove(dialog)
-        dialog.view.deleteLater()
+        dialog.deleteLater()
 
     def open_manual(self):
         """Opens manual window."""

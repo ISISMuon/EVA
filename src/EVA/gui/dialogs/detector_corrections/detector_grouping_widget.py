@@ -61,12 +61,6 @@ class DetectorGroupingWidget(QWidget, Ui_DetectorGrouping):
 
         # Load current profile
         current_profile = config["general"]["current_grouping_profile"]
-        # if get_config()["general"]["current_grouping_profile"] is not None:
-        #     self.current_profile = get_config()["general"]["current_grouping_profile"]
-        #     self.view.detector_grouping_profile_label.setText(f"Current Profile: {self.current_profile}")
-        # else:
-        #     self.current_profile = None
-        #     self.view.detector_grouping_profile_label.setText(f"Current Profile: None")
         if current_profile:
             self.saved_profile_options_combobox.setCurrentText(
                 current_profile
@@ -100,6 +94,26 @@ class DetectorGroupingWidget(QWidget, Ui_DetectorGrouping):
             )
 
         return detector_grouping_data
+
+    def add_profile(self, profile_name: str, profile_data: dict):
+        """
+        Add a detector grouping profile to the combo box and load it.
+        """
+        config = get_config()
+
+        saved_profiles = (
+            config["general"]["saved_grouping_profiles"]
+        )
+
+        saved_profiles[profile_name] = profile_data
+
+        config.save_config()
+
+        self.update_combo_box_options([profile_name])
+
+        self.saved_profile_options_combobox.setCurrentText(
+            profile_name
+        )
 
     def load_selected_profile(self):
         selected_profile = (
@@ -227,7 +241,11 @@ class DetectorGroupingWidget(QWidget, Ui_DetectorGrouping):
         Returns the current detector grouping profile name.
         """
         config = get_config()
-        return config["general"]["current_grouping_profile"]
+        current_profile = config["general"]["current_grouping_profile"]
+        profile_data = config["general"]["saved_grouping_profiles"].get(
+            current_profile, {}
+        )
+        return current_profile, profile_data
 
     def display_error_message(
         self,

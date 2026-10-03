@@ -1,12 +1,17 @@
+import json
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
+    QFileDialog,
     QGridLayout,
+    QHBoxLayout,
     QMessageBox,
+    QPushButton,
     QTabWidget,
 )
 
+from EVA.core.app import get_config
 from EVA.core.data_structures.run import Run
 
 from EVA.gui.dialogs.detector_corrections.energy_corrections_widget import (
@@ -30,14 +35,23 @@ class DetectorCorrectionsDialog(QDialog):
         self.run = run
 
         self.setWindowTitle("Detector Corrections")
-        # self.setMinimumSize(800, 600)
+        self.setMinimumSize(500, 400)
 
         self.init_gui()
+        self.load_settings_button.clicked.connect(self.load_settings)
+        self.export_settings_button.clicked.connect(self.export_settings)
 
     def init_gui(self):
         self.layout = QGridLayout()
         self.setLayout(self.layout)
+        # Settings buttons
+        self.load_settings_button = QPushButton("Load Settings")
+        self.export_settings_button = QPushButton("Export Settings")
 
+        self.settings_button_layout = QHBoxLayout()
+        self.settings_button_layout.addWidget(self.load_settings_button)
+        self.settings_button_layout.addWidget(self.export_settings_button)
+        self.settings_button_layout.addStretch()
         self.tabs = QTabWidget()
 
         self.energy_corrections = EnergyCorrectionsWidget(self.run)
@@ -90,13 +104,13 @@ class DetectorCorrectionsDialog(QDialog):
             1,
         )
 
-    def on_apply(self):
+    def fetch_corrections(self):
         try:
             energy_corrections = self.energy_corrections.get_energy_correction_selections()
             efficiency_corrections = (
                 self.efficiency_corrections.get_efficiency_correction_selections()
             )
-            detector_grouping = self.detector_grouping.get_grouping_selections()
+            profile_name, profile_data = self.detector_grouping.get_grouping_selections()
 
         except ValueError as e:
             self.display_message(
@@ -109,9 +123,12 @@ class DetectorCorrectionsDialog(QDialog):
         corrections = {
             "energy_corrections": energy_corrections,
             "efficiency_corrections": efficiency_corrections,
-            "detector_grouping": detector_grouping,
+            "detector_grouping": {"profile_name": profile_name, "profile_data": profile_data},
         }
+        return corrections
 
+    def on_apply(self):
+        corrections = self.fetch_corrections()
         self.detector_corrections_applied_s.emit(corrections)
 
         self.accept()
@@ -121,6 +138,47 @@ class DetectorCorrectionsDialog(QDialog):
     def on_cancel(self):
         self.reject()
         self.dialog_closed_s.emit()
+
+    def export_settings(self):
+        corrections = self.fetch_corrections()
+        def_dir = get_config()["general"]["working_directory"]
+        save_path = self.get_save_file_path(default_dir=def_dir, file_filter="JSON Files (*.json)", caption="Export Settings", default_extension=".json")
+        with open(save_path, "w") as f:
+            json.dump(corrections, f, indent=4)
+
+    def load_settings(self):
+        def_dir = get_config()["general"]["working_directory"]
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Load Settings", directory=def_dir, filter="JSON Files (*.json)"
+        )
+        if not file_path:
+            return
+
+        with open(file_path, "r") as f:
+            corrections = json.load(f)
+
+        self.energy_corrections.populate_table(corrections["energy_corrections"])
+        self.efficiency_corrections.populate_table(corrections["efficiency_corrections"])
+        self.detector_grouping.add_profile(
+            profile_name=corrections["detector_grouping"]["profile_name"],
+            profile_data=corrections["detector_grouping"]["profile_data"]
+        )
+    def get_save_file_path(
+        self,
+        default_dir: str,
+        file_filter: str,
+        caption="Save File",
+        default_extension: str = None,
+    ) -> str:
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, caption, directory=default_dir, filter=file_filter
+        )
+        if file_path and default_extension:
+            if not file_path.lower().endswith(default_extension.lower()):
+                file_path += default_extension
+        if file_path:
+            return file_path
+        return ""
 
     def display_message(
         self, title="Message", message="", buttons=QMessageBox.StandardButton.Ok

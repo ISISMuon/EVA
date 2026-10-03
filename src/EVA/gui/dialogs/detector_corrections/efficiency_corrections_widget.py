@@ -18,7 +18,14 @@ class EfficiencyCorrectionsWidget(QDialog, Ui_EfficiencyCorrections):
 
         self.setupUi(self)
         self.setWindowTitle("Efficiency corrections")
-
+        self.low_energy_label.setText(
+            "Low energy correction: "
+            "<b>exp</b>(a + b·log(x/100) + c·log²(x/100))"
+        )
+        self.high_energy_label.setText(
+            "High energy correction: "
+            "<b>exp</b>(d + e·log(x/1000) + f·log²(x/1000))"
+        )
         self.checkboxes = []
 
         self.correction_table.stretch_horizontal_header()
@@ -28,15 +35,14 @@ class EfficiencyCorrectionsWidget(QDialog, Ui_EfficiencyCorrections):
             self.corrections = {}
             self.corrections["detectors"] = {
                 detector: {
-                    "eff_corr_coeffs": (1.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+                    "eff_corr_coeffs": (0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
                     "use_eff_corr": False,
                         }
                 for detector in self.run.active_detectors
                 }
             self.corrections.update(
                 {
-                    "lower_energy_limit": 0.0,
-                    "upper_energy_limit": 0.0,
+                    "energy_cutoff": 0.0,
                     "units": "Percentage"
                 }
             )
@@ -44,8 +50,7 @@ class EfficiencyCorrectionsWidget(QDialog, Ui_EfficiencyCorrections):
 
     def populate_table(self):
         self.efficiency_correction_units_combobox.setCurrentText(self.corrections["units"])
-        self.low_energy_line_edit.setText(str(self.corrections["lower_energy_limit"]))
-        self.high_energy_line_edit.setText(str(self.corrections["upper_energy_limit"]))
+        self.cutoff_energy_line_edit.setText(str(self.corrections["energy_cutoff"]))
         table_contents = [
             [detector, *settings["eff_corr_coeffs"]]
             for detector, settings in self.corrections["detectors"].items()
@@ -76,7 +81,7 @@ class EfficiencyCorrectionsWidget(QDialog, Ui_EfficiencyCorrections):
     def get_efficiency_correction_selections(self):
         rows = self.correction_table.rowCount()
 
-        result = {}
+        result = {"detectors": {}}
 
         for row in range(rows):
             detector = self.correction_table.item(row, 0).text()
@@ -88,14 +93,11 @@ class EfficiencyCorrectionsWidget(QDialog, Ui_EfficiencyCorrections):
 
             use_eff_corr = self.checkboxes[row].isChecked()
 
-            result[detector] = {
+            result["detectors"][detector] = {
                 "eff_corr_coeffs": params,
                 "use_eff_corr": use_eff_corr,
             }
-        result["lower_energy_limit"] = float(self.low_energy_line_edit.text())
-        result["upper_energy_limit"] = float(self.high_energy_line_edit.text())
-        if result["lower_energy_limit"] >= result["upper_energy_limit"]:
-            raise ValueError("Lower energy limit must be less than upper energy limit.")
+        result["energy_cutoff"] = float(self.cutoff_energy_line_edit.text())
         result["units"] = self.efficiency_correction_units_combobox.currentText()
 
         return result
