@@ -58,6 +58,12 @@ class ElementalAnalysisPresenter(object):
             self.model.peakfind_selected_function
         )
 
+        self.view.ml_model_select_combo.addItems(list(self.model.ml_models.keys()))
+        if self.model.ml_identify_selected_model is not None:
+            self.view.ml_model_select_combo.setCurrentText(
+                self.model.ml_identify_selected_model
+            )
+
         self.setup_detector_checkboxes()
 
         # set up all connections:
@@ -102,6 +108,7 @@ class ElementalAnalysisPresenter(object):
         )
         self.view.find_peaks_button.clicked.connect(self.start_peak_find)
         self.view.reset_button.clicked.connect(self.reset_peak_find)
+        self.view.identify_elements_button.clicked.connect(self.start_identify_elements)
 
         self.view.muon_search_button.clicked.connect(self.search_muonic_xrays)
         self.view.gamma_search_button.clicked.connect(self.search_gammas)
@@ -517,6 +524,31 @@ class ElementalAnalysisPresenter(object):
         self.view.peakfind_results_tree.clear()
         self.view.peakfind_results_table.setRowCount(0)
         self.view.plot.canvas.draw()
+
+    def start_identify_elements(self):
+        """
+        Runs the selected ML element-presence model on the currently plotted spectra
+        and displays the results.
+        """
+        self.model.ml_identify_selected_model = (
+            self.view.ml_model_select_combo.currentText()
+        )
+
+        try:
+            self.model.identify_elements_ml()
+        except FileNotFoundError as e:
+            self.view.display_error_message(message=f"ML model files not found: {e}")
+            return
+        except Exception as e:
+            self.view.display_error_message(
+                message=f"ML element identification failed: {e}"
+            )
+            return
+
+        self.view.update_table(
+            self.view.ml_results_table, self.model.ml_identify_simplified_result
+        )
+        self.view.ml_results_table.resizeRowsToContents()
 
     def checkbox_checked(
         self, checkstate: Qt.CheckState, detector: str, checkbox: QCheckBox

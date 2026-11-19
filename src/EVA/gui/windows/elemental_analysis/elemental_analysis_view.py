@@ -1,7 +1,13 @@
 import logging
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout, QTableWidgetItem, QTreeWidgetItem, QTableWidget
+from PyQt6.QtWidgets import (
+    QVBoxLayout,
+    QTableWidgetItem,
+    QTreeWidgetItem,
+    QTableWidget,
+    QHeaderView,
+)
 
 from EVA.gui.base.base_view import BaseView
 from EVA.gui.ui_files.elemental_analysis_gui import Ui_elemental_analysis
@@ -32,6 +38,13 @@ class ElementalAnalysisView(BaseView, Ui_elemental_analysis):
         self.plotted_gammas_table.stretch_horizontal_header()
         self.plotted_mu_xrays_table.stretch_horizontal_header()
         self.peakfind_results_table.stretch_horizontal_header()
+
+        # ML results table: detector column fits its content, the two text columns share the rest
+        self.ml_results_table.stretch_horizontal_header(skip=[0])
+        self.ml_results_table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.ResizeToContents
+        )
+        self.ml_results_table.setWordWrap(True)
 
         self.peakfind_results_table.setMaximumHeight(150)
 

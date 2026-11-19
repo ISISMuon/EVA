@@ -623,6 +623,59 @@ class Ui_elemental_analysis(object):
             self.reset_button, 0, QtCore.Qt.AlignmentFlag.AlignTop
         )
         self.tab_menu.addTab(self.peak_find_container, "")
+        self.ml_identify_container = QtWidgets.QWidget()
+        self.ml_identify_container.setObjectName("ml_identify_container")
+        self.ml_identify_layout = QtWidgets.QVBoxLayout(self.ml_identify_container)
+        self.ml_identify_layout.setObjectName("ml_identify_layout")
+        self.ml_model_select_container = QtWidgets.QWidget(
+            parent=self.ml_identify_container
+        )
+        self.ml_model_select_layout = QtWidgets.QHBoxLayout(
+            self.ml_model_select_container
+        )
+        self.ml_model_select_layout.setContentsMargins(0, 0, 0, 0)
+        self.ml_model_select_layout.setObjectName("ml_model_select_layout")
+        self.ml_model_select_label = QtWidgets.QLabel(
+            parent=self.ml_model_select_container
+        )
+        self.ml_model_select_label.setObjectName("ml_model_select_label")
+        self.ml_model_select_layout.addWidget(self.ml_model_select_label)
+        self.ml_model_select_combo = QtWidgets.QComboBox(
+            parent=self.ml_model_select_container
+        )
+        self.ml_model_select_combo.setObjectName("ml_model_select_combo")
+        self.ml_model_select_layout.addWidget(self.ml_model_select_combo)
+        self.ml_identify_layout.addWidget(self.ml_model_select_container)
+        self.identify_elements_button = QtWidgets.QPushButton(
+            parent=self.ml_identify_container
+        )
+        self.identify_elements_button.setObjectName("identify_elements_button")
+        self.ml_identify_layout.addWidget(
+            self.identify_elements_button, 0, QtCore.Qt.AlignmentFlag.AlignTop
+        )
+        self.ml_results_label = QtWidgets.QLabel(parent=self.ml_identify_container)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.ml_results_label.setFont(font)
+        self.ml_results_label.setObjectName("ml_results_label")
+        self.ml_identify_layout.addWidget(self.ml_results_label)
+        self.ml_results_table = BaseTable(parent=self.ml_identify_container)
+        self.ml_results_table.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        self.ml_results_table.setObjectName("ml_results_table")
+        self.ml_results_table.setColumnCount(3)
+        self.ml_results_table.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.ml_results_table.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.ml_results_table.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.ml_results_table.setHorizontalHeaderItem(2, item)
+        self.ml_identify_layout.addWidget(self.ml_results_table, 1)
+        self.ml_note_label = QtWidgets.QLabel(parent=self.ml_identify_container)
+        self.ml_note_label.setWordWrap(True)
+        self.ml_note_label.setObjectName("ml_note_label")
+        self.ml_identify_layout.addWidget(self.ml_note_label)
+        self.tab_menu.addTab(self.ml_identify_container, "")
         self.gridLayout_2.addWidget(self.tab_menu, 0, 2, 2, 1)
         self.widget = QtWidgets.QWidget(parent=elemental_analysis)
         self.widget.setObjectName("widget")
@@ -802,9 +855,37 @@ class Ui_elemental_analysis(object):
             2, _translate("elemental_analysis", "Possible Elements")
         )
         self.reset_button.setText(_translate("elemental_analysis", "Reset"))
+        self.ml_model_select_label.setText(
+            _translate("elemental_analysis", "Select trained model")
+        )
+        self.identify_elements_button.setText(
+            _translate("elemental_analysis", "Identify Elements (ML)")
+        )
+        self.ml_results_label.setText(
+            _translate("elemental_analysis", "ML Identified Elements")
+        )
+        self.ml_note_label.setText(
+            _translate(
+                "elemental_analysis",
+                "Note: the Biryani (2099) and Biryani 3099 models were trained on data with an energy range "
+                "of 8000 keV, and the Biryani 4099 model was trained on data with an energy range of 1000 keV. "
+                "When interpreting the results, only consider those from a model whose training energy range "
+                "matches the energy range of the spectrum being analysed.",
+            )
+        )
+        item = self.ml_results_table.horizontalHeaderItem(0)
+        item.setText(_translate("elemental_analysis", "Detector"))
+        item = self.ml_results_table.horizontalHeaderItem(1)
+        item.setText(_translate("elemental_analysis", "Likely Elements"))
+        item = self.ml_results_table.horizontalHeaderItem(2)
+        item.setText(_translate("elemental_analysis", "Top Probabilities"))
         self.tab_menu.setTabText(
             self.tab_menu.indexOf(self.peak_find_container),
             _translate("elemental_analysis", "Peak Detection"),
+        )
+        self.tab_menu.setTabText(
+            self.tab_menu.indexOf(self.ml_identify_container),
+            _translate("elemental_analysis", "Element Identification"),
         )
 
 

@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 from EVA.core.data_searching import get_match, sort_match
 from EVA.core.data_structures.run import Run
 from EVA.core.peak_finding import find_peaks
+from EVA.core.ml_identification import element_presence
 from EVA.core.app import get_config
 from EVA.core.plot.plotting import plot_run, Plot_Peak_Location, replot_run
 from EVA.util.transition_utils import is_primary, is_secondary
@@ -42,6 +43,15 @@ class ElementalAnalysisModel(QObject):
 
         self.peakfind_result = []
         self.peakfind_simplified_result = []
+
+        self.ml_identify_threshold = element_presence.DEFAULT_THRESHOLD
+        self.ml_identify_result = {}
+        self.ml_identify_simplified_result = []
+
+        # discover which trained models are installed under ml_identification/models/ -
+        # maps a human-readable display name (e.g. "Biryani 3099") to that model's folder
+        self.ml_models = element_presence.discover_models()
+        self.ml_identify_selected_model = next(iter(self.ml_models), None)
 
         self.plotted_gamma_lines = {}
         self.plotted_mu_xray_lines = {}
@@ -448,6 +458,92 @@ class ElementalAnalysisModel(QObject):
 
         self.peakfind_result = peakfind_res
         self.peakfind_simplified_result = result_simplified
+
+    def identify_elements_ml(self):
+        """
+        Runs the ML element-presence model on each currently plotted detector's spectrum.
+
+        Unlike find_peaks(), this does not localise individual peaks - it classifies which
+        elements are likely present across the whole spectrum.
+        """
+        if not self.ml_models:
+            raise FileNotFoundError(
+                "No trained ML models found under src/EVA/core/ml_identification/models/."
+            )
+        if self.ml_identify_selected_model not in self.ml_models:
+            raise ValueError(
+                f"Invalid ML model selected: '{self.ml_identify_selected_model}'"
+            )
+
+        model_dir = self.ml_models[self.ml_identify_selected_model]
+
+        # For .nxs runs, the data depends on the Display Plot mode. The model needs an energy
+        # spectrum (counts vs energy), so refuse modes that plot something else, rather than
+        # silently returning meaningless elements.
+        non_spectrum_modes = (
+            "Time Plot",
+            "Efficiency Spectrum",
+            "IBEX 2D Time-Energy Plot",
+            "Manual 2D Time-Energy Plot",
+        )
+        plot_mode = getattr(self.run, "plot_mode", None)
+        if plot_mode in non_spectrum_modes:
+            raise ValueError(
+                f"The ML model needs an energy spectrum, but Display Plot is set to "
+                f"'{plot_mode}'. Switch Display Plot to a spectrum mode "
+                f"(e.g. 'IBEX Prompt Spectrum') and try again."
+            )
+
+        logger.debug(
+            "Running ML element identification with model = '%s', threshold = %s.",
+            self.ml_identify_selected_model,
+            self.ml_identify_threshold,
+        )
+
+        result = {}
+        result_simplified = []
+
+        for dataset in self.run.data.values():
+            # only run on data which is plotted, same convention as find_peaks().
+            # self.run.data can also hold empty spectra for detectors that were not loaded
+            # for this run, so skip anything that has no data
+            if (
+                dataset.detector not in self.run.plot_detectors
+                or dataset.x.size == 0
+                or dataset.y.size == 0
+            ):
+                continue
+
+            try:
+                res = element_presence.identify_elements(
+                    dataset.x,
+                    dataset.y,
+                    model_dir,
+                    threshold=self.ml_identify_threshold,
+                )
+            except ValueError as e:
+                # e.g. a spectrum with no counts cannot be normalised - report it, don't abort the rest
+                logger.warning(
+                    "ML element identification skipped detector %s: %s",
+                    dataset.detector,
+                    e,
+                )
+                result_simplified.append(
+                    [dataset.detector, "n/a", "No usable counts in spectrum"]
+                )
+                continue
+
+            result[dataset.detector] = res
+
+            present_str = ", ".join(res["present"]) if res["present"] else "None"
+            top3_str = ", ".join(f"{el}:{p:.2f}" for el, p in res["topk"][:3])
+            result_simplified.append([dataset.detector, present_str, top3_str])
+
+        if not result_simplified:
+            raise ValueError("No plotted detectors with data to analyse.")
+
+        self.ml_identify_result = result
+        self.ml_identify_simplified_result = result_simplified
 
     def remove_plot_markers(self):
         """
