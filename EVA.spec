@@ -12,6 +12,7 @@ a = Analysis(
     binaries=[],
     datas=[("src/EVA/databases", "src/EVA/databases"),
         ('src/EVA/resources', 'src/EVA/resources'),
+           ("src/EVA/core/ml_identification/models", "src/EVA/core/ml_identification/models"),
            ("src/EVA/core/settings/defaults.json", "src/EVA/core/settings"),
            ("src/EVA/core/settings/srim_defaults.txt", "src/EVA/core/settings"),
             ("src/g4bl/data", "g4bl/data"),
